@@ -1,0 +1,28 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { MULTIPLICATION_1_12 } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/multiplication-practice/facts', label: 'Multiplication Facts', description: 'Same drill, different focus' },
+  { href: '/division-practice/facts', label: 'Division Facts', description: 'Practice the inverse' },
+  { href: '/multiplication-practice', label: 'All Multiplication Practice', description: 'See all levels' },
+];
+---
+
+<PracticeLayout
+  title="Times Tables 1–12 Practice | Multiplication 1–12"
+  description="Practice multiplication times tables from 1 to 12 online. Mixed problems across all 12 times tables with instant feedback and streak tracking."
+  canonical={`${SITE}/multiplication-practice/1-12`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Multiplication Practice', href: '/multiplication-practice' }, { label: 'Times Tables 1–12' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Times Tables 1–12 Practice</h1>
+  <div slot="intro">
+    <p>Drill all times tables from 1 through 12 in a mixed, randomized format. Every session pulls problems from the full 1–12 range, so there's nowhere to hide the facts you haven't mastered yet.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={MULTIPLICATION_1_12} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { ADDITION_2_DIGIT } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/addition-practice/1-digit', label: '1-Digit Addition', description: 'Easier — start here' },
+  { href: '/addition-practice/2-digit-carrying', label: 'Addition with Carrying', description: 'Harder — add regrouping' },
+  { href: '/subtraction-practice/2-digit', label: '2-Digit Subtraction', description: 'Pair with subtraction' },
+  { href: '/addition-practice', label: 'All Addition Practice', description: 'See all addition levels' },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Addition Practice | Math Practice"
+  description="Practice two-digit addition online. Problems range from 10+10 to 99+99, including sums with carrying. Timed and untimed modes."
+  canonical={`${SITE}/addition-practice/2-digit`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition Practice', href: '/addition-practice' }, { label: '2-Digit Addition' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition Practice</h1>
+  <div slot="intro">
+    <p>Step up to two-digit addition with numbers from 10 to 99. Problems may include carrying, helping you practice column addition and regrouping in a fast interactive format.</p>
+    <p class="mt-2">Ready for a challenge? Try timed mode and see how many you can answer in a minute.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={ADDITION_2_DIGIT} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

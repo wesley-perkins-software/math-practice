@@ -1,0 +1,29 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { MULTIPLICATION_GENERAL } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/multiplication-practice/facts', label: 'Multiplication Facts', description: 'Full 1–12 drill' },
+  { href: '/multiplication-practice/1-12', label: 'Times Tables 1–12', description: 'Times table practice' },
+  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Practice division' },
+  { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
+];
+---
+
+<PracticeLayout
+  title="Multiplication Worksheets — Free Online Times Table Practice"
+  description="Free multiplication worksheet practice online. Times tables 1–12 with instant feedback. No printing needed. Track your score and streak."
+  canonical={`${SITE}/math-worksheets/multiplication-worksheets`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Multiplication Worksheets' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Worksheets</h1>
+  <div slot="intro">
+    <p>Practice multiplication facts like a worksheet — 20 randomized times table problems with instant feedback on every answer. Covers the full 1–12 times table range.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={MULTIPLICATION_GENERAL} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { ADDITION_2_DIGIT_CARRYING } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/addition-practice/2-digit', label: '2-Digit Addition', description: 'Without carrying' },
+  { href: '/subtraction-practice/2-digit-borrowing', label: 'Subtraction with Borrowing', description: 'Related skill' },
+  { href: '/addition-practice/1-digit', label: '1-Digit Addition', description: 'Easier — no carrying' },
+  { href: '/addition-practice', label: 'All Addition Practice', description: 'See all addition levels' },
+];
+---
+
+<PracticeLayout
+  title="Addition with Carrying Practice | Math Practice"
+  description="Practice two-digit addition with carrying and regrouping. All problems require carrying to the tens or hundreds column. Timed and untimed modes."
+  canonical={`${SITE}/addition-practice/2-digit-carrying`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition Practice', href: '/addition-practice' }, { label: 'Addition with Carrying' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Addition with Carrying Practice</h1>
+  <div slot="intro">
+    <p>Every problem on this page requires carrying (regrouping). This is targeted practice for the most common stumbling block in two-digit addition.</p>
+    <p class="mt-2">Mastering carrying is key to multi-digit arithmetic. Practice here until it feels automatic.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={ADDITION_2_DIGIT_CARRYING} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

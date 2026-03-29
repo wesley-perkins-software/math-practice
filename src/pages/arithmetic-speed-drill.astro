@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { ARITHMETIC_SPEED_DRILL } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/math-drills', label: 'Math Drills', description: 'Balanced mixed drill' },
+  { href: '/mental-math-practice', label: 'Mental Math', description: 'Larger numbers' },
+  { href: '/multiplication-practice/facts', label: 'Multiplication Facts', description: 'Speed drill ×' },
+  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Focus on facts' },
+];
+---
+
+<PracticeLayout
+  title="Arithmetic Speed Drill — Beat the Clock with Mixed Math"
+  description="How many arithmetic problems can you answer in 60 seconds? Mixed addition, subtraction, multiplication, and division. Track your best score."
+  canonical={`${SITE}/arithmetic-speed-drill`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Arithmetic Speed Drill' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Arithmetic Speed Drill</h1>
+  <div slot="intro">
+    <p>How many arithmetic problems can you answer in 60 seconds? This mixed-operation speed drill covers all four operations. Your score is tracked automatically — try to beat your personal best each session.</p>
+    <p class="mt-2">Great for warming up before a test or just keeping your mental math sharp.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={ARITHMETIC_SPEED_DRILL} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

@@ -1,0 +1,28 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { SUBTRACTION_1_DIGIT } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/subtraction-practice/2-digit', label: '2-Digit Subtraction', description: 'Next level up' },
+  { href: '/addition-practice/1-digit', label: '1-Digit Addition', description: 'Practice the inverse' },
+  { href: '/subtraction-practice', label: 'All Subtraction Practice', description: 'See all levels' },
+];
+---
+
+<PracticeLayout
+  title="1-Digit Subtraction Practice | Math Practice"
+  description="Practice single-digit subtraction online. Numbers 1–9, no borrowing, instant feedback. Perfect for building basic subtraction fluency."
+  canonical={`${SITE}/subtraction-practice/1-digit`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice', href: '/subtraction-practice' }, { label: '1-Digit Subtraction' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Subtraction Practice</h1>
+  <div slot="intro">
+    <p>Practice single-digit subtraction with numbers 1 through 9. All answers are non-negative — no borrowing required — so you can focus purely on speed and recall.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={SUBTRACTION_1_DIGIT} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

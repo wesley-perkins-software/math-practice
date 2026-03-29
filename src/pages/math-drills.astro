@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { MATH_DRILLS } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: 'Max speed challenge' },
+  { href: '/mental-math-practice', label: 'Mental Math Practice', description: 'Larger numbers' },
+  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Facts-focused drill' },
+  { href: '/addition-practice', label: 'Addition Practice', description: 'Drill addition only' },
+  { href: '/multiplication-practice', label: 'Multiplication Practice', description: 'Drill multiplication only' },
+];
+---
+
+<PracticeLayout
+  title="Math Drills — Timed Mixed Arithmetic Practice"
+  description="Fast-paced timed math drills covering all four operations. Answer as many arithmetic problems as you can in 60 seconds. Free online practice."
+  canonical={`${SITE}/math-drills`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Drills' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Math Drills</h1>
+  <div slot="intro">
+    <p>Timed math drills across all four arithmetic operations. Answer as many problems as possible before the clock runs out. Track your personal best and try to beat it each session.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={MATH_DRILLS} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

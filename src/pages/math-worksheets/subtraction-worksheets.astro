@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { SUBTRACTION_GENERAL } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/subtraction-practice/1-digit', label: '1-Digit Subtraction', description: 'Simple problems' },
+  { href: '/subtraction-practice/2-digit', label: '2-Digit Subtraction', description: 'Two-digit problems' },
+  { href: '/subtraction-practice/2-digit-borrowing', label: 'Subtraction with Borrowing', description: 'Regrouping practice' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Practice addition' },
+  { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
+];
+---
+
+<PracticeLayout
+  title="Subtraction Worksheets — Free Online Subtraction Practice"
+  description="Free subtraction worksheet practice online. 1-digit through 2-digit subtraction with instant feedback. No printing required."
+  canonical={`${SITE}/math-worksheets/subtraction-worksheets`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Subtraction Worksheets' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Subtraction Worksheets</h1>
+  <div slot="intro">
+    <p>Interactive subtraction practice that works like a worksheet — 20 problems, one at a time, with instant feedback. Covers subtraction from 1-digit through 2-digit problems with borrowing.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={SUBTRACTION_GENERAL} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

@@ -1,0 +1,159 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import '@/styles/global.css';
+
+const SITE = 'https://www.mathpractice.com';
+
+const operations = [
+  {
+    href: '/addition-practice',
+    label: 'Addition Practice',
+    symbol: '+',
+    color: '#3B82F6',
+    bg: '#EFF6FF',
+    desc: 'Single-digit to multi-digit addition, with or without carrying.',
+  },
+  {
+    href: '/subtraction-practice',
+    label: 'Subtraction Practice',
+    symbol: '−',
+    color: '#8B5CF6',
+    bg: '#F5F3FF',
+    desc: 'Build fluency with subtraction and borrowing.',
+  },
+  {
+    href: '/multiplication-practice',
+    label: 'Multiplication Practice',
+    symbol: '×',
+    color: '#10B981',
+    bg: '#ECFDF5',
+    desc: 'Times tables and multiplication facts up to 12.',
+  },
+  {
+    href: '/division-practice',
+    label: 'Division Practice',
+    symbol: '÷',
+    color: '#F59E0B',
+    bg: '#FFFBEB',
+    desc: 'Division facts and whole-number division.',
+  },
+];
+---
+
+<BaseLayout
+  title="Math Practice — Free Arithmetic Drills Online"
+  description="Practice addition, subtraction, multiplication, and division online. Timed and untimed modes, streaks, and instant feedback. Free for students of all ages."
+  canonical={`${SITE}/`}
+>
+  <header class="border-b border-[#E2E8F0] bg-white">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+      <a href="/" class="text-lg font-bold text-[#1E293B]">Math Practice</a>
+      <nav class="hidden sm:flex items-center gap-5 text-sm font-medium text-[#64748B]">
+        <a href="/addition-practice" class="hover:text-[#1E293B] transition-colors">Addition</a>
+        <a href="/subtraction-practice" class="hover:text-[#1E293B] transition-colors">Subtraction</a>
+        <a href="/multiplication-practice" class="hover:text-[#1E293B] transition-colors">Multiplication</a>
+        <a href="/division-practice" class="hover:text-[#1E293B] transition-colors">Division</a>
+        <a href="/arithmetic-speed-drill" class="hover:text-[#3B82F6] text-[#3B82F6] font-semibold transition-colors">Speed Drill</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero -->
+    <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 text-center">
+      <h1 class="text-4xl sm:text-5xl font-bold text-[#1E293B] leading-tight">
+        Practice Arithmetic.<br />Build Real Fluency.
+      </h1>
+      <p class="mt-4 text-lg text-[#64748B] max-w-xl mx-auto">
+        Fast, focused arithmetic drills for students, parents, and anyone who wants sharp mental math skills. No login. No fluff.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a
+          href="/math-practice"
+          class="w-full sm:w-auto py-3 px-8 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-base rounded-xl transition-colors"
+        >
+          Start Practicing
+        </a>
+        <a
+          href="/arithmetic-speed-drill"
+          class="w-full sm:w-auto py-3 px-8 bg-white border border-[#E2E8F0] hover:border-[#3B82F6] text-[#1E293B] font-semibold text-base rounded-xl transition-colors"
+        >
+          Speed Drill
+        </a>
+      </div>
+    </section>
+
+    <!-- Operation Cards -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
+      <h2 class="text-xl font-semibold text-[#1E293B] mb-6 text-center">Choose a Topic</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {operations.map((op) => (
+          <a
+            href={op.href}
+            class="flex flex-col items-center gap-3 bg-white border border-[#E2E8F0] rounded-2xl p-6 hover:shadow-md hover:border-[#3B82F6] transition-all group"
+          >
+            <div
+              class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl font-bold"
+              style={`background:${op.bg};color:${op.color}`}
+            >
+              {op.symbol}
+            </div>
+            <div class="text-sm font-semibold text-[#1E293B] text-center group-hover:text-[#3B82F6] transition-colors">
+              {op.label}
+            </div>
+            <div class="text-xs text-[#94A3B8] text-center">{op.desc}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Speed drill CTA -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
+      <div class="grid sm:grid-cols-2 gap-4">
+        <a href="/arithmetic-speed-drill" class="bg-[#1E293B] rounded-2xl p-6 flex flex-col gap-2 hover:bg-[#334155] transition-colors group">
+          <div class="text-2xl font-bold text-white">Speed Drill</div>
+          <div class="text-[#94A3B8] text-sm">Mixed operations against the clock. How many can you answer in 60 seconds?</div>
+          <div class="text-[#3B82F6] font-semibold text-sm mt-2 group-hover:underline">Try it →</div>
+        </a>
+        <a href="/mental-math-practice" class="bg-white border border-[#E2E8F0] rounded-2xl p-6 flex flex-col gap-2 hover:shadow-md hover:border-[#3B82F6] transition-all group">
+          <div class="text-2xl font-bold text-[#1E293B]">Mental Math</div>
+          <div class="text-[#64748B] text-sm">Larger numbers, timed practice. Build your mental calculation speed.</div>
+          <div class="text-[#3B82F6] font-semibold text-sm mt-2 group-hover:underline">Try it →</div>
+        </a>
+      </div>
+    </section>
+
+    <!-- More links -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16 border-t border-[#E2E8F0] pt-10">
+      <h2 class="text-base font-semibold text-[#64748B] mb-4">More Practice Tools</h2>
+      <div class="flex flex-wrap gap-3">
+        {[
+          ['/math-drills', 'Math Drills'],
+          ['/math-facts-practice', 'Math Facts Practice'],
+          ['/math-worksheets', 'Math Worksheets'],
+          ['/addition-practice/1-digit', '1-Digit Addition'],
+          ['/multiplication-practice/facts', 'Multiplication Facts'],
+          ['/division-practice/facts', 'Division Facts'],
+        ].map(([href, label]) => (
+          <a href={href} class="py-2 px-4 bg-white border border-[#E2E8F0] rounded-xl text-sm text-[#64748B] hover:border-[#3B82F6] hover:text-[#3B82F6] transition-colors">
+            {label}
+          </a>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <footer class="border-t border-[#E2E8F0] mt-4">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#94A3B8]">
+        <a href="/math-practice" class="hover:text-[#64748B]">Math Practice</a>
+        <a href="/addition-practice" class="hover:text-[#64748B]">Addition</a>
+        <a href="/subtraction-practice" class="hover:text-[#64748B]">Subtraction</a>
+        <a href="/multiplication-practice" class="hover:text-[#64748B]">Multiplication</a>
+        <a href="/division-practice" class="hover:text-[#64748B]">Division</a>
+        <a href="/math-worksheets" class="hover:text-[#64748B]">Worksheets</a>
+      </div>
+      <p class="text-xs text-[#CBD5E1] mt-4">© {new Date().getFullYear()} Math Practice. Free arithmetic practice for students of all ages.</p>
+    </div>
+  </footer>
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { MENTAL_MATH } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: 'Faster, smaller numbers' },
+  { href: '/math-drills', label: 'Math Drills', description: 'Balanced mixed drill' },
+  { href: '/addition-practice/2-digit', label: '2-Digit Addition', description: 'Focus on addition' },
+  { href: '/multiplication-practice/facts', label: 'Multiplication Facts', description: 'Focus on multiplication' },
+];
+---
+
+<PracticeLayout
+  title="Mental Math Practice — Build Mental Calculation Speed"
+  description="Practice mental math with larger numbers. Mixed addition, subtraction, and multiplication up to 25. Timed drills to improve mental calculation speed."
+  canonical={`${SITE}/mental-math-practice`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Mental Math Practice' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Mental Math Practice</h1>
+  <div slot="intro">
+    <p>Push your mental arithmetic speed with larger numbers. Problems use operands up to 25, covering addition, subtraction, and multiplication. The goal is to calculate quickly without pencil and paper.</p>
+    <p class="mt-2">Regular mental math practice improves number sense, estimation, and overall arithmetic confidence.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={MENTAL_MATH} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>
