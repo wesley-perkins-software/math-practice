@@ -1,0 +1,28 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { DIVISION_GENERAL } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/division-practice/facts', label: 'Division Facts', description: 'Focused drill' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Practice multiplication' },
+  { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
+];
+---
+
+<PracticeLayout
+  title="Division Worksheets — Free Online Division Practice"
+  description="Free division worksheet practice online. Whole-number division facts with instant feedback. Divisors 1–12, clean integer answers only."
+  canonical={`${SITE}/math-worksheets/division-worksheets`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Division Worksheets' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division Worksheets</h1>
+  <div slot="intro">
+    <p>Interactive division practice that works like a worksheet. All problems use divisors 1–12 and have clean whole-number answers — just like a standard division facts worksheet, but with instant feedback.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={DIVISION_GENERAL} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

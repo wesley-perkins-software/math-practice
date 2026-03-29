@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.mathpractice.com/sitemap-index.xml

@@ -1,0 +1,29 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Practice addition problems' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Practice subtraction problems' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Times tables practice' },
+  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Division facts practice' },
+  { href: '/addition-practice', label: 'Addition Practice (Interactive)', description: 'Try the interactive drill' },
+  { href: '/multiplication-practice', label: 'Multiplication Practice (Interactive)', description: 'Interactive times tables' },
+];
+---
+
+<PracticeLayout
+  title="Math Worksheets — Free Online Arithmetic Practice"
+  description="Free interactive math worksheets for addition, subtraction, multiplication, and division. Practice online with instant feedback instead of printing."
+  canonical={`${SITE}/math-worksheets`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Math Worksheets</h1>
+  <div slot="intro">
+    <p>Looking for math worksheet practice? These interactive pages work like worksheets — a set of arithmetic problems with instant feedback — but you don't need to print anything. Choose your topic below.</p>
+    <p class="mt-2">Each page focuses on one operation and skill level, just like a printed worksheet, but with the added benefit of immediate right/wrong feedback and automatic scoring.</p>
+  </div>
+  <InternalLinks slot="links" title="Choose a Worksheet Topic" links={links} />
+</PracticeLayout>

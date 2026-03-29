@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { ADDITION_1_DIGIT } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/addition-practice/2-digit', label: '2-Digit Addition', description: 'Next step up' },
+  { href: '/addition-practice/2-digit-carrying', label: 'Addition with Carrying', description: 'Carrying and regrouping' },
+  { href: '/subtraction-practice/1-digit', label: '1-Digit Subtraction', description: 'Pair with subtraction' },
+  { href: '/addition-practice', label: 'All Addition Practice', description: 'See all addition levels' },
+];
+---
+
+<PracticeLayout
+  title="1-Digit Addition Practice | Math Practice"
+  description="Practice single-digit addition facts online. Instant feedback, streaks, and timed drills for 1-digit sums up to 9+9."
+  canonical={`${SITE}/addition-practice/1-digit`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition Practice', href: '/addition-practice' }, { label: '1-Digit Addition' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Addition Practice</h1>
+  <div slot="intro">
+    <p>Build a strong foundation with single-digit addition. Every problem uses numbers 1–9 with no carrying, so you can focus on speed and accuracy before moving to bigger numbers.</p>
+    <p class="mt-2">Use timed mode to see how many you can answer in 60 seconds, or work through 20 problems untimed.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={ADDITION_1_DIGIT} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

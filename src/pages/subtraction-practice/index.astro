@@ -1,0 +1,30 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { SUBTRACTION_GENERAL } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/subtraction-practice/1-digit', label: '1-Digit Subtraction', description: 'Simple single-digit' },
+  { href: '/subtraction-practice/2-digit', label: '2-Digit Subtraction', description: 'Two-digit numbers' },
+  { href: '/subtraction-practice/2-digit-borrowing', label: 'Subtraction with Borrowing', description: 'Borrowing and regrouping' },
+  { href: '/addition-practice', label: 'Addition Practice', description: 'Practice the inverse' },
+  { href: '/math-drills', label: 'Math Drills', description: 'Mixed timed drills' },
+];
+---
+
+<PracticeLayout
+  title="Subtraction Practice — Free Online Subtraction Drills"
+  description="Practice subtraction online with instant feedback. 1-digit through 2-digit subtraction, with and without borrowing. Timed and untimed modes."
+  canonical={`${SITE}/subtraction-practice`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Subtraction Practice</h1>
+  <div slot="intro">
+    <p>Build subtraction fluency from single-digit facts up to two-digit subtraction with borrowing. Problems always produce non-negative answers, keeping the focus on mental math speed.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={SUBTRACTION_GENERAL} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

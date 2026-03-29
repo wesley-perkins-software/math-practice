@@ -1,0 +1,29 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import PracticeWidget from '@/components/PracticeWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { SUBTRACTION_2_DIGIT_BORROWING } from '@/engine/presets';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/subtraction-practice/2-digit', label: '2-Digit Subtraction', description: 'Without borrowing focus' },
+  { href: '/addition-practice/2-digit-carrying', label: 'Addition with Carrying', description: 'Related skill' },
+  { href: '/subtraction-practice', label: 'All Subtraction Practice', description: 'See all levels' },
+];
+---
+
+<PracticeLayout
+  title="Subtraction with Borrowing Practice | Math Practice"
+  description="Targeted practice for two-digit subtraction with borrowing and regrouping. Every problem requires borrowing. Timed and untimed modes."
+  canonical={`${SITE}/subtraction-practice/2-digit-borrowing`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice', href: '/subtraction-practice' }, { label: 'Subtraction with Borrowing' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Subtraction with Borrowing Practice</h1>
+  <div slot="intro">
+    <p>Every problem here requires borrowing (regrouping). This is focused practice for one of the most common areas of difficulty in two-digit subtraction.</p>
+    <p class="mt-2">Work through these until borrowing feels natural and automatic.</p>
+  </div>
+  <PracticeWidget slot="widget" client:load config={SUBTRACTION_2_DIGIT_BORROWING} />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>
