@@ -41,8 +41,8 @@ const operations = [
 ---
 
 <BaseLayout
-  title="Math Practice — Free Arithmetic Drills Online"
-  description="Practice addition, subtraction, multiplication, and division online. Timed and untimed modes, streaks, and instant feedback. Free for students of all ages."
+  title="Math Practice — Free Arithmetic Drills for Students"
+  description="Free math practice for addition, subtraction, multiplication, and division. Timed drills, instant feedback, and progress tracking for students in grades 1–8."
   canonical={`${SITE}/`}
 >
   <header class="border-b border-[#E2E8F0] bg-white">
@@ -62,10 +62,13 @@ const operations = [
     <!-- Hero -->
     <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 text-center">
       <h1 class="text-4xl sm:text-5xl font-bold text-[#1E293B] leading-tight">
-        Practice Arithmetic.<br />Build Real Fluency.
+        Math practice that builds<br />speed and confidence
       </h1>
       <p class="mt-4 text-lg text-[#64748B] max-w-xl mx-auto">
-        Fast, focused arithmetic drills for students, parents, and anyone who wants sharp mental math skills. No login. No fluff.
+        Free arithmetic drills for addition, subtraction, multiplication, and division.
+      </p>
+      <p class="mt-2 text-sm text-[#94A3B8]">
+        For students, parents, and teachers — no login, no ads, free forever.
       </p>
       <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
         <a
@@ -78,14 +81,14 @@ const operations = [
           href="/arithmetic-speed-drill"
           class="w-full sm:w-auto py-3 px-8 bg-white border border-[#E2E8F0] hover:border-[#3B82F6] text-[#1E293B] font-semibold text-base rounded-xl transition-colors"
         >
-          Speed Drill
+          Try a Speed Drill
         </a>
       </div>
     </section>
 
     <!-- Operation Cards -->
     <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
-      <h2 class="text-xl font-semibold text-[#1E293B] mb-6 text-center">Choose a Topic</h2>
+      <h2 class="text-xl font-semibold text-[#1E293B] mb-6 text-center">Practice by operation</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         {operations.map((op) => (
           <a
@@ -107,12 +110,19 @@ const operations = [
       </div>
     </section>
 
-    <!-- Speed drill CTA -->
+    <!-- Trust signal strip -->
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
+      <p class="text-xs text-[#94A3B8] text-center py-2">
+        Free forever &middot; No account needed &middot; Works on any device
+      </p>
+    </section>
+
+    <!-- Featured drills -->
     <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
       <div class="grid sm:grid-cols-2 gap-4">
-        <a href="/arithmetic-speed-drill" class="bg-[#1E293B] rounded-2xl p-6 flex flex-col gap-2 hover:bg-[#334155] transition-colors group">
-          <div class="text-2xl font-bold text-white">Speed Drill</div>
-          <div class="text-[#94A3B8] text-sm">Mixed operations against the clock. How many can you answer in 60 seconds?</div>
+        <a href="/arithmetic-speed-drill" class="bg-white border border-[#E2E8F0] border-l-4 border-l-[#3B82F6] rounded-2xl p-6 flex flex-col gap-2 hover:shadow-md transition-all group">
+          <div class="text-2xl font-bold text-[#1E293B]">Speed Drill</div>
+          <div class="text-[#64748B] text-sm">Mixed operations against the clock. How many can you answer in 60 seconds?</div>
           <div class="text-[#3B82F6] font-semibold text-sm mt-2 group-hover:underline">Try it →</div>
         </a>
         <a href="/mental-math-practice" class="bg-white border border-[#E2E8F0] rounded-2xl p-6 flex flex-col gap-2 hover:shadow-md hover:border-[#3B82F6] transition-all group">
@@ -125,7 +135,7 @@ const operations = [
 
     <!-- More links -->
     <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16 border-t border-[#E2E8F0] pt-10">
-      <h2 class="text-base font-semibold text-[#64748B] mb-4">More Practice Tools</h2>
+      <h2 class="text-base font-semibold text-[#64748B] mb-4">More drills</h2>
       <div class="flex flex-wrap gap-3">
         {[
           ['/math-drills', 'Math Drills'],
