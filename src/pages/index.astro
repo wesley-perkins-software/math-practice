@@ -11,7 +11,7 @@ const operations = [
     symbol: '+',
     color: '#3B82F6',
     bg: '#EFF6FF',
-    topics: ['1-digit addition', '2-digit addition', 'carrying practice'],
+    topics: ['1-Digit', '2-Digit', 'Carrying'],
   },
   {
     href: '/subtraction-practice',
@@ -19,7 +19,7 @@ const operations = [
     symbol: '−',
     color: '#8B5CF6',
     bg: '#F5F3FF',
-    topics: ['1-digit subtraction', '2-digit subtraction', 'borrowing practice'],
+    topics: ['1-Digit', '2-Digit', 'Borrowing'],
   },
   {
     href: '/multiplication-practice',
@@ -27,7 +27,7 @@ const operations = [
     symbol: '×',
     color: '#10B981',
     bg: '#ECFDF5',
-    topics: ['multiplication facts', 'times tables', 'timed drills'],
+    topics: ['Facts', '1–12', 'Times Tables'],
   },
   {
     href: '/division-practice',
@@ -35,7 +35,7 @@ const operations = [
     symbol: '÷',
     color: '#F59E0B',
     bg: '#FFFBEB',
-    topics: ['division facts', 'whole-number division', 'timed drills'],
+    topics: ['Facts', 'Basic Division'],
   },
 ];
 ---
@@ -93,7 +93,7 @@ const operations = [
         {operations.map((op) => (
           <a
             href={op.href}
-            class="flex flex-col items-center gap-3 bg-white border border-[#E2E8F0] rounded-2xl p-6 hover:shadow-md hover:border-[#3B82F6] transition-all group"
+            class="flex flex-col items-center gap-2.5 bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-md hover:border-[#3B82F6] transition-all group"
           >
             <div
               class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl font-bold"
@@ -104,14 +104,13 @@ const operations = [
             <div class="text-sm font-semibold text-[#1E293B] text-center group-hover:text-[#3B82F6] transition-colors">
               {op.label}
             </div>
-            <ul class="w-full text-xs text-[#64748B] space-y-1.5">
+            <div class="mt-0.5 flex min-h-11 flex-wrap justify-center gap-1.5" aria-label={`${op.label} practice types`}>
               {op.topics.map((topic) => (
-                <li class="flex items-start gap-2">
-                  <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD5E1]" aria-hidden="true"></span>
-                  <span>{topic}</span>
-                </li>
+                <span class="rounded-full border border-[#E2E8F0] bg-[#F8FAFC] px-2.5 py-1 text-[11px] font-medium leading-none text-[#64748B]">
+                  {topic}
+                </span>
               ))}
-            </ul>
+            </div>
           </a>
         ))}
       </div>
