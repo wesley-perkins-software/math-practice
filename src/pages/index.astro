@@ -91,8 +91,8 @@ const operations = [
       <h2 class="text-xl font-semibold text-[#1E293B] mb-6 text-center">Practice by operation</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         {operations.map((op) => (
-          <div class="flex flex-col bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-md hover:border-[#3B82F6] transition-all group">
-            <a href={op.href} class="flex flex-col items-center gap-2 mb-4">
+          <a href={op.href} class="flex flex-col bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-md hover:border-[#3B82F6] transition-all group">
+            <div class="flex flex-col items-center gap-2 mb-4">
               <div
                 class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl font-bold"
                 style={`background:${op.bg};color:${op.color}`}
@@ -102,7 +102,7 @@ const operations = [
               <div class="text-sm font-semibold text-[#1E293B] text-center group-hover:text-[#3B82F6] transition-colors">
                 {op.label}
               </div>
-            </a>
+            </div>
             <ul class="flex flex-col gap-1">
               {op.practices.map((p) => (
                 <li class="flex items-center gap-1.5 text-xs text-[#64748B] px-2 py-0.5">
@@ -111,7 +111,7 @@ const operations = [
                 </li>
               ))}
             </ul>
-          </div>
+          </a>
         ))}
       </div>
     </section>
