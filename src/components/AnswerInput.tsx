@@ -62,6 +62,7 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
       />
       <button
         onClick={handleSubmit}
+        onMouseDown={(e) => e.preventDefault()}
         disabled={disabled || value === ''}
         className="w-full max-w-xs py-3 px-6 bg-[#3B82F6] hover:bg-[#2563EB] active:bg-[#1D4ED8] text-white font-semibold text-base rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:ring-offset-2"
       >
