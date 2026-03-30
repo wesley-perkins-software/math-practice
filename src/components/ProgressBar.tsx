@@ -8,7 +8,7 @@ export default function ProgressBar({ value, color = '#3B82F6' }: Props) {
   const pct = Math.max(0, Math.min(1, value)) * 100;
 
   return (
-    <div className="w-full h-2 bg-[#E2E8F0] rounded-full overflow-hidden">
+    <div className="w-full h-2.5 bg-[#E2E8F0] rounded-full overflow-hidden">
       <div
         className="h-full rounded-full transition-all duration-300 ease-linear"
         style={{ width: `${pct}%`, backgroundColor: color }}
