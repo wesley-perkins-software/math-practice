@@ -11,7 +11,7 @@ const operations = [
     symbol: '+',
     color: '#3B82F6',
     bg: '#EFF6FF',
-    desc: 'Single-digit to multi-digit addition, with or without carrying.',
+    topics: ['1-digit addition', '2-digit addition', 'carrying practice'],
   },
   {
     href: '/subtraction-practice',
@@ -19,7 +19,7 @@ const operations = [
     symbol: '−',
     color: '#8B5CF6',
     bg: '#F5F3FF',
-    desc: 'Build fluency with subtraction and borrowing.',
+    topics: ['1-digit subtraction', '2-digit subtraction', 'borrowing practice'],
   },
   {
     href: '/multiplication-practice',
@@ -27,7 +27,7 @@ const operations = [
     symbol: '×',
     color: '#10B981',
     bg: '#ECFDF5',
-    desc: 'Times tables and multiplication facts up to 12.',
+    topics: ['multiplication facts', 'times tables', 'timed drills'],
   },
   {
     href: '/division-practice',
@@ -35,7 +35,7 @@ const operations = [
     symbol: '÷',
     color: '#F59E0B',
     bg: '#FFFBEB',
-    desc: 'Division facts and whole-number division.',
+    topics: ['division facts', 'whole-number division', 'timed drills'],
   },
 ];
 ---
@@ -104,7 +104,14 @@ const operations = [
             <div class="text-sm font-semibold text-[#1E293B] text-center group-hover:text-[#3B82F6] transition-colors">
               {op.label}
             </div>
-            <div class="text-xs text-[#94A3B8] text-center">{op.desc}</div>
+            <ul class="w-full text-xs text-[#64748B] space-y-1.5">
+              {op.topics.map((topic) => (
+                <li class="flex items-start gap-2">
+                  <span class="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-[#CBD5E1]" aria-hidden="true"></span>
+                  <span>{topic}</span>
+                </li>
+              ))}
+            </ul>
           </a>
         ))}
       </div>
