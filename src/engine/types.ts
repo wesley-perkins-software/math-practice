@@ -10,6 +10,8 @@ export interface DigitRange {
 export interface PracticeConfig {
   /** Unique key per page for localStorage namespacing */
   storageKey: string;
+  /** Human-readable name for display in the progress dashboard */
+  label?: string;
   operation: Operation;
   /** Default mode when page loads */
   mode: PracticeMode;

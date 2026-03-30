@@ -1,0 +1,21 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import ProgressDashboard from '@/components/ProgressDashboard';
+
+const SITE = 'https://www.mathpractice.com';
+---
+
+<PracticeLayout
+  title="My Progress — Math Practice"
+  description="See your math practice stats across all drills — total problems solved, best speed scores, and longest streaks."
+  canonical={`${SITE}/progress`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'My Progress' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">My Progress</h1>
+  <p slot="intro">
+    Your practice history across all math drills, pulled directly from your browser. No account needed.
+  </p>
+  <div slot="widget">
+    <ProgressDashboard client:load />
+  </div>
+</PracticeLayout>
