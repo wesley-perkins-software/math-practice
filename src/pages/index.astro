@@ -11,7 +11,7 @@ const operations = [
     symbol: '+',
     color: '#3B82F6',
     bg: '#EFF6FF',
-    desc: 'Single-digit to multi-digit addition, with or without carrying.',
+    practices: ['1-digit addition', '2-digit addition', '2-digit with carrying'],
   },
   {
     href: '/subtraction-practice',
@@ -19,7 +19,7 @@ const operations = [
     symbol: '−',
     color: '#8B5CF6',
     bg: '#F5F3FF',
-    desc: 'Build fluency with subtraction and borrowing.',
+    practices: ['1-digit subtraction', '2-digit subtraction', '2-digit with borrowing'],
   },
   {
     href: '/multiplication-practice',
@@ -27,7 +27,7 @@ const operations = [
     symbol: '×',
     color: '#10B981',
     bg: '#ECFDF5',
-    desc: 'Times tables and multiplication facts up to 12.',
+    practices: ['Multiplication facts', 'Times tables 1–12'],
   },
   {
     href: '/division-practice',
@@ -35,7 +35,7 @@ const operations = [
     symbol: '÷',
     color: '#F59E0B',
     bg: '#FFFBEB',
-    desc: 'Division facts and whole-number division.',
+    practices: ['Division facts'],
   },
 ];
 ---
@@ -91,21 +91,27 @@ const operations = [
       <h2 class="text-xl font-semibold text-[#1E293B] mb-6 text-center">Practice by operation</h2>
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
         {operations.map((op) => (
-          <a
-            href={op.href}
-            class="flex flex-col items-center gap-3 bg-white border border-[#E2E8F0] rounded-2xl p-6 hover:shadow-md hover:border-[#3B82F6] transition-all group"
-          >
-            <div
-              class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl font-bold"
-              style={`background:${op.bg};color:${op.color}`}
-            >
-              {op.symbol}
-            </div>
-            <div class="text-sm font-semibold text-[#1E293B] text-center group-hover:text-[#3B82F6] transition-colors">
-              {op.label}
-            </div>
-            <div class="text-xs text-[#94A3B8] text-center">{op.desc}</div>
-          </a>
+          <div class="flex flex-col bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-md hover:border-[#3B82F6] transition-all group">
+            <a href={op.href} class="flex flex-col items-center gap-2 mb-4">
+              <div
+                class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl font-bold"
+                style={`background:${op.bg};color:${op.color}`}
+              >
+                {op.symbol}
+              </div>
+              <div class="text-sm font-semibold text-[#1E293B] text-center group-hover:text-[#3B82F6] transition-colors">
+                {op.label}
+              </div>
+            </a>
+            <ul class="flex flex-col gap-1">
+              {op.practices.map((p) => (
+                <li class="flex items-center gap-1.5 text-xs text-[#64748B] px-2 py-0.5">
+                  <span class="w-1 h-1 rounded-full bg-[#CBD5E1] shrink-0"></span>
+                  {p}
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
       </div>
     </section>
