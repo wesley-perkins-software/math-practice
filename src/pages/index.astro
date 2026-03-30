@@ -11,7 +11,7 @@ const operations = [
     symbol: '+',
     color: '#3B82F6',
     bg: '#EFF6FF',
-    practices: ['1-digit addition', '2-digit addition', '2-digit with carrying'],
+    practices: ['1-Digit Addition', '2-Digit Addition', 'Addition with Carrying'],
   },
   {
     href: '/subtraction-practice',
@@ -19,7 +19,7 @@ const operations = [
     symbol: '−',
     color: '#8B5CF6',
     bg: '#F5F3FF',
-    practices: ['1-digit subtraction', '2-digit subtraction', '2-digit with borrowing'],
+    practices: ['1-Digit Subtraction', '2-Digit Subtraction', 'Subtraction with Borrowing'],
   },
   {
     href: '/multiplication-practice',
@@ -27,7 +27,7 @@ const operations = [
     symbol: '×',
     color: '#10B981',
     bg: '#ECFDF5',
-    practices: ['Multiplication facts', 'Times tables 1–12'],
+    practices: ['Multiplication Facts', 'Times Tables 1–12'],
   },
   {
     href: '/division-practice',
@@ -35,17 +35,17 @@ const operations = [
     symbol: '÷',
     color: '#F59E0B',
     bg: '#FFFBEB',
-    practices: ['Division facts'],
+    practices: ['Division Facts', 'Division without Remainder', 'Division with Remainder'],
   },
 ];
 ---
 
 <BaseLayout
   title="Math Practice — Free Arithmetic Drills for Students"
-  description="Free math practice for addition, subtraction, multiplication, and division. Timed drills, instant feedback, and progress tracking for students in grades 1–8."
+  description="Free math practice for addition, subtraction, multiplication, and division. Instant feedback and progress tracking for students in grades K–5."
   canonical={`${SITE}/`}
 >
-  <header class="border-b border-[#E2E8F0] bg-white">
+  <header class="border-b border-[#E2E8F0] bg-white sticky top-0 z-10">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
       <a href="/" class="text-lg font-bold text-[#1E293B]">Math Practice</a>
       <nav class="hidden sm:flex items-center gap-5 text-sm font-medium text-[#64748B]">
@@ -53,122 +53,78 @@ const operations = [
         <a href="/subtraction-practice" class="hover:text-[#1E293B] transition-colors">Subtraction</a>
         <a href="/multiplication-practice" class="hover:text-[#1E293B] transition-colors">Multiplication</a>
         <a href="/division-practice" class="hover:text-[#1E293B] transition-colors">Division</a>
-        <a href="/arithmetic-speed-drill" class="hover:text-[#3B82F6] text-[#3B82F6] font-semibold transition-colors">Speed Drill</a>
       </nav>
     </div>
   </header>
 
   <main>
     <!-- Hero -->
-    <section class="max-w-3xl mx-auto px-4 sm:px-6 py-16 text-center">
-      <h1 class="text-4xl sm:text-5xl font-bold text-[#1E293B] leading-tight">
-        Math practice that builds<br />speed and confidence
+    <section class="max-w-2xl mx-auto px-4 sm:px-6 pt-14 pb-10 text-center">
+      <h1 class="text-4xl sm:text-5xl font-bold text-[#1E293B] leading-tight tracking-tight">
+        Build math skills,<br />one problem at a time
       </h1>
-      <p class="mt-4 text-lg text-[#64748B] max-w-xl mx-auto">
-        Free arithmetic drills for addition, subtraction, multiplication, and division.
+      <p class="mt-4 text-lg text-[#64748B] max-w-lg mx-auto leading-relaxed">
+        Free arithmetic practice for students in grades K–5.
+        Addition, subtraction, multiplication, and division —
+        with instant feedback and no pressure.
       </p>
-      <p class="mt-2 text-sm text-[#94A3B8]">
-        For students, parents, and teachers — no login, no ads, free forever.
-      </p>
-      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-        <a
-          href="/math-practice"
-          class="w-full sm:w-auto py-3 px-8 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-semibold text-base rounded-xl transition-colors"
-        >
-          Start Practicing
-        </a>
-        <a
-          href="/arithmetic-speed-drill"
-          class="w-full sm:w-auto py-3 px-8 bg-white border border-[#E2E8F0] hover:border-[#3B82F6] text-[#1E293B] font-semibold text-base rounded-xl transition-colors"
-        >
-          Try a Speed Drill
-        </a>
+      <div class="mt-5 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-[#64748B]">
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#22C55E] shrink-0"></span>No login required
+        </span>
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#22C55E] shrink-0"></span>Free forever
+        </span>
+        <span class="flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-[#22C55E] shrink-0"></span>Works on any device
+        </span>
       </div>
     </section>
 
     <!-- Operation Cards -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
-      <h2 class="text-xl font-semibold text-[#1E293B] mb-6 text-center">Practice by operation</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-20">
+      <h2 class="text-2xl font-bold text-[#1E293B] mb-2 text-center">Choose an operation</h2>
+      <p class="text-[#64748B] text-center mb-8 text-base">Select any topic to start practicing right away.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {operations.map((op) => (
-          <a href={op.href} class="flex flex-col bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:shadow-md hover:border-[#3B82F6] transition-all group">
-            <div class="flex flex-col items-center gap-2 mb-4">
-              <div
-                class="w-14 h-14 rounded-xl flex items-center justify-center text-3xl font-bold"
-                style={`background:${op.bg};color:${op.color}`}
-              >
+          <a
+            href={op.href}
+            class="flex flex-col bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group"
+          >
+            <div class="px-6 py-5 min-h-[10rem] flex flex-col items-center justify-center gap-3" style={`background:${op.bg}`}>
+              <div class="text-6xl font-black leading-none select-none" style={`color:${op.color}`}>
                 {op.symbol}
               </div>
-              <div class="text-sm font-semibold text-[#1E293B] text-center group-hover:text-[#3B82F6] transition-colors">
+              <div class="text-lg font-bold text-[#1E293B] text-center">
                 {op.label}
               </div>
             </div>
-            <ul class="flex flex-col gap-1">
+            <div class="px-5 py-4 flex flex-col gap-2 flex-1">
               {op.practices.map((p) => (
-                <li class="flex items-center gap-1.5 text-xs text-[#64748B] px-2 py-0.5">
-                  <span class="w-1 h-1 rounded-full bg-[#CBD5E1] shrink-0"></span>
+                <div class="flex items-center gap-2 text-sm text-[#475569]">
+                  <span class="w-1.5 h-1.5 rounded-full shrink-0" style={`background:${op.color}`}></span>
                   {p}
-                </li>
+                </div>
               ))}
-            </ul>
-          </a>
-        ))}
-      </div>
-    </section>
-
-    <!-- Trust signal strip -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-10">
-      <p class="text-xs text-[#94A3B8] text-center py-2">
-        Free forever &middot; No account needed &middot; Works on any device
-      </p>
-    </section>
-
-    <!-- Featured drills -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16">
-      <div class="grid sm:grid-cols-2 gap-4">
-        <a href="/arithmetic-speed-drill" class="bg-white border border-[#E2E8F0] border-l-4 border-l-[#3B82F6] rounded-2xl p-6 flex flex-col gap-2 hover:shadow-md transition-all group">
-          <div class="text-2xl font-bold text-[#1E293B]">Speed Drill</div>
-          <div class="text-[#64748B] text-sm">Mixed operations against the clock. How many can you answer in 60 seconds?</div>
-          <div class="text-[#3B82F6] font-semibold text-sm mt-2 group-hover:underline">Try it →</div>
-        </a>
-        <a href="/mental-math-practice" class="bg-white border border-[#E2E8F0] rounded-2xl p-6 flex flex-col gap-2 hover:shadow-md hover:border-[#3B82F6] transition-all group">
-          <div class="text-2xl font-bold text-[#1E293B]">Mental Math</div>
-          <div class="text-[#64748B] text-sm">Larger numbers, timed practice. Build your mental calculation speed.</div>
-          <div class="text-[#3B82F6] font-semibold text-sm mt-2 group-hover:underline">Try it →</div>
-        </a>
-      </div>
-    </section>
-
-    <!-- More links -->
-    <section class="max-w-5xl mx-auto px-4 sm:px-6 pb-16 border-t border-[#E2E8F0] pt-10">
-      <h2 class="text-base font-semibold text-[#64748B] mb-4">More drills</h2>
-      <div class="flex flex-wrap gap-3">
-        {[
-          ['/math-drills', 'Math Drills'],
-          ['/math-facts-practice', 'Math Facts Practice'],
-          ['/math-worksheets', 'Math Worksheets'],
-          ['/addition-practice/1-digit', '1-Digit Addition'],
-          ['/multiplication-practice/facts', 'Multiplication Facts'],
-          ['/division-practice/facts', 'Division Facts'],
-          ['/progress', 'My Progress'],
-        ].map(([href, label]) => (
-          <a href={href} class="py-2 px-4 bg-white border border-[#E2E8F0] rounded-xl text-sm text-[#64748B] hover:border-[#3B82F6] hover:text-[#3B82F6] transition-colors">
-            {label}
+            </div>
+            <div class="px-5 pb-5 pt-2">
+              <span class="text-sm font-semibold transition-colors" style={`color:${op.color}`}>
+                Practice →
+              </span>
+            </div>
           </a>
         ))}
       </div>
     </section>
   </main>
 
-  <footer class="border-t border-[#E2E8F0] mt-4">
+  <footer class="border-t border-[#E2E8F0]">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#94A3B8]">
-        <a href="/math-practice" class="hover:text-[#64748B]">Math Practice</a>
-        <a href="/addition-practice" class="hover:text-[#64748B]">Addition</a>
-        <a href="/subtraction-practice" class="hover:text-[#64748B]">Subtraction</a>
-        <a href="/multiplication-practice" class="hover:text-[#64748B]">Multiplication</a>
-        <a href="/division-practice" class="hover:text-[#64748B]">Division</a>
-        <a href="/math-worksheets" class="hover:text-[#64748B]">Worksheets</a>
+        <a href="/addition-practice" class="hover:text-[#64748B] transition-colors">Addition</a>
+        <a href="/subtraction-practice" class="hover:text-[#64748B] transition-colors">Subtraction</a>
+        <a href="/multiplication-practice" class="hover:text-[#64748B] transition-colors">Multiplication</a>
+        <a href="/division-practice" class="hover:text-[#64748B] transition-colors">Division</a>
       </div>
       <p class="text-xs text-[#CBD5E1] mt-4">© {new Date().getFullYear()} Math Practice. Free arithmetic practice for students of all ages.</p>
     </div>
