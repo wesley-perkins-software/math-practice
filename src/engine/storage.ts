@@ -72,3 +72,8 @@ export function resetCurrentStreak(key: string): void {
   const stats = loadStats(key);
   saveStats(key, { ...stats, currentStreak: 0 });
 }
+
+export function resetLongestStreak(key: string): void {
+  const stats = loadStats(key);
+  saveStats(key, { ...stats, longestStreak: 0 });
+}

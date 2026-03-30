@@ -1,19 +1,8 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
-import InternalLinks from '@/components/InternalLinks';
-import { ADDITION_GENERAL } from '@/engine/presets';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 
 const SITE = 'https://www.mathpractice.com';
-
-const links = [
-  { href: '/addition-practice/1-digit', label: '1-Digit Addition', description: 'Simple single-digit sums' },
-  { href: '/addition-practice/2-digit', label: '2-Digit Addition', description: 'Two-digit numbers' },
-  { href: '/addition-practice/2-digit-carrying', label: 'Addition with Carrying', description: 'Carrying and regrouping' },
-  { href: '/subtraction-practice', label: 'Subtraction Practice', description: 'Practice subtraction next' },
-  { href: '/math-drills', label: 'Math Drills', description: 'Mixed timed drills' },
-  { href: '/arithmetic-speed-drill', label: 'Speed Drill', description: 'Beat the clock' },
-];
 ---
 
 <PracticeLayout
@@ -24,8 +13,28 @@ const links = [
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Addition Practice</h1>
   <div slot="intro">
-    <p>Build your addition skills one problem at a time. Start with single-digit sums and work up to two-digit addition with carrying. Choose timed mode to challenge yourself, or untimed mode to work at your own pace.</p>
+    <p>Build your addition skills one problem at a time. Select a difficulty, then choose timed or untimed mode and start practicing.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={ADDITION_GENERAL} />
-  <InternalLinks slot="links" links={links} />
+
+  <AdditionPracticeHub slot="widget" client:load />
+
+  <div slot="links" class="mt-10">
+    <h2 class="text-base font-semibold text-[#1E293B] mb-3">What to Practice Next</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <a
+        href="/subtraction-practice"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Subtraction Practice</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Take the next step with subtraction</div>
+      </a>
+      <a
+        href="/math-drills"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Mixed Math Drills</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Mixed operations, timed challenge</div>
+      </a>
+    </div>
+  </div>
 </PracticeLayout>

@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PracticeConfig, PracticeMode, TimerDuration, Problem, SessionResult, PageStats } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, MODE_PREF_KEY, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, resetLongestStreak, MODE_PREF_KEY, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import ProblemDisplay from './ProblemDisplay';
@@ -168,6 +168,16 @@ export default function PracticeWidget({ config }: Props) {
     setStats(loadStats(config.storageKey));
   }
 
+  function handleResetCurrentStreak() {
+    resetCurrentStreak(config.storageKey);
+    setStats(loadStats(config.storageKey));
+  }
+
+  function handleResetLongestStreak() {
+    resetLongestStreak(config.storageKey);
+    setStats(loadStats(config.storageKey));
+  }
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -198,21 +208,33 @@ export default function PracticeWidget({ config }: Props) {
             Start Practice
           </button>
 
-          {/* Stats preview */}
-          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#E2E8F0]">
-            <div className="text-center">
-              <div className="text-base font-bold text-[#1E293B]">{stats.currentStreak}</div>
-              <div className="text-xs text-[#94A3B8]">Streak</div>
+          {/* Stats cards */}
+          <div className="grid grid-cols-3 gap-3 pt-2 border-t border-[#E2E8F0]">
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.currentStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Current Streak</div>
+              <button
+                onClick={handleResetCurrentStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
             </div>
-            <div className="text-center">
-              <div className="text-base font-bold text-[#1E293B]">{stats.longestStreak}</div>
-              <div className="text-xs text-[#94A3B8]">Best Streak</div>
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.longestStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Longest Streak</div>
+              <button
+                onClick={handleResetLongestStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
             </div>
-            <div className="text-center">
-              <div className="text-base font-bold text-[#1E293B]">
-                {stats.bestTimedScore > 0 ? `${stats.bestTimedScore}` : '—'}
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">
+                {stats.bestTimedScore > 0 ? stats.bestTimedScore : '—'}
               </div>
-              <div className="text-xs text-[#94A3B8]">Best/min</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Best/min</div>
             </div>
           </div>
         </div>
@@ -264,6 +286,40 @@ export default function PracticeWidget({ config }: Props) {
             onSubmit={handleAnswer}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
           />
+
+          {/* Live stats cards */}
+          <div className="grid grid-cols-3 gap-3 w-full pt-4 border-t border-[#E2E8F0]">
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.currentStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Current Streak</div>
+              <button
+                onClick={handleResetCurrentStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
+            </div>
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.longestStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Longest Streak</div>
+              <button
+                onClick={handleResetLongestStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
+            </div>
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{correct} / {problemIndex}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Session</div>
+              <button
+                onClick={handleRestart}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
