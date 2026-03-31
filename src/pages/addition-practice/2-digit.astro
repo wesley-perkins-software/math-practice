@@ -15,15 +15,15 @@ const links = [
 ---
 
 <PracticeLayout
-  title="2-Digit Addition Practice | Math Practice"
-  description="Practice two-digit addition online. Problems range from 10+10 to 99+99, including sums with carrying. Timed and untimed modes."
+  title="2-Digit Addition (No Carrying) Practice | Math Practice"
+  description="Practice two-digit addition without carrying. All problems are designed so no regrouping is needed — digits in each column sum to less than 10. Timed and untimed modes."
   canonical={`${SITE}/addition-practice/2-digit`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition Practice', href: '/addition-practice' }, { label: '2-Digit Addition' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition Practice', href: '/addition-practice' }, { label: '2-Digit Addition (No Carrying)' }]}
 >
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition Practice</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition (No Carrying)</h1>
   <div slot="intro">
-    <p>Step up to two-digit addition with numbers from 10 to 99. Problems may include carrying, helping you practice column addition and regrouping in a fast interactive format.</p>
-    <p class="mt-2">Ready for a challenge? Try timed mode and see how many you can answer in a minute.</p>
+    <p>Practice two-digit addition with numbers from 10 to 99. Every problem is designed so the digits in each column add up to less than 10 — no carrying or regrouping required.</p>
+    <p class="mt-2">This is a great step after 1-digit addition. When you're ready for the next challenge, try Addition with Carrying.</p>
   </div>
   <PracticeWidget slot="widget" client:load config={ADDITION_2_DIGIT} />
   <InternalLinks slot="links" links={links} />

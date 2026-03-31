@@ -16,13 +16,13 @@ export const ADDITION_1_DIGIT: PracticeConfig = {
 
 export const ADDITION_2_DIGIT: PracticeConfig = {
   storageKey: 'add-2d',
-  label: '2-Digit Addition',
+  label: '2-Digit Addition (No Carrying)',
   operation: 'addition',
   mode: 'untimed',
   timerDuration: 60,
   operandA: { min: 10, max: 99 },
   operandB: { min: 10, max: 99 },
-  carrying: true,
+  carrying: false,
   problemCount: 20,
 };
 
