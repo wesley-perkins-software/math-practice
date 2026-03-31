@@ -10,10 +10,28 @@ import type { PracticeConfig } from '@/engine/types';
 
 type Difficulty = '1-digit' | '2-digit' | 'carrying' | 'mixed';
 
-const DIFFICULTIES: { id: Difficulty; label: string; config: PracticeConfig }[] = [
+const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig }[] = [
   { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT },
-  { id: '2-digit',  label: 'No Carry', config: ADDITION_2_DIGIT },
-  { id: 'carrying', label: 'Carrying', config: ADDITION_2_DIGIT_CARRYING },
+  {
+    id: '2-digit',
+    label: (
+      <>
+        <span className="block">2-Digit</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Carry</span>
+      </>
+    ),
+    config: ADDITION_2_DIGIT,
+  },
+  {
+    id: 'carrying',
+    label: (
+      <>
+        <span className="block">2-Digit</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">Carrying</span>
+      </>
+    ),
+    config: ADDITION_2_DIGIT_CARRYING,
+  },
   { id: 'mixed',    label: 'Mixed',    config: ADDITION_GENERAL },
 ];
 
@@ -27,7 +45,7 @@ export default function AdditionPracticeHub() {
         <button
           key={id}
           onClick={() => setDifficulty(id)}
-          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors ${
+          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors leading-snug ${
             difficulty === id
               ? 'bg-white text-[#1E293B] shadow-sm'
               : 'text-[#64748B] hover:text-[#1E293B]'

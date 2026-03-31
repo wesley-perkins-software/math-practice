@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import NumberPad from './NumberPad';
 
 interface Props {
   onSubmit: (answer: number) => void;
@@ -16,7 +17,7 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
     }
   }, [disabled]);
 
-  // Refocus after each submission (feedbackState changes away from idle)
+  // Clear and refocus after each submission
   useEffect(() => {
     if (feedbackState === 'idle') {
       setValue('');
@@ -38,6 +39,15 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
     }
   }
 
+  function handleDigit(d: string) {
+    if (value.length >= 3) return;
+    setValue((v) => v + d);
+  }
+
+  function handleBackspace() {
+    setValue((v) => v.slice(0, -1));
+  }
+
   const borderColor =
     feedbackState === 'correct'
       ? 'border-[#22C55E] ring-2 ring-[#22C55E]/30'
@@ -49,26 +59,22 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
     <div className="flex flex-col items-center gap-3 w-full">
       <input
         ref={inputRef}
-        type="number"
-        inputMode="numeric"
-        pattern="[0-9]*"
+        type="text"
+        inputMode="none"
         value={value}
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 3))}
         onKeyDown={handleKeyDown}
         disabled={disabled}
         placeholder="?"
         aria-label="Your answer"
         className={`w-full max-w-xs text-center text-4xl font-semibold py-3 px-4 rounded-xl border-2 outline-none transition-all bg-white text-[#1E293B] placeholder-[#CBD5E1] ${borderColor} disabled:opacity-50 disabled:cursor-not-allowed`}
       />
-      <button
-        onClick={handleSubmit}
-        onMouseDown={(e) => e.preventDefault()}
-        disabled={disabled || value === ''}
-        className="w-full max-w-xs py-3 px-6 bg-[#3B82F6] hover:bg-[#2563EB] active:bg-[#1D4ED8] text-white font-semibold text-base rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:ring-offset-2"
-      >
-        Check Answer
-      </button>
-      <p className="text-xs text-[#94A3B8]">or press Enter</p>
+      <NumberPad
+        onDigit={handleDigit}
+        onBackspace={handleBackspace}
+        onSubmit={handleSubmit}
+        disabled={disabled}
+      />
     </div>
   );
 }
