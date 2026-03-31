@@ -259,12 +259,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
           <AnswerInput
             onSubmit={handleAnswer}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+            feedbackContent={(
+              <div className="h-8 flex items-center justify-center w-full">
+                <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
+              </div>
+            )}
           />
-
-          {/* Feedback — fixed height reserves space so layout never shifts */}
-          <div className="h-8 flex items-center justify-center w-full">
-            <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
-          </div>
 
           {/* Current streak */}
           <div className="flex items-center justify-between w-full pt-3 border-t border-[#E2E8F0]">

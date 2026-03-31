@@ -5,9 +5,15 @@ interface Props {
   onSubmit: (answer: number) => void;
   disabled?: boolean;
   feedbackState?: 'correct' | 'incorrect' | 'idle';
+  feedbackContent?: React.ReactNode;
 }
 
-export default function AnswerInput({ onSubmit, disabled = false, feedbackState = 'idle' }: Props) {
+export default function AnswerInput({
+  onSubmit,
+  disabled = false,
+  feedbackState = 'idle',
+  feedbackContent,
+}: Props) {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -69,6 +75,7 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
         aria-label="Your answer"
         className={`w-full max-w-xs text-center text-4xl font-semibold py-3 px-4 rounded-xl border-2 outline-none transition-all bg-white text-[#1E293B] placeholder-[#CBD5E1] ${borderColor} disabled:opacity-50 disabled:cursor-not-allowed`}
       />
+      {feedbackContent}
       <NumberPad
         onDigit={handleDigit}
         onBackspace={handleBackspace}
