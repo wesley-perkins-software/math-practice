@@ -20,10 +20,6 @@ const links = [
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition Practice', href: '/addition-practice' }, { label: '1-Digit Addition' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Addition Practice</h1>
-  <div slot="intro">
-    <p>Build a strong foundation with single-digit addition. Every problem uses numbers 1–9 with no carrying, so you can focus on speed and accuracy before moving to bigger numbers.</p>
-    <p class="mt-2">Use timed mode to see how many you can answer in 60 seconds, or work through 20 problems untimed.</p>
-  </div>
   <AdditionPracticeHub slot="widget" active="1-digit" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
