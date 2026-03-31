@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PracticeConfig, PracticeMode, TimerDuration, Problem, SessionResult, PageStats } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, resetLongestStreak, MODE_PREF_KEY, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, MODE_PREF_KEY, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import ProblemDisplay from './ProblemDisplay';
@@ -49,6 +49,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [secondsRemaining, setSecondsRemaining] = useState<number>(60);
   const [feedbackState, setFeedbackState] = useState<FeedbackState>('hidden');
   const [feedbackCorrectAnswer, setFeedbackCorrectAnswer] = useState(0);
+  const [submissionKey, setSubmissionKey] = useState(0);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
 
@@ -169,6 +170,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
     setProblemIndex(nextIndex);
     setProblem(generateProblem(config));
+    setSubmissionKey((k) => k + 1);
   }
 
   function handleRestart() {
@@ -180,11 +182,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
   function handleResetCurrentStreak() {
     resetCurrentStreak(config.storageKey);
-    setStats(loadStats(config.storageKey));
-  }
-
-  function handleResetLongestStreak() {
-    resetLongestStreak(config.storageKey);
     setStats(loadStats(config.storageKey));
   }
 
@@ -221,7 +218,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
           </button>
 
           {/* Stats cards */}
-          <div className="grid grid-cols-3 gap-3 pt-2 border-t border-[#E2E8F0]">
+          <div className="grid grid-cols-1 gap-3 pt-2 border-t border-[#E2E8F0]">
             <div className="bg-[#F8F9FB] rounded-xl p-3">
               <div className="text-lg font-bold text-[#1E293B]">{stats.currentStreak}</div>
               <div className="text-xs text-[#64748B] font-medium mt-0.5">Current Streak</div>
@@ -231,22 +228,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
               >
                 Reset
               </button>
-            </div>
-            <div className="bg-[#F8F9FB] rounded-xl p-3">
-              <div className="text-lg font-bold text-[#1E293B]">{stats.longestStreak}</div>
-              <div className="text-xs text-[#64748B] font-medium mt-0.5">Longest Streak</div>
-              <button
-                onClick={handleResetLongestStreak}
-                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
-              >
-                Reset
-              </button>
-            </div>
-            <div className="bg-[#F8F9FB] rounded-xl p-3">
-              <div className="text-lg font-bold text-[#1E293B]">
-                {stats.bestTimedScore > 0 ? stats.bestTimedScore : '—'}
-              </div>
-              <div className="text-xs text-[#64748B] font-medium mt-0.5">Best/min</div>
             </div>
           </div>
         </div>
@@ -279,13 +260,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
           <div className="flex flex-col items-center gap-2 w-full">
             <AnswerInput
               onSubmit={handleAnswer}
+              submissionKey={submissionKey}
               feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
             />
             <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
           </div>
 
           {/* Live stats cards */}
-          <div className="grid grid-cols-3 gap-3 w-full pt-4 border-t border-[#E2E8F0]">
+          <div className="grid grid-cols-2 gap-3 w-full pt-4 border-t border-[#E2E8F0]">
             <div className="bg-[#F8F9FB] rounded-xl p-3">
               <div className="text-lg font-bold text-[#1E293B]">{stats.currentStreak}</div>
               <div className="text-xs text-[#64748B] font-medium mt-0.5">Current Streak</div>
@@ -297,24 +279,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
               </button>
             </div>
             <div className="bg-[#F8F9FB] rounded-xl p-3">
-              <div className="text-lg font-bold text-[#1E293B]">{stats.longestStreak}</div>
-              <div className="text-xs text-[#64748B] font-medium mt-0.5">Longest Streak</div>
-              <button
-                onClick={handleResetLongestStreak}
-                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
-              >
-                Reset
-              </button>
-            </div>
-            <div className="bg-[#F8F9FB] rounded-xl p-3">
-              <div className="text-lg font-bold text-[#1E293B]">{correct} / {problemIndex}</div>
-              <div className="text-xs text-[#64748B] font-medium mt-0.5">Session</div>
-              <button
-                onClick={handleRestart}
-                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
-              >
-                Reset
-              </button>
+              <div className="text-lg font-bold text-[#1E293B]">
+                {mode === 'untimed' ? `${problemIndex} / ${config.problemCount ?? 20}` : `${problemIndex}`}
+              </div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">
+                {mode === 'untimed' ? 'Session Progress' : 'Session Progress (Answered)'}
+              </div>
             </div>
           </div>
         </div>
