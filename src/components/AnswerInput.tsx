@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   onSubmit: (answer: number) => void;
+  submissionKey?: number;
   disabled?: boolean;
   feedbackState?: 'correct' | 'incorrect' | 'idle';
 }
 
-export default function AnswerInput({ onSubmit, disabled = false, feedbackState = 'idle' }: Props) {
+export default function AnswerInput({ onSubmit, submissionKey = 0, disabled = false, feedbackState = 'idle' }: Props) {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -16,13 +17,13 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
     }
   }, [disabled]);
 
-  // Refocus after each submission (feedbackState changes away from idle)
+  // Keep the keyboard loop fast after each submitted answer.
   useEffect(() => {
-    if (feedbackState === 'idle') {
+    if (!disabled) {
       setValue('');
-      inputRef.current?.focus();
+      requestAnimationFrame(() => inputRef.current?.focus());
     }
-  }, [feedbackState]);
+  }, [submissionKey, disabled]);
 
   function handleSubmit() {
     const num = parseInt(value, 10);
@@ -52,6 +53,12 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
         type="number"
         inputMode="numeric"
         pattern="[0-9]*"
+        enterKeyHint="done"
+        autoComplete="off"
+        autoCorrect="off"
+        autoCapitalize="off"
+        step="1"
+        min="0"
         value={value}
         onChange={(e) => setValue(e.target.value)}
         onKeyDown={handleKeyDown}
@@ -64,11 +71,11 @@ export default function AnswerInput({ onSubmit, disabled = false, feedbackState 
         onClick={handleSubmit}
         onMouseDown={(e) => e.preventDefault()}
         disabled={disabled || value === ''}
-        className="w-full max-w-xs py-3 px-6 bg-[#3B82F6] hover:bg-[#2563EB] active:bg-[#1D4ED8] text-white font-semibold text-base rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:ring-offset-2"
+        className="w-full max-w-xs py-2.5 px-5 border border-[#BFDBFE] bg-[#EFF6FF] hover:bg-[#DBEAFE] active:bg-[#BFDBFE] text-[#1D4ED8] font-medium text-sm rounded-xl transition-colors disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/40 focus:ring-offset-2"
       >
-        Check Answer
+        Submit
       </button>
-      <p className="text-xs text-[#94A3B8]">or press Enter</p>
+      <p className="text-xs text-[#94A3B8]">Press Enter / Done to keep going</p>
     </div>
   );
 }
