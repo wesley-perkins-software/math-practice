@@ -21,7 +21,7 @@ export default function ProblemDisplay({ problem }: Props) {
     >
       {/* Row 1: operandA, right-aligned */}
       <div className="text-right">
-        <span className="text-6xl md:text-7xl font-bold text-[#1E293B] tabular-nums">
+        <span className="text-5xl md:text-6xl font-bold text-[#1E293B] tabular-nums">
           {problem.operandA}
         </span>
       </div>
@@ -31,7 +31,7 @@ export default function ProblemDisplay({ problem }: Props) {
         <span className="text-4xl font-semibold text-[#3B82F6]">
           {symbol}
         </span>
-        <span className="text-6xl md:text-7xl font-bold text-[#1E293B] tabular-nums">
+        <span className="text-5xl md:text-6xl font-bold text-[#1E293B] tabular-nums">
           {problem.operandB}
         </span>
       </div>

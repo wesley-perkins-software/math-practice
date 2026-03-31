@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import type { PracticeConfig, PracticeMode, TimerDuration, Problem, SessionResult, PageStats } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, MODE_PREF_KEY, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, resetLongestStreak, MODE_PREF_KEY, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import ProblemDisplay from './ProblemDisplay';
@@ -19,6 +19,7 @@ type FeedbackState = 'correct' | 'incorrect' | 'hidden';
 
 interface Props {
   config: PracticeConfig;
+  topContent?: React.ReactNode;
 }
 
 function loadPref<T>(key: string, fallback: T): T {
@@ -34,7 +35,7 @@ function savePref(key: string, value: unknown): void {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* ignore */ }
 }
 
-export default function PracticeWidget({ config }: Props) {
+export default function PracticeWidget({ config, topContent }: Props) {
   const problemCount = config.problemCount ?? 20;
 
   // User preferences (persisted globally)
@@ -55,12 +56,31 @@ export default function PracticeWidget({ config }: Props) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load prefs + stats on mount (client-only)
+  // Refs that are always current — safe to read in callbacks/effects without stale closures
+  const correctRef = useRef(0);
+  correctRef.current = correct;
+  const phaseRef = useRef<Phase>('idle');
+  phaseRef.current = phase;
+
+  // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
+  // If active: generate a new problem from the new config immediately.
+  // If complete: reset to idle for a fresh start on the new difficulty.
   useEffect(() => {
     setMode(loadPref<PracticeMode>(MODE_PREF_KEY, config.mode));
     setDuration(loadPref<TimerDuration>(DURATION_PREF_KEY, config.timerDuration));
     setStats(loadStats(config.storageKey));
-  }, [config.storageKey, config.mode, config.timerDuration]);
+    if (phaseRef.current === 'active') {
+      setProblem(generateProblem(config));
+      setFeedbackState('hidden');
+    } else if (phaseRef.current === 'complete') {
+      setPhase('idle');
+      setResult(null);
+      setFeedbackState('hidden');
+      setProblemIndex(0);
+      setCorrect(0);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config.storageKey]);
 
   function handleModeChange(m: PracticeMode) {
     setMode(m);
@@ -96,36 +116,41 @@ export default function PracticeWidget({ config }: Props) {
     }
   }
 
-  // Finish is wrapped in useCallback so the timer closure can reference it
+  // Finish is wrapped in useCallback so the timer closure can reference it.
+  // Uses correctRef so the correct count is never stale — avoids setState-in-setState.
   const finishSession = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
     const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
-    // Access correct count via ref to avoid stale closure
-    setCorrect((c) => {
-      setResult(buildSessionResult(c, problemIndex + 1, elapsed));
-      return c;
-    });
+    setResult(buildSessionResult(correctRef.current, problemIndex + 1, elapsed));
     setPhase('complete');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionStartTime, problemIndex]);
 
-  // Save stats and sync state after result is set
+  // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
     if (phase === 'complete' && result) {
-      const updated = updateStatsAfterSession(stats, result, mode === 'timed');
+      const current = loadStats(config.storageKey);
+      const updated = updateStatsAfterSession(current, result, mode === 'timed');
       saveStats(config.storageKey, updated);
       setStats(updated);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, result]);
+  }, [phase, result, config.storageKey, mode]);
 
   function handleAnswer(answer: number) {
     if (!problem || phase !== 'active') return;
 
     const isCorrect = scoreAnswer(problem, answer);
+
+    // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
+    const currentStats = loadStats(config.storageKey);
+    const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
+    const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
+    const updatedStats = { ...currentStats, currentStreak: newCurrentStreak, longestStreak: newLongestStreak };
+    saveStats(config.storageKey, updatedStats);
+    setStats(updatedStats);
 
     if (isCorrect) {
       setCorrect((c) => c + 1);
@@ -143,15 +168,11 @@ export default function PracticeWidget({ config }: Props) {
     const nextIndex = problemIndex + 1;
 
     if (mode === 'untimed' && nextIndex >= problemCount) {
-      // End of untimed session
+      // End of untimed session — use setTimeout so the last answer's setCorrect flush lands first
       setTimeout(() => {
         if (timerRef.current) clearInterval(timerRef.current);
         const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
-        setCorrect((c) => {
-          const finalCorrect = isCorrect ? c : c; // c already updated above via setState
-          setResult(buildSessionResult(finalCorrect, nextIndex, elapsed));
-          return finalCorrect;
-        });
+        setResult(buildSessionResult(correctRef.current, nextIndex, elapsed));
         setPhase('complete');
       }, 300);
       return;
@@ -168,6 +189,16 @@ export default function PracticeWidget({ config }: Props) {
     setStats(loadStats(config.storageKey));
   }
 
+  function handleResetCurrentStreak() {
+    resetCurrentStreak(config.storageKey);
+    setStats(loadStats(config.storageKey));
+  }
+
+  function handleResetLongestStreak() {
+    resetLongestStreak(config.storageKey);
+    setStats(loadStats(config.storageKey));
+  }
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -178,6 +209,13 @@ export default function PracticeWidget({ config }: Props) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto">
+      {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
+      {topContent && (
+        <div className="mb-5 pb-5 border-b border-[#E2E8F0]">
+          {topContent}
+        </div>
+      )}
+
       {/* ── IDLE ────────────────────────────────────── */}
       {phase === 'idle' && (
         <div className="flex flex-col gap-5">
@@ -198,21 +236,33 @@ export default function PracticeWidget({ config }: Props) {
             Start Practice
           </button>
 
-          {/* Stats preview */}
-          <div className="grid grid-cols-3 gap-2 pt-2 border-t border-[#E2E8F0]">
-            <div className="text-center">
-              <div className="text-base font-bold text-[#1E293B]">{stats.currentStreak}</div>
-              <div className="text-xs text-[#94A3B8]">Streak</div>
+          {/* Stats cards */}
+          <div className="grid grid-cols-3 gap-3 pt-2 border-t border-[#E2E8F0]">
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.currentStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Current Streak</div>
+              <button
+                onClick={handleResetCurrentStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
             </div>
-            <div className="text-center">
-              <div className="text-base font-bold text-[#1E293B]">{stats.longestStreak}</div>
-              <div className="text-xs text-[#94A3B8]">Best Streak</div>
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.longestStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Longest Streak</div>
+              <button
+                onClick={handleResetLongestStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
             </div>
-            <div className="text-center">
-              <div className="text-base font-bold text-[#1E293B]">
-                {stats.bestTimedScore > 0 ? `${stats.bestTimedScore}` : '—'}
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">
+                {stats.bestTimedScore > 0 ? stats.bestTimedScore : '—'}
               </div>
-              <div className="text-xs text-[#94A3B8]">Best/min</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Best/min</div>
             </div>
           </div>
         </div>
@@ -264,6 +314,40 @@ export default function PracticeWidget({ config }: Props) {
             onSubmit={handleAnswer}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
           />
+
+          {/* Live stats cards */}
+          <div className="grid grid-cols-3 gap-3 w-full pt-4 border-t border-[#E2E8F0]">
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.currentStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Current Streak</div>
+              <button
+                onClick={handleResetCurrentStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
+            </div>
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{stats.longestStreak}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Longest Streak</div>
+              <button
+                onClick={handleResetLongestStreak}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
+            </div>
+            <div className="bg-[#F8F9FB] rounded-xl p-3">
+              <div className="text-lg font-bold text-[#1E293B]">{correct} / {problemIndex}</div>
+              <div className="text-xs text-[#64748B] font-medium mt-0.5">Session</div>
+              <button
+                onClick={handleRestart}
+                className="text-xs text-[#3B82F6] hover:underline mt-1.5 block"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
