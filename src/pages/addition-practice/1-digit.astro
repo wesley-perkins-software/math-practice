@@ -1,8 +1,7 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
-import { ADDITION_1_DIGIT } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
@@ -25,6 +24,6 @@ const links = [
     <p>Build a strong foundation with single-digit addition. Every problem uses numbers 1–9 with no carrying, so you can focus on speed and accuracy before moving to bigger numbers.</p>
     <p class="mt-2">Use timed mode to see how many you can answer in 60 seconds, or work through 20 problems untimed.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={ADDITION_1_DIGIT} />
+  <AdditionPracticeHub slot="widget" active="1-digit" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
