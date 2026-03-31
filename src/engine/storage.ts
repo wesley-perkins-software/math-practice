@@ -53,13 +53,10 @@ export function updateStatsAfterSession(
   const sessionScore = calculateSessionScore(result.correct, result.total);
   const timedScore = isTimed ? calculateTimedScore(result.correct, result.durationSeconds) : 0;
 
-  // Streak: add correct answers from this session to current streak
-  const newCurrentStreak = existing.currentStreak + result.correct;
-  const newLongestStreak = Math.max(existing.longestStreak, newCurrentStreak);
-
+  // Streak is updated per-answer in PracticeWidget — preserve existing values here.
   return {
-    currentStreak: newCurrentStreak,
-    longestStreak: newLongestStreak,
+    currentStreak: existing.currentStreak,
+    longestStreak: existing.longestStreak,
     bestTimedScore: Math.max(existing.bestTimedScore, timedScore),
     lastSessionScore: sessionScore,
     lastSessionDate: new Date().toISOString().slice(0, 10),

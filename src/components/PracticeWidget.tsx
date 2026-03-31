@@ -63,13 +63,16 @@ export default function PracticeWidget({ config, topContent }: Props) {
   phaseRef.current = phase;
 
   // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
-  // Does NOT reset the active phase — tab switches are seamless.
-  // If on the score card (complete), resets to idle so the user starts fresh.
+  // If active: generate a new problem from the new config immediately.
+  // If complete: reset to idle for a fresh start on the new difficulty.
   useEffect(() => {
     setMode(loadPref<PracticeMode>(MODE_PREF_KEY, config.mode));
     setDuration(loadPref<TimerDuration>(DURATION_PREF_KEY, config.timerDuration));
     setStats(loadStats(config.storageKey));
-    if (phaseRef.current === 'complete') {
+    if (phaseRef.current === 'active') {
+      setProblem(generateProblem(config));
+      setFeedbackState('hidden');
+    } else if (phaseRef.current === 'complete') {
       setPhase('idle');
       setResult(null);
       setFeedbackState('hidden');
@@ -140,6 +143,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
     if (!problem || phase !== 'active') return;
 
     const isCorrect = scoreAnswer(problem, answer);
+
+    // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
+    const currentStats = loadStats(config.storageKey);
+    const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
+    const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
+    const updatedStats = { ...currentStats, currentStreak: newCurrentStreak, longestStreak: newLongestStreak };
+    saveStats(config.storageKey, updatedStats);
+    setStats(updatedStats);
 
     if (isCorrect) {
       setCorrect((c) => c + 1);
