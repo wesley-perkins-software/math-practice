@@ -19,6 +19,7 @@ type FeedbackState = 'correct' | 'incorrect' | 'hidden';
 
 interface Props {
   config: PracticeConfig;
+  topContent?: React.ReactNode;
 }
 
 function loadPref<T>(key: string, fallback: T): T {
@@ -34,7 +35,7 @@ function savePref(key: string, value: unknown): void {
   try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* ignore */ }
 }
 
-export default function PracticeWidget({ config }: Props) {
+export default function PracticeWidget({ config, topContent }: Props) {
   const problemCount = config.problemCount ?? 20;
 
   // User preferences (persisted globally)
@@ -55,12 +56,21 @@ export default function PracticeWidget({ config }: Props) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Load prefs + stats on mount (client-only)
+  // On mount and whenever the difficulty (storageKey) changes: reset session and load new config's data
   useEffect(() => {
+    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
+    if (feedbackTimerRef.current) { clearTimeout(feedbackTimerRef.current); feedbackTimerRef.current = null; }
     setMode(loadPref<PracticeMode>(MODE_PREF_KEY, config.mode));
     setDuration(loadPref<TimerDuration>(DURATION_PREF_KEY, config.timerDuration));
+    setPhase('idle');
+    setProblem(null);
+    setResult(null);
+    setFeedbackState('hidden');
+    setProblemIndex(0);
+    setCorrect(0);
     setStats(loadStats(config.storageKey));
-  }, [config.storageKey, config.mode, config.timerDuration]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [config.storageKey]);
 
   function handleModeChange(m: PracticeMode) {
     setMode(m);
@@ -112,15 +122,15 @@ export default function PracticeWidget({ config }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionStartTime, problemIndex]);
 
-  // Save stats and sync state after result is set
+  // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
     if (phase === 'complete' && result) {
-      const updated = updateStatsAfterSession(stats, result, mode === 'timed');
+      const current = loadStats(config.storageKey);
+      const updated = updateStatsAfterSession(current, result, mode === 'timed');
       saveStats(config.storageKey, updated);
       setStats(updated);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, result]);
+  }, [phase, result, config.storageKey, mode]);
 
   function handleAnswer(answer: number) {
     if (!problem || phase !== 'active') return;
@@ -188,6 +198,13 @@ export default function PracticeWidget({ config }: Props) {
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto">
+      {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
+      {topContent && (
+        <div className="mb-5 pb-5 border-b border-[#E2E8F0]">
+          {topContent}
+        </div>
+      )}
+
       {/* ── IDLE ────────────────────────────────────── */}
       {phase === 'idle' && (
         <div className="flex flex-col gap-5">
