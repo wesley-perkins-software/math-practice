@@ -27,9 +27,7 @@ export interface PracticeConfig {
   factsMode?: boolean;
   /** Upper bound for facts mode. Default 12. */
   maxFactor?: number;
-  /** Number of problems per untimed session. Default 20. */
-  problemCount?: number;
-  /** Explicit operation list when operation === 'mixed' */
+/** Explicit operation list when operation === 'mixed' */
   operations?: Exclude<Operation, 'mixed'>[];
 }
 

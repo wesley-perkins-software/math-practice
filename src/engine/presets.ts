@@ -11,7 +11,6 @@ export const ADDITION_1_DIGIT: PracticeConfig = {
   operandA: { min: 1, max: 9 },
   operandB: { min: 1, max: 9 },
   carrying: false,
-  problemCount: 20,
 };
 
 export const ADDITION_2_DIGIT: PracticeConfig = {
@@ -23,7 +22,6 @@ export const ADDITION_2_DIGIT: PracticeConfig = {
   operandA: { min: 10, max: 99 },
   operandB: { min: 10, max: 99 },
   carrying: false,
-  problemCount: 20,
 };
 
 export const ADDITION_2_DIGIT_CARRYING: PracticeConfig = {
@@ -35,7 +33,6 @@ export const ADDITION_2_DIGIT_CARRYING: PracticeConfig = {
   operandA: { min: 15, max: 99 },
   operandB: { min: 15, max: 99 },
   carrying: true,
-  problemCount: 20,
 };
 
 export const ADDITION_GENERAL: PracticeConfig = {
@@ -47,7 +44,6 @@ export const ADDITION_GENERAL: PracticeConfig = {
   operandA: { min: 1, max: 99 },
   operandB: { min: 1, max: 99 },
   carrying: true,
-  problemCount: 20,
 };
 
 // ─── Subtraction ────────────────────────────────────────────────────────────
@@ -61,7 +57,6 @@ export const SUBTRACTION_1_DIGIT: PracticeConfig = {
   operandA: { min: 1, max: 9 },
   operandB: { min: 1, max: 9 },
   borrowing: false,
-  problemCount: 20,
 };
 
 export const SUBTRACTION_2_DIGIT: PracticeConfig = {
@@ -73,7 +68,6 @@ export const SUBTRACTION_2_DIGIT: PracticeConfig = {
   operandA: { min: 10, max: 99 },
   operandB: { min: 10, max: 99 },
   borrowing: true,
-  problemCount: 20,
 };
 
 export const SUBTRACTION_2_DIGIT_BORROWING: PracticeConfig = {
@@ -85,7 +79,6 @@ export const SUBTRACTION_2_DIGIT_BORROWING: PracticeConfig = {
   operandA: { min: 20, max: 99 },
   operandB: { min: 11, max: 49 },
   borrowing: true,
-  problemCount: 20,
 };
 
 export const SUBTRACTION_GENERAL: PracticeConfig = {
@@ -97,7 +90,6 @@ export const SUBTRACTION_GENERAL: PracticeConfig = {
   operandA: { min: 1, max: 99 },
   operandB: { min: 1, max: 99 },
   borrowing: true,
-  problemCount: 20,
 };
 
 // ─── Multiplication ─────────────────────────────────────────────────────────
@@ -112,7 +104,6 @@ export const MULTIPLICATION_FACTS: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   factsMode: true,
   maxFactor: 12,
-  problemCount: 20,
 };
 
 export const MULTIPLICATION_1_12: PracticeConfig = {
@@ -125,7 +116,6 @@ export const MULTIPLICATION_1_12: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   factsMode: true,
   maxFactor: 12,
-  problemCount: 20,
 };
 
 export const MULTIPLICATION_GENERAL: PracticeConfig = {
@@ -138,7 +128,6 @@ export const MULTIPLICATION_GENERAL: PracticeConfig = {
   operandB: { min: 2, max: 12 },
   factsMode: true,
   maxFactor: 12,
-  problemCount: 20,
 };
 
 // ─── Division ───────────────────────────────────────────────────────────────
@@ -153,7 +142,6 @@ export const DIVISION_FACTS: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   factsMode: true,
   maxFactor: 12,
-  problemCount: 20,
 };
 
 export const DIVISION_GENERAL: PracticeConfig = {
@@ -166,7 +154,6 @@ export const DIVISION_GENERAL: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   factsMode: true,
   maxFactor: 12,
-  problemCount: 20,
 };
 
 // ─── Mixed / Speed Drill ────────────────────────────────────────────────────
@@ -181,7 +168,6 @@ export const MIXED_PRACTICE: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   operations: ['addition', 'subtraction', 'multiplication', 'division'],
   factsMode: true,
-  problemCount: 20,
 };
 
 export const MATH_DRILLS: PracticeConfig = {
@@ -194,7 +180,6 @@ export const MATH_DRILLS: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   operations: ['addition', 'subtraction', 'multiplication', 'division'],
   factsMode: true,
-  problemCount: 20,
 };
 
 export const MENTAL_MATH: PracticeConfig = {
@@ -206,7 +191,6 @@ export const MENTAL_MATH: PracticeConfig = {
   operandA: { min: 1, max: 25 },
   operandB: { min: 1, max: 25 },
   operations: ['addition', 'subtraction', 'multiplication'],
-  problemCount: 20,
 };
 
 export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
@@ -219,7 +203,6 @@ export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   operations: ['addition', 'subtraction', 'multiplication', 'division'],
   factsMode: true,
-  problemCount: 20,
 };
 
 export const MATH_FACTS_PRACTICE: PracticeConfig = {
@@ -232,7 +215,6 @@ export const MATH_FACTS_PRACTICE: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   operations: ['multiplication', 'division'],
   factsMode: true,
-  problemCount: 20,
 };
 
 export const MATH_PRACTICE_GENERAL: PracticeConfig = {
@@ -244,7 +226,6 @@ export const MATH_PRACTICE_GENERAL: PracticeConfig = {
   operandA: { min: 1, max: 20 },
   operandB: { min: 1, max: 20 },
   operations: ['addition', 'subtraction', 'multiplication', 'division'],
-  problemCount: 20,
 };
 
 // ─── All presets (used by the progress dashboard) ───────────────────────────
