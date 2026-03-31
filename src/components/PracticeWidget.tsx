@@ -36,8 +36,6 @@ function savePref(key: string, value: unknown): void {
 }
 
 export default function PracticeWidget({ config, topContent }: Props) {
-  const problemCount = config.problemCount ?? 20;
-
   // User preferences (persisted globally)
   const [mode, setMode] = useState<PracticeMode>(config.mode);
   const [duration, setDuration] = useState<TimerDuration>(config.timerDuration);
@@ -169,17 +167,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
     const nextIndex = problemIndex + 1;
 
-    if (mode === 'untimed' && nextIndex >= problemCount) {
-      // End of untimed session — use setTimeout so the last answer's setCorrect flush lands first
-      setTimeout(() => {
-        if (timerRef.current) clearInterval(timerRef.current);
-        const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
-        setResult(buildSessionResult(correctRef.current, nextIndex, elapsed));
-        setPhase('complete');
-      }, 300);
-      return;
-    }
-
     setProblemIndex(nextIndex);
     setProblem(generateProblem(config));
   }
@@ -225,11 +212,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
           {mode === 'timed' && (
             <DurationPicker value={duration} onChange={handleDurationChange} />
           )}
-          {mode === 'untimed' && (
-            <p className="text-sm text-[#64748B] text-center">
-              {problemCount} problems — answer at your own pace.
-            </p>
-          )}
           <button
             onClick={startSession}
             className="w-full py-4 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-bold text-lg rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:ring-offset-2"
@@ -273,35 +255,23 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
         <div className="flex flex-col items-center gap-6">
-          {/* Top bar: timer or problem count */}
+          {/* Top bar: timer or correct count */}
           <div className="flex items-center justify-between w-full">
-            <span className="text-sm text-[#64748B]">
-              {mode === 'untimed'
-                ? `${problemIndex + 1} / ${problemCount}`
-                : `${correct} correct`}
-            </span>
-            {mode === 'timed' ? (
+            <span className="text-sm text-[#64748B]">{correct} correct</span>
+            {mode === 'timed' && (
               <TimerDisplay secondsRemaining={secondsRemaining} />
-            ) : (
-              <span className="text-sm text-[#64748B]">
-                {correct} correct
-              </span>
             )}
           </div>
 
-          {/* Progress bar */}
-          <div className="w-full">
-            <ProgressBar
-              value={
-                mode === 'timed'
-                  ? secondsRemaining / duration
-                  : (problemIndex) / problemCount
-              }
-              color={
-                mode === 'timed' && secondsRemaining <= 10 ? '#F97316' : '#3B82F6'
-              }
-            />
-          </div>
+          {/* Progress bar — timed mode only */}
+          {mode === 'timed' && (
+            <div className="w-full">
+              <ProgressBar
+                value={secondsRemaining / duration}
+                color={secondsRemaining <= 10 ? '#F97316' : '#3B82F6'}
+              />
+            </div>
+          )}
 
           {/* Problem */}
           <ProblemDisplay problem={problem} />
