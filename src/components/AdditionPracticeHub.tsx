@@ -1,63 +1,40 @@
-import { useState } from 'react';
-import PracticeWidget from './PracticeWidget';
-import {
-  ADDITION_1_DIGIT,
-  ADDITION_2_DIGIT,
-  ADDITION_2_DIGIT_CARRYING,
-  ADDITION_GENERAL,
-} from '@/engine/presets';
-import type { PracticeConfig } from '@/engine/types';
-
-type Difficulty = '1-digit' | '2-digit' | 'carrying' | 'mixed';
-
-const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig }[] = [
-  { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT },
+const LEVELS = [
   {
-    id: '2-digit',
-    label: (
-      <>
-        <span className="block">2-Digit</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Carry</span>
-      </>
-    ),
-    config: ADDITION_2_DIGIT,
+    href: '/addition-practice/1-digit',
+    label: '1-Digit Addition',
+    description: 'Single-digit facts, 1–9, no carrying',
+    color: '#3B82F6',
   },
   {
-    id: 'carrying',
-    label: (
-      <>
-        <span className="block">2-Digit</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">Carrying</span>
-      </>
-    ),
-    config: ADDITION_2_DIGIT_CARRYING,
+    href: '/addition-practice/2-digit',
+    label: '2-Digit Addition',
+    description: 'Two-digit numbers, no carrying required',
+    color: '#3B82F6',
   },
-  { id: 'mixed',    label: 'Mixed',    config: ADDITION_GENERAL },
+  {
+    href: '/addition-practice/2-digit-carrying',
+    label: 'Addition with Carrying',
+    description: 'Every problem requires carrying and regrouping',
+    color: '#3B82F6',
+  },
 ];
 
 export default function AdditionPracticeHub() {
-  const [difficulty, setDifficulty] = useState<Difficulty>('mixed');
-  const selected = DIFFICULTIES.find(d => d.id === difficulty)!;
-
-  const tabs = (
-    <div className="flex gap-1 p-1 bg-[#F1F5F9] rounded-xl">
-      {DIFFICULTIES.map(({ id, label }) => (
-        <button
-          key={id}
-          onClick={() => setDifficulty(id)}
-          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors leading-snug ${
-            difficulty === id
-              ? 'bg-white text-[#1E293B] shadow-sm'
-              : 'text-[#64748B] hover:text-[#1E293B]'
-          }`}
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {LEVELS.map(({ href, label, description }) => (
+        <a
+          key={href}
+          href={href}
+          className="block bg-white border border-[#E2E8F0] rounded-xl p-5 hover:border-[#3B82F6] hover:shadow-md transition-all group"
         >
-          {label}
-        </button>
+          <div className="font-semibold text-[#1E293B] group-hover:text-[#3B82F6] transition-colors">
+            {label}
+          </div>
+          <div className="text-sm text-[#64748B] mt-1">{description}</div>
+          <div className="mt-3 text-sm font-semibold text-[#3B82F6]">Practice →</div>
+        </a>
       ))}
     </div>
-  );
-
-  return (
-    <PracticeWidget config={selected.config} topContent={tabs} />
   );
 }
