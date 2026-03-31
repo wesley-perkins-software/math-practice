@@ -255,13 +255,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
         <div className="flex flex-col items-center gap-6">
-          {/* Top bar: timer or correct count */}
-          <div className="flex items-center justify-between w-full">
-            <span className="text-sm text-[#64748B]">{correct} correct</span>
-            {mode === 'timed' && (
+          {/* Top bar: timer (timed mode only) */}
+          {mode === 'timed' && (
+            <div className="flex items-center justify-end w-full">
               <TimerDisplay secondsRemaining={secondsRemaining} />
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Progress bar — timed mode only */}
           {mode === 'timed' && (
@@ -276,16 +275,16 @@ export default function PracticeWidget({ config, topContent }: Props) {
           {/* Problem */}
           <ProblemDisplay problem={problem} />
 
-          {/* Feedback */}
-          <div className="h-6 flex items-center">
-            <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
-          </div>
-
           {/* Input */}
           <AnswerInput
             onSubmit={handleAnswer}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
           />
+
+          {/* Feedback */}
+          <div className="h-6 flex items-center">
+            <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
+          </div>
 
           {/* Live stats cards */}
           <div className="grid grid-cols-3 gap-3 w-full pt-4 border-t border-[#E2E8F0]">
