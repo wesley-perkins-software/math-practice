@@ -62,21 +62,20 @@ export default function PracticeWidget({ config, topContent }: Props) {
   phaseRef.current = phase;
 
   // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
-  // If active: generate a new problem from the new config immediately.
-  // If complete: reset to idle for a fresh start on the new difficulty.
+  // Always auto-start a session (skip idle). If active mid-session: generate a new problem.
   useEffect(() => {
-    setMode(loadPref<PracticeMode>(MODE_PREF_KEY, config.mode));
-    setDuration(loadPref<TimerDuration>(DURATION_PREF_KEY, config.timerDuration));
+    const savedMode = loadPref<PracticeMode>(MODE_PREF_KEY, config.mode);
+    const savedDuration = loadPref<TimerDuration>(DURATION_PREF_KEY, config.timerDuration);
+    setMode(savedMode);
+    setDuration(savedDuration);
     setStats(loadStats(config.storageKey));
     if (phaseRef.current === 'active') {
       setProblem(generateProblem(config));
       setFeedbackState('hidden');
-    } else if (phaseRef.current === 'complete') {
-      setPhase('idle');
+    } else {
+      // idle on mount, or complete when switching difficulty — auto-start immediately
       setResult(null);
-      setFeedbackState('hidden');
-      setProblemIndex(0);
-      setCorrect(0);
+      startSession(savedMode, savedDuration);
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.storageKey]);
@@ -91,16 +90,18 @@ export default function PracticeWidget({ config, topContent }: Props) {
     savePref(DURATION_PREF_KEY, d);
   }
 
-  function startSession() {
+  function startSession(forcedMode?: PracticeMode, forcedDuration?: TimerDuration) {
+    const m = forcedMode ?? mode;
+    const d = forcedDuration ?? duration;
     setProblem(generateProblem(config));
     setProblemIndex(0);
     setCorrect(0);
     setFeedbackState('hidden');
     setSessionStartTime(Date.now());
-    setSecondsRemaining(duration);
+    setSecondsRemaining(d);
     setPhase('active');
 
-    if (mode === 'timed') {
+    if (m === 'timed') {
       timerRef.current = setInterval(() => {
         setSecondsRemaining((s) => {
           if (s <= 1) {
@@ -172,10 +173,10 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }
 
   function handleRestart() {
-    setPhase('idle');
     setResult(null);
     setFeedbackState('hidden');
     setStats(loadStats(config.storageKey));
+    startSession();
   }
 
   function handleResetCurrentStreak() {
@@ -197,38 +198,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {topContent && (
         <div className="mb-5 pb-5 border-b border-[#E2E8F0]">
           {topContent}
-        </div>
-      )}
-
-      {/* ── IDLE ────────────────────────────────────── */}
-      {phase === 'idle' && (
-        <div className="flex flex-col gap-5">
-          <ModeToggle mode={mode} onChange={handleModeChange} />
-          {mode === 'timed' && (
-            <DurationPicker value={duration} onChange={handleDurationChange} />
-          )}
-          <button
-            onClick={startSession}
-            className="w-full py-4 bg-[#3B82F6] hover:bg-[#2563EB] text-white font-bold text-lg rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/50 focus:ring-offset-2"
-            autoFocus
-          >
-            Start Practice
-          </button>
-
-          {/* Current streak */}
-          {stats.currentStreak > 0 && (
-            <div className="flex items-center justify-between pt-2 border-t border-[#E2E8F0]">
-              <span className="text-sm text-[#64748B]">
-                🔥 Current streak: <span className="font-bold text-[#1E293B]">{stats.currentStreak}</span>
-              </span>
-              <button
-                onClick={handleResetCurrentStreak}
-                className="text-xs text-[#3B82F6] hover:underline"
-              >
-                Reset
-              </button>
-            </div>
-          )}
         </div>
       )}
 

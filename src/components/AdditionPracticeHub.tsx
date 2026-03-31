@@ -49,7 +49,7 @@ export default function AdditionPracticeHub({ active }: Props) {
         <a
           key={id}
           href={href}
-          className={`flex-1 py-2 text-sm font-semibold rounded-lg transition-colors leading-snug text-center ${
+          className={`flex-1 py-2 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors leading-snug ${
             active === id
               ? 'bg-white text-[#1E293B] shadow-sm'
               : 'text-[#64748B] hover:text-[#1E293B]'
