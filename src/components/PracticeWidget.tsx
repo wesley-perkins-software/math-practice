@@ -50,6 +50,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [secondsRemaining, setSecondsRemaining] = useState<number>(60);
   const [feedbackState, setFeedbackState] = useState<FeedbackState>('hidden');
+  const [feedbackCorrectAnswer, setFeedbackCorrectAnswer] = useState(0);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
 
@@ -156,6 +157,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
       setCorrect((c) => c + 1);
       setFeedbackState('correct');
     } else {
+      setFeedbackCorrectAnswer(problem.correctAnswer);
       setFeedbackState('incorrect');
     }
 
@@ -306,7 +308,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
           {/* Feedback */}
           <div className="h-6 flex items-center">
-            <FeedbackBanner state={feedbackState} correctAnswer={problem.correctAnswer} />
+            <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
           </div>
 
           {/* Input */}
