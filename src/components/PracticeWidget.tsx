@@ -255,14 +255,16 @@ export default function PracticeWidget({ config, topContent }: Props) {
           {/* Problem */}
           <ProblemDisplay problem={problem} />
 
-          {/* Input + Feedback */}
-          <div className="flex flex-col items-center gap-2 w-full">
-            <AnswerInput
-              onSubmit={handleAnswer}
-              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-            />
+          {/* Feedback — fixed height reserves space so layout never shifts */}
+          <div className="h-8 flex items-center justify-center w-full">
             <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
           </div>
+
+          {/* Input + NumberPad */}
+          <AnswerInput
+            onSubmit={handleAnswer}
+            feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+          />
 
           {/* Current streak */}
           <div className="flex items-center justify-between w-full pt-3 border-t border-[#E2E8F0]">

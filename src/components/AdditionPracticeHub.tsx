@@ -16,8 +16,8 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
     id: '2-digit',
     label: (
       <>
-        <span className="block">No Carry</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">2-digit</span>
+        <span className="block">2-Digit</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Carry</span>
       </>
     ),
     config: ADDITION_2_DIGIT,
@@ -26,8 +26,8 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
     id: 'carrying',
     label: (
       <>
-        <span className="block">Carrying</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">2-digit</span>
+        <span className="block">2-Digit</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">Carrying</span>
       </>
     ),
     config: ADDITION_2_DIGIT_CARRYING,
