@@ -56,19 +56,26 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // On mount and whenever the difficulty (storageKey) changes: reset session and load new config's data
+  // Refs that are always current — safe to read in callbacks/effects without stale closures
+  const correctRef = useRef(0);
+  correctRef.current = correct;
+  const phaseRef = useRef<Phase>('idle');
+  phaseRef.current = phase;
+
+  // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
+  // Does NOT reset the active phase — tab switches are seamless.
+  // If on the score card (complete), resets to idle so the user starts fresh.
   useEffect(() => {
-    if (timerRef.current) { clearInterval(timerRef.current); timerRef.current = null; }
-    if (feedbackTimerRef.current) { clearTimeout(feedbackTimerRef.current); feedbackTimerRef.current = null; }
     setMode(loadPref<PracticeMode>(MODE_PREF_KEY, config.mode));
     setDuration(loadPref<TimerDuration>(DURATION_PREF_KEY, config.timerDuration));
-    setPhase('idle');
-    setProblem(null);
-    setResult(null);
-    setFeedbackState('hidden');
-    setProblemIndex(0);
-    setCorrect(0);
     setStats(loadStats(config.storageKey));
+    if (phaseRef.current === 'complete') {
+      setPhase('idle');
+      setResult(null);
+      setFeedbackState('hidden');
+      setProblemIndex(0);
+      setCorrect(0);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.storageKey]);
 
@@ -106,18 +113,15 @@ export default function PracticeWidget({ config, topContent }: Props) {
     }
   }
 
-  // Finish is wrapped in useCallback so the timer closure can reference it
+  // Finish is wrapped in useCallback so the timer closure can reference it.
+  // Uses correctRef so the correct count is never stale — avoids setState-in-setState.
   const finishSession = useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
     const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
-    // Access correct count via ref to avoid stale closure
-    setCorrect((c) => {
-      setResult(buildSessionResult(c, problemIndex + 1, elapsed));
-      return c;
-    });
+    setResult(buildSessionResult(correctRef.current, problemIndex + 1, elapsed));
     setPhase('complete');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionStartTime, problemIndex]);
@@ -153,15 +157,11 @@ export default function PracticeWidget({ config, topContent }: Props) {
     const nextIndex = problemIndex + 1;
 
     if (mode === 'untimed' && nextIndex >= problemCount) {
-      // End of untimed session
+      // End of untimed session — use setTimeout so the last answer's setCorrect flush lands first
       setTimeout(() => {
         if (timerRef.current) clearInterval(timerRef.current);
         const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
-        setCorrect((c) => {
-          const finalCorrect = isCorrect ? c : c; // c already updated above via setState
-          setResult(buildSessionResult(finalCorrect, nextIndex, elapsed));
-          return finalCorrect;
-        });
+        setResult(buildSessionResult(correctRef.current, nextIndex, elapsed));
         setPhase('complete');
       }, 300);
       return;
