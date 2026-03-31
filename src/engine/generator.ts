@@ -22,6 +22,7 @@ function hasCarry(a: number, b: number): boolean {
 function generateAddition(config: PracticeConfig): Problem {
   const { operandA, operandB, carrying } = config;
   const noCarry = carrying === false;
+  const requireCarry = carrying === true;
   let a: number, b: number;
   let attempts = 0;
   do {
@@ -30,7 +31,7 @@ function generateAddition(config: PracticeConfig): Problem {
     attempts++;
     // Safety valve: after 100 attempts relax the constraint to avoid infinite loops
     if (attempts > 100) break;
-  } while (noCarry && hasCarry(a, b));
+  } while ((noCarry && hasCarry(a, b)) || (requireCarry && !hasCarry(a, b)));
 
   return { id: nextId(), operandA: a, operandB: b, operation: 'addition', correctAnswer: a + b };
 }

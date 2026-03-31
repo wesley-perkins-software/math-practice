@@ -1,8 +1,7 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
-import { ADDITION_2_DIGIT } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
@@ -25,6 +24,6 @@ const links = [
     <p>Practice two-digit addition with numbers from 10 to 99. Every problem is designed so the digits in each column add up to less than 10 — no carrying or regrouping required.</p>
     <p class="mt-2">This is a great step after 1-digit addition. When you're ready for the next challenge, try Addition with Carrying.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={ADDITION_2_DIGIT} />
+  <AdditionPracticeHub slot="widget" active="2-digit" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

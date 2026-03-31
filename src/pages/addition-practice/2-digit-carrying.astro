@@ -1,8 +1,7 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
-import { ADDITION_2_DIGIT_CARRYING } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
@@ -25,6 +24,6 @@ const links = [
     <p>Every problem on this page requires carrying (regrouping). This is targeted practice for the most common stumbling block in two-digit addition.</p>
     <p class="mt-2">Mastering carrying is key to multi-digit arithmetic. Practice here until it feels automatic.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={ADDITION_2_DIGIT_CARRYING} />
+  <AdditionPracticeHub slot="widget" active="carrying" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
