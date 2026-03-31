@@ -20,10 +20,6 @@ const links = [
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition Practice', href: '/addition-practice' }, { label: 'Addition with Carrying' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Addition with Carrying Practice</h1>
-  <div slot="intro">
-    <p>Every problem on this page requires carrying (regrouping). This is targeted practice for the most common stumbling block in two-digit addition.</p>
-    <p class="mt-2">Mastering carrying is key to multi-digit arithmetic. Practice here until it feels automatic.</p>
-  </div>
   <AdditionPracticeHub slot="widget" active="carrying" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
