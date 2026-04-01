@@ -92,7 +92,7 @@ export default function WrittenProblemInput({
       <div
         className={`select-none w-fit mx-auto min-w-[8rem] transition-opacity duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        } ${feedbackState === 'incorrect' ? 'shake' : ''}`}
         aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
       >
         {/* Hidden input captures keyboard events */}
@@ -129,11 +129,14 @@ export default function WrittenProblemInput({
         {/* Row 3: answer, right-aligned under the rule */}
         <div className="text-right mt-1 min-h-[3.5rem] md:min-h-[4rem] flex items-center justify-end">
           <span
-            className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${
+            className={`relative text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${
               isPlaceholder ? 'text-[#CBD5E1]' : answerColor
             }`}
           >
-            {isPlaceholder ? '?' : value}
+            {isPlaceholder ? '' : value}
+            {feedbackState === 'idle' && (
+              <span className="cursor-blink absolute left-full top-0">|</span>
+            )}
           </span>
         </div>
       </div>
