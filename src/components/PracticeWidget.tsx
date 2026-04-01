@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer } from '@/engine/scorer';
@@ -19,7 +19,6 @@ interface Props {
 }
 
 export default function PracticeWidget({ config, topContent }: Props) {
-  // Session state
   const [phase, setPhase] = useState<Phase>('idle');
   const [problem, setProblem] = useState<Problem | null>(null);
   const [problemIndex, setProblemIndex] = useState(0);
@@ -29,24 +28,31 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [feedbackCorrectAnswer, setFeedbackCorrectAnswer] = useState(0);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
+  const [answerValue, setAnswerValue] = useState('');
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
   correctRef.current = correct;
   const phaseRef = useRef<Phase>('idle');
   phaseRef.current = phase;
 
-  // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
-  // Always auto-start a session (skip idle). If active mid-session: generate a new problem.
+  const useAlignedAnswerLayout = useMemo(() => {
+    const supportsWrittenArithmetic =
+      config.operation === 'addition' || config.operation === 'subtraction' || config.operation === 'division';
+
+    const hasMultiDigitOperands = config.operandA.max >= 10 || config.operandB.max >= 10;
+
+    return supportsWrittenArithmetic && hasMultiDigitOperands;
+  }, [config.operation, config.operandA.max, config.operandB.max]);
+
   useEffect(() => {
     setStats(loadStats(config.storageKey));
     if (phaseRef.current === 'active') {
       setProblem(generateProblem(config));
       setFeedbackState('hidden');
+      setAnswerValue('');
     } else {
-      // idle on mount, or complete when switching difficulty — auto-start immediately
       setResult(null);
       startSession();
     }
@@ -61,9 +67,9 @@ export default function PracticeWidget({ config, topContent }: Props) {
     setFeedbackState('hidden');
     setSessionStartTime(Date.now());
     setPhase('active');
+    setAnswerValue('');
   }
 
-  // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
     if (phase === 'complete' && result) {
       const current = loadStats(config.storageKey);
@@ -78,7 +84,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
     const isCorrect = scoreAnswer(problem, answer);
 
-    // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
     const currentStats = loadStats(config.storageKey);
     const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
     const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
@@ -96,18 +101,19 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
     const FEEDBACK_DELAY_MS = isCorrect ? 600 : 1800;
 
-    // Clear any pending transition timer
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     transitionTimerRef.current = setTimeout(() => {
       setProblemIndex((i) => i + 1);
       setProblem(generateProblem(config));
       setFeedbackState('hidden');
+      setAnswerValue('');
     }, FEEDBACK_DELAY_MS);
   }
 
   function handleRestart() {
     setResult(null);
     setFeedbackState('hidden');
+    setAnswerValue('');
     setStats(loadStats(config.storageKey));
     startSession();
   }
@@ -117,31 +123,40 @@ export default function PracticeWidget({ config, topContent }: Props) {
     setStats(loadStats(config.storageKey));
   }
 
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     };
   }, []);
 
+  const answerDigitLimit = problem
+    ? Math.max(String(problem.correctAnswer).length, String(problem.operandA).length, String(problem.operandB).length)
+    : 3;
+
   return (
     <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto">
-      {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
       {topContent && (
         <div className="mb-4 pb-4 border-b border-[#E2E8F0]">
           {topContent}
         </div>
       )}
 
-      {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
         <div className="flex flex-col items-center gap-4 md:gap-5">
-          {/* Problem */}
-          <ProblemDisplay problem={problem} />
+          <ProblemDisplay
+            problem={problem}
+            showAlignedAnswer={useAlignedAnswerLayout}
+            answerValue={answerValue}
+            answerMaxDigits={answerDigitLimit}
+            answerFeedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+          />
 
-          {/* Input + NumberPad */}
           <AnswerInput
+            value={answerValue}
+            onValueChange={setAnswerValue}
             onSubmit={handleAnswer}
+            maxDigits={answerDigitLimit}
+            layout={useAlignedAnswerLayout ? 'aligned' : 'standard'}
             disabled={feedbackState !== 'hidden'}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
             feedbackContent={(
@@ -151,7 +166,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
             )}
           />
 
-          {/* Current streak */}
           <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">
             <span className="text-sm text-[#64748B]">
               🔥 Streak: <span className="font-bold text-[#1E293B]">{stats.currentStreak}</span>
@@ -166,7 +180,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
         </div>
       )}
 
-      {/* ── COMPLETE ────────────────────────────────── */}
       {phase === 'complete' && result && (
         <ScoreCard
           result={result}
