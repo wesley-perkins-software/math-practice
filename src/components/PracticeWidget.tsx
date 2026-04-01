@@ -28,8 +28,10 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [feedbackCorrectAnswer, setFeedbackCorrectAnswer] = useState(0);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
+  const [isResetArmed, setIsResetArmed] = useState(false);
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const resetArmTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
@@ -112,22 +114,32 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }
 
   function handleResetCurrentStreak() {
+    if (!isResetArmed) {
+      setIsResetArmed(true);
+      if (resetArmTimerRef.current) clearTimeout(resetArmTimerRef.current);
+      resetArmTimerRef.current = setTimeout(() => setIsResetArmed(false), 2200);
+      return;
+    }
+
     resetCurrentStreak(config.storageKey);
     setStats(loadStats(config.storageKey));
+    setIsResetArmed(false);
+    if (resetArmTimerRef.current) clearTimeout(resetArmTimerRef.current);
   }
 
   // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+      if (resetArmTimerRef.current) clearTimeout(resetArmTimerRef.current);
     };
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto">
+    <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto border border-[#E2E8F0]">
       {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
       {topContent && (
-        <div className="mb-4 pb-4 border-b border-[#E2E8F0]">
+        <div className="mb-5 pb-4 border-b border-[#E2E8F0]">
           {topContent}
         </div>
       )}
@@ -149,15 +161,20 @@ export default function PracticeWidget({ config, topContent }: Props) {
           />
 
           {/* Current streak */}
-          <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">
+          <div className="w-full flex items-center justify-between rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-2">
             <span className="text-sm text-[#64748B]">
-              🔥 Streak: <span className="font-bold text-[#1E293B]">{stats.currentStreak}</span>
+              🔥 Streak <span className="font-semibold text-base text-[#0F172A] tabular-nums align-middle">{stats.currentStreak}</span>
             </span>
             <button
               onClick={handleResetCurrentStreak}
-              className="text-xs text-[#3B82F6] hover:underline"
+              className={`text-xs font-medium rounded-md px-2 py-1 transition-colors ${
+                isResetArmed
+                  ? 'text-[#B91C1C] bg-[#FEE2E2] hover:bg-[#FECACA]'
+                  : 'text-[#64748B] hover:text-[#475569] hover:bg-[#EEF2F7]'
+              }`}
+              aria-label={isResetArmed ? 'Tap again to reset streak' : 'Reset streak'}
             >
-              Reset
+              {isResetArmed ? 'Tap again' : 'Reset'}
             </button>
           </div>
         </div>

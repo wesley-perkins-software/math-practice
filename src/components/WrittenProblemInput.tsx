@@ -87,10 +87,10 @@ export default function WrittenProblemInput({
   const isPlaceholder = value.length === 0;
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full">
+    <div className="flex flex-col items-center gap-2.5 w-full">
       {/* Written arithmetic block */}
       <div
-        className={`select-none w-fit mx-auto min-w-[8rem] transition-opacity duration-200 ease-out ${
+        className={`select-none w-fit mx-auto min-w-[8rem] rounded-2xl border border-[#E2E8F0] bg-[#FCFDFE] px-4 py-3 shadow-[0_1px_2px_rgba(15,23,42,0.05)] transition-opacity duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
@@ -110,27 +110,27 @@ export default function WrittenProblemInput({
 
         {/* Row 1: operandA, right-aligned */}
         <div className="text-right">
-          <span className="text-5xl md:text-6xl font-bold text-[#1E293B] tabular-nums">
+          <span className="text-5xl md:text-6xl font-bold text-[#0F172A] tabular-nums tracking-tight">
             {problem.operandA}
           </span>
         </div>
 
         {/* Row 2: operator (left) + operandB (right) */}
-        <div className="flex items-center justify-end gap-3">
-          <span className="text-4xl font-semibold text-[#3B82F6]">{symbol}</span>
-          <span className="text-5xl md:text-6xl font-bold text-[#1E293B] tabular-nums">
+        <div className="flex items-center justify-end gap-3 mt-0.5">
+          <span className="text-4xl font-semibold text-[#3B82F6] leading-none">{symbol}</span>
+          <span className="text-5xl md:text-6xl font-bold text-[#0F172A] tabular-nums tracking-tight">
             {problem.operandB}
           </span>
         </div>
 
         {/* Horizontal rule */}
-        <div className="border-t-[3px] border-[#1E293B] mt-2" />
+        <div className="border-t-[3px] border-[#0F172A] mt-2.5" />
 
         {/* Row 3: answer, right-aligned under the rule */}
-        <div className="text-right mt-1 min-h-[3.5rem] md:min-h-[4rem] flex items-center justify-end">
+        <div className="text-right mt-1.5 min-h-[3.6rem] md:min-h-[4rem] flex items-center justify-end">
           <span
-            className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${
-              isPlaceholder ? 'text-[#CBD5E1]' : answerColor
+            className={`text-5xl md:text-6xl font-bold tabular-nums tracking-tight transition-colors duration-150 rounded-lg px-2 ${
+              isPlaceholder ? 'text-[#94A3B8] bg-[#F1F5F9]' : `${answerColor} bg-[#EFF6FF]`
             }`}
           >
             {isPlaceholder ? '?' : value}
@@ -139,7 +139,7 @@ export default function WrittenProblemInput({
       </div>
 
       {/* Feedback banner slot */}
-      {feedbackContent}
+      <div className="min-h-8">{feedbackContent}</div>
 
       {/* Number pad */}
       <NumberPad
