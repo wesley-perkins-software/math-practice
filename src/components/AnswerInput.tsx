@@ -16,6 +16,7 @@ export default function AnswerInput({
 }: Props) {
   const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
+  const lastSubmitAtRef = useRef(0);
 
   useEffect(() => {
     if (!disabled) {
@@ -32,8 +33,13 @@ export default function AnswerInput({
   }, [feedbackState]);
 
   function handleSubmit() {
+    if (disabled) return;
+    const now = Date.now();
+    if (now - lastSubmitAtRef.current < 100) return;
+
     const num = parseInt(value, 10);
     if (!isNaN(num)) {
+      lastSubmitAtRef.current = now;
       onSubmit(num);
     }
   }
@@ -56,13 +62,13 @@ export default function AnswerInput({
 
   const borderColor =
     feedbackState === 'correct'
-      ? 'border-[#22C55E] ring-2 ring-[#22C55E]/30'
+      ? 'border-[#22C55E] ring-[3px] ring-[#22C55E]/30'
       : feedbackState === 'incorrect'
-      ? 'border-[#EF4444] ring-2 ring-[#EF4444]/30'
-      : 'border-[#E2E8F0] focus-within:border-[#3B82F6] focus-within:ring-2 focus-within:ring-[#3B82F6]/20';
+      ? 'border-[#EF4444] ring-[3px] ring-[#EF4444]/30'
+      : 'border-[#CBD5E1] focus:border-[#3B82F6] focus:ring-[3px] focus:ring-[#3B82F6]/25';
 
   return (
-    <div className="flex flex-col items-center gap-3 w-full">
+    <div className="flex flex-col items-center gap-2 w-full">
       <input
         ref={inputRef}
         type="text"
@@ -73,7 +79,7 @@ export default function AnswerInput({
         disabled={disabled}
         placeholder="?"
         aria-label="Your answer"
-        className={`w-full max-w-xs text-center text-4xl font-semibold py-3 px-4 rounded-xl border-2 outline-none transition-all bg-white text-[#1E293B] placeholder-[#CBD5E1] ${borderColor} disabled:opacity-50 disabled:cursor-not-allowed`}
+        className={`w-full max-w-xs text-center text-4xl font-semibold py-3 px-4 rounded-xl border-2 outline-none transition-all duration-150 bg-white text-[#1E293B] caret-[#3B82F6] placeholder-[#CBD5E1] placeholder:transition-opacity placeholder:duration-100 ${value.length > 0 ? 'placeholder:opacity-0' : 'placeholder:opacity-100'} ${borderColor} disabled:opacity-50 disabled:cursor-not-allowed`}
       />
       {feedbackContent}
       <NumberPad
