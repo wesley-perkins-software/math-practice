@@ -1,4 +1,5 @@
 import PracticeWidget from './PracticeWidget';
+import { useEffect } from 'react';
 import {
   ADDITION_1_DIGIT,
   ADDITION_2_DIGIT,
@@ -40,7 +41,27 @@ interface Props {
   active: Difficulty;
 }
 
+const TAB_SCROLL_KEY = 'addition-practice:scroll-y';
+
 export default function AdditionPracticeHub({ active }: Props) {
+  useEffect(() => {
+    const saved = sessionStorage.getItem(TAB_SCROLL_KEY);
+    if (!saved) return;
+
+    const y = Number.parseFloat(saved);
+    if (!Number.isFinite(y)) {
+      sessionStorage.removeItem(TAB_SCROLL_KEY);
+      return;
+    }
+
+    window.scrollTo({ top: y, behavior: 'auto' });
+    sessionStorage.removeItem(TAB_SCROLL_KEY);
+  }, []);
+
+  const handleTabClick = () => {
+    sessionStorage.setItem(TAB_SCROLL_KEY, String(window.scrollY));
+  };
+
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
   const tabs = (
@@ -49,6 +70,7 @@ export default function AdditionPracticeHub({ active }: Props) {
         <a
           key={id}
           href={href}
+          onClick={handleTabClick}
           className={`flex-1 py-2 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors leading-snug ${
             active === id
               ? 'bg-white text-[#1E293B] shadow-sm'
