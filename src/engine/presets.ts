@@ -10,7 +10,6 @@ export const ADDITION_1_DIGIT: PracticeConfig = {
   timerDuration: 60,
   operandA: { min: 1, max: 9 },
   operandB: { min: 1, max: 9 },
-  carrying: false,
 };
 
 export const ADDITION_2_DIGIT: PracticeConfig = {
