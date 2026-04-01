@@ -92,7 +92,7 @@ export default function WrittenProblemInput({
       <div
         className={`select-none w-fit mx-auto min-w-[8rem] transition-opacity duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        } ${feedbackState === 'incorrect' ? 'shake' : ''}`}
         aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
       >
         {/* Hidden input captures keyboard events */}
@@ -133,7 +133,10 @@ export default function WrittenProblemInput({
               isPlaceholder ? 'text-[#CBD5E1]' : answerColor
             }`}
           >
-            {isPlaceholder ? '?' : value}
+            {isPlaceholder ? '' : value}
+            {feedbackState === 'idle' && (
+              <span className="cursor-blink">|</span>
+            )}
           </span>
         </div>
       </div>
