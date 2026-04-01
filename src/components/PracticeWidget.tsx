@@ -94,7 +94,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
       setFeedbackState('incorrect');
     }
 
-    const FEEDBACK_DELAY_MS = isCorrect ? 250 : 1800;
+    const FEEDBACK_DELAY_MS = isCorrect ? 600 : 1800;
 
     // Clear any pending transition timer
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
