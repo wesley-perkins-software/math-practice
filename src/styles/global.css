@@ -36,7 +36,6 @@
 .cursor-blink {
   animation: blink 0.9s step-end infinite;
   font-weight: 300;
-  margin-left: 1px;
 }
 
 .shake {

@@ -129,13 +129,13 @@ export default function WrittenProblemInput({
         {/* Row 3: answer, right-aligned under the rule */}
         <div className="text-right mt-1 min-h-[3.5rem] md:min-h-[4rem] flex items-center justify-end">
           <span
-            className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${
+            className={`relative text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${
               isPlaceholder ? 'text-[#CBD5E1]' : answerColor
             }`}
           >
             {isPlaceholder ? '' : value}
             {feedbackState === 'idle' && (
-              <span className="cursor-blink">|</span>
+              <span className="cursor-blink absolute left-full top-0">|</span>
             )}
           </span>
         </div>
