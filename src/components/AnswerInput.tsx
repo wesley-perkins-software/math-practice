@@ -1,20 +1,27 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import NumberPad from './NumberPad';
 
 interface Props {
+  value: string;
+  onValueChange: (value: string) => void;
   onSubmit: (answer: number) => void;
   disabled?: boolean;
   feedbackState?: 'correct' | 'incorrect' | 'idle';
   feedbackContent?: React.ReactNode;
+  maxDigits?: number;
+  layout?: 'standard' | 'aligned';
 }
 
 export default function AnswerInput({
+  value,
+  onValueChange,
   onSubmit,
   disabled = false,
   feedbackState = 'idle',
   feedbackContent,
+  maxDigits = 3,
+  layout = 'standard',
 }: Props) {
-  const [value, setValue] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
 
@@ -23,14 +30,6 @@ export default function AnswerInput({
       inputRef.current?.focus();
     }
   }, [disabled]);
-
-  // Clear and refocus after each submission
-  useEffect(() => {
-    if (feedbackState === 'idle') {
-      setValue('');
-      inputRef.current?.focus();
-    }
-  }, [feedbackState]);
 
   function handleSubmit() {
     if (disabled) return;
@@ -48,16 +47,28 @@ export default function AnswerInput({
     if (e.key === 'Enter') {
       e.preventDefault();
       handleSubmit();
+      return;
+    }
+
+    if (/^\d$/.test(e.key)) {
+      e.preventDefault();
+      handleDigit(e.key);
+      return;
+    }
+
+    if (e.key === 'Backspace') {
+      e.preventDefault();
+      handleBackspace();
     }
   }
 
   function handleDigit(d: string) {
-    if (value.length >= 3) return;
-    setValue((v) => v + d);
+    if (value.length >= maxDigits) return;
+    onValueChange(`${value}${d}`);
   }
 
   function handleBackspace() {
-    setValue((v) => v.slice(0, -1));
+    onValueChange(value.slice(0, -1));
   }
 
   const borderColor =
@@ -74,12 +85,16 @@ export default function AnswerInput({
         type="text"
         inputMode="none"
         value={value}
-        onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 3))}
+        onChange={(e) => onValueChange(e.target.value.replace(/\D/g, '').slice(0, maxDigits))}
         onKeyDown={handleKeyDown}
         disabled={disabled}
         placeholder="?"
         aria-label="Your answer"
-        className={`w-full max-w-xs text-center text-4xl font-semibold py-3 px-4 rounded-xl border-2 outline-none transition-all duration-150 bg-white text-[#1E293B] caret-[#3B82F6] placeholder-[#CBD5E1] placeholder:transition-opacity placeholder:duration-100 ${value.length > 0 ? 'placeholder:opacity-0' : 'placeholder:opacity-100'} ${borderColor} disabled:opacity-50 disabled:cursor-not-allowed`}
+        className={
+          layout === 'aligned'
+            ? 'sr-only'
+            : `w-full max-w-xs text-center text-4xl font-semibold py-3 px-4 rounded-xl border-2 outline-none transition-all duration-150 bg-white text-[#1E293B] caret-[#3B82F6] placeholder-[#CBD5E1] placeholder:transition-opacity placeholder:duration-100 ${value.length > 0 ? 'placeholder:opacity-0' : 'placeholder:opacity-100'} ${borderColor} disabled:opacity-50 disabled:cursor-not-allowed`
+        }
       />
       {feedbackContent}
       <NumberPad
