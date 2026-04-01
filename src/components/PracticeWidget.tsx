@@ -1,17 +1,13 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
-import type { PracticeConfig, PracticeMode, TimerDuration, Problem, SessionResult, PageStats } from '@/engine/types';
+import { useEffect, useRef, useState } from 'react';
+import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
-import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, MODE_PREF_KEY, DURATION_PREF_KEY } from '@/engine/storage';
+import { scoreAnswer } from '@/engine/scorer';
+import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import ProblemDisplay from './ProblemDisplay';
 import AnswerInput from './AnswerInput';
 import FeedbackBanner from './FeedbackBanner';
-import ProgressBar from './ProgressBar';
-import TimerDisplay from './TimerDisplay';
-import ModeToggle from './ModeToggle';
-import DurationPicker from './DurationPicker';
 import ScoreCard from './ScoreCard';
 
 type Phase = 'idle' | 'active' | 'complete';
@@ -22,37 +18,18 @@ interface Props {
   topContent?: React.ReactNode;
 }
 
-function loadPref<T>(key: string, fallback: T): T {
-  try {
-    const v = localStorage.getItem(key);
-    return v ? (JSON.parse(v) as T) : fallback;
-  } catch {
-    return fallback;
-  }
-}
-
-function savePref(key: string, value: unknown): void {
-  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* ignore */ }
-}
-
 export default function PracticeWidget({ config, topContent }: Props) {
-  // User preferences (persisted globally)
-  const [mode, setMode] = useState<PracticeMode>(config.mode);
-  const [duration, setDuration] = useState<TimerDuration>(config.timerDuration);
-
   // Session state
   const [phase, setPhase] = useState<Phase>('idle');
   const [problem, setProblem] = useState<Problem | null>(null);
   const [problemIndex, setProblemIndex] = useState(0);
   const [correct, setCorrect] = useState(0);
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
-  const [secondsRemaining, setSecondsRemaining] = useState<number>(60);
   const [feedbackState, setFeedbackState] = useState<FeedbackState>('hidden');
   const [feedbackCorrectAnswer, setFeedbackCorrectAnswer] = useState(0);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
 
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
@@ -64,10 +41,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
   // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
   // Always auto-start a session (skip idle). If active mid-session: generate a new problem.
   useEffect(() => {
-    const savedMode = loadPref<PracticeMode>(MODE_PREF_KEY, config.mode);
-    const savedDuration = loadPref<TimerDuration>(DURATION_PREF_KEY, config.timerDuration);
-    setMode(savedMode);
-    setDuration(savedDuration);
     setStats(loadStats(config.storageKey));
     if (phaseRef.current === 'active') {
       setProblem(generateProblem(config));
@@ -75,69 +48,29 @@ export default function PracticeWidget({ config, topContent }: Props) {
     } else {
       // idle on mount, or complete when switching difficulty — auto-start immediately
       setResult(null);
-      startSession(savedMode, savedDuration);
+      startSession();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.storageKey]);
 
-  function handleModeChange(m: PracticeMode) {
-    setMode(m);
-    savePref(MODE_PREF_KEY, m);
-  }
-
-  function handleDurationChange(d: TimerDuration) {
-    setDuration(d);
-    savePref(DURATION_PREF_KEY, d);
-  }
-
-  function startSession(forcedMode?: PracticeMode, forcedDuration?: TimerDuration) {
-    const m = forcedMode ?? mode;
-    const d = forcedDuration ?? duration;
+  function startSession() {
     setProblem(generateProblem(config));
     setProblemIndex(0);
     setCorrect(0);
     setFeedbackState('hidden');
     setSessionStartTime(Date.now());
-    setSecondsRemaining(d);
     setPhase('active');
-
-    if (m === 'timed') {
-      timerRef.current = setInterval(() => {
-        setSecondsRemaining((s) => {
-          if (s <= 1) {
-            clearInterval(timerRef.current!);
-            timerRef.current = null;
-            finishSession();
-            return 0;
-          }
-          return s - 1;
-        });
-      }, 1000);
-    }
   }
-
-  // Finish is wrapped in useCallback so the timer closure can reference it.
-  // Uses correctRef so the correct count is never stale — avoids setState-in-setState.
-  const finishSession = useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
-      timerRef.current = null;
-    }
-    const elapsed = Math.round((Date.now() - sessionStartTime) / 1000);
-    setResult(buildSessionResult(correctRef.current, problemIndex + 1, elapsed));
-    setPhase('complete');
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sessionStartTime, problemIndex]);
 
   // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
     if (phase === 'complete' && result) {
       const current = loadStats(config.storageKey);
-      const updated = updateStatsAfterSession(current, result, mode === 'timed');
+      const updated = updateStatsAfterSession(current, result, false);
       saveStats(config.storageKey, updated);
       setStats(updated);
     }
-  }, [phase, result, config.storageKey, mode]);
+  }, [phase, result, config.storageKey]);
 
   function handleAnswer(answer: number) {
     if (!problem || phase !== 'active') return;
@@ -187,7 +120,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
       if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
     };
   }, []);
@@ -204,23 +136,6 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
         <div className="flex flex-col items-center gap-6">
-          {/* Top bar: timer (timed mode only) */}
-          {mode === 'timed' && (
-            <div className="flex items-center justify-end w-full">
-              <TimerDisplay secondsRemaining={secondsRemaining} />
-            </div>
-          )}
-
-          {/* Progress bar — timed mode only */}
-          {mode === 'timed' && (
-            <div className="w-full">
-              <ProgressBar
-                value={secondsRemaining / duration}
-                color={secondsRemaining <= 10 ? '#F97316' : '#3B82F6'}
-              />
-            </div>
-          )}
-
           {/* Problem */}
           <ProblemDisplay problem={problem} />
 
@@ -255,7 +170,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
         <ScoreCard
           result={result}
           stats={stats}
-          isTimed={mode === 'timed'}
+          isTimed={false}
           onRestart={handleRestart}
         />
       )}
