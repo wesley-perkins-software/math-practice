@@ -128,14 +128,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
     <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto">
       {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
       {topContent && (
-        <div className="mb-5 pb-5 border-b border-[#E2E8F0]">
+        <div className="mb-4 pb-4 border-b border-[#E2E8F0]">
           {topContent}
         </div>
       )}
 
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
-        <div className="flex flex-col items-center gap-6">
+        <div className="flex flex-col items-center gap-4 md:gap-5">
           {/* Problem */}
           <ProblemDisplay problem={problem} />
 
@@ -152,7 +152,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
           />
 
           {/* Current streak */}
-          <div className="flex items-center justify-between w-full pt-3 border-t border-[#E2E8F0]">
+          <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">
             <span className="text-sm text-[#64748B]">
               🔥 Streak: <span className="font-bold text-[#1E293B]">{stats.currentStreak}</span>
             </span>
