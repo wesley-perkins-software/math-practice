@@ -5,8 +5,7 @@ import { scoreAnswer } from '@/engine/scorer';
 import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
-import ProblemDisplay from './ProblemDisplay';
-import AnswerInput from './AnswerInput';
+import WrittenProblemInput from './WrittenProblemInput';
 import FeedbackBanner from './FeedbackBanner';
 import ScoreCard from './ScoreCard';
 
@@ -136,11 +135,9 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
         <div className="flex flex-col items-center gap-4 md:gap-5">
-          {/* Problem */}
-          <ProblemDisplay problem={problem} />
-
-          {/* Input + NumberPad */}
-          <AnswerInput
+          {/* Written arithmetic block + input + number pad */}
+          <WrittenProblemInput
+            problem={problem}
             onSubmit={handleAnswer}
             disabled={feedbackState !== 'hidden'}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
