@@ -30,7 +30,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
 
-  const feedbackTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
@@ -54,6 +54,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }, [config.storageKey]);
 
   function startSession() {
+    if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     setProblem(generateProblem(config));
     setProblemIndex(0);
     setCorrect(0);
@@ -93,16 +94,15 @@ export default function PracticeWidget({ config, topContent }: Props) {
       setFeedbackState('incorrect');
     }
 
-    // Clear any pending feedback timer
-    if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
-    feedbackTimerRef.current = setTimeout(() => {
+    const FEEDBACK_DELAY_MS = 250;
+
+    // Clear any pending transition timer
+    if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    transitionTimerRef.current = setTimeout(() => {
+      setProblemIndex((i) => i + 1);
+      setProblem(generateProblem(config));
       setFeedbackState('hidden');
-    }, 700);
-
-    const nextIndex = problemIndex + 1;
-
-    setProblemIndex(nextIndex);
-    setProblem(generateProblem(config));
+    }, FEEDBACK_DELAY_MS);
   }
 
   function handleRestart() {
@@ -120,7 +120,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (feedbackTimerRef.current) clearTimeout(feedbackTimerRef.current);
+      if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     };
   }, []);
 
@@ -142,6 +142,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
           {/* Input + NumberPad */}
           <AnswerInput
             onSubmit={handleAnswer}
+            disabled={feedbackState !== 'hidden'}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
             feedbackContent={(
               <div className="h-8 flex items-center justify-center w-full">
