@@ -131,7 +131,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto">
+    <div className="bg-white rounded-2xl shadow-lg ring-1 ring-black/5 p-4 md:p-5 w-full max-w-lg mx-auto">
       {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
       {topContent && (
         <div className="mb-4 pb-4 border-b border-[#E2E8F0]">
@@ -141,7 +141,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
-        <div className="flex flex-col items-center gap-4 md:gap-5">
+        <div className="flex flex-col items-center gap-2 md:gap-3">
           {/* Written arithmetic block + input + number pad */}
           <WrittenProblemInput
             problem={problem}
@@ -149,14 +149,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
             disabled={feedbackState !== 'hidden'}
             feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
             feedbackContent={(
-              <div className="h-8 flex items-center justify-center w-full">
+              <div className="h-6 flex items-center justify-center w-full">
                 <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
               </div>
             )}
           />
 
           {/* Current streak */}
-          <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">
+          <div className="flex items-center justify-between w-full pt-1 border-t border-[#E2E8F0]">
             {/* Streak label — always visible so Reset has context */}
             <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#94A3B8]'}`}>
               {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
