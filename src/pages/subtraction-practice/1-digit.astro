@@ -1,8 +1,7 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
-import { SUBTRACTION_1_DIGIT } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
@@ -23,6 +22,6 @@ const links = [
   <div slot="intro">
     <p>Practice single-digit subtraction with numbers 1 through 9. All answers are non-negative — no borrowing required — so you can focus purely on speed and recall.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={SUBTRACTION_1_DIGIT} />
+  <SubtractionPracticeHub slot="widget" active="1-digit" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

@@ -1,8 +1,7 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
-import { SUBTRACTION_2_DIGIT } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
@@ -24,6 +23,6 @@ const links = [
   <div slot="intro">
     <p>Practice two-digit subtraction with numbers from 10 to 99. Problems may include borrowing, making this a good all-around two-digit subtraction workout.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={SUBTRACTION_2_DIGIT} />
+  <SubtractionPracticeHub slot="widget" active="2-digit" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
