@@ -58,51 +58,50 @@ export default function MultiplicationPracticeHub({ active }: Props) {
 
   const config = active === 'mixed' ? MULTIPLICATION_FACTS : tableConfig(selectedTable);
 
-  const topContent = (
-    <div className="flex flex-col gap-1 p-1 bg-[#F1F5F9] rounded-xl">
-      {/* Main tabs */}
-      <div className="flex gap-1">
-        {TABS.map(({ id, label, href }) => (
-          <a
-            key={id}
-            href={href}
-            onClick={handleTabClick}
-            className={`flex-1 py-2 flex items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 ${
-              active === id
-                ? 'bg-white text-[#1E293B] shadow-sm border-b-2 border-[#3B82F6]'
-                : 'text-[#64748B] hover:text-[#334155] hover:bg-white/50'
-            }`}
-          >
-            {label}
-          </a>
-        ))}
+  return (
+    <div className="w-full max-w-lg mx-auto flex flex-col gap-3">
+      {/* ── SELECTOR (above the card) ──────────────── */}
+      <div className="flex flex-col gap-2">
+        {/* Mode tabs */}
+        <div className="flex gap-1 p-1 bg-white/60 backdrop-blur-sm rounded-2xl shadow-sm border border-white/80">
+          {TABS.map(({ id, label, href }) => (
+            <a
+              key={id}
+              href={href}
+              onClick={handleTabClick}
+              className={`flex-1 py-2 flex items-center justify-center text-sm font-semibold rounded-xl transition-all duration-150 ${
+                active === id
+                  ? 'bg-white text-[#1E293B] shadow-sm'
+                  : 'text-[#64748B] hover:text-[#334155] hover:bg-white/40'
+              }`}
+            >
+              {label}
+            </a>
+          ))}
+        </div>
+
+        {/* Number chips — only in times-tables mode */}
+        {active === 'times-tables' && (
+          <div className="grid grid-cols-6 gap-1.5">
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => (
+              <button
+                key={n}
+                onClick={() => handleTableSelect(n)}
+                className={`rounded-xl py-2 text-sm font-bold transition-all duration-150 ${
+                  selectedTable === n
+                    ? 'bg-[#3B82F6] text-white shadow-md scale-105'
+                    : 'bg-white/70 text-[#475569] hover:bg-white hover:text-[#1E293B] shadow-sm'
+                }`}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Divider + number selector */}
-      {active === 'times-tables' && (
-        <>
-          <div className="border-t border-[#E2E8F0] mx-1" />
-          {[[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12]].map((row, rowIdx) => (
-            <div key={rowIdx} className="flex gap-1">
-              {row.map(n => (
-                <button
-                  key={n}
-                  onClick={() => handleTableSelect(n)}
-                  className={`flex-1 py-1 text-sm font-semibold rounded-lg transition-colors duration-150 ${
-                    selectedTable === n
-                      ? 'bg-white text-[#1E293B] shadow-sm border-b-2 border-[#3B82F6]'
-                      : 'text-[#64748B] hover:text-[#334155] hover:bg-white/50'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          ))}
-        </>
-      )}
+      {/* ── PRACTICE CARD (always same height) ─────── */}
+      <PracticeWidget config={config} />
     </div>
   );
-
-  return <PracticeWidget config={config} topContent={topContent} />;
 }

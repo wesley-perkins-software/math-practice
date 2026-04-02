@@ -131,7 +131,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 md:p-8 w-full max-w-lg mx-auto">
+    <div className="bg-white rounded-2xl shadow-lg ring-1 ring-black/5 p-6 md:p-8 w-full max-w-lg mx-auto">
       {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
       {topContent && (
         <div className="mb-4 pb-4 border-b border-[#E2E8F0]">
