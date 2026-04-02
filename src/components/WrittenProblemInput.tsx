@@ -130,7 +130,7 @@ export default function WrittenProblemInput({
         <div className="text-right mt-1 min-h-[3.5rem] md:min-h-[4rem] flex items-center justify-end">
           {isPlaceholder ? (
             <span className="text-5xl md:text-6xl font-bold tabular-nums text-[#CBD5E1] inline-flex items-center">
-              ?<span className="ml-0.5 animate-pulse text-[#334155] font-light">|</span>
+              ?<span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span>
             </span>
           ) : (
             <span className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${answerColor}`}>

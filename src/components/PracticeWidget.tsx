@@ -157,14 +157,10 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
           {/* Current streak */}
           <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">
-            {/* Streak badge — only visible once a streak is active */}
-            {stats.currentStreak > 0 ? (
-              <span className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 font-bold text-sm px-3 py-1 rounded-full">
-                🔥 {stats.currentStreak}
-              </span>
-            ) : (
-              <span />
-            )}
+            {/* Streak label — always visible so Reset has context */}
+            <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#94A3B8]'}`}>
+              {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
+            </span>
 
             {/* Reset / inline confirm */}
             {!resetPending ? (

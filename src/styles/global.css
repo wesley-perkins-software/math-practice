@@ -17,6 +17,11 @@
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
 
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
 @layer base {
   html {
     font-family: var(--font-sans);
