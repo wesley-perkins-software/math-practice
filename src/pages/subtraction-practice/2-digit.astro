@@ -15,13 +15,13 @@ const links = [
 
 <PracticeLayout
   title="2-Digit Subtraction Practice | Math Practice"
-  description="Practice two-digit subtraction online. Numbers from 10 to 99, may include borrowing. Timed and untimed modes with instant feedback."
+  description="Practice two-digit subtraction online with no borrowing. Numbers from 10 to 99, timed and untimed modes with instant feedback."
   canonical={`${SITE}/subtraction-practice/2-digit`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice', href: '/subtraction-practice' }, { label: '2-Digit Subtraction' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction Practice</h1>
   <div slot="intro">
-    <p>Practice two-digit subtraction with numbers from 10 to 99. Problems may include borrowing, making this a good all-around two-digit subtraction workout.</p>
+    <p>Practice two-digit subtraction with numbers from 10 to 99, without borrowing. This is great for building fluency before moving to regrouping problems.</p>
   </div>
   <SubtractionPracticeHub slot="widget" active="2-digit" client:load />
   <InternalLinks slot="links" links={links} />

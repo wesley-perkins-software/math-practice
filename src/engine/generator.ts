@@ -30,6 +30,24 @@ function hasCarry(a: number, b: number): boolean {
   return false;
 }
 
+/** Returns true if subtracting b from a (a >= b) requires a borrow in any column */
+function hasBorrow(a: number, b: number): boolean {
+  let borrow = 0;
+  while (a > 0 || b > 0) {
+    const topDigit = (a % 10) - borrow;
+    const bottomDigit = b % 10;
+
+    if (topDigit < bottomDigit) {
+      return true;
+    }
+
+    borrow = 0;
+    a = Math.floor(a / 10);
+    b = Math.floor(b / 10);
+  }
+  return false;
+}
+
 function generateAddition(config: PracticeConfig): Problem {
   const { operandA, operandB, carrying } = config;
   const noCarry = carrying === false;
@@ -50,15 +68,46 @@ function generateAddition(config: PracticeConfig): Problem {
 function generateSubtraction(config: PracticeConfig): Problem {
   const { operandA, operandB, borrowing } = config;
   const noBorrow = borrowing === false;
-  let a = randInt(operandA.min, operandA.max);
-  let b = randInt(operandB.min, operandB.max);
+  const requireBorrow = borrowing === true;
 
-  if (noBorrow) {
-    // Ensure a >= b so no borrowing is needed
-    if (b > a) [a, b] = [b, a];
-  } else {
-    // Always ensure a >= b for valid (non-negative) subtraction answers
-    if (b > a) [a, b] = [b, a];
+  let a: number | undefined;
+  let b: number | undefined;
+  let attempts = 0;
+  while (attempts < 100) {
+    const candidateA = randInt(operandA.min, operandA.max);
+    const candidateB = randInt(operandB.min, operandB.max);
+    attempts++;
+
+    if (candidateB > candidateA) continue;
+
+    const candidateHasBorrow = hasBorrow(candidateA, candidateB);
+    if (noBorrow && candidateHasBorrow) continue;
+    if (requireBorrow && !candidateHasBorrow) continue;
+
+    a = candidateA;
+    b = candidateB;
+    break;
+  }
+
+  if (a === undefined || b === undefined) {
+    for (let candidateA = operandA.min; candidateA <= operandA.max; candidateA++) {
+      for (let candidateB = operandB.min; candidateB <= operandB.max; candidateB++) {
+        if (candidateB > candidateA) continue;
+
+        const candidateHasBorrow = hasBorrow(candidateA, candidateB);
+        if (noBorrow && candidateHasBorrow) continue;
+        if (requireBorrow && !candidateHasBorrow) continue;
+
+        a = candidateA;
+        b = candidateB;
+        break;
+      }
+      if (a !== undefined && b !== undefined) break;
+    }
+  }
+
+  if (a === undefined || b === undefined) {
+    throw new Error(`Unable to generate subtraction problem for config "${config.storageKey}"`);
   }
 
   return { id: nextId(), operandA: a, operandB: b, operation: 'subtraction', correctAnswer: a - b };
