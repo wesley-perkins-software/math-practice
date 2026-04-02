@@ -1,17 +1,8 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
-import InternalLinks from '@/components/InternalLinks';
-import { MULTIPLICATION_GENERAL } from '@/engine/presets';
+import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 
 const SITE = 'https://www.mathpractice.com';
-
-const links = [
-  { href: '/multiplication-practice/facts', label: 'Multiplication Facts', description: 'Times tables 1–12' },
-  { href: '/multiplication-practice/1-12', label: 'Times Tables 1–12', description: 'Full 1–12 drill' },
-  { href: '/division-practice', label: 'Division Practice', description: 'Practice the inverse' },
-  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Mixed facts drill' },
-];
 ---
 
 <PracticeLayout
@@ -22,8 +13,27 @@ const links = [
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Practice</h1>
   <div slot="intro">
-    <p>Drill multiplication facts from 1×1 through 12×12. Build the automatic recall that makes harder math easier. Use timed mode to sharpen your speed.</p>
+    <p>Drill multiplication facts from 1×1 through 12×12. Choose a specific times table to master it, or switch to mixed practice for a full challenge.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={MULTIPLICATION_GENERAL} />
-  <InternalLinks slot="links" links={links} />
+  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" />
+
+  <div slot="links" class="mt-10">
+    <h2 class="text-base font-semibold text-[#1E293B] mb-3">What to Practice Next</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <a
+        href="/division-practice"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Division Practice</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Practice the inverse operation</div>
+      </a>
+      <a
+        href="/math-facts-practice"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Math Facts Practice</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Mixed × and ÷ facts drill</div>
+      </a>
+    </div>
+  </div>
 </PracticeLayout>

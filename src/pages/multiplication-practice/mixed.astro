@@ -1,0 +1,39 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
+
+const SITE = 'https://www.mathpractice.com';
+---
+
+<PracticeLayout
+  title="Multiplication Facts Practice | Mixed 1–12 Drill"
+  description="Practice all 144 multiplication facts from 1×1 to 12×12. Random problems across every times table. Instant feedback and streak tracking. Free."
+  canonical={`${SITE}/multiplication-practice/mixed`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Multiplication Practice', href: '/multiplication-practice' }, { label: 'Mixed Practice' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Mixed Multiplication Practice</h1>
+  <div slot="intro">
+    <p>All 144 multiplication facts from 1×1 to 12×12, served up in random order. Every session pulls from the full range so there's nowhere to hide the facts you haven't mastered yet.</p>
+  </div>
+  <MultiplicationPracticeHub slot="widget" client:load active="mixed" />
+
+  <div slot="links" class="mt-10">
+    <h2 class="text-base font-semibold text-[#1E293B] mb-3">What to Practice Next</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <a
+        href="/multiplication-practice/times-tables"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Times Tables</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Drill one table at a time</div>
+      </a>
+      <a
+        href="/division-practice"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Division Practice</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Practice the inverse operation</div>
+      </a>
+    </div>
+  </div>
+</PracticeLayout>
