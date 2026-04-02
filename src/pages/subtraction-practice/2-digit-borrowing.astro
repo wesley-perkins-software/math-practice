@@ -19,10 +19,6 @@ const links = [
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice', href: '/subtraction-practice' }, { label: 'Subtraction with Borrowing' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Subtraction with Borrowing Practice</h1>
-  <div slot="intro">
-    <p>Every problem here requires borrowing (regrouping). This is focused practice for one of the most common areas of difficulty in two-digit subtraction.</p>
-    <p class="mt-2">Work through these until borrowing feels natural and automatic.</p>
-  </div>
   <SubtractionPracticeHub slot="widget" active="borrowing" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
