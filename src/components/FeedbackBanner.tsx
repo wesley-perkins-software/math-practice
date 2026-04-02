@@ -12,13 +12,13 @@ export default function FeedbackBanner({ state, correctAnswer }: Props) {
     <div
       aria-live="polite"
       aria-atomic="true"
-      className={`text-sm font-semibold px-3 py-1 rounded-lg transition-opacity ${
+      className={`text-base font-semibold px-4 py-1.5 rounded-lg transition-opacity ${
         isCorrect
           ? 'bg-[#DCFCE7] text-[#15803D]'
           : 'bg-[#FEE2E2] text-[#B91C1C]'
       }`}
     >
-      {isCorrect ? 'Correct!' : `The answer was ${correctAnswer}`}
+      {isCorrect ? '✓ Correct!' : `The answer was ${correctAnswer}`}
     </div>
   );
 }

@@ -28,6 +28,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [feedbackCorrectAnswer, setFeedbackCorrectAnswer] = useState(0);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
+  const [resetPending, setResetPending] = useState(false);
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -36,6 +37,11 @@ export default function PracticeWidget({ config, topContent }: Props) {
   correctRef.current = correct;
   const phaseRef = useRef<Phase>('idle');
   phaseRef.current = phase;
+
+  // Clear reset confirmation when difficulty changes
+  useEffect(() => {
+    setResetPending(false);
+  }, [config.storageKey]);
 
   // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
   // Always auto-start a session (skip idle). If active mid-session: generate a new problem.
@@ -114,6 +120,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   function handleResetCurrentStreak() {
     resetCurrentStreak(config.storageKey);
     setStats(loadStats(config.storageKey));
+    setResetPending(false);
   }
 
   // Cleanup on unmount
@@ -150,15 +157,48 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
           {/* Current streak */}
           <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">
-            <span className="text-sm text-[#64748B]">
-              🔥 Streak: <span className="font-bold text-[#1E293B]">{stats.currentStreak}</span>
-            </span>
-            <button
-              onClick={handleResetCurrentStreak}
-              className="text-xs text-[#3B82F6] hover:underline"
-            >
-              Reset
-            </button>
+            {/* Streak badge */}
+            {stats.currentStreak > 0 ? (
+              <span className="inline-flex items-center gap-1.5 bg-amber-50 border border-amber-200 text-amber-700 font-bold text-sm px-3 py-1 rounded-full">
+                🔥 {stats.currentStreak}
+                {stats.currentStreak >= 10 && (
+                  <span className="text-[10px] font-semibold text-amber-500">on fire!</span>
+                )}
+                {stats.currentStreak >= 5 && stats.currentStreak < 10 && (
+                  <span className="text-[10px] font-semibold text-amber-500">keep going!</span>
+                )}
+              </span>
+            ) : (
+              <span className="inline-flex items-center gap-1.5 bg-[#F1F5F9] text-[#94A3B8] font-semibold text-sm px-3 py-1 rounded-full">
+                🔥 0
+              </span>
+            )}
+
+            {/* Reset / inline confirm */}
+            {!resetPending ? (
+              <button
+                onClick={() => setResetPending(true)}
+                className="text-xs text-[#94A3B8] hover:text-[#64748B] transition-colors px-2 py-1 rounded hover:bg-[#F1F5F9]"
+              >
+                Reset
+              </button>
+            ) : (
+              <div className="flex items-center gap-1">
+                <span className="text-xs text-[#64748B] mr-1">Reset streak?</span>
+                <button
+                  onClick={handleResetCurrentStreak}
+                  className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                >
+                  Yes
+                </button>
+                <button
+                  onClick={() => setResetPending(false)}
+                  className="text-xs font-semibold text-[#64748B] bg-[#F1F5F9] hover:bg-[#E2E8F0] px-2 py-1 rounded transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}

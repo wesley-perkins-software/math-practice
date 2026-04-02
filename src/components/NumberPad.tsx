@@ -17,7 +17,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
   }
 
   const keyBaseClasses =
-    'h-16 rounded-2xl text-2xl font-semibold transition-all duration-100 ease-out active:scale-95 active:shadow-inner disabled:opacity-40 disabled:cursor-not-allowed';
+    'h-[4.25rem] rounded-2xl text-2xl font-semibold transition-all duration-100 ease-out active:scale-95 active:shadow-inner disabled:opacity-40 disabled:cursor-not-allowed';
 
   return (
     <div className="w-full select-none mt-1">

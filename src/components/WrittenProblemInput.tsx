@@ -128,13 +128,15 @@ export default function WrittenProblemInput({
 
         {/* Row 3: answer, right-aligned under the rule */}
         <div className="text-right mt-1 min-h-[3.5rem] md:min-h-[4rem] flex items-center justify-end">
-          <span
-            className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${
-              isPlaceholder ? 'text-[#CBD5E1]' : answerColor
-            }`}
-          >
-            {isPlaceholder ? '?' : value}
-          </span>
+          {isPlaceholder ? (
+            <span className="text-5xl md:text-6xl font-bold tabular-nums text-[#CBD5E1] inline-flex items-center">
+              ?<span className="ml-0.5 animate-pulse text-[#3B82F6] font-light">|</span>
+            </span>
+          ) : (
+            <span className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${answerColor}`}>
+              {value}
+            </span>
+          )}
         </div>
       </div>
 

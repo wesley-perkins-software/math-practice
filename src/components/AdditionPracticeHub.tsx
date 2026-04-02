@@ -71,10 +71,10 @@ export default function AdditionPracticeHub({ active }: Props) {
           key={id}
           href={href}
           onClick={handleTabClick}
-          className={`flex-1 py-2 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors leading-snug ${
+          className={`flex-1 py-2 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 leading-snug ${
             active === id
-              ? 'bg-white text-[#1E293B] shadow-sm'
-              : 'text-[#64748B] hover:text-[#1E293B]'
+              ? 'bg-white text-[#1E293B] shadow-sm border-b-2 border-[#3B82F6]'
+              : 'text-[#64748B] hover:text-[#334155] hover:bg-white/50'
           }`}
         >
           {label}
