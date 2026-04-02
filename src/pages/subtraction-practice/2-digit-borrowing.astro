@@ -1,8 +1,7 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
-import { SUBTRACTION_2_DIGIT_BORROWING } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
@@ -24,6 +23,6 @@ const links = [
     <p>Every problem here requires borrowing (regrouping). This is focused practice for one of the most common areas of difficulty in two-digit subtraction.</p>
     <p class="mt-2">Work through these until borrowing feels natural and automatic.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={SUBTRACTION_2_DIGIT_BORROWING} />
+  <SubtractionPracticeHub slot="widget" active="borrowing" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

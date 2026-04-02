@@ -1,18 +1,8 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
-import InternalLinks from '@/components/InternalLinks';
-import { SUBTRACTION_GENERAL } from '@/engine/presets';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
 
 const SITE = 'https://www.mathpractice.com';
-
-const links = [
-  { href: '/subtraction-practice/1-digit', label: '1-Digit Subtraction', description: 'Simple single-digit' },
-  { href: '/subtraction-practice/2-digit', label: '2-Digit Subtraction', description: 'Two-digit numbers' },
-  { href: '/subtraction-practice/2-digit-borrowing', label: 'Subtraction with Borrowing', description: 'Borrowing and regrouping' },
-  { href: '/addition-practice', label: 'Addition Practice', description: 'Practice the inverse' },
-  { href: '/math-drills', label: 'Math Drills', description: 'Mixed timed drills' },
-];
 ---
 
 <PracticeLayout
@@ -22,9 +12,25 @@ const links = [
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Subtraction Practice</h1>
-  <div slot="intro">
-    <p>Build subtraction fluency from single-digit facts up to two-digit subtraction with borrowing. Problems always produce non-negative answers, keeping the focus on mental math speed.</p>
+  <SubtractionPracticeHub slot="widget" active="1-digit" client:load />
+
+  <div slot="links" class="mt-10">
+    <h2 class="text-base font-semibold text-[#1E293B] mb-3">What to Practice Next</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <a
+        href="/addition-practice"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Addition Practice</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Practice the inverse operation</div>
+      </a>
+      <a
+        href="/math-drills"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Mixed Math Drills</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Mixed operations, timed challenge</div>
+      </a>
+    </div>
   </div>
-  <PracticeWidget slot="widget" client:load config={SUBTRACTION_GENERAL} />
-  <InternalLinks slot="links" links={links} />
 </PracticeLayout>
