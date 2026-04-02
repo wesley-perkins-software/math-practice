@@ -4,11 +4,10 @@ import {
   ADDITION_1_DIGIT,
   ADDITION_2_DIGIT,
   ADDITION_2_DIGIT_CARRYING,
-  ADDITION_GENERAL,
 } from '@/engine/presets';
 import type { PracticeConfig } from '@/engine/types';
 
-type Difficulty = '1-digit' | '2-digit' | 'carrying' | 'mixed';
+type Difficulty = '1-digit' | '2-digit' | 'carrying';
 
 const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig; href: string }[] = [
   { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT,          href: '/addition-practice/1-digit' },
@@ -34,7 +33,6 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
     config: ADDITION_2_DIGIT_CARRYING,
     href: '/addition-practice/2-digit-carrying',
   },
-  { id: 'mixed',    label: 'Mixed',    config: ADDITION_GENERAL,           href: '/addition-practice' },
 ];
 
 interface Props {

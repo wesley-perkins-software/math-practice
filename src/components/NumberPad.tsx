@@ -45,7 +45,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
           onClick={() => !disabled && onBackspace()}
           disabled={disabled}
           aria-label="Backspace"
-          className={`${keyBaseClasses} bg-[#F1F5F9] hover:bg-[#E2E8F0] active:bg-[#CBD5E1] text-[#64748B] flex items-center justify-center shadow-[0_1px_2px_rgba(15,23,42,0.06)]`}
+          className={`${keyBaseClasses} bg-[#E8EDF2] hover:bg-[#DDE3EA] active:bg-[#CBD5E1] text-[#64748B] flex items-center justify-center shadow-[0_1px_2px_rgba(15,23,42,0.06)]`}
         >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-7 h-7" aria-hidden="true">
             <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
