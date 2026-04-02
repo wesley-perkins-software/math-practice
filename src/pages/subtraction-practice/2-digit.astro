@@ -20,9 +20,6 @@ const links = [
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice', href: '/subtraction-practice' }, { label: '2-Digit Subtraction' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction Practice</h1>
-  <div slot="intro">
-    <p>Practice two-digit subtraction with numbers from 10 to 99, without borrowing. This is great for building fluency before moving to regrouping problems.</p>
-  </div>
   <SubtractionPracticeHub slot="widget" active="2-digit" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

@@ -19,9 +19,6 @@ const links = [
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction Practice', href: '/subtraction-practice' }, { label: '1-Digit Subtraction' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Subtraction Practice</h1>
-  <div slot="intro">
-    <p>Practice single-digit subtraction with numbers 1 through 9. All answers are non-negative — no borrowing required — so you can focus purely on speed and recall.</p>
-  </div>
   <SubtractionPracticeHub slot="widget" active="1-digit" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
