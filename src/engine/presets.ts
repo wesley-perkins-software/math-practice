@@ -66,7 +66,7 @@ export const SUBTRACTION_2_DIGIT: PracticeConfig = {
   timerDuration: 60,
   operandA: { min: 10, max: 99 },
   operandB: { min: 10, max: 99 },
-  borrowing: true,
+  borrowing: false,
 };
 
 export const SUBTRACTION_2_DIGIT_BORROWING: PracticeConfig = {
