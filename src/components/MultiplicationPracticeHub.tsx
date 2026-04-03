@@ -102,7 +102,7 @@ export default function MultiplicationPracticeHub({ active }: Props) {
       <PracticeWidget config={config} topContent={topContent} />
       {showPicker && (
         <div
-          className="fixed inset-0 z-50 flex items-end sm:items-center bg-black/40"
+          className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center bg-black/40"
           onClick={() => setShowPicker(false)}
         >
           <div
