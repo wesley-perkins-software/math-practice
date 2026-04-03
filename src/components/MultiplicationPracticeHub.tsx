@@ -85,10 +85,12 @@ export default function MultiplicationPracticeHub({ active }: Props) {
           <div className="border-t border-[#E2E8F0] mx-1" />
           <button
             onClick={() => setShowPicker(true)}
-            className="w-full mt-1 py-1.5 px-3 flex items-center justify-between text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E2E8F0] text-[#1E293B] hover:border-[#3B82F6] transition-colors duration-150"
+            className="w-full mt-1 py-1.5 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E2E8F0] text-[#1E293B] hover:border-[#3B82F6] transition-colors duration-150"
           >
             <span>{selectedTable} Times Table</span>
-            <span className="text-[#64748B] text-xs">Change ▾</span>
+            <svg className="w-3.5 h-3.5 text-[#64748B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
           </button>
         </>
       )}
@@ -100,20 +102,31 @@ export default function MultiplicationPracticeHub({ active }: Props) {
       <PracticeWidget config={config} topContent={topContent} />
       {showPicker && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40"
+          className="fixed inset-0 z-50 flex items-end bg-black/40"
           onClick={() => setShowPicker(false)}
         >
           <div
-            className="bg-white rounded-2xl shadow-xl p-4 w-72"
+            className="bg-white rounded-t-2xl shadow-xl w-full px-4 pt-3 pb-8"
             onClick={e => e.stopPropagation()}
           >
-            <p className="text-sm font-semibold text-[#64748B] mb-3 text-center">Choose a times table</p>
+            {/* Drag handle */}
+            <div className="w-10 h-1 bg-[#E2E8F0] rounded-full mx-auto mb-4" />
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold text-[#64748B]">Choose a times table</p>
+              <button
+                onClick={() => setShowPicker(false)}
+                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-[#94A3B8] hover:text-[#1E293B] transition-colors text-base leading-none"
+                aria-label="Close"
+              >
+                ✕
+              </button>
+            </div>
             <div className="grid grid-cols-4 gap-2">
               {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => (
                 <button
                   key={n}
                   onClick={() => { handleTableSelect(n); setShowPicker(false); }}
-                  className={`py-3 rounded-xl text-sm font-bold transition-colors duration-150 ${
+                  className={`py-4 rounded-xl text-sm font-bold transition-colors duration-150 ${
                     selectedTable === n
                       ? 'bg-[#3B82F6] text-white'
                       : 'bg-[#F1F5F9] text-[#1E293B] hover:bg-[#E2E8F0]'
