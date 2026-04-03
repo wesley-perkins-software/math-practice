@@ -102,15 +102,15 @@ export default function MultiplicationPracticeHub({ active }: Props) {
       <PracticeWidget config={config} topContent={topContent} />
       {showPicker && (
         <div
-          className="fixed inset-0 z-50 flex items-end bg-black/40"
+          className="fixed inset-0 z-50 flex items-end sm:items-center bg-black/40"
           onClick={() => setShowPicker(false)}
         >
           <div
-            className="bg-white rounded-t-2xl shadow-xl w-full px-4 pt-3 pb-8"
+            className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:w-80 px-4 pt-3 pb-8 sm:p-4"
             onClick={e => e.stopPropagation()}
           >
-            {/* Drag handle */}
-            <div className="w-10 h-1 bg-[#E2E8F0] rounded-full mx-auto mb-4" />
+            {/* Drag handle — mobile only */}
+            <div className="sm:hidden w-10 h-1 bg-[#E2E8F0] rounded-full mx-auto mb-4" />
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold text-[#64748B]">Choose a times table</p>
               <button
@@ -126,7 +126,7 @@ export default function MultiplicationPracticeHub({ active }: Props) {
                 <button
                   key={n}
                   onClick={() => { handleTableSelect(n); setShowPicker(false); }}
-                  className={`py-4 rounded-xl text-sm font-bold transition-colors duration-150 ${
+                  className={`py-4 sm:py-3 rounded-xl text-sm font-bold transition-colors duration-150 ${
                     selectedTable === n
                       ? 'bg-[#3B82F6] text-white'
                       : 'bg-[#F1F5F9] text-[#1E293B] hover:bg-[#E2E8F0]'
