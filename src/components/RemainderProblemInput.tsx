@@ -160,11 +160,7 @@ export default function RemainderProblemInput({
             }`}
           >
             {quotientValue.length === 0 ? (
-              activeSlot === 'quotient' ? (
-                <>?<span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span></>
-              ) : (
-                <span className="text-[#CBD5E1]">?</span>
-              )
+              <span className={activeSlot === 'quotient' ? 'text-[#1E293B]' : 'text-[#CBD5E1]'}>?</span>
             ) : (
               quotientValue
             )}
@@ -188,11 +184,7 @@ export default function RemainderProblemInput({
               }`}
             >
               {remainderValue.length === 0 ? (
-                activeSlot === 'remainder' ? (
-                  <>?<span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span></>
-                ) : (
-                  <span className="text-[#CBD5E1]">?</span>
-                )
+                <span className={activeSlot === 'remainder' ? 'text-[#1E293B]' : 'text-[#CBD5E1]'}>?</span>
               ) : (
                 remainderValue
               )}
