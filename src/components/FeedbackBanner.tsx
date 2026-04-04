@@ -11,7 +11,7 @@ export default function FeedbackBanner({ state, correctAnswer, correctRemainder 
 
   const incorrectText =
     correctRemainder !== undefined
-      ? `The answer was ${correctAnswer}, remainder of ${correctRemainder}`
+      ? `The answer was ${correctAnswer} with a remainder of ${correctRemainder}`
       : `The answer was ${correctAnswer}`;
 
   return (
