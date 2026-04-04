@@ -6,6 +6,7 @@ import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak } fro
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import WrittenProblemInput from './WrittenProblemInput';
+import RemainderProblemInput from './RemainderProblemInput';
 import FeedbackBanner from './FeedbackBanner';
 import ScoreCard from './ScoreCard';
 
@@ -26,6 +27,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [sessionStartTime, setSessionStartTime] = useState<number>(0);
   const [feedbackState, setFeedbackState] = useState<FeedbackState>('hidden');
   const [feedbackCorrectAnswer, setFeedbackCorrectAnswer] = useState(0);
+  const [feedbackCorrectRemainder, setFeedbackCorrectRemainder] = useState<number | undefined>(undefined);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
   const [resetPending, setResetPending] = useState(false);
@@ -78,10 +80,10 @@ export default function PracticeWidget({ config, topContent }: Props) {
     }
   }, [phase, result, config.storageKey]);
 
-  function handleAnswer(answer: number) {
+  function handleAnswer(answer: number, remainder?: number) {
     if (!problem || phase !== 'active') return;
 
-    const isCorrect = scoreAnswer(problem, answer);
+    const isCorrect = scoreAnswer(problem, answer, remainder);
 
     // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
     const currentStats = loadStats(config.storageKey);
@@ -93,9 +95,11 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
     if (isCorrect) {
       setCorrect((c) => c + 1);
+      setFeedbackCorrectRemainder(undefined);
       setFeedbackState('correct');
     } else {
       setFeedbackCorrectAnswer(problem.correctAnswer);
+      setFeedbackCorrectRemainder(problem.remainder);
       setFeedbackState('incorrect');
     }
 
@@ -143,17 +147,31 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {phase === 'active' && problem && (
         <div className="flex flex-col items-center gap-4 md:gap-5">
           {/* Written arithmetic block + input + number pad */}
-          <WrittenProblemInput
-            problem={problem}
-            onSubmit={handleAnswer}
-            disabled={feedbackState !== 'hidden'}
-            feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-            feedbackContent={(
-              <div className="h-8 flex items-center justify-center w-full">
-                <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
-              </div>
-            )}
-          />
+          {config.withRemainder ? (
+            <RemainderProblemInput
+              problem={problem}
+              onSubmit={(q, r) => handleAnswer(q, r)}
+              disabled={feedbackState !== 'hidden'}
+              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+              feedbackContent={(
+                <div className="h-8 flex items-center justify-center w-full">
+                  <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
+                </div>
+              )}
+            />
+          ) : (
+            <WrittenProblemInput
+              problem={problem}
+              onSubmit={handleAnswer}
+              disabled={feedbackState !== 'hidden'}
+              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+              feedbackContent={(
+                <div className="h-8 flex items-center justify-center w-full">
+                  <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
+                </div>
+              )}
+            />
+          )}
 
           {/* Current streak */}
           <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">

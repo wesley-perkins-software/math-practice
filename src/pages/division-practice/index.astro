@@ -1,29 +1,28 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import DivisionPracticeHub from '@/components/DivisionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
-import { DIVISION_GENERAL } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
 const links = [
-  { href: '/division-practice/facts', label: 'Division Facts', description: 'Divisors 1–12' },
+  { href: '/division-practice/divide-by', label: 'Divide by X', description: 'Focus on one divisor' },
+  { href: '/division-practice/remainders', label: 'Division with Remainders', description: 'Quotient and remainder' },
   { href: '/multiplication-practice', label: 'Multiplication Practice', description: 'Practice the inverse' },
   { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Mixed × and ÷ facts' },
-  { href: '/math-drills', label: 'Math Drills', description: 'Mixed timed drills' },
 ];
 ---
 
 <PracticeLayout
   title="Division Practice — Free Online Division Drills"
-  description="Practice division facts online with instant feedback. Whole-number division with divisors 1–12. Timed and untimed modes."
+  description="Practice division facts, divide by a specific number, or work with remainders. Whole-number and remainder division with divisors 1–12. Instant feedback and streak tracking."
   canonical={`${SITE}/division-practice`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division Practice' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division Practice</h1>
   <div slot="intro">
-    <p>Practice division facts with whole-number answers. Every problem is generated so the answer is always a clean integer — no remainders — letting you focus on mental division speed.</p>
+    <p>Practice division facts, drill a specific divisor, or tackle division with remainders. Choose your mode and build fluency at your own pace.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={DIVISION_GENERAL} />
+  <DivisionPracticeHub slot="widget" active="facts" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

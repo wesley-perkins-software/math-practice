@@ -1,6 +1,9 @@
 import type { Problem, SessionResult } from './types';
 
-export function scoreAnswer(problem: Problem, userAnswer: number): boolean {
+export function scoreAnswer(problem: Problem, userAnswer: number, userRemainder?: number): boolean {
+  if (problem.remainder !== undefined) {
+    return userAnswer === problem.correctAnswer && userRemainder === problem.remainder;
+  }
   return userAnswer === problem.correctAnswer;
 }
 
