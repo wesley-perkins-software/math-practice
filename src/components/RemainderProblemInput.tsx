@@ -172,8 +172,8 @@ export default function RemainderProblemInput({
           className="mt-4 cursor-pointer"
           onClick={() => switchSlot('remainder')}
         >
-          <div className="text-xs font-medium text-[#94A3B8] uppercase tracking-wide text-right mb-1">
-            Remainder
+          <div className="text-xs font-medium text-[#94A3B8] tracking-wide text-right mb-1">
+            Remainder:
           </div>
           <div className="flex justify-end">
             <span
