@@ -29,6 +29,8 @@ export interface PracticeConfig {
   maxFactor?: number;
   /** Division: generate problems with remainders */
   withRemainder?: boolean;
+  /** Override the delay (ms) before advancing after an incorrect answer */
+  incorrectFeedbackDelayMs?: number;
 /** Explicit operation list when operation === 'mixed' */
   operations?: Exclude<Operation, 'mixed'>[];
 }

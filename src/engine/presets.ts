@@ -179,6 +179,7 @@ export const DIVISION_REMAINDERS: PracticeConfig = {
   operandA: { min: 1, max: 12 },
   operandB: { min: 2, max: 12 },
   withRemainder: true,
+  incorrectFeedbackDelayMs: 3500,
 };
 
 // ─── Mixed / Speed Drill ────────────────────────────────────────────────────

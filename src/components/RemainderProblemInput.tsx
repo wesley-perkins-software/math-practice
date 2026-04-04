@@ -173,7 +173,7 @@ export default function RemainderProblemInput({
           onClick={() => switchSlot('remainder')}
         >
           <div className="text-xs font-medium text-[#94A3B8] uppercase tracking-wide text-right mb-1">
-            Remainder
+            Remainder:
           </div>
           <div className="flex justify-end">
             <span
