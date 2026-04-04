@@ -17,12 +17,13 @@ export default function RemainderProblemInput({
   feedbackState = 'idle',
   feedbackContent,
 }: Props) {
-  const [phase, setPhase] = useState<'quotient' | 'remainder'>('quotient');
+  const [activeSlot, setActiveSlot] = useState<'quotient' | 'remainder'>('quotient');
   const [quotientValue, setQuotientValue] = useState('');
   const [remainderValue, setRemainderValue] = useState('');
   const [isVisible, setIsVisible] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
+  const autoAdvanceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Fade-in on problem change
   useEffect(() => {
@@ -31,51 +32,108 @@ export default function RemainderProblemInput({
     return () => cancelAnimationFrame(id);
   }, [problem.operandA, problem.operandB]);
 
-  // Focus hidden input when enabled
+  // Focus hidden input when enabled or slot changes
   useEffect(() => {
     if (!disabled) inputRef.current?.focus();
-  }, [disabled, phase]);
+  }, [disabled, activeSlot]);
 
   // Reset on new problem (feedbackState returns to idle)
   useEffect(() => {
     if (feedbackState === 'idle') {
-      setPhase('quotient');
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = null;
+      }
+      setActiveSlot('quotient');
       setQuotientValue('');
       setRemainderValue('');
       inputRef.current?.focus();
     }
   }, [feedbackState]);
 
-  const currentValue = phase === 'quotient' ? quotientValue : remainderValue;
-  const setCurrentValue = phase === 'quotient' ? setQuotientValue : setRemainderValue;
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autoAdvanceTimerRef.current) clearTimeout(autoAdvanceTimerRef.current);
+    };
+  }, []);
 
   function handleDigit(d: string) {
-    if (currentValue.length >= 2) return;
-    setCurrentValue((v) => v + d);
+    if (disabled) return;
+
+    if (activeSlot === 'quotient') {
+      // Block 0 as leading digit (quotient is always 1–12)
+      if (quotientValue === '' && d === '0') return;
+      if (quotientValue.length >= 2) return;
+
+      // Cancel any pending auto-advance timer before appending
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = null;
+      }
+
+      const newQ = quotientValue + d;
+      setQuotientValue(newQ);
+
+      if (newQ.length === 2) {
+        // Two digits (10/11/12): advance immediately
+        setActiveSlot('remainder');
+      } else if (d !== '1') {
+        // Digits 2–9: unambiguously single-digit, advance immediately
+        setActiveSlot('remainder');
+      } else {
+        // Digit '1': could become 10/11/12, wait 600ms
+        autoAdvanceTimerRef.current = setTimeout(() => {
+          autoAdvanceTimerRef.current = null;
+          setActiveSlot('remainder');
+        }, 600);
+      }
+    } else {
+      if (remainderValue.length >= 2) return;
+      // Remainder must be less than the divisor
+      const candidate = parseInt(remainderValue + d, 10);
+      if (candidate >= problem.operandB) return;
+      setRemainderValue((v) => v + d);
+    }
   }
 
   function handleBackspace() {
-    setCurrentValue((v) => v.slice(0, -1));
+    if (activeSlot === 'remainder') {
+      if (remainderValue.length > 0) {
+        setRemainderValue((v) => v.slice(0, -1));
+      } else {
+        // Empty remainder: cancel timer, return to quotient, strip last quotient digit
+        if (autoAdvanceTimerRef.current) {
+          clearTimeout(autoAdvanceTimerRef.current);
+          autoAdvanceTimerRef.current = null;
+        }
+        setActiveSlot('quotient');
+        setQuotientValue((v) => v.slice(0, -1));
+      }
+    } else {
+      if (autoAdvanceTimerRef.current) {
+        clearTimeout(autoAdvanceTimerRef.current);
+        autoAdvanceTimerRef.current = null;
+      }
+      setQuotientValue((v) => v.slice(0, -1));
+    }
   }
 
   function handleSubmit() {
     if (disabled) return;
     const now = Date.now();
     if (now - lastSubmitAtRef.current < 100) return;
-    lastSubmitAtRef.current = now;
 
-    if (phase === 'quotient') {
-      const q = parseInt(quotientValue, 10);
-      if (!isNaN(q)) {
-        setPhase('remainder');
-      }
-    } else {
-      const q = parseInt(quotientValue, 10);
-      const r = parseInt(remainderValue, 10);
-      if (!isNaN(q) && !isNaN(r)) {
-        onSubmit(q, r);
-      }
+    const q = parseInt(quotientValue, 10);
+    const r = parseInt(remainderValue, 10);
+    if (isNaN(q) || isNaN(r)) return;
+
+    lastSubmitAtRef.current = now;
+    if (autoAdvanceTimerRef.current) {
+      clearTimeout(autoAdvanceTimerRef.current);
+      autoAdvanceTimerRef.current = null;
     }
+    onSubmit(q, r);
   }
 
   function handleKeyDown(e: React.KeyboardEvent) {
@@ -85,8 +143,7 @@ export default function RemainderProblemInput({
     }
   }
 
-  const isQuotientPhase = phase === 'quotient';
-  const isPlaceholder = currentValue.length === 0;
+  const activeValue = activeSlot === 'quotient' ? quotientValue : remainderValue;
 
   return (
     <div className="flex flex-col items-center gap-2 w-full">
@@ -102,11 +159,19 @@ export default function RemainderProblemInput({
           ref={inputRef}
           type="text"
           inputMode="none"
-          value={currentValue}
-          onChange={(e) => setCurrentValue(e.target.value.replace(/\D/g, '').slice(0, 2))}
+          value={activeValue}
+          onChange={(e) => {
+            const raw = e.target.value.replace(/\D/g, '');
+            if (raw.length > activeValue.length) {
+              const newChar = raw[activeValue.length];
+              if (newChar) handleDigit(newChar);
+            } else if (raw.length < activeValue.length) {
+              handleBackspace();
+            }
+          }}
           onKeyDown={handleKeyDown}
           disabled={disabled}
-          aria-label={isQuotientPhase ? 'Enter quotient' : 'Enter remainder'}
+          aria-label={activeSlot === 'quotient' ? 'Enter quotient' : 'Enter remainder'}
           className="sr-only"
         />
 
@@ -128,46 +193,54 @@ export default function RemainderProblemInput({
         {/* Horizontal rule */}
         <div className="border-t-[3px] border-[#1E293B] mt-2" />
 
-        {/* Row 3: answer area — quotient [ ] R remainder [ ] */}
+        {/* Row 3: _ R _ — both slots always visible */}
         <div className="mt-1 flex items-center justify-end gap-2 min-h-[3.5rem] md:min-h-[4rem]">
-          {/* Quotient box */}
-          {isQuotientPhase ? (
-            /* Phase 1: quotient is the active input */
-            <span className="text-5xl md:text-6xl font-bold tabular-nums text-[#1E293B] inline-flex items-center">
-              {isPlaceholder ? (
+          {/* Quotient slot */}
+          <span
+            className={`text-5xl md:text-6xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 ${
+              activeSlot === 'quotient'
+                ? 'text-[#1E293B] border-[#3B82F6]'
+                : 'text-[#94A3B8] border-transparent'
+            }`}
+          >
+            {quotientValue.length === 0 ? (
+              activeSlot === 'quotient' ? (
                 <>?<span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span></>
               ) : (
-                quotientValue
-              )}
-            </span>
-          ) : (
-            /* Phase 2: quotient is locked in */
-            <span className="text-5xl md:text-6xl font-bold tabular-nums text-[#64748B]">
-              {quotientValue}
-            </span>
-          )}
+                <span className="text-[#CBD5E1]">?</span>
+              )
+            ) : (
+              quotientValue
+            )}
+          </span>
 
-          {/* R separator — always visible once we have a quotient or are in phase 2 */}
-          {(!isQuotientPhase || quotientValue.length > 0) && (
-            <span className="text-3xl md:text-4xl font-bold text-[#94A3B8]">R</span>
-          )}
+          {/* R separator — always visible */}
+          <span className="text-3xl md:text-4xl font-bold text-[#94A3B8]">R</span>
 
-          {/* Remainder box — only shown in phase 2 */}
-          {!isQuotientPhase && (
-            <span className="text-5xl md:text-6xl font-bold tabular-nums text-[#1E293B] inline-flex items-center">
-              {isPlaceholder ? (
+          {/* Remainder slot */}
+          <span
+            className={`text-5xl md:text-6xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 ${
+              activeSlot === 'remainder'
+                ? 'text-[#1E293B] border-[#3B82F6]'
+                : 'text-[#CBD5E1] border-transparent'
+            }`}
+          >
+            {remainderValue.length === 0 ? (
+              activeSlot === 'remainder' ? (
                 <>?<span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span></>
               ) : (
-                remainderValue
-              )}
-            </span>
-          )}
+                <span className="text-[#CBD5E1]">?</span>
+              )
+            ) : (
+              remainderValue
+            )}
+          </span>
         </div>
 
-        {/* Phase hint label */}
+        {/* Active slot hint */}
         <div className="text-center mt-1">
           <span className="text-xs font-medium text-[#94A3B8] uppercase tracking-wide">
-            {isQuotientPhase ? 'Enter quotient' : 'Enter remainder'}
+            {activeSlot === 'quotient' ? 'Enter quotient' : 'Enter remainder'}
           </span>
         </div>
       </div>
