@@ -1,12 +1,18 @@
 interface Props {
   state: 'correct' | 'incorrect' | 'hidden';
   correctAnswer: number;
+  correctRemainder?: number;
 }
 
-export default function FeedbackBanner({ state, correctAnswer }: Props) {
+export default function FeedbackBanner({ state, correctAnswer, correctRemainder }: Props) {
   if (state === 'hidden') return null;
 
   const isCorrect = state === 'correct';
+
+  const incorrectText =
+    correctRemainder !== undefined
+      ? `The answer was ${correctAnswer} R ${correctRemainder}`
+      : `The answer was ${correctAnswer}`;
 
   return (
     <div
@@ -18,7 +24,7 @@ export default function FeedbackBanner({ state, correctAnswer }: Props) {
           : 'bg-[#FEE2E2] text-[#B91C1C]'
       }`}
     >
-      {isCorrect ? '✓ Correct!' : `The answer was ${correctAnswer}`}
+      {isCorrect ? '✓ Correct!' : incorrectText}
     </div>
   );
 }

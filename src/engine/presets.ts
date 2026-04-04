@@ -131,6 +131,21 @@ export const MULTIPLICATION_GENERAL: PracticeConfig = {
 
 // ─── Division ───────────────────────────────────────────────────────────────
 
+/** Generates a config for practicing division by a specific divisor (1–12). */
+export function divideByConfig(n: number): PracticeConfig {
+  return {
+    storageKey: `div-by-${n}`,
+    label: `Divide by ${n}`,
+    operation: 'division',
+    mode: 'untimed',
+    timerDuration: 60,
+    operandA: { min: 1, max: 12 },
+    operandB: { min: n, max: n },
+    factsMode: true,
+    maxFactor: 12,
+  };
+}
+
 export const DIVISION_FACTS: PracticeConfig = {
   storageKey: 'div-facts',
   label: 'Division Facts',
@@ -153,6 +168,17 @@ export const DIVISION_GENERAL: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   factsMode: true,
   maxFactor: 12,
+};
+
+export const DIVISION_REMAINDERS: PracticeConfig = {
+  storageKey: 'div-remainders',
+  label: 'Division with Remainders',
+  operation: 'division',
+  mode: 'untimed',
+  timerDuration: 60,
+  operandA: { min: 1, max: 12 },
+  operandB: { min: 2, max: 12 },
+  withRemainder: true,
 };
 
 // ─── Mixed / Speed Drill ────────────────────────────────────────────────────
@@ -243,6 +269,7 @@ export const ALL_PRESETS: PracticeConfig[] = [
   MULTIPLICATION_GENERAL,
   DIVISION_FACTS,
   DIVISION_GENERAL,
+  DIVISION_REMAINDERS,
   MIXED_PRACTICE,
   MATH_DRILLS,
   MENTAL_MATH,

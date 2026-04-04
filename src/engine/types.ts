@@ -27,6 +27,8 @@ export interface PracticeConfig {
   factsMode?: boolean;
   /** Upper bound for facts mode. Default 12. */
   maxFactor?: number;
+  /** Division: generate problems with remainders */
+  withRemainder?: boolean;
 /** Explicit operation list when operation === 'mixed' */
   operations?: Exclude<Operation, 'mixed'>[];
 }
@@ -37,6 +39,8 @@ export interface Problem {
   operandB: number;
   operation: Exclude<Operation, 'mixed'>;
   correctAnswer: number;
+  /** Division with remainders: the remainder portion of the answer */
+  remainder?: number;
 }
 
 export interface SessionResult {

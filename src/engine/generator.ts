@@ -126,7 +126,17 @@ function generateMultiplication(config: PracticeConfig): Problem {
   return { id: nextId(), operandA: a, operandB: b, operation: 'multiplication', correctAnswer: a * b };
 }
 
+function generateDivisionWithRemainder(): Problem {
+  const divisor = randInt(2, 12);
+  const quotient = randInt(1, 12);
+  const remainder = randInt(1, divisor - 1);
+  const dividend = divisor * quotient + remainder;
+  return { id: nextId(), operandA: dividend, operandB: divisor, operation: 'division', correctAnswer: quotient, remainder };
+}
+
 function generateDivision(config: PracticeConfig): Problem {
+  if (config.withRemainder) return generateDivisionWithRemainder();
+
   const maxF = config.maxFactor ?? 12;
   let divisor: number, quotient: number;
   if (config.factsMode) {

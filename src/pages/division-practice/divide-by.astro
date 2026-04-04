@@ -1,0 +1,28 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import DivisionPracticeHub from '@/components/DivisionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/division-practice/facts', label: 'Division Facts', description: 'Mixed divisors 1–12' },
+  { href: '/division-practice/remainders', label: 'Division with Remainders', description: 'Quotient and remainder' },
+  { href: '/multiplication-practice/times-tables', label: 'Times Tables', description: 'Practice the inverse' },
+  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Mixed × and ÷ facts' },
+];
+---
+
+<PracticeLayout
+  title="Divide by X Practice | Focus on One Divisor"
+  description="Pick a divisor from 1 to 12 and drill division problems with that divisor. Build fluency one number family at a time with instant feedback."
+  canonical={`${SITE}/division-practice/divide-by`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division Practice', href: '/division-practice' }, { label: 'Divide by X' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Divide by X Practice</h1>
+  <div slot="intro">
+    <p>Choose a divisor and practice dividing by that number. All answers are exact whole numbers — perfect for building fluency with one divisor at a time before mixing them together.</p>
+  </div>
+  <DivisionPracticeHub slot="widget" active="divide-by" client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>
