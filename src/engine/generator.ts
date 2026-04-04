@@ -140,7 +140,7 @@ function generateDivision(config: PracticeConfig): Problem {
   const maxF = config.maxFactor ?? 12;
   let divisor: number, quotient: number;
   if (config.factsMode) {
-    divisor = randInt(1, maxF);
+    divisor = randInt(config.operandB.min, config.operandB.max);
     quotient = randInt(1, maxF);
   } else {
     divisor = randInt(Math.max(config.operandB.min, 1), config.operandB.max);
