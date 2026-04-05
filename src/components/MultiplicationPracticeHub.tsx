@@ -60,7 +60,7 @@ export default function MultiplicationPracticeHub({ active }: Props) {
   const config = active === 'mixed' ? MULTIPLICATION_FACTS : tableConfig(selectedTable);
 
   const topContent = (
-    <div className="flex flex-col gap-1 p-1 bg-[#F1F5F9] rounded-xl">
+    <div className="flex flex-col gap-1 p-1 bg-[#EEF2FF] border border-[#E0E7FF] rounded-xl">
       {/* Main tabs */}
       <div className="flex gap-1">
         {TABS.map(({ id, label, href }) => (
@@ -68,10 +68,10 @@ export default function MultiplicationPracticeHub({ active }: Props) {
             key={id}
             href={href}
             onClick={handleTabClick}
-            className={`flex-1 py-2 flex items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 ${
+            className={`flex-1 py-2.5 flex items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 ${
               active === id
-                ? 'bg-white text-[#1E293B] shadow-sm border-b-2 border-[#3B82F6]'
-                : 'text-[#64748B] hover:text-[#334155] hover:bg-white/50'
+                ? 'bg-white text-[#4F46E5] shadow-sm border-b-2 border-[#4F46E5]'
+                : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-white/60'
             }`}
           >
             {label}
@@ -82,13 +82,13 @@ export default function MultiplicationPracticeHub({ active }: Props) {
       {/* Divider + compact table selector */}
       {active === 'times-tables' && (
         <>
-          <div className="border-t border-[#E2E8F0] mx-1" />
+          <div className="border-t border-[#E0E7FF] mx-1" />
           <button
             onClick={() => setShowPicker(true)}
-            className="w-full mt-1 py-1.5 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E2E8F0] text-[#1E293B] hover:border-[#3B82F6] transition-colors duration-150"
+            className="w-full mt-1 py-1.5 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E0E7FF] text-[#1E1B4B] hover:border-[#4F46E5] transition-colors duration-150"
           >
             <span>{selectedTable} Times Table</span>
-            <svg className="w-3.5 h-3.5 text-[#64748B] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg className="w-3.5 h-3.5 text-[#6B7280] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -110,12 +110,12 @@ export default function MultiplicationPracticeHub({ active }: Props) {
             onClick={e => e.stopPropagation()}
           >
             {/* Drag handle — mobile only */}
-            <div className="sm:hidden w-10 h-1 bg-[#E2E8F0] rounded-full mx-auto mb-4" />
+            <div className="sm:hidden w-10 h-1 bg-[#E0E7FF] rounded-full mx-auto mb-4" />
             <div className="flex items-center justify-between mb-3">
-              <p className="text-sm font-semibold text-[#64748B]">Choose a times table</p>
+              <p className="text-sm font-semibold text-[#6B7280]">Choose a times table</p>
               <button
                 onClick={() => setShowPicker(false)}
-                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F1F5F9] text-[#94A3B8] hover:text-[#1E293B] transition-colors text-base leading-none"
+                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#EEF2FF] text-[#A5B4FC] hover:text-[#1E1B4B] transition-colors text-base leading-none"
                 aria-label="Close"
               >
                 ✕
@@ -128,8 +128,8 @@ export default function MultiplicationPracticeHub({ active }: Props) {
                   onClick={() => { handleTableSelect(n); setShowPicker(false); }}
                   className={`py-4 sm:py-3 rounded-xl text-sm font-bold transition-colors duration-150 ${
                     selectedTable === n
-                      ? 'bg-[#3B82F6] text-white'
-                      : 'bg-[#F1F5F9] text-[#1E293B] hover:bg-[#E2E8F0]'
+                      ? 'bg-[#4F46E5] text-white'
+                      : 'bg-[#F5F3FF] text-[#1E1B4B] hover:bg-[#EEF2FF]'
                   }`}
                 >
                   {n}
