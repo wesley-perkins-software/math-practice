@@ -135,13 +135,17 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }, []);
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-4 md:p-5 w-full max-w-lg mx-auto">
-      {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
-      {topContent && (
-        <div className="mb-4 pb-4 border-b border-[#E2E8F0]">
-          {topContent}
-        </div>
-      )}
+    <div className="bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden">
+      {/* ── GRADIENT ACCENT BAR ─────────────────────── */}
+      <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
+
+      <div className="p-4 md:p-5">
+        {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
+        {topContent && (
+          <div className="mb-4 pb-4 border-b border-[#E0E7FF]">
+            {topContent}
+          </div>
+        )}
 
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
@@ -174,9 +178,9 @@ export default function PracticeWidget({ config, topContent }: Props) {
           )}
 
           {/* Current streak */}
-          <div className="flex items-center justify-between w-full pt-2 border-t border-[#E2E8F0]">
+          <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
             {/* Streak label — always visible so Reset has context */}
-            <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#94A3B8]'}`}>
+            <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}>
               {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
             </span>
 
@@ -184,13 +188,13 @@ export default function PracticeWidget({ config, topContent }: Props) {
             {!resetPending ? (
               <button
                 onClick={() => setResetPending(true)}
-                className="text-xs text-[#94A3B8] hover:text-[#64748B] transition-colors px-2 py-1 rounded hover:bg-[#F1F5F9]"
+                className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
               >
                 Reset
               </button>
             ) : (
               <div className="flex items-center gap-1">
-                <span className="text-xs text-[#64748B] mr-1">Reset streak?</span>
+                <span className="text-xs text-[#6B7280] mr-1">Reset streak?</span>
                 <button
                   onClick={handleResetCurrentStreak}
                   className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
@@ -199,7 +203,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
                 </button>
                 <button
                   onClick={() => setResetPending(false)}
-                  className="text-xs font-semibold text-[#64748B] bg-[#F1F5F9] hover:bg-[#E2E8F0] px-2 py-1 rounded transition-colors"
+                  className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
                 >
                   Cancel
                 </button>
@@ -218,6 +222,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
           onRestart={handleRestart}
         />
       )}
+      </div>
     </div>
   );
 }

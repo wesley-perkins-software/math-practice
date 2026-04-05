@@ -63,16 +63,16 @@ export default function SubtractionPracticeHub({ active }: Props) {
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
   const tabs = (
-    <div className="flex gap-1 p-1 bg-[#F1F5F9] rounded-xl">
+    <div className="flex gap-1 p-1 bg-[#EEF2FF] border border-[#E0E7FF] rounded-xl">
       {DIFFICULTIES.map(({ id, label, href }) => (
         <a
           key={id}
           href={href}
           onClick={handleTabClick}
-          className={`flex-1 py-2 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 leading-snug ${
+          className={`flex-1 py-2.5 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 leading-snug ${
             active === id
-              ? 'bg-white text-[#1E293B] shadow-sm border-b-2 border-[#3B82F6]'
-              : 'text-[#64748B] hover:text-[#334155] hover:bg-white/50'
+              ? 'bg-white text-[#4F46E5] shadow-sm border-b-2 border-[#4F46E5]'
+              : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-white/60'
           }`}
         >
           {label}
