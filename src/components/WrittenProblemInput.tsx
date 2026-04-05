@@ -27,6 +27,7 @@ export default function WrittenProblemInput({
   const symbol = OP_SYMBOL[problem.operation];
   const [value, setValue] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
 
@@ -107,6 +108,8 @@ export default function WrittenProblemInput({
           disabled={disabled}
           aria-label="Your answer"
           className="sr-only"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
 
         {/* Row 1: operandA, right-aligned */}
@@ -131,7 +134,7 @@ export default function WrittenProblemInput({
         <div className="text-right mt-1 min-h-[2.5rem] md:min-h-[3rem] flex items-center justify-end">
           {isPlaceholder ? (
             <span className="text-4xl md:text-5xl font-bold tabular-nums text-[#CBD5E1] inline-flex items-center">
-              ?<span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span>
+              ?{isFocused && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span>}
             </span>
           ) : (
             <span className={`text-4xl md:text-5xl font-bold tabular-nums transition-colors duration-150 ${answerColor}`}>
