@@ -110,15 +110,15 @@ export default function WrittenProblemInput({
 
         {/* Row 1: operandA, right-aligned */}
         <div className="text-right">
-          <span className="text-5xl md:text-6xl font-bold text-[#1E293B] tabular-nums">
+          <span className="text-4xl md:text-5xl font-bold text-[#1E293B] tabular-nums">
             {problem.operandA}
           </span>
         </div>
 
         {/* Row 2: operator (left) + operandB (right) */}
         <div className="flex items-center justify-end gap-3">
-          <span className="text-4xl font-semibold text-[#3B82F6]">{symbol}</span>
-          <span className="text-5xl md:text-6xl font-bold text-[#1E293B] tabular-nums">
+          <span className="text-3xl md:text-4xl font-semibold text-[#3B82F6]">{symbol}</span>
+          <span className="text-4xl md:text-5xl font-bold text-[#1E293B] tabular-nums">
             {problem.operandB}
           </span>
         </div>
@@ -127,13 +127,13 @@ export default function WrittenProblemInput({
         <div className="border-t-[3px] border-[#1E293B] mt-2" />
 
         {/* Row 3: answer, right-aligned under the rule */}
-        <div className="text-right mt-1 min-h-[3.5rem] md:min-h-[4rem] flex items-center justify-end">
+        <div className="text-right mt-1 min-h-[2.5rem] md:min-h-[3rem] flex items-center justify-end">
           {isPlaceholder ? (
-            <span className="text-5xl md:text-6xl font-bold tabular-nums text-[#CBD5E1] inline-flex items-center">
+            <span className="text-4xl md:text-5xl font-bold tabular-nums text-[#CBD5E1] inline-flex items-center">
               ?<span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#334155] font-light">|</span>
             </span>
           ) : (
-            <span className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 ${answerColor}`}>
+            <span className={`text-4xl md:text-5xl font-bold tabular-nums transition-colors duration-150 ${answerColor}`}>
               {value}
             </span>
           )}
