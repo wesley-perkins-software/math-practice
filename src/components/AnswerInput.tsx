@@ -68,7 +68,7 @@ export default function AnswerInput({
       : 'border-[#CBD5E1] focus:border-[#3B82F6] focus:ring-[3px] focus:ring-[#3B82F6]/25';
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full">
+    <div className="flex flex-col items-center gap-2 w-full" onClick={() => inputRef.current?.focus()}>
       <input
         ref={inputRef}
         type="text"

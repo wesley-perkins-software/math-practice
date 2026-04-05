@@ -107,6 +107,7 @@ export default function RemainderProblemInput({
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         aria-label={`What is ${problem.operandA} ÷ ${problem.operandB}? Enter quotient and remainder.`}
+        onClick={() => inputRef.current?.focus()}
       >
         {/* Hidden input captures keyboard events */}
         <input
