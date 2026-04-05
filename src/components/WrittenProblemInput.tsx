@@ -94,6 +94,7 @@ export default function WrittenProblemInput({
           isVisible ? 'opacity-100' : 'opacity-0'
         }`}
         aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
+        onClick={() => inputRef.current?.focus()}
       >
         {/* Hidden input captures keyboard events */}
         <input
