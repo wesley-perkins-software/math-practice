@@ -1,0 +1,40 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import DivisionPracticeHub from '@/components/DivisionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+export function getStaticPaths() {
+  return Array.from({ length: 12 }, (_, i) => i + 1).map((divisor) => ({
+    params: { divisor: String(divisor) },
+    props: { divisor },
+  }));
+}
+
+const { divisor } = Astro.props;
+
+const title = `Divide by ${divisor} Practice`;
+const description = `Practice division by ${divisor} with exact whole-number answers. Build speed and confidence with focused divide by ${divisor} drills.`;
+
+const links = [
+  { href: '/division/facts', label: 'Division Facts Practice', description: 'Mixed exact division facts' },
+  { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
+  { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Start with foundational facts' },
+  { href: '/division/divide-by/12', label: 'Divide by 12 Practice', description: 'Advance single-divisor fluency' },
+];
+---
+
+<PracticeLayout
+  title={title}
+  description={description}
+  canonical={`${SITE}/division/divide-by/${divisor}`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division' }, { label: `Divide by ${divisor}` }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{title}</h1>
+  <div slot="intro">
+    <p>Focus on one fact family at a time with divide by {divisor} problems. This targeted practice helps students improve speed, sharpen accuracy, and gain confidence before mixing divisors.</p>
+  </div>
+  <DivisionPracticeHub slot="widget" active="divide-by" selectedDivisor={divisor} client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

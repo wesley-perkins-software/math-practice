@@ -1,28 +1,15 @@
 ---
-import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import DivisionPracticeHub from '@/components/DivisionPracticeHub';
-import InternalLinks from '@/components/InternalLinks';
-
-const SITE = 'https://www.mathpractice.com';
-
-const links = [
-  { href: '/division-practice/facts', label: 'Division Facts', description: 'Exact division first' },
-  { href: '/division-practice/divide-by', label: 'Divide by X', description: 'Focus on one divisor' },
-  { href: '/multiplication', label: 'Multiplication Practice', description: 'Practice the inverse' },
-  { href: '/math-drills', label: 'Math Drills', description: 'Mixed timed drills' },
-];
 ---
 
-<PracticeLayout
-  title="Division with Remainders Practice | Quotient and Remainder"
-  description="Practice division with remainders online. Enter the quotient and remainder separately. Divisors 2–12 with instant feedback and streak tracking."
-  canonical={`${SITE}/division-practice/remainders`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division Practice', href: '/division-practice' }, { label: 'Remainders' }]}
->
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division with Remainders</h1>
-  <div slot="intro">
-    <p>Practice division that doesn't divide evenly. Enter the quotient first, then the remainder. This builds the conceptual understanding needed for long division and fractions.</p>
-  </div>
-  <DivisionPracticeHub slot="widget" active="remainders" client:load />
-  <InternalLinks slot="links" links={links} />
-</PracticeLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0;url=/division/remainders" />
+    <link rel="canonical" href="https://www.mathpractice.com/division/remainders" />
+    <title>Redirecting to Division with Remainders Practice</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/division/remainders">Division with Remainders Practice</a>…</p>
+  </body>
+</html>
