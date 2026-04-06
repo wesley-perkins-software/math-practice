@@ -1,0 +1,28 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+
+const SITE = 'https://www.mathpractice.com';
+---
+
+<PracticeLayout
+  title="Multiplication Practice | Facts and Times Tables"
+  description="Choose mixed multiplication facts practice or focus on a single times table from 1 to 12."
+  canonical={`${SITE}/multiplication`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Multiplication' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Practice</h1>
+  <div slot="intro">
+    <p>Choose your multiplication mode: mixed facts practice for full coverage, or times tables for focused practice on one number at a time.</p>
+  </div>
+
+  <div slot="widget" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+    <a href="/multiplication/facts" class="block bg-white border border-[#E2E8F0] rounded-xl p-5 hover:border-[#3B82F6] hover:shadow-sm transition-all">
+      <h2 class="text-lg font-semibold text-[#1E293B]">Multiplication Facts Practice</h2>
+      <p class="text-sm text-[#64748B] mt-1">Practice mixed multiplication facts from 1×1 through 12×12.</p>
+    </a>
+    <a href="/multiplication/times-tables/1" class="block bg-white border border-[#E2E8F0] rounded-xl p-5 hover:border-[#3B82F6] hover:shadow-sm transition-all">
+      <h2 class="text-lg font-semibold text-[#1E293B]">Times Tables Practice</h2>
+      <p class="text-sm text-[#64748B] mt-1">Master one table at a time, from 1 through 12.</p>
+    </a>
+  </div>
+</PracticeLayout>

@@ -1,0 +1,65 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
+
+const SITE = 'https://www.mathpractice.com';
+
+export function getStaticPaths() {
+  return Array.from({ length: 12 }, (_, i) => ({
+    params: { table: String(i + 1) },
+  }));
+}
+
+const { table } = Astro.params;
+const tableNumber = Number(table);
+
+if (!Number.isInteger(tableNumber) || tableNumber < 1 || tableNumber > 12) {
+  return Astro.redirect('/multiplication/times-tables/1', 302);
+}
+
+const pageTitle = `${tableNumber} Times Table Practice | Multiplication Table ${tableNumber}`;
+const pageDescription = `Practice the ${tableNumber} times table with focused multiplication problems. Build fast recall for ${tableNumber}×1 through ${tableNumber}×12 with instant feedback and streak tracking.`;
+const h1 = `${tableNumber} Times Table Practice`;
+const introLead = `Focus on the ${tableNumber} times table to build automatic recall for one number at a time.`;
+const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}×12 so students can master the ${tableNumber}s before moving on to mixed multiplication practice.`;
+---
+
+<PracticeLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={`${SITE}/multiplication/times-tables/${tableNumber}`}
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Multiplication', href: '/multiplication' },
+    { label: 'Times Tables', href: '/multiplication/times-tables/1' },
+    { label: `${tableNumber} Times Table` },
+  ]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{h1}</h1>
+  <div slot="intro">
+    <p>{introLead}</p>
+    <p class="mt-2">{introSupport}</p>
+  </div>
+
+  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
+
+  <div slot="links" class="mt-10">
+    <h2 class="text-base font-semibold text-[#1E293B] mb-3">What to Practice Next</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+      <a
+        href="/multiplication/facts"
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">Mixed Practice</div>
+        <div class="text-sm text-[#64748B] mt-0.5">All multiplication facts from 1–12</div>
+      </a>
+      <a
+        href={tableNumber === 12 ? '/multiplication/times-tables/1' : `/multiplication/times-tables/${tableNumber + 1}`}
+        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
+      >
+        <div class="font-semibold text-[#1E293B]">{tableNumber === 12 ? 'Back to 1 Times Table' : `Next: ${tableNumber + 1} Times Table`}</div>
+        <div class="text-sm text-[#64748B] mt-0.5">Continue table-by-table multiplication practice</div>
+      </a>
+    </div>
+  </div>
+</PracticeLayout>
