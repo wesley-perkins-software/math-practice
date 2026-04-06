@@ -117,6 +117,21 @@ export const MULTIPLICATION_1_12: PracticeConfig = {
   maxFactor: 12,
 };
 
+
+export function multiplyTableConfig(n: number): PracticeConfig {
+  return {
+    storageKey: `mult-table-${n}`,
+    label: `${n} Times Table`,
+    operation: 'multiplication',
+    mode: 'untimed',
+    timerDuration: 60,
+    operandA: { min: n, max: n },
+    operandB: { min: 1, max: 12 },
+    factsMode: true,
+    maxFactor: 12,
+  };
+}
+
 export const MULTIPLICATION_GENERAL: PracticeConfig = {
   storageKey: 'mult-general',
   label: 'Multiplication Practice',

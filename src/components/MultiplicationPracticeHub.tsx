@@ -1,36 +1,22 @@
 import PracticeWidget from './PracticeWidget';
 import { useEffect, useState } from 'react';
-import { MULTIPLICATION_FACTS } from '@/engine/presets';
-import type { PracticeConfig } from '@/engine/types';
+import { MULTIPLICATION_FACTS, multiplyTableConfig } from '@/engine/presets';
 
-type Mode = 'times-tables' | 'mixed';
+type Mode = 'times-tables' | 'facts' | 'mixed';
 
-const TABS: { id: Mode; label: string; href: string }[] = [
-  { id: 'times-tables', label: 'Times Tables', href: '/multiplication-practice/times-tables' },
-  { id: 'mixed',        label: 'Mixed Practice', href: '/multiplication-practice/mixed' },
+const TABS: { id: 'times-tables' | 'facts'; label: string; href: string }[] = [
+  { id: 'times-tables', label: 'Times Tables', href: '/multiplication/times-tables/1' },
+  { id: 'facts', label: 'Mixed Practice', href: '/multiplication/facts' },
 ];
 
-const TABLE_KEY  = 'mult-practice:table';
 const SCROLL_KEY = 'mult-practice:scroll-y';
-
-function tableConfig(n: number): PracticeConfig {
-  return {
-    storageKey: `mult-table-${n}`,
-    label: `${n}s Table`,
-    operation: 'multiplication',
-    mode: 'untimed',
-    timerDuration: 60,
-    operandA: { min: n, max: n },
-    operandB: { min: 1, max: 12 },
-  };
-}
 
 interface Props {
   active: Mode;
+  selectedTable?: number;
 }
 
-export default function MultiplicationPracticeHub({ active }: Props) {
-  const [selectedTable, setSelectedTable] = useState<number>(1);
+export default function MultiplicationPracticeHub({ active, selectedTable = 1 }: Props) {
   const [showPicker, setShowPicker] = useState(false);
 
   useEffect(() => {
@@ -40,12 +26,6 @@ export default function MultiplicationPracticeHub({ active }: Props) {
       if (Number.isFinite(y)) window.scrollTo({ top: y, behavior: 'auto' });
       sessionStorage.removeItem(SCROLL_KEY);
     }
-
-    const savedTable = sessionStorage.getItem(TABLE_KEY);
-    if (savedTable) {
-      const n = parseInt(savedTable, 10);
-      if (n >= 1 && n <= 12) setSelectedTable(n);
-    }
   }, []);
 
   const handleTabClick = () => {
@@ -53,15 +33,15 @@ export default function MultiplicationPracticeHub({ active }: Props) {
   };
 
   const handleTableSelect = (n: number) => {
-    setSelectedTable(n);
-    sessionStorage.setItem(TABLE_KEY, String(n));
+    sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
+    window.location.href = `/multiplication/times-tables/${n}`;
   };
 
-  const config = active === 'mixed' ? MULTIPLICATION_FACTS : tableConfig(selectedTable);
+  const normalizedActive: 'times-tables' | 'facts' = active === 'times-tables' ? 'times-tables' : 'facts';
+  const config = normalizedActive === 'facts' ? MULTIPLICATION_FACTS : multiplyTableConfig(selectedTable);
 
   const topContent = (
     <div className="flex flex-col gap-1 p-1 bg-[#EEF2FF] border border-[#E0E7FF] rounded-xl">
-      {/* Main tabs */}
       <div className="flex gap-1">
         {TABS.map(({ id, label, href }) => (
           <a
@@ -69,7 +49,7 @@ export default function MultiplicationPracticeHub({ active }: Props) {
             href={href}
             onClick={handleTabClick}
             className={`flex-1 py-2.5 flex items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 ${
-              active === id
+              normalizedActive === id
                 ? 'bg-white text-[#4F46E5] shadow-sm border-b-2 border-[#4F46E5]'
                 : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-white/60'
             }`}
@@ -79,8 +59,7 @@ export default function MultiplicationPracticeHub({ active }: Props) {
         ))}
       </div>
 
-      {/* Divider + compact table selector */}
-      {active === 'times-tables' && (
+      {normalizedActive === 'times-tables' && (
         <>
           <div className="border-t border-[#E0E7FF] mx-1" />
           <button
@@ -109,7 +88,6 @@ export default function MultiplicationPracticeHub({ active }: Props) {
             className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:w-80 px-4 pt-3 pb-8 sm:p-4"
             onClick={e => e.stopPropagation()}
           >
-            {/* Drag handle — mobile only */}
             <div className="sm:hidden w-10 h-1 bg-[#E0E7FF] rounded-full mx-auto mb-4" />
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold text-[#6B7280]">Choose a times table</p>
@@ -122,10 +100,13 @@ export default function MultiplicationPracticeHub({ active }: Props) {
               </button>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => (
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => (
                 <button
                   key={n}
-                  onClick={() => { handleTableSelect(n); setShowPicker(false); }}
+                  onClick={() => {
+                    setShowPicker(false);
+                    handleTableSelect(n);
+                  }}
                   className={`py-4 sm:py-3 rounded-xl text-sm font-bold transition-colors duration-150 ${
                     selectedTable === n
                       ? 'bg-[#4F46E5] text-white'
