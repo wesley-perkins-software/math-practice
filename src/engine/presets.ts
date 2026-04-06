@@ -127,8 +127,6 @@ export function multiplyTableConfig(n: number): PracticeConfig {
     timerDuration: 60,
     operandA: { min: n, max: n },
     operandB: { min: 1, max: 12 },
-    factsMode: true,
-    maxFactor: 12,
   };
 }
 
