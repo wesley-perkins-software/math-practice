@@ -1,0 +1,26 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Review single-digit addition fluency' },
+  { href: '/addition/2-digit-with-carrying', label: '2-Digit Addition with Carrying', description: 'Progress to regrouping problems' },
+  { href: '/subtraction-practice/2-digit', label: '2-Digit Subtraction', description: 'Pair two-digit addition and subtraction' },
+  { href: '/addition-practice', label: 'All Addition Practice', description: 'See every addition practice page' },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Addition Practice (No Carrying) | Math Practice"
+  description="Practice 2-digit addition without carrying. Every problem avoids regrouping so students can master place value and multi-digit setup first."
+  canonical={`${SITE}/addition/2-digit-no-carrying`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition/1-digit' }, { label: '2-Digit Addition (No Carrying)' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition Practice (No Carrying)</h1>
+  <p slot="intro">Work on two-digit addition without regrouping to strengthen place-value alignment and written addition steps before introducing carrying.</p>
+  <AdditionPracticeHub slot="widget" active="2-digit-no-carrying" client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

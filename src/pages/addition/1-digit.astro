@@ -1,0 +1,26 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Move into two-digit column addition' },
+  { href: '/addition/2-digit-with-carrying', label: '2-Digit Addition with Carrying', description: 'Practice regrouping and carrying' },
+  { href: '/subtraction-practice/1-digit', label: '1-Digit Subtraction', description: 'Build inverse-operation fluency' },
+  { href: '/addition-practice', label: 'All Addition Practice', description: 'Browse addition practice options' },
+];
+---
+
+<PracticeLayout
+  title="1-Digit Addition Practice | Math Practice"
+  description="Practice 1-digit addition problems online with instant feedback, streak tracking, and timed drills. Build fast, accurate single-digit addition fluency."
+  canonical={`${SITE}/addition/1-digit`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition/1-digit' }, { label: '1-Digit Addition' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Addition Practice</h1>
+  <p slot="intro">Practice basic single-digit addition facts, including sums greater than 9, to build speed and confidence with everyday mental math.</p>
+  <AdditionPracticeHub slot="widget" active="1-digit" client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>
