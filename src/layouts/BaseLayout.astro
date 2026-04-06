@@ -41,6 +41,7 @@ const { title, description, canonical, ogType = 'website' } = Astro.props;
       rel="stylesheet"
     />
 
+    <slot name="head" />
   </head>
   <body class="min-h-screen bg-[#F5F3FF] text-[#1E1B4B]">
     <slot />
