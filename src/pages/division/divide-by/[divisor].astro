@@ -6,7 +6,7 @@ import InternalLinks from '@/components/InternalLinks';
 const SITE = 'https://www.mathpractice.com';
 
 export function getStaticPaths() {
-  return Array.from({ length: 11 }, (_, i) => i + 2).map((divisor) => ({
+  return Array.from({ length: 12 }, (_, i) => i + 1).map((divisor) => ({
     params: { divisor: String(divisor) },
     props: { divisor },
   }));
@@ -20,7 +20,7 @@ const description = `Practice division by ${divisor} with exact whole-number ans
 const links = [
   { href: '/division/facts', label: 'Division Facts Practice', description: 'Mixed exact division facts' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
-  { href: '/division/divide-by/2', label: 'Divide by 2 Practice', description: 'Start with foundational facts' },
+  { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Start with foundational facts' },
   { href: '/division/divide-by/12', label: 'Divide by 12 Practice', description: 'Advance single-divisor fluency' },
 ];
 ---

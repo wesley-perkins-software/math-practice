@@ -6,7 +6,7 @@ type Mode = 'facts' | 'divide-by' | 'remainders';
 
 const TABS: { id: Mode; label: string; href: string }[] = [
   { id: 'facts', label: 'Facts', href: '/division/facts' },
-  { id: 'divide-by', label: 'Divide by X', href: '/division/divide-by/2' },
+  { id: 'divide-by', label: 'Divide by X', href: '/division/divide-by/1' },
   { id: 'remainders', label: 'Remainders', href: '/division/remainders' },
 ];
 
@@ -15,7 +15,7 @@ interface Props {
   selectedDivisor?: number;
 }
 
-export default function DivisionPracticeHub({ active, selectedDivisor = 2 }: Props) {
+export default function DivisionPracticeHub({ active, selectedDivisor = 1 }: Props) {
   const [showPicker, setShowPicker] = useState(false);
 
   const config =
@@ -90,7 +90,7 @@ export default function DivisionPracticeHub({ active, selectedDivisor = 2 }: Pro
               </button>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => (
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => (
                 <a
                   key={n}
                   href={`/division/divide-by/${n}`}
