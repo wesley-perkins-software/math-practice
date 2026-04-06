@@ -1,64 +1,37 @@
 import PracticeWidget from './PracticeWidget';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { DIVISION_FACTS, DIVISION_REMAINDERS, divideByConfig } from '@/engine/presets';
 
 type Mode = 'facts' | 'divide-by' | 'remainders';
 
 const TABS: { id: Mode; label: string; href: string }[] = [
-  { id: 'facts',     label: 'Facts',        href: '/division-practice/facts' },
-  { id: 'divide-by', label: 'Divide by X',  href: '/division-practice/divide-by' },
-  { id: 'remainders', label: 'Remainders',  href: '/division-practice/remainders' },
+  { id: 'facts', label: 'Facts', href: '/division/facts' },
+  { id: 'divide-by', label: 'Divide by X', href: '/division/divide-by/2' },
+  { id: 'remainders', label: 'Remainders', href: '/division/remainders' },
 ];
-
-const DIVISOR_KEY = 'div-practice:divisor';
-const SCROLL_KEY  = 'div-practice:scroll-y';
 
 interface Props {
   active: Mode;
+  selectedDivisor?: number;
 }
 
-export default function DivisionPracticeHub({ active }: Props) {
-  const [selectedDivisor, setSelectedDivisor] = useState<number>(2);
+export default function DivisionPracticeHub({ active, selectedDivisor = 2 }: Props) {
   const [showPicker, setShowPicker] = useState(false);
 
-  useEffect(() => {
-    const saved = sessionStorage.getItem(SCROLL_KEY);
-    if (saved) {
-      const y = Number.parseFloat(saved);
-      if (Number.isFinite(y)) window.scrollTo({ top: y, behavior: 'auto' });
-      sessionStorage.removeItem(SCROLL_KEY);
-    }
-
-    const savedDivisor = sessionStorage.getItem(DIVISOR_KEY);
-    if (savedDivisor) {
-      const n = parseInt(savedDivisor, 10);
-      if (n >= 1 && n <= 12) setSelectedDivisor(n);
-    }
-  }, []);
-
-  const handleTabClick = () => {
-    sessionStorage.setItem(SCROLL_KEY, String(window.scrollY));
-  };
-
-  const handleDivisorSelect = (n: number) => {
-    setSelectedDivisor(n);
-    sessionStorage.setItem(DIVISOR_KEY, String(n));
-  };
-
   const config =
-    active === 'facts'      ? DIVISION_FACTS :
-    active === 'remainders' ? DIVISION_REMAINDERS :
-    divideByConfig(selectedDivisor);
+    active === 'facts'
+      ? DIVISION_FACTS
+      : active === 'remainders'
+        ? DIVISION_REMAINDERS
+        : divideByConfig(selectedDivisor);
 
   const topContent = (
     <div className="flex flex-col gap-1 p-1 bg-[#EEF2FF] border border-[#E0E7FF] rounded-xl">
-      {/* Main tabs */}
       <div className="flex gap-1">
         {TABS.map(({ id, label, href }) => (
           <a
             key={id}
             href={href}
-            onClick={handleTabClick}
             className={`flex-1 py-2.5 flex items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 ${
               active === id
                 ? 'bg-white text-[#4F46E5] shadow-sm border-b-2 border-[#4F46E5]'
@@ -70,7 +43,6 @@ export default function DivisionPracticeHub({ active }: Props) {
         ))}
       </div>
 
-      {/* Divider + compact divisor selector */}
       {active === 'divide-by' && (
         <>
           <div className="border-t border-[#E0E7FF] mx-1" />
@@ -79,7 +51,13 @@ export default function DivisionPracticeHub({ active }: Props) {
             className="w-full mt-1 py-1.5 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E0E7FF] text-[#1E1B4B] hover:border-[#4F46E5] transition-colors duration-150"
           >
             <span>Dividing by {selectedDivisor}</span>
-            <svg className="w-3.5 h-3.5 text-[#6B7280] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <svg
+              className="w-3.5 h-3.5 text-[#6B7280] shrink-0"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2.5}
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
@@ -100,7 +78,6 @@ export default function DivisionPracticeHub({ active }: Props) {
             className="bg-white rounded-t-2xl sm:rounded-2xl shadow-xl w-full sm:w-80 px-4 pt-3 pb-8 sm:p-4"
             onClick={e => e.stopPropagation()}
           >
-            {/* Drag handle — mobile only */}
             <div className="sm:hidden w-10 h-1 bg-[#E0E7FF] rounded-full mx-auto mb-4" />
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold text-[#6B7280]">Choose a divisor</p>
@@ -113,18 +90,18 @@ export default function DivisionPracticeHub({ active }: Props) {
               </button>
             </div>
             <div className="grid grid-cols-4 gap-2">
-              {[1,2,3,4,5,6,7,8,9,10,11,12].map(n => (
-                <button
+              {[2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((n) => (
+                <a
                   key={n}
-                  onClick={() => { handleDivisorSelect(n); setShowPicker(false); }}
-                  className={`py-4 sm:py-3 rounded-xl text-sm font-bold transition-colors duration-150 ${
+                  href={`/division/divide-by/${n}`}
+                  className={`py-4 sm:py-3 rounded-xl text-sm font-bold transition-colors duration-150 text-center ${
                     selectedDivisor === n
                       ? 'bg-[#4F46E5] text-white'
                       : 'bg-[#F5F3FF] text-[#1E1B4B] hover:bg-[#EEF2FF]'
                   }`}
                 >
                   {n}
-                </button>
+                </a>
               ))}
             </div>
           </div>

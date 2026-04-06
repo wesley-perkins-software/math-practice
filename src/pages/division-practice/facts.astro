@@ -1,28 +1,15 @@
 ---
-import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import DivisionPracticeHub from '@/components/DivisionPracticeHub';
-import InternalLinks from '@/components/InternalLinks';
-
-const SITE = 'https://www.mathpractice.com';
-
-const links = [
-  { href: '/division-practice/divide-by', label: 'Divide by X', description: 'Focus on one divisor' },
-  { href: '/division-practice/remainders', label: 'Division with Remainders', description: 'Quotient and remainder' },
-  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Practice the inverse' },
-  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Mixed × and ÷ facts' },
-];
 ---
 
-<PracticeLayout
-  title="Division Facts Practice | 1–12 Division Drill"
-  description="Practice division facts with divisors 1–12 online. Whole-number answers only. Instant feedback, timed drills, and streak tracking."
-  canonical={`${SITE}/division-practice/facts`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division Practice', href: '/division-practice' }, { label: 'Division Facts' }]}
->
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division Facts Practice</h1>
-  <div slot="intro">
-    <p>Drill division facts with divisors from 1 to 12. Every problem has a clean whole-number answer, so you can build speed on the core division facts that underpin long division and fractions.</p>
-  </div>
-  <DivisionPracticeHub slot="widget" active="facts" client:load />
-  <InternalLinks slot="links" links={links} />
-</PracticeLayout>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content="0;url=/division/facts" />
+    <link rel="canonical" href="https://www.mathpractice.com/division/facts" />
+    <title>Redirecting to Division Facts Practice</title>
+  </head>
+  <body>
+    <p>Redirecting to <a href="/division/facts">Division Facts Practice</a>…</p>
+  </body>
+</html>
