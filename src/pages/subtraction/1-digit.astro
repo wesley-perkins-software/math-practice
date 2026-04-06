@@ -1,0 +1,26 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Move up to two-digit subtraction without regrouping' },
+  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Practice regrouping in two-digit subtraction' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Practice the inverse operation' },
+  { href: '/subtraction-practice', label: 'All Subtraction Practice', description: 'Browse subtraction practice options' },
+];
+---
+
+<PracticeLayout
+  title="1-Digit Subtraction Practice | Math Practice"
+  description="Practice 1-digit subtraction facts online with instant feedback, streak tracking, and timed drills. Build early elementary subtraction fluency and confidence."
+  canonical={`${SITE}/subtraction/1-digit`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction/1-digit' }, { label: '1-Digit Subtraction' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Subtraction Practice</h1>
+  <p slot="intro">Practice basic single-digit subtraction facts to build subtraction fluency, number sense, and confidence for early elementary learners.</p>
+  <SubtractionPracticeHub slot="widget" active="1-digit" client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

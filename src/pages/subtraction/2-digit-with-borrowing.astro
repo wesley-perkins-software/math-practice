@@ -1,0 +1,26 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Review non-regrouping subtraction first' },
+  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Reinforce subtraction fact fluency' },
+  { href: '/addition/2-digit-with-carrying', label: '2-Digit Addition with Carrying', description: 'Related regrouping addition skill' },
+  { href: '/subtraction-practice', label: 'All Subtraction Practice', description: 'Browse subtraction practice options' },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Subtraction with Borrowing Practice | Math Practice"
+  description="Practice 2-digit subtraction with borrowing and regrouping online. Every problem requires borrowing to build advanced subtraction accuracy."
+  canonical={`${SITE}/subtraction/2-digit-with-borrowing`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction/1-digit' }, { label: '2-Digit Subtraction with Borrowing' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction with Borrowing Practice</h1>
+  <p slot="intro">Practice regrouping in two-digit subtraction by borrowing from the tens column, a key step for mastering more advanced subtraction problems.</p>
+  <SubtractionPracticeHub slot="widget" active="2-digit-with-borrowing" client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>
