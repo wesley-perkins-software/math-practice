@@ -1,0 +1,26 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Review before regrouping' },
+  { href: '/subtraction-practice/2-digit-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Related regrouping skill' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Reinforce addition fact fluency' },
+  { href: '/addition-practice', label: 'All Addition Practice', description: 'Explore all addition levels' },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Addition with Carrying Practice | Math Practice"
+  description="Practice 2-digit addition with carrying and regrouping. These problems build advanced multi-digit addition accuracy in timed or untimed mode."
+  canonical={`${SITE}/addition/2-digit-with-carrying`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition/1-digit' }, { label: '2-Digit Addition with Carrying' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition with Carrying Practice</h1>
+  <p slot="intro">Practice regrouping when ones digits add to 10 or more, then carry to the tens column to build confidence with advanced two-digit addition.</p>
+  <AdditionPracticeHub slot="widget" active="2-digit-with-carrying" client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>

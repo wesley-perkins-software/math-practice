@@ -7,12 +7,12 @@ import {
 } from '@/engine/presets';
 import type { PracticeConfig } from '@/engine/types';
 
-type Difficulty = '1-digit' | '2-digit' | 'carrying';
+type Difficulty = '1-digit' | '2-digit-no-carrying' | '2-digit-with-carrying';
 
 const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig; href: string }[] = [
-  { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT,          href: '/addition-practice/1-digit' },
+  { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT, href: '/addition/1-digit' },
   {
-    id: '2-digit',
+    id: '2-digit-no-carrying',
     label: (
       <>
         <span className="block">2-Digit</span>
@@ -20,10 +20,10 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
       </>
     ),
     config: ADDITION_2_DIGIT,
-    href: '/addition-practice/2-digit',
+    href: '/addition/2-digit-no-carrying',
   },
   {
-    id: 'carrying',
+    id: '2-digit-with-carrying',
     label: (
       <>
         <span className="block">2-Digit</span>
@@ -31,7 +31,7 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
       </>
     ),
     config: ADDITION_2_DIGIT_CARRYING,
-    href: '/addition-practice/2-digit-carrying',
+    href: '/addition/2-digit-with-carrying',
   },
 ];
 
