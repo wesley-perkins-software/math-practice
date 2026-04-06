@@ -1,0 +1,26 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Review subtraction fact fluency first' },
+  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Progress to regrouping subtraction practice' },
+  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Practice the inverse two-digit skill' },
+  { href: '/subtraction-practice', label: 'All Subtraction Practice', description: 'Browse subtraction practice options' },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Subtraction Practice (No Borrowing) | Math Practice"
+  description="Practice 2-digit subtraction without borrowing online. Build place-value accuracy with subtraction problems that do not require regrouping."
+  canonical={`${SITE}/subtraction/2-digit-no-borrowing`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction/1-digit' }, { label: '2-Digit Subtraction (No Borrowing)' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction Practice (No Borrowing)</h1>
+  <p slot="intro">Work on two-digit subtraction without regrouping to strengthen place-value alignment and written subtraction steps before introducing borrowing.</p>
+  <SubtractionPracticeHub slot="widget" active="2-digit-no-borrowing" client:load />
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>
