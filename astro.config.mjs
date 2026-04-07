@@ -6,6 +6,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://www.mathpractice.com',
   output: 'static',
+  redirects: {
+    '/addition-practice': '/addition',
+  },
   integrations: [
     react(),
     sitemap(),

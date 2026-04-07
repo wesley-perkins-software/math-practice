@@ -6,10 +6,30 @@ import InternalLinks from '@/components/InternalLinks';
 const SITE = 'https://www.mathpractice.com';
 
 const links = [
-  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Move into two-digit column addition' },
+  { href: '/addition', label: 'All Addition Levels', description: 'Choose a difficulty or compare all levels' },
+  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Next step: move into two-digit problems' },
   { href: '/addition/2-digit-with-carrying', label: '2-Digit Addition with Carrying', description: 'Practice regrouping and carrying' },
   { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Build inverse-operation fluency' },
-  { href: '/addition-practice', label: 'All Addition Practice', description: 'Browse addition practice options' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style practice with instant feedback' },
+];
+
+const faqItems = [
+  {
+    q: 'What grade is 1-digit addition?',
+    a: '1-digit addition is a core Kindergarten and Grade 1 skill. Students work toward fluency with all 81 single-digit addition facts (1+1 through 9+9) before moving on to two-digit addition.'
+  },
+  {
+    q: 'What does "sums greater than 9" mean in addition?',
+    a: 'When two single digits add up to 10 or more (for example, 7 + 8 = 15), the sum is greater than 9. These facts are especially important because they lay the groundwork for understanding carrying in multi-digit addition.'
+  },
+  {
+    q: 'How do I get faster at single-digit addition?',
+    a: 'The most effective strategies are: counting on from the larger number (for 3 + 7, start at 7 and count up 3), making 10 (for 8 + 6, split 6 into 2 + 4, then add 8 + 2 = 10, then + 4 = 14), and using doubles (knowing 6 + 6 = 12 helps quickly solve 6 + 7 = 13). Daily short practice sessions build speed faster than occasional long sessions.'
+  },
+  {
+    q: 'How many addition facts are there?',
+    a: 'There are 81 single-digit addition facts (1+1 through 9+9). If you include 0 as an addend, there are 100 (0+0 through 9+9). Most curricula focus on the 81 non-zero facts for fluency practice.'
+  },
 ];
 ---
 
@@ -17,10 +37,82 @@ const links = [
   title="1-Digit Addition Practice | Math Practice"
   description="Practice 1-digit addition problems online with instant feedback, streak tracking, and timed drills. Build fast, accurate single-digit addition fluency."
   canonical={`${SITE}/addition/1-digit`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition/1-digit' }, { label: '1-Digit Addition' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '1-Digit Addition' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "1-Digit Addition Practice",
+      "description": "Interactive online practice for single-digit addition facts. Covers all sums 1+1 through 9+9 with instant feedback and progress tracking.",
+      "url": `${SITE}/addition/1-digit`,
+      "educationalLevel": ["Kindergarten", "Grade 1"],
+      "teaches": "Single-digit addition",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Addition Practice</h1>
   <p slot="intro">Practice basic single-digit addition facts, including sums greater than 9, to build speed and confidence with everyday mental math.</p>
   <AdditionPracticeHub slot="widget" active="1-digit" client:load />
   <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Kindergarten – Grade 1</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 81 single-digit addition facts (1+1 through 9+9)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Sums greater than 9 (e.g., 7 + 8 = 15) — the hardest and most important facts</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Optional timed mode (30 seconds to 5 minutes) to build speed</li>
+      </ul>
+    </section>
+
+    <!-- Strategies -->
+    <section aria-labelledby="strategies-heading">
+      <h2 id="strategies-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Mental Math Strategies</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Count On</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Start from the larger number and count up. For 3 + 7: start at 7, count up 3 → 8, 9, 10.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Make Ten</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">For 8 + 6: split 6 into 2 + 4. Then 8 + 2 = 10, and 10 + 4 = 14.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Doubles</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Know that 6 + 6 = 12, so 6 + 7 = 13 (one more). Doubles are easy to memorize.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
 </PracticeLayout>

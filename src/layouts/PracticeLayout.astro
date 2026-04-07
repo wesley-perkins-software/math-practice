@@ -17,6 +17,21 @@ const { title, description, canonical, breadcrumb = [] } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
+  <Fragment slot="head">
+    {breadcrumb.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumb.map((item, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "name": item.label,
+          ...(item.href ? { "item": `https://www.mathpractice.com${item.href}` } : {})
+        }))
+      })} />
+    )}
+    <slot name="head" />
+  </Fragment>
   <!-- Site Header -->
   <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
@@ -25,7 +40,7 @@ const { title, description, canonical, breadcrumb = [] } = Astro.props;
         <span class="text-base font-bold text-white tracking-tight">Math Practice</span>
       </a>
       <nav class="hidden sm:flex items-center gap-1">
-        <a href="/addition/1-digit" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Addition</a>
+        <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Addition</a>
         <a href="/subtraction-practice" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Subtraction</a>
         <a href="/multiplication" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Multiplication</a>
         <a href="/division/facts" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Division</a>
@@ -74,7 +89,7 @@ const { title, description, canonical, breadcrumb = [] } = Astro.props;
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1]">
         <a href="/" class="hover:text-[#3730A3] transition-colors">Home</a>
         <a href="/math-practice" class="hover:text-[#3730A3] transition-colors">Math Practice</a>
-        <a href="/addition/1-digit" class="hover:text-[#3730A3] transition-colors">Addition</a>
+        <a href="/addition" class="hover:text-[#3730A3] transition-colors">Addition</a>
         <a href="/subtraction-practice" class="hover:text-[#3730A3] transition-colors">Subtraction</a>
         <a href="/multiplication" class="hover:text-[#3730A3] transition-colors">Multiplication</a>
         <a href="/division/facts" class="hover:text-[#3730A3] transition-colors">Division</a>
