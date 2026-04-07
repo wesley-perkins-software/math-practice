@@ -6,10 +6,30 @@ import InternalLinks from '@/components/InternalLinks';
 const SITE = 'https://www.mathpractice.com';
 
 const links = [
-  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Move up to two-digit subtraction without regrouping' },
-  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Practice regrouping in two-digit subtraction' },
-  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Practice the inverse operation' },
-  { href: '/subtraction-practice', label: 'All Subtraction Practice', description: 'Browse subtraction practice options' },
+  { href: '/subtraction', label: 'All Subtraction Levels', description: 'Choose a difficulty or compare all levels' },
+  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Next step: two-digit problems without regrouping' },
+  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Practice regrouping and borrowing' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Build inverse-operation fluency' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style practice with instant feedback' },
+];
+
+const faqItems = [
+  {
+    q: 'What grade is 1-digit subtraction?',
+    a: '1-digit subtraction is a core Kindergarten and Grade 1 skill. Students work toward fluency with all single-digit subtraction facts before moving on to two-digit subtraction.'
+  },
+  {
+    q: 'What does "difference" mean in subtraction?',
+    a: 'The difference is the result of a subtraction problem. For 9 − 4 = 5, the difference is 5. It represents how much larger one number is than another, or how much is left after taking away.'
+  },
+  {
+    q: 'How do I get faster at single-digit subtraction?',
+    a: 'The most effective strategies are: count back from the larger number (for 9 − 3, start at 9 and count back 3), use the "think addition" strategy (for 8 − 5, ask "5 + ? = 8"), and learn fact families (knowing 6 + 4 = 10 means you also know 10 − 4 = 6). Daily short practice sessions build speed faster than occasional long sessions.'
+  },
+  {
+    q: 'How many subtraction facts are there?',
+    a: 'There are 72 single-digit subtraction facts (from 2 − 1 through 9 − 9, excluding subtraction by 0). If you include differences equal to zero, there are 81. Most curricula focus on the core facts with differences from 0 to 8.'
+  },
 ];
 ---
 
@@ -17,10 +37,82 @@ const links = [
   title="1-Digit Subtraction Practice | Math Practice"
   description="Practice 1-digit subtraction facts online with instant feedback, streak tracking, and timed drills. Build early elementary subtraction fluency and confidence."
   canonical={`${SITE}/subtraction/1-digit`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction/1-digit' }, { label: '1-Digit Subtraction' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '1-Digit Subtraction' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "1-Digit Subtraction Practice",
+      "description": "Interactive online practice for single-digit subtraction facts. Covers all differences from 1−1 through 9−9 with instant feedback and progress tracking.",
+      "url": `${SITE}/subtraction/1-digit`,
+      "educationalLevel": ["Kindergarten", "Grade 1"],
+      "teaches": "Single-digit subtraction",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Subtraction Practice</h1>
   <p slot="intro">Practice basic single-digit subtraction facts to build subtraction fluency, number sense, and confidence for early elementary learners.</p>
   <SubtractionPracticeHub slot="widget" active="1-digit" client:load />
   <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Kindergarten – Grade 1</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All single-digit subtraction facts (1−1 through 9−1, up to 9−9)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Differences from 0 to 8, including the hardest subtraction facts</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Streak and best score saved automatically in your browser</li>
+      </ul>
+    </section>
+
+    <!-- Strategies -->
+    <section aria-labelledby="strategies-heading">
+      <h2 id="strategies-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Mental Math Strategies</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Count Back</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Start from the larger number and count down. For 9 − 3: start at 9, count back 3 → 8, 7, 6.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Think Addition</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">For 8 − 5: ask "5 + ? = 8." If you know your addition facts, you can find subtraction answers instantly.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Fact Families</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Know that 6 + 4 = 10, so 10 − 4 = 6 and 10 − 6 = 4. Addition and subtraction facts come in families of four.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
 </PracticeLayout>

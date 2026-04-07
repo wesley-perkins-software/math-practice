@@ -6,63 +6,63 @@ const SITE = 'https://www.mathpractice.com';
 
 const difficulties = [
   {
-    href: '/addition/1-digit',
-    label: '1-Digit Addition',
+    href: '/subtraction/1-digit',
+    label: '1-Digit Subtraction',
     grade: 'Kindergarten – Grade 1',
-    description: 'Practice single-digit facts (1–9). Build speed and accuracy with the foundation of all arithmetic.',
-    symbol: '4 + 7',
+    description: 'Practice single-digit subtraction facts (1–9). Build speed and accuracy with the foundation of all subtraction.',
+    symbol: '9 − 4',
   },
   {
-    href: '/addition/2-digit-no-carrying',
-    label: '2-Digit Addition (No Carrying)',
+    href: '/subtraction/2-digit-no-borrowing',
+    label: '2-Digit Subtraction (No Borrowing)',
     grade: 'Grade 1 – Grade 2',
-    description: 'Two-digit addition without regrouping. Master place-value alignment and column addition before introducing carrying.',
-    symbol: '23 + 45',
+    description: 'Two-digit subtraction without regrouping. Master place-value alignment and column subtraction before introducing borrowing.',
+    symbol: '57 − 23',
   },
   {
-    href: '/addition/2-digit-with-carrying',
-    label: '2-Digit Addition with Carrying',
+    href: '/subtraction/2-digit-with-borrowing',
+    label: '2-Digit Subtraction with Borrowing',
     grade: 'Grade 2 – Grade 3',
-    description: 'Two-digit addition with regrouping. Practice carrying from the ones column to build advanced multi-digit fluency.',
-    symbol: '47 + 38',
+    description: 'Two-digit subtraction with regrouping. Practice borrowing from the tens column to build advanced multi-digit fluency.',
+    symbol: '74 − 38',
   },
 ];
 
 const relatedLinks = [
-  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Inverse operation — build fact families' },
-  { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'The subtraction equivalent of carrying' },
-  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style addition with instant feedback' },
-  { href: '/multiplication', label: 'Multiplication Practice', description: 'Next step after mastering addition' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Inverse operation — build fact families' },
+  { href: '/addition/2-digit-with-carrying', label: 'Addition with Carrying', description: 'The addition equivalent of borrowing' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style subtraction with instant feedback' },
+  { href: '/multiplication', label: 'Multiplication Practice', description: 'Next step after mastering subtraction' },
 ];
 
 const faqItems = [
   {
-    q: 'What grade level is 1-digit addition?',
-    a: '1-digit addition (sums within 18) is typically a Kindergarten and Grade 1 skill. Students learn to add single digits fluently before moving to multi-digit addition.'
+    q: 'What grade level is 1-digit subtraction?',
+    a: '1-digit subtraction is a core Kindergarten and Grade 1 skill. Students work toward fluency with all single-digit subtraction facts before moving on to two-digit subtraction.'
   },
   {
-    q: 'What is carrying in addition?',
-    a: 'Carrying (also called regrouping) happens when the digits in a column add up to 10 or more. The ones digit is written in the answer, and the tens digit is "carried" to the next column. For example, 47 + 38: the ones column is 7 + 8 = 15, so you write 5 and carry 1 to the tens column.'
+    q: 'What is borrowing in subtraction?',
+    a: 'Borrowing (also called regrouping) occurs when the ones digit of the top number is smaller than the ones digit of the bottom number. You borrow 1 ten from the tens column — reducing the tens digit by 1 — and add 10 to the ones digit so that subtraction is possible. For example, 72 − 38: the ones column has 2 < 8, so borrow 1 ten → 12 − 8 = 4 ones; tens: 6 − 3 = 3 → answer 34.'
   },
   {
-    q: 'What is the difference between addition with and without carrying?',
-    a: 'In addition without carrying, no column adds up to 10 or more, so every digit stays in its own column (e.g., 23 + 45 = 68). In addition with carrying, at least one column totals 10 or more, requiring a digit to be moved to the next column (e.g., 47 + 38 = 85).'
+    q: 'What is the difference between subtraction with and without borrowing?',
+    a: 'In subtraction without borrowing, every digit in the top number is greater than or equal to the corresponding digit in the bottom number, so each column can be subtracted directly (e.g., 57 − 23 = 34). In subtraction with borrowing, the ones digit of the top number is smaller, requiring a ten to be exchanged for 10 ones before subtracting (e.g., 72 − 38 requires borrowing).'
   },
   {
-    q: 'How do I teach carrying to a child?',
-    a: 'Start with 1-digit addition to build fact fluency. Then introduce 2-digit addition without carrying so students understand column alignment. Once that is solid, introduce carrying: show that when a column sums to 10 or more, you write the ones digit and place the tens digit above the next column. Use physical manipulatives (base-ten blocks) alongside the practice problems for the best results.'
+    q: 'How do I teach borrowing to a child?',
+    a: 'Start with 1-digit subtraction to build fact fluency. Then introduce 2-digit subtraction without borrowing so students understand column alignment. Once that is solid, introduce borrowing: when the top ones digit is smaller than the bottom ones digit, cross out the tens digit, write it minus 1, and add 10 to the ones digit. Use base-ten blocks alongside written practice to make the concept concrete before it becomes abstract.'
   },
   {
-    q: 'How does this addition practice work?',
-    a: 'Each session gives you 20 addition problems with instant right/wrong feedback after every answer. Your streak and best scores are saved automatically in your browser.'
+    q: 'How does this subtraction practice work?',
+    a: 'Each session gives you 20 subtraction problems with instant right/wrong feedback after every answer. Your streak and best scores are saved automatically in your browser.'
   },
 ];
 ---
 
 <BaseLayout
-  title="Addition Practice — Free Online Addition Drills | Math Practice"
-  description="Free online addition practice for grades K–3. Choose 1-digit addition, 2-digit addition without carrying, or 2-digit addition with carrying. Instant feedback and streak tracking."
-  canonical={`${SITE}/addition`}
+  title="Subtraction Practice — Free Online Subtraction Drills | Math Practice"
+  description="Free online subtraction practice for grades K–3. Choose 1-digit subtraction, 2-digit subtraction without borrowing, or 2-digit subtraction with borrowing. Instant feedback and streak tracking."
+  canonical={`${SITE}/subtraction`}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -70,7 +70,7 @@ const faqItems = [
       "@type": "BreadcrumbList",
       "itemListElement": [
         { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mathpractice.com/" },
-        { "@type": "ListItem", "position": 2, "name": "Addition Practice" }
+        { "@type": "ListItem", "position": 2, "name": "Subtraction Practice" }
       ]
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -85,11 +85,11 @@ const faqItems = [
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "Addition Practice",
-      "description": "Free online addition practice for grades K–3 covering 1-digit, 2-digit without carrying, and 2-digit with carrying. Instant feedback and progress tracking.",
-      "url": "https://www.mathpractice.com/addition",
+      "name": "Subtraction Practice",
+      "description": "Free online subtraction practice for grades K–3 covering 1-digit, 2-digit without borrowing, and 2-digit with borrowing. Instant feedback and progress tracking.",
+      "url": "https://www.mathpractice.com/subtraction",
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
-      "teaches": "Addition",
+      "teaches": "Subtraction",
       "provider": {
         "@type": "Organization",
         "name": "Math Practice",
@@ -106,8 +106,8 @@ const faqItems = [
         <span class="text-base font-bold text-white tracking-tight">Math Practice</span>
       </a>
       <nav class="hidden sm:flex items-center gap-1">
-        <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-white bg-white/10 transition-all">Addition</a>
-        <a href="/subtraction" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Subtraction</a>
+        <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Addition</a>
+        <a href="/subtraction" class="px-3 py-1.5 rounded-lg text-sm font-medium text-white bg-white/10 transition-all">Subtraction</a>
         <a href="/multiplication" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Multiplication</a>
         <a href="/division/facts" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Division</a>
       </nav>
@@ -119,13 +119,13 @@ const faqItems = [
     <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#A5B4FC] flex items-center flex-wrap gap-1">
       <a href="/" class="hover:text-[#4F46E5] transition-colors">Home</a>
       <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>
-      <span class="text-[#6B7280]">Addition Practice</span>
+      <span class="text-[#6B7280]">Subtraction Practice</span>
     </nav>
 
     <!-- H1 + intro -->
-    <h1 class="text-3xl font-bold text-[#1E293B]">Addition Practice</h1>
+    <h1 class="text-3xl font-bold text-[#1E293B]">Subtraction Practice</h1>
     <p class="mt-3 mb-8 text-[#6B7280] text-base leading-relaxed max-w-xl">
-      Free online addition practice for grades K–3. Choose a difficulty level below — each opens an interactive drill with instant feedback and streak tracking.
+      Free online subtraction practice for grades K–3. Choose a difficulty level below — each opens an interactive drill with instant feedback and streak tracking.
     </p>
 
     <!-- Difficulty cards -->
@@ -161,22 +161,22 @@ const faqItems = [
           <div class="flex items-start gap-4 px-5 py-4">
             <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">K – Grade 1</span>
             <div>
-              <p class="text-sm font-medium text-[#1E293B]">1-Digit Addition</p>
-              <p class="text-sm text-[#6B7280] mt-0.5">Learn to add numbers 1–9. Build fluency with all 81 single-digit addition facts. This is the core foundation before any multi-digit work.</p>
+              <p class="text-sm font-medium text-[#1E293B]">1-Digit Subtraction</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Learn to subtract numbers 1–9. Build fluency with all single-digit subtraction facts. This core foundation makes every later skill easier — and connects directly to addition fact families.</p>
             </div>
           </div>
           <div class="flex items-start gap-4 px-5 py-4">
             <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 1 – 2</span>
             <div>
-              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition (No Carrying)</p>
-              <p class="text-sm text-[#6B7280] mt-0.5">Extend single-digit fluency to two-digit numbers. Learn to align columns by place value and add tens and ones independently.</p>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Subtraction (No Borrowing)</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Extend single-digit fluency to two-digit numbers. Learn to align columns by place value and subtract tens and ones independently — without regrouping.</p>
             </div>
           </div>
           <div class="flex items-start gap-4 px-5 py-4">
             <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2 – 3</span>
             <div>
-              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition with Carrying</p>
-              <p class="text-sm text-[#6B7280] mt-0.5">Master regrouping. When a column's digits sum to 10 or more, carry the tens digit into the next column. This skill extends directly to 3-digit and larger addition.</p>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Subtraction with Borrowing</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Master regrouping. When the ones digit is too small to subtract from, borrow 1 ten from the tens column. This skill extends directly to 3-digit and larger subtraction.</p>
             </div>
           </div>
         </div>
@@ -188,13 +188,13 @@ const faqItems = [
       <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
       <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
         <p>
-          Start with <a href="/addition/1-digit" class="text-[#4F46E5] font-medium hover:underline">1-digit addition</a> and practice daily until students can answer any single-digit fact quickly and without counting. Fluency here (typically by end of Grade 1) makes every later skill easier.
+          Start with <a href="/subtraction/1-digit" class="text-[#4F46E5] font-medium hover:underline">1-digit subtraction</a> and practice daily until students can answer any single-digit fact quickly. Fluency here (typically by end of Grade 1) is the bedrock for everything that follows — and works best when paired with addition fact families.
         </p>
         <p>
-          When moving to 2-digit addition, begin with <a href="/addition/2-digit-no-carrying" class="text-[#4F46E5] font-medium hover:underline">no-carrying problems</a> first. This isolates place-value alignment from the complexity of regrouping, giving students a chance to practice the column-addition process cleanly.
+          When moving to 2-digit subtraction, begin with <a href="/subtraction/2-digit-no-borrowing" class="text-[#4F46E5] font-medium hover:underline">no-borrowing problems</a> first. This isolates place-value alignment from the complexity of regrouping, giving students a chance to practice the column-subtraction process cleanly.
         </p>
         <p>
-          Introduce <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] font-medium hover:underline">carrying</a> only after no-carrying problems feel easy. Use base-ten blocks alongside the screen practice to make the concept concrete before it becomes abstract.
+          Introduce <a href="/subtraction/2-digit-with-borrowing" class="text-[#4F46E5] font-medium hover:underline">borrowing</a> only after no-borrowing problems feel easy. Use base-ten blocks alongside screen practice to make the concept concrete before it becomes abstract.
         </p>
       </div>
     </section>
