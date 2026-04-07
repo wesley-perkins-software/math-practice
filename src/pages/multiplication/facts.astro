@@ -1,8 +1,36 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
 
 const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
+  { href: '/multiplication/times-tables/1', label: 'Times Tables Practice', description: 'Focus on one table at a time (1–12)' },
+  { href: '/division/facts', label: 'Division Facts Practice', description: 'Practice the inverse operation' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Worksheet-style practice with instant feedback' },
+  { href: '/addition/1-digit', label: 'Addition Practice', description: 'Review the foundation for multiplication' },
+];
+
+const faqItems = [
+  {
+    q: 'What are multiplication facts?',
+    a: 'Multiplication facts are the 144 products formed by multiplying any two numbers from 1 to 12 (1×1=1 through 12×12=144). Mastering these by memory is called fact fluency.',
+  },
+  {
+    q: 'How many multiplication facts are there from 1 to 12?',
+    a: 'There are 144 total facts (a 12×12 grid). Due to the commutative property (3×4 = 4×3), only 78 are truly unique. Most students memorize all 144 so both orientations are automatic.',
+  },
+  {
+    q: 'What grade should students know all multiplication facts?',
+    a: 'Most curricula expect fluency with facts through 10×10 by end of Grade 3 and through 12×12 by end of Grade 4.',
+  },
+  {
+    q: 'What is the commutative property of multiplication?',
+    a: 'The commutative property means that changing the order of factors does not change the product: 4×7 = 7×4 = 28. Knowing this cuts the number of unique facts to learn nearly in half.',
+  },
+];
 ---
 
 <PracticeLayout
@@ -11,30 +39,83 @@ const SITE = 'https://www.mathpractice.com';
   canonical={`${SITE}/multiplication/facts`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Multiplication', href: '/multiplication' }, { label: 'Facts' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Multiplication Facts Practice",
+      "description": "Interactive online practice for all multiplication facts from 1×1 through 12×12. Random order drills with instant feedback and progress tracking.",
+      "url": `${SITE}/multiplication/facts`,
+      "educationalLevel": ["Grade 3", "Grade 4"],
+      "teaches": "Multiplication facts 1×1 through 12×12",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Facts Practice</h1>
   <div slot="intro">
     <p>Practice mixed multiplication facts from 1 through 12 in random order. This broad mode helps students strengthen overall multiplication fluency across the entire fact family.</p>
     <p class="mt-2">Use untimed practice for accuracy first, then switch to timed mode to improve speed and automatic recall.</p>
   </div>
   <MultiplicationPracticeHub slot="widget" client:load active="facts" />
+  <InternalLinks slot="links" links={links} />
 
-  <div slot="links" class="mt-10">
-    <h2 class="text-base font-semibold text-[#1E293B] mb-3">What to Practice Next</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-      <a
-        href="/multiplication/times-tables/1"
-        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
-      >
-        <div class="font-semibold text-[#1E293B]">Times Tables</div>
-        <div class="text-sm text-[#64748B] mt-0.5">Practice one table at a time (1–12)</div>
-      </a>
-      <a
-        href="/division/facts"
-        class="block bg-white border border-[#E2E8F0] rounded-xl p-4 hover:border-[#3B82F6] hover:shadow-sm transition-all"
-      >
-        <div class="font-semibold text-[#1E293B]">Division Practice</div>
-        <div class="text-sm text-[#64748B] mt-0.5">Practice the inverse operation</div>
-      </a>
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Grade 3 – Grade 4</span>
     </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 144 multiplication facts from 1×1 through 12×12</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems presented in random order to build genuine recall (not rote sequence)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Scores and best streak saved in your browser automatically</li>
+      </ul>
+    </section>
+
+    <!-- Strategies -->
+    <section aria-labelledby="strategies-heading">
+      <h2 id="strategies-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Mental Math Strategies</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Skip Counting</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Count up by the multiplier. For 6×7: 7, 14, 21, 28, 35, 42. Works for any table until facts feel automatic.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Know 3×8? You already know 8×3. Turn unfamiliar facts into familiar ones by flipping the order.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Break It Apart</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">For 7×8: split as (7×4) + (7×4) = 28 + 28 = 56. Breaking into smaller known facts reduces memory load.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
   </div>
 </PracticeLayout>
