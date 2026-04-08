@@ -46,6 +46,8 @@ export default function PracticeWidget({ config, topContent }: Props) {
     return (config.timerDuration ?? 60) as TimerDuration;
   });
   const [secondsRemaining, setSecondsRemaining] = useState<number>(duration);
+  // timerStarted: false until the user submits their first answer
+  const [timerStarted, setTimerStarted] = useState(false);
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -58,6 +60,8 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const sessionStartTimeRef = useRef(0);
   sessionStartTimeRef.current = sessionStartTime;
   const totalAnsweredRef = useRef(0);
+  const timerStartedRef = useRef(false);
+  timerStartedRef.current = timerStarted;
 
   // Clear reset confirmation when difficulty changes
   useEffect(() => {
@@ -83,12 +87,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     totalAnsweredRef.current = 0;
+    timerStartedRef.current = false;
+    setTimerStarted(false);
     setSecondsRemaining(duration);
+    // sessionStartTime is NOT captured here — it's captured on the first answer submission
     setProblem(generateProblem(config));
     setProblemIndex(0);
     setCorrect(0);
     setFeedbackState('hidden');
-    setSessionStartTime(Date.now());
     setPhase('active');
   }
 
@@ -100,9 +106,9 @@ export default function PracticeWidget({ config, topContent }: Props) {
     setPhase('complete');
   }
 
-  // Countdown timer — only runs for timed configs
+  // Countdown timer — starts only after the user's first answer, only for timed configs
   useEffect(() => {
-    if (phase !== 'active' || !isTimed) return;
+    if (phase !== 'active' || !isTimed || !timerStarted) return;
     timerIntervalRef.current = setInterval(() => {
       setSecondsRemaining((s) => {
         if (s <= 1) {
@@ -117,7 +123,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
     };
   // endSession reads only refs — safe to omit from deps
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phase, isTimed]);
+  }, [phase, isTimed, timerStarted]);
 
   // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
@@ -131,11 +137,21 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
   function handleDurationChange(d: TimerDuration) {
     setDuration(d);
+    setSecondsRemaining(d);
     try { localStorage.setItem(DURATION_PREF_KEY, String(d)); } catch {}
   }
 
   function handleAnswer(answer: number, remainder?: number) {
     if (!problem || phase !== 'active') return;
+
+    // Start the timer on the first answer submission
+    if (isTimed && !timerStartedRef.current) {
+      timerStartedRef.current = true;
+      setTimerStarted(true);
+      const now = Date.now();
+      setSessionStartTime(now);
+      sessionStartTimeRef.current = now;
+    }
 
     totalAnsweredRef.current += 1;
     const isCorrect = scoreAnswer(problem, answer, remainder);
@@ -158,7 +174,9 @@ export default function PracticeWidget({ config, topContent }: Props) {
       setFeedbackState('incorrect');
     }
 
-    const FEEDBACK_DELAY_MS = isCorrect ? 600 : (config.incorrectFeedbackDelayMs ?? 1800);
+    const FEEDBACK_DELAY_MS = isCorrect
+      ? (config.correctFeedbackDelayMs ?? 600)
+      : (config.incorrectFeedbackDelayMs ?? 1800);
 
     // Clear any pending transition timer
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
@@ -209,8 +227,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
           {/* Timer bar — only for timed mode */}
           {isTimed && (
             <div className="w-full flex items-center justify-between border-b border-[#E0E7FF] pb-3">
-              <TimerDisplay secondsRemaining={secondsRemaining} />
-              <DurationPicker value={duration} onChange={handleDurationChange} />
+              {timerStarted
+                ? <TimerDisplay secondsRemaining={secondsRemaining} />
+                : <span className="text-sm text-[#A5B4FC] font-medium">Timer starts on first answer</span>
+              }
+              {/* Duration picker only available before timer starts */}
+              {!timerStarted && (
+                <DurationPicker value={duration} onChange={handleDurationChange} />
+              )}
             </div>
           )}
 
