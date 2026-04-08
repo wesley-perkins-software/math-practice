@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine/types';
+import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
-import { scoreAnswer } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak } from '@/engine/storage';
+import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
+import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import WrittenProblemInput from './WrittenProblemInput';
 import RemainderProblemInput from './RemainderProblemInput';
 import FeedbackBanner from './FeedbackBanner';
 import ScoreCard from './ScoreCard';
+import TimerDisplay from './TimerDisplay';
+import DurationPicker from './DurationPicker';
 
 type Phase = 'idle' | 'active' | 'complete';
 type FeedbackState = 'correct' | 'incorrect' | 'hidden';
@@ -19,6 +22,8 @@ interface Props {
 }
 
 export default function PracticeWidget({ config, topContent }: Props) {
+  const isTimed = config.mode === 'timed';
+
   // Session state
   const [phase, setPhase] = useState<Phase>('idle');
   const [problem, setProblem] = useState<Problem | null>(null);
@@ -32,13 +37,27 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
   const [resetPending, setResetPending] = useState(false);
 
+  // Timer state
+  const [duration, setDuration] = useState<TimerDuration>(() => {
+    try {
+      const saved = localStorage.getItem(DURATION_PREF_KEY);
+      if (saved) return Number(saved) as TimerDuration;
+    } catch {}
+    return (config.timerDuration ?? 60) as TimerDuration;
+  });
+  const [secondsRemaining, setSecondsRemaining] = useState<number>(duration);
+
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
   correctRef.current = correct;
   const phaseRef = useRef<Phase>('idle');
   phaseRef.current = phase;
+  const sessionStartTimeRef = useRef(0);
+  sessionStartTimeRef.current = sessionStartTime;
+  const totalAnsweredRef = useRef(0);
 
   // Clear reset confirmation when difficulty changes
   useEffect(() => {
@@ -62,6 +81,9 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
   function startSession() {
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    totalAnsweredRef.current = 0;
+    setSecondsRemaining(duration);
     setProblem(generateProblem(config));
     setProblemIndex(0);
     setCorrect(0);
@@ -70,19 +92,52 @@ export default function PracticeWidget({ config, topContent }: Props) {
     setPhase('active');
   }
 
+  function endSession() {
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+    const elapsed = Math.round((Date.now() - sessionStartTimeRef.current) / 1000);
+    setResult(buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed));
+    setPhase('complete');
+  }
+
+  // Countdown timer — only runs for timed configs
+  useEffect(() => {
+    if (phase !== 'active' || !isTimed) return;
+    timerIntervalRef.current = setInterval(() => {
+      setSecondsRemaining((s) => {
+        if (s <= 1) {
+          endSession();
+          return 0;
+        }
+        return s - 1;
+      });
+    }, 1000);
+    return () => {
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    };
+  // endSession reads only refs — safe to omit from deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [phase, isTimed]);
+
   // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
     if (phase === 'complete' && result) {
       const current = loadStats(config.storageKey);
-      const updated = updateStatsAfterSession(current, result, false);
+      const updated = updateStatsAfterSession(current, result, isTimed);
       saveStats(config.storageKey, updated);
       setStats(updated);
     }
-  }, [phase, result, config.storageKey]);
+  }, [phase, result, config.storageKey, isTimed]);
+
+  function handleDurationChange(d: TimerDuration) {
+    setDuration(d);
+    try { localStorage.setItem(DURATION_PREF_KEY, String(d)); } catch {}
+  }
 
   function handleAnswer(answer: number, remainder?: number) {
     if (!problem || phase !== 'active') return;
 
+    totalAnsweredRef.current += 1;
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
     // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
@@ -131,6 +186,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   useEffect(() => {
     return () => {
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     };
   }, []);
 
@@ -150,6 +206,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {/* ── ACTIVE ──────────────────────────────────── */}
       {phase === 'active' && problem && (
         <div className="flex flex-col items-center gap-4 md:gap-5">
+          {/* Timer bar — only for timed mode */}
+          {isTimed && (
+            <div className="w-full flex items-center justify-between border-b border-[#E0E7FF] pb-3">
+              <TimerDisplay secondsRemaining={secondsRemaining} />
+              <DurationPicker value={duration} onChange={handleDurationChange} />
+            </div>
+          )}
+
           {/* Written arithmetic block + input + number pad */}
           {config.withRemainder ? (
             <RemainderProblemInput
@@ -218,7 +282,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
         <ScoreCard
           result={result}
           stats={stats}
-          isTimed={false}
+          isTimed={isTimed}
           onRestart={handleRestart}
         />
       )}
