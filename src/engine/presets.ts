@@ -214,7 +214,7 @@ export const MATH_DRILLS: PracticeConfig = {
   label: 'Math Drills',
   operation: 'mixed',
   mode: 'timed',
-  timerDuration: 60,
+  timerDuration: 120,
   operandA: { min: 1, max: 12 },
   operandB: { min: 1, max: 12 },
   operations: ['addition', 'subtraction', 'multiplication', 'division'],
@@ -242,6 +242,8 @@ export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
   operandB: { min: 1, max: 12 },
   operations: ['addition', 'subtraction', 'multiplication', 'division'],
   factsMode: true,
+  correctFeedbackDelayMs: 200,
+  incorrectFeedbackDelayMs: 400,
 };
 
 export const MATH_FACTS_PRACTICE: PracticeConfig = {
