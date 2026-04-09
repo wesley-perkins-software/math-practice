@@ -115,7 +115,7 @@ const operations = [
           "name": "Are there timed practice modes?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Yes. Math Drills, Arithmetic Speed Drill, and Mental Math Practice are all timed. The default is 60 seconds, with options for 30 seconds, 2 minutes, or 5 minutes."
+            "text": "Yes. Math Drills (2 minutes), Arithmetic Speed Drill (60 seconds), and Mental Math Practice (60 seconds) are all timed. Each drill has a fixed duration matched to its purpose."
           }
         },
         {
@@ -438,22 +438,26 @@ const operations = [
           <div class="bg-[#F5F3FF] rounded-2xl p-6 ring-1 ring-[#E0E7FF] flex flex-col">
             <div class="flex items-start justify-between mb-3">
               <span class="text-2xl" aria-hidden="true">🧠</span>
-              <span class="bg-[#EEF2FF] text-[#4F46E5] text-xs font-bold px-2.5 py-0.5 rounded-full">Larger Numbers</span>
+              <span class="bg-[#EEF2FF] text-[#4F46E5] text-xs font-bold px-2.5 py-0.5 rounded-full">Two-Digit Mental Math</span>
             </div>
             <h3 class="text-base font-bold text-[#1E1B4B] mb-2">Mental Math Practice</h3>
             <p class="text-sm text-[#6B7280] leading-relaxed flex-1">
-              Practice mental calculation with operands up to 25. Regular mental math practice
-              improves number sense, estimation skill, and arithmetic confidence — ideal for
-              grades 3 and up.
+              60 seconds of two-digit addition and subtraction — no pencil and paper. Practice
+              the mental arithmetic you use in everyday life: calculating change, estimating
+              totals, splitting costs. Ideal for grades 3 and up.
             </p>
             <a href="/mental-math-practice" class="mt-4 text-sm font-bold text-[#4F46E5] hover:text-[#3730A3] inline-flex items-center gap-1 transition-colors">
               Practice Mental Math <span aria-hidden="true">→</span>
             </a>
           </div>
         </div>
-        <div class="mt-8 text-center">
+        <div class="mt-8 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
           <a href="/math-facts-practice" class="text-sm text-[#6B7280] hover:text-[#4F46E5] transition-colors">
             Also try: <span class="font-semibold text-[#4F46E5]">Math Facts Practice</span> — mixed multiplication &amp; division facts <span aria-hidden="true">→</span>
+          </a>
+          <span class="hidden sm:inline text-[#E0E7FF]">|</span>
+          <a href="/timed-drills" class="text-sm text-[#6B7280] hover:text-[#4F46E5] transition-colors">
+            <span class="font-semibold text-[#4F46E5]">Compare all timed drills</span> — find the right format for you <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
@@ -529,6 +533,7 @@ const operations = [
         </div>
         <!-- Additional pages -->
         <div class="mt-10 pt-8 border-t border-[#E0E7FF] flex flex-wrap gap-3">
+          <a href="/timed-drills" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Timed Drills</a>
           <a href="/math-drills" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Math Drills</a>
           <a href="/mental-math-practice" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Mental Math Practice</a>
           <a href="/arithmetic-speed-drill" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Arithmetic Speed Drill</a>
@@ -568,7 +573,7 @@ const operations = [
           </div>
           <div class="py-5">
             <dt class="text-base font-semibold text-[#1E1B4B]">Are there timed practice modes?</dt>
-            <dd class="mt-2 text-sm text-[#6B7280] leading-relaxed">Yes. <a href="/math-drills" class="text-[#4F46E5] hover:underline">Math Drills</a>, <a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a>, and <a href="/mental-math-practice" class="text-[#4F46E5] hover:underline">Mental Math Practice</a> are all timed. The default is 60 seconds, with options for 30 seconds, 2 minutes, or 5 minutes.</dd>
+            <dd class="mt-2 text-sm text-[#6B7280] leading-relaxed">Yes. <a href="/math-drills" class="text-[#4F46E5] hover:underline">Math Drills</a> (2 minutes), <a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a> (60 seconds), and <a href="/mental-math-practice" class="text-[#4F46E5] hover:underline">Mental Math Practice</a> (60 seconds) are all timed. Each drill has a fixed duration matched to its purpose. See the <a href="/timed-drills" class="text-[#4F46E5] hover:underline">Timed Drills</a> page to compare formats.</dd>
           </div>
           <div class="py-5">
             <dt class="text-base font-semibold text-[#1E1B4B]">Does this work on phones and tablets?</dt>
