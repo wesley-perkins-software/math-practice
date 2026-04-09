@@ -377,8 +377,8 @@ const operations = [
               <a href="/multiplication/facts" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Mixed Multiplication Facts
               </a>
-              <a href="/math-drills" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
-                <span aria-hidden="true">→</span> Timed Math Drills
+              <a href="/arithmetic-speed-drill" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+                <span aria-hidden="true">→</span> Arithmetic Speed Drill
               </a>
             </div>
           </div>
@@ -386,60 +386,30 @@ const operations = [
       </div>
     </section>
 
-    <!-- Timed Drills & Speed Practice -->
+    <!-- Arithmetic Speed Drill -->
     <section class="bg-white border-t border-[#E0E7FF]">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
-        <div class="text-center mb-10">
-          <h2 class="text-3xl font-bold text-[#1E1B4B]">Timed Drills &amp; Speed Practice</h2>
-          <p class="text-[#6B7280] mt-2 text-base max-w-2xl mx-auto">
-            Build arithmetic speed alongside accuracy. Timed drills are especially effective for
-            test preparation and for developing automatic recall of math facts.
-          </p>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <a href="/timed-drills" class="bg-[#F5F3FF] rounded-2xl p-4 ring-1 ring-[#E0E7FF] hover:ring-[#C7D2FE] transition-all flex flex-col gap-2">
-            <div class="flex items-start justify-between mb-3">
-              <span class="text-2xl" aria-hidden="true">⏱</span>
-              <span class="bg-[#EEF2FF] text-[#4F46E5] text-xs font-bold px-2.5 py-0.5 rounded-full">All 4 Operations</span>
-            </div>
-            <h3 class="text-base font-bold text-[#1E1B4B]">Math Drills</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">
-              Two-minute mixed drill across all four operations for deliberate fluency practice.
-            </p>
-            <span class="text-sm font-bold text-[#4F46E5] inline-flex items-center gap-1 mt-1">
-              View Timed Drills <span aria-hidden="true">→</span>
-            </span>
-          </a>
-          <a href="/timed-drills" class="bg-[#F5F3FF] rounded-2xl p-4 ring-1 ring-[#E0E7FF] hover:ring-[#C7D2FE] transition-all flex flex-col gap-2">
-            <div class="flex items-start justify-between mb-3">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-2">
               <span class="text-2xl" aria-hidden="true">⚡</span>
-              <span class="bg-[#EEF2FF] text-[#4F46E5] text-xs font-bold px-2.5 py-0.5 rounded-full">Beat the Clock</span>
+              <h2 class="text-2xl font-bold text-[#1E1B4B]">Arithmetic Speed Drill</h2>
             </div>
-            <h3 class="text-base font-bold text-[#1E1B4B]">Arithmetic Speed Drill</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">
-              60-second mixed arithmetic challenge focused on fast recall and reaction speed.
+            <p class="text-[#6B7280] text-base leading-relaxed max-w-lg">
+              60 seconds. Choose your operations — addition, subtraction, multiplication, division, or any mix — and see how many facts you can answer correctly.
             </p>
-            <span class="text-sm font-bold text-[#4F46E5] inline-flex items-center gap-1 mt-1">
-              View Timed Drills <span aria-hidden="true">→</span>
-            </span>
-          </a>
-          <a href="/timed-drills" class="bg-[#F5F3FF] rounded-2xl p-4 ring-1 ring-[#E0E7FF] hover:ring-[#C7D2FE] transition-all flex flex-col gap-2">
-            <div class="flex items-start justify-between mb-3">
-              <span class="text-2xl" aria-hidden="true">🧠</span>
-              <span class="bg-[#EEF2FF] text-[#4F46E5] text-xs font-bold px-2.5 py-0.5 rounded-full">Two-Digit Mental Math</span>
+            <div class="flex flex-wrap gap-2 mt-4">
+              <span class="bg-[#EEF2FF] text-[#4F46E5] text-sm font-semibold px-3 py-1 rounded-full font-mono">+</span>
+              <span class="bg-[#EEF2FF] text-[#4F46E5] text-sm font-semibold px-3 py-1 rounded-full font-mono">−</span>
+              <span class="bg-[#EEF2FF] text-[#4F46E5] text-sm font-semibold px-3 py-1 rounded-full font-mono">×</span>
+              <span class="bg-[#EEF2FF] text-[#4F46E5] text-sm font-semibold px-3 py-1 rounded-full font-mono">÷</span>
             </div>
-            <h3 class="text-base font-bold text-[#1E1B4B]">Mental Math Practice</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">
-              60-second two-digit addition and subtraction to build everyday mental arithmetic.
-            </p>
-            <span class="text-sm font-bold text-[#4F46E5] inline-flex items-center gap-1 mt-1">
-              View Timed Drills <span aria-hidden="true">→</span>
-            </span>
-          </a>
-        </div>
-        <div class="mt-8 text-center flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href="/timed-drills" class="text-sm text-[#6B7280] hover:text-[#4F46E5] transition-colors">
-            <span class="font-semibold text-[#4F46E5]">Compare all timed drills</span> — find the right format for you <span aria-hidden="true">→</span>
+          </div>
+          <a
+            href="/arithmetic-speed-drill"
+            class="shrink-0 inline-flex items-center gap-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
+          >
+            Start Drill <span aria-hidden="true">→</span>
           </a>
         </div>
       </div>
@@ -515,9 +485,6 @@ const operations = [
         </div>
         <!-- Additional pages -->
         <div class="mt-10 pt-8 border-t border-[#E0E7FF] flex flex-wrap gap-3">
-          <a href="/timed-drills" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Timed Drills</a>
-          <a href="/math-drills" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Math Drills</a>
-          <a href="/mental-math-practice" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Mental Math Practice</a>
           <a href="/arithmetic-speed-drill" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Arithmetic Speed Drill</a>
           <a href="/math-practice" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">General Math Practice</a>
           <a href="/math-worksheets" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Math Worksheets</a>
@@ -555,7 +522,7 @@ const operations = [
           </div>
           <div class="py-5">
             <dt class="text-base font-semibold text-[#1E1B4B]">Are there timed practice modes?</dt>
-            <dd class="mt-2 text-sm text-[#6B7280] leading-relaxed">Yes. <a href="/math-drills" class="text-[#4F46E5] hover:underline">Math Drills</a> (2 minutes), <a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a> (60 seconds), and <a href="/mental-math-practice" class="text-[#4F46E5] hover:underline">Mental Math Practice</a> (60 seconds) are all timed. Each drill has a fixed duration matched to its purpose. See the <a href="/timed-drills" class="text-[#4F46E5] hover:underline">Timed Drills</a> page to compare formats.</dd>
+            <dd class="mt-2 text-sm text-[#6B7280] leading-relaxed">Yes. The <a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a> is a 60-second timed challenge. Choose which operations to include — addition, subtraction, multiplication, division, or any combination — and see how many facts you can answer correctly.</dd>
           </div>
           <div class="py-5">
             <dt class="text-base font-semibold text-[#1E1B4B]">Does this work on phones and tablets?</dt>

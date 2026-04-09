@@ -1,48 +1,46 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import SpeedDrillSetup from '@/components/SpeedDrillSetup';
 import InternalLinks from '@/components/InternalLinks';
-import { ARITHMETIC_SPEED_DRILL } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
 const links = [
-  { href: '/math-drills', label: 'Math Drills', description: 'Deliberate practice — 2 minutes with feedback' },
-  { href: '/mental-math-practice', label: 'Mental Math Practice', description: 'Two-digit add & subtract' },
-  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Speed drill for × only' },
+  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Untimed × facts drill' },
+  { href: '/division/facts', label: 'Division Facts', description: 'Untimed ÷ facts drill' },
+  { href: '/addition', label: 'Addition Practice', description: 'Build adding speed before drilling' },
   { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Untimed mixed facts drill' },
-  { href: '/timed-drills', label: 'All Timed Drills', description: 'Compare all three drill formats' },
 ];
 
 const faqItems = [
   {
     q: 'What is the Arithmetic Speed Drill?',
-    a: 'The Arithmetic Speed Drill is a 60-second test of arithmetic reaction speed. It covers all four operations — addition, subtraction, multiplication, and division — with numbers 1–12. Problems clear almost instantly after each answer, and wrong responses do not reveal the correct answer. The goal is maximum correct answers per minute.',
+    a: 'The Arithmetic Speed Drill is a 60-second test of arithmetic speed. Choose which operations to include — addition, subtraction, multiplication, division, or any combination — with numbers 1–12. Problems clear almost instantly after each answer. Your score is how many you answer correctly in 60 seconds.',
   },
   {
     q: 'Who is the Speed Drill for?',
-    a: 'The Speed Drill is for Grade 3 and above — students who already know their math facts and want to see how fast they can apply them. It\'s a measurement tool, not a teaching tool. Students who are still learning their facts will find it frustrating; they\'ll benefit more from the two-minute Math Drills with answer feedback.',
+    a: 'Anyone who wants to measure or improve how fast they can recall arithmetic facts. It\'s best for students who already know their facts and want to build speed. Students still learning their facts will benefit more from untimed practice on the individual operation pages first.',
   },
   {
-    q: 'How is the Speed Drill different from Math Drills?',
-    a: 'Math Drills is two minutes long and shows the correct answer after each mistake — it\'s designed for deliberate practice and learning. The Speed Drill is 60 seconds with near-instant feedback and no answer revealed for wrong responses. Use Math Drills to build fluency; use the Speed Drill to benchmark it.',
+    q: 'Why would I choose fewer than all 4 operations?',
+    a: 'Focusing on one or two operations lets you target your weakest area. If division always slows you down, drill division alone for a session. Once your score on that operation improves, switch back to the full mixed drill.',
   },
   {
-    q: 'What is a good score on the Speed Drill?',
-    a: 'For Grade 3–4 students, 20–30 correct per minute is solid. Students in Grade 4–5 with strong fluency often reach 35–50+. There\'s no universal benchmark — focus on improving your own personal best over time.',
+    q: 'What is a good score?',
+    a: 'For students with solid fact knowledge, 20–30 correct per minute is a good baseline. Students with strong fluency regularly reach 35–50+. Focus on improving your own personal best over time rather than comparing to others.',
   },
   {
     q: 'Does it save my score?',
-    a: 'Yes. Your score and personal best are saved automatically in your browser with no account required. Your best score displays at the start of each session.',
+    a: 'Yes. Your personal best is saved automatically in your browser — no account or login required. Your best score displays at the start of each session.',
   },
 ];
 ---
 
 <PracticeLayout
-  title="Arithmetic Speed Drill — 60-Second Mixed Math Challenge | Math Practice"
-  description="How many arithmetic problems can you answer in 60 seconds? Mixed addition, subtraction, multiplication, and division facts 1–12. Free online speed drill with personal best tracking."
+  title="Arithmetic Speed Drill — 60-Second Math Challenge | Math Practice"
+  description="How many arithmetic problems can you answer in 60 seconds? Choose addition, subtraction, multiplication, and division facts 1–12. Free online speed drill with personal best tracking."
   canonical={`${SITE}/arithmetic-speed-drill`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Timed Drills', href: '/timed-drills' }, { label: 'Arithmetic Speed Drill' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Arithmetic Speed Drill' }]}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -58,9 +56,8 @@ const faqItems = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Arithmetic Speed Drill",
-      "description": "60-second mixed arithmetic speed drill covering all four operations with numbers 1–12. Measures fact recall speed. Free with personal best tracking.",
+      "description": "60-second arithmetic speed drill. Choose addition, subtraction, multiplication, and division facts 1–12. Free with personal best tracking.",
       "url": "https://www.mathpractice.com/arithmetic-speed-drill",
-      "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
       "teaches": "Arithmetic Fluency",
       "provider": {
         "@type": "Organization",
@@ -72,11 +69,11 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Arithmetic Speed Drill</h1>
   <div slot="intro">
-    <p>60 seconds. How many can you get? The Speed Drill moves as fast as you do — answers clear almost instantly so nothing slows you down. It's the closest thing on this site to a pure reaction-speed arithmetic test.</p>
-    <p class="mt-2">All four operations, facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
+    <p>60 seconds. Choose your operations, then go. The drill moves as fast as you do — answers clear almost instantly so nothing slows you down.</p>
+    <p class="mt-2">All facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
   </div>
 
-  <PracticeWidget slot="widget" client:load config={ARITHMETIC_SPEED_DRILL} />
+  <SpeedDrillSetup slot="widget" client:load />
   <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-10">
@@ -84,15 +81,10 @@ const faqItems = [
     <section aria-labelledby="hiw-heading">
       <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-4">What You'll Practice</h2>
       <div class="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5">
-        <div class="flex items-center gap-2 mb-3">
-          <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-2.5 py-1 rounded-full uppercase tracking-wide">Grade 3–5</span>
-          <span class="text-xs text-[#6B7280]">· 60 seconds · All four operations</span>
-        </div>
         <ul class="text-sm text-[#4B5563] leading-relaxed space-y-1.5">
-          <li>• Addition, subtraction, multiplication, and division — mixed randomly</li>
+          <li>• Choose any combination of the 4 operations — or mix all of them</li>
           <li>• All facts from 1×1 through 12×12 (and their addition/subtraction equivalents)</li>
           <li>• Near-instant transitions — the fastest drill on the site</li>
-          <li>• No answer revealed for wrong responses — pure speed measurement</li>
           <li>• Score = number of correct answers in 60 seconds</li>
           <li>• Personal best tracked automatically in your browser</li>
         </ul>
@@ -106,7 +98,7 @@ const faqItems = [
         <div class="divide-y divide-[#E2E8F0]">
           <div class="flex items-center gap-4 px-5 py-3.5">
             <span class="w-20 text-sm font-semibold text-[#1E293B] shrink-0">20–30</span>
-            <p class="text-sm text-[#6B7280]">Solid for Grade 3–4. Facts are mostly known; some operations are slower than others.</p>
+            <p class="text-sm text-[#6B7280]">Solid baseline. Facts are mostly known; some operations are slower than others.</p>
           </div>
           <div class="flex items-center gap-4 px-5 py-3.5">
             <span class="w-20 text-sm font-semibold text-[#1E293B] shrink-0">30–40</span>
@@ -114,7 +106,7 @@ const faqItems = [
           </div>
           <div class="flex items-center gap-4 px-5 py-3.5">
             <span class="w-20 text-sm font-semibold text-[#1E293B] shrink-0">40+</span>
-            <p class="text-sm text-[#6B7280]">Excellent. Fact recall is fully automated. Try the <a href="/mental-math-practice" class="text-[#4F46E5] font-medium hover:underline">Mental Math Practice</a> for the next challenge.</p>
+            <p class="text-sm text-[#6B7280]">Excellent. Fact recall is fully automated. Keep pushing your personal best.</p>
           </div>
         </div>
       </div>
@@ -125,10 +117,10 @@ const faqItems = [
       <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">How to Improve Your Score</h2>
       <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
         <p>
-          <strong>If your score is under 25,</strong> use <a href="/math-drills" class="text-[#4F46E5] font-medium hover:underline">Math Drills</a> first. The two-minute session with answer feedback will help identify and close gaps before you push for speed.
+          <strong>Find your weak operation.</strong> If division always slows you down, drill division alone for a session using the operation selector. Targeted drilling on your weakest operation is the fastest path to a higher score.
         </p>
         <p>
-          <strong>Find your weak operation.</strong> If division always slows you down, spend time on <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">division facts</a> practice. Targeted untimed drilling on your weakest operation is the fastest path to a higher speed score.
+          <strong>Build the facts first.</strong> If your score is consistently under 20, spend time on untimed practice — <a href="/multiplication/facts" class="text-[#4F46E5] font-medium hover:underline">multiplication facts</a>, <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">division facts</a> — before pushing for speed.
         </p>
         <p>
           <strong>Don't sacrifice accuracy for speed.</strong> Wrong answers don't count — only correct answers add to your score. A calm, accurate pace beats frantic guessing every time.
