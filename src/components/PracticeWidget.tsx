@@ -239,7 +239,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
             <div className="w-full flex items-center justify-between border-b border-[#E0E7FF] pb-3">
               {timerStarted
                 ? <TimerDisplay secondsRemaining={secondsRemaining} />
-                : <span className="text-sm text-[#A5B4FC] font-medium">Timer starts on first answer</span>
+                : <TimerDisplay secondsRemaining={duration} />
               }
               {/* Duration picker only available before timer starts */}
               {!timerStarted && !isTimerDurationFixed && (
