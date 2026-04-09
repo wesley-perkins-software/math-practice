@@ -7,24 +7,146 @@ import { ARITHMETIC_SPEED_DRILL } from '@/engine/presets';
 const SITE = 'https://www.mathpractice.com';
 
 const links = [
-  { href: '/math-drills', label: 'Math Drills', description: 'Balanced mixed drill' },
-  { href: '/mental-math-practice', label: 'Mental Math', description: 'Larger numbers' },
-  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Speed drill ×' },
-  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Focus on facts' },
+  { href: '/math-drills', label: 'Math Drills', description: 'Deliberate practice — 2 minutes with feedback' },
+  { href: '/mental-math-practice', label: 'Mental Math Practice', description: 'Two-digit add & subtract' },
+  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Speed drill for × only' },
+  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Untimed mixed facts drill' },
+  { href: '/timed-drills', label: 'All Timed Drills', description: 'Compare all three drill formats' },
+];
+
+const faqItems = [
+  {
+    q: 'What is the Arithmetic Speed Drill?',
+    a: 'The Arithmetic Speed Drill is a 60-second test of arithmetic reaction speed. It covers all four operations — addition, subtraction, multiplication, and division — with numbers 1–12. Problems clear almost instantly after each answer, and wrong responses do not reveal the correct answer. The goal is maximum correct answers per minute.',
+  },
+  {
+    q: 'Who is the Speed Drill for?',
+    a: 'The Speed Drill is for Grade 3 and above — students who already know their math facts and want to see how fast they can apply them. It\'s a measurement tool, not a teaching tool. Students who are still learning their facts will find it frustrating; they\'ll benefit more from the two-minute Math Drills with answer feedback.',
+  },
+  {
+    q: 'How is the Speed Drill different from Math Drills?',
+    a: 'Math Drills is two minutes long and shows the correct answer after each mistake — it\'s designed for deliberate practice and learning. The Speed Drill is 60 seconds with near-instant feedback and no answer revealed for wrong responses. Use Math Drills to build fluency; use the Speed Drill to benchmark it.',
+  },
+  {
+    q: 'What is a good score on the Speed Drill?',
+    a: 'For Grade 3–4 students, 20–30 correct per minute is solid. Students in Grade 4–5 with strong fluency often reach 35–50+. There\'s no universal benchmark — focus on improving your own personal best over time.',
+  },
+  {
+    q: 'Does it save my score?',
+    a: 'Yes. Your score and personal best are saved automatically in your browser with no account required. Your best score displays at the start of each session.',
+  },
 ];
 ---
 
 <PracticeLayout
-  title="Arithmetic Speed Drill — Beat the Clock with Mixed Math"
-  description="How many arithmetic problems can you answer in 60 seconds? Mixed addition, subtraction, multiplication, and division. Track your best score."
+  title="Arithmetic Speed Drill — 60-Second Mixed Math Challenge | Math Practice"
+  description="How many arithmetic problems can you answer in 60 seconds? Mixed addition, subtraction, multiplication, and division facts 1–12. Free online speed drill with personal best tracking."
   canonical={`${SITE}/arithmetic-speed-drill`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Arithmetic Speed Drill' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Timed Drills', href: '/timed-drills' }, { label: 'Arithmetic Speed Drill' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Arithmetic Speed Drill",
+      "description": "60-second mixed arithmetic speed drill covering all four operations with numbers 1–12. Measures fact recall speed. Free with personal best tracking.",
+      "url": "https://www.mathpractice.com/arithmetic-speed-drill",
+      "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
+      "teaches": "Arithmetic Fluency",
+      "provider": {
+        "@type": "Organization",
+        "name": "Math Practice",
+        "url": "https://www.mathpractice.com"
+      }
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Arithmetic Speed Drill</h1>
   <div slot="intro">
     <p>60 seconds. How many can you get? The Speed Drill moves as fast as you do — answers clear almost instantly so nothing slows you down. It's the closest thing on this site to a pure reaction-speed arithmetic test.</p>
     <p class="mt-2">All four operations, facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
   </div>
+
   <PracticeWidget slot="widget" client:load config={ARITHMETIC_SPEED_DRILL} />
   <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-10">
+    <!-- What you'll practice -->
+    <section aria-labelledby="hiw-heading">
+      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-4">What You'll Practice</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-2.5 py-1 rounded-full uppercase tracking-wide">Grade 3–5</span>
+          <span class="text-xs text-[#6B7280]">· 60 seconds · All four operations</span>
+        </div>
+        <ul class="text-sm text-[#4B5563] leading-relaxed space-y-1.5">
+          <li>• Addition, subtraction, multiplication, and division — mixed randomly</li>
+          <li>• All facts from 1×1 through 12×12 (and their addition/subtraction equivalents)</li>
+          <li>• Near-instant transitions — the fastest drill on the site</li>
+          <li>• No answer revealed for wrong responses — pure speed measurement</li>
+          <li>• Score = number of correct answers in 60 seconds</li>
+          <li>• Personal best tracked automatically in your browser</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Score guide -->
+    <section aria-labelledby="scores-heading">
+      <h2 id="scores-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Score Reference</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-center gap-4 px-5 py-3.5">
+            <span class="w-20 text-sm font-semibold text-[#1E293B] shrink-0">20–30</span>
+            <p class="text-sm text-[#6B7280]">Solid for Grade 3–4. Facts are mostly known; some operations are slower than others.</p>
+          </div>
+          <div class="flex items-center gap-4 px-5 py-3.5">
+            <span class="w-20 text-sm font-semibold text-[#1E293B] shrink-0">30–40</span>
+            <p class="text-sm text-[#6B7280]">Strong fluency. Most facts are automatic across all four operations.</p>
+          </div>
+          <div class="flex items-center gap-4 px-5 py-3.5">
+            <span class="w-20 text-sm font-semibold text-[#1E293B] shrink-0">40+</span>
+            <p class="text-sm text-[#6B7280]">Excellent. Fact recall is fully automated. Try the <a href="/mental-math-practice" class="text-[#4F46E5] font-medium hover:underline">Mental Math Practice</a> for the next challenge.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips -->
+    <section aria-labelledby="tips-heading">
+      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">How to Improve Your Score</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          <strong>If your score is under 25,</strong> use <a href="/math-drills" class="text-[#4F46E5] font-medium hover:underline">Math Drills</a> first. The two-minute session with answer feedback will help identify and close gaps before you push for speed.
+        </p>
+        <p>
+          <strong>Find your weak operation.</strong> If division always slows you down, spend time on <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">division facts</a> practice. Targeted untimed drilling on your weakest operation is the fastest path to a higher speed score.
+        </p>
+        <p>
+          <strong>Don't sacrifice accuracy for speed.</strong> Wrong answers don't count — only correct answers add to your score. A calm, accurate pace beats frantic guessing every time.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
 </PracticeLayout>

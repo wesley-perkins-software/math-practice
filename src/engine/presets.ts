@@ -227,9 +227,9 @@ export const MENTAL_MATH: PracticeConfig = {
   operation: 'mixed',
   mode: 'timed',
   timerDuration: 60,
-  operandA: { min: 1, max: 25 },
-  operandB: { min: 1, max: 25 },
-  operations: ['addition', 'subtraction', 'multiplication'],
+  operandA: { min: 1, max: 30 },
+  operandB: { min: 1, max: 30 },
+  operations: ['addition', 'subtraction'],
 };
 
 export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {

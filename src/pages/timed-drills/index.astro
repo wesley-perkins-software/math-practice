@@ -1,0 +1,237 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const modes = [
+  {
+    href: '/math-drills',
+    label: 'Math Drills',
+    grade: 'Grade 2–5',
+    symbol: '4 + 7',
+    description: 'Two-minute mixed drill covering all four operations. Wrong answers show the correct solution before moving on — deliberate practice that builds fluency.',
+  },
+  {
+    href: '/arithmetic-speed-drill',
+    label: 'Arithmetic Speed Drill',
+    grade: 'Grade 3–5',
+    symbol: '9 × 8',
+    description: '60-second speed challenge. Answers clear almost instantly — the closest thing to a pure reaction-speed test on addition, subtraction, multiplication, and division facts.',
+  },
+  {
+    href: '/mental-math-practice',
+    label: 'Mental Math Practice',
+    grade: 'Grade 3–5',
+    symbol: '24 + 17',
+    description: '60 seconds, addition and subtraction with numbers up to 30. Practice the mental arithmetic you actually use in everyday life — no pencil and paper.',
+  },
+];
+
+const relatedLinks = [
+  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'All 144 multiplication facts (1×1–12×12)' },
+  { href: '/division/facts', label: 'Division Facts', description: 'Division fluency paired with multiplication' },
+  { href: '/addition/2-digit-with-carrying', label: '2-Digit Addition', description: 'Build carrying fluency before speed drills' },
+  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Untimed mixed multiplication and division' },
+];
+
+const faqItems = [
+  {
+    q: 'What is the difference between Math Drills and the Arithmetic Speed Drill?',
+    a: 'Math Drills runs for two minutes and shows you the correct answer after each mistake — it\'s designed for deliberate practice and learning. The Speed Drill runs for 60 seconds and clears each problem almost instantly, with no answer revealed for wrong responses. Use Math Drills to build fluency; use the Speed Drill to test how fast that fluency really is.',
+  },
+  {
+    q: 'What grade level are these timed drills for?',
+    a: 'Math Drills and the Speed Drill are appropriate for Grade 2 and above — students who already understand the four operations and are working on speed. Mental Math Practice suits Grade 3 and above, once students are comfortable with two-digit addition and subtraction.',
+  },
+  {
+    q: 'How often should students practice timed math drills?',
+    a: 'Short daily sessions of 2–5 minutes are more effective than occasional longer ones. Consistency matters more than duration. A single two-minute Math Drills session each day is enough to see meaningful improvement in fluency over weeks.',
+  },
+  {
+    q: 'Should students learn their facts before using timed drills?',
+    a: 'Yes. Timed drills are a fluency tool, not a learning tool. Students who don\'t yet know their facts will find timed practice frustrating. Use the untimed operation practice pages (Addition, Subtraction, Multiplication, Division) to learn the facts first, then switch to timed drills to build speed.',
+  },
+  {
+    q: 'Are these timed drills free?',
+    a: 'Yes. All three drills are completely free, require no account or login, and work on any device — phone, tablet, or computer.',
+  },
+];
+---
+
+<BaseLayout
+  title="Timed Math Drills — Free Online Speed Practice | Math Practice"
+  description="Free timed math drills for grades 2–5. Choose a drill format: two-minute deliberate practice, 60-second speed challenge, or mental math with two-digit numbers. Instant feedback and score tracking."
+  canonical={`${SITE}/timed-drills`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mathpractice.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Timed Math Drills" }
+      ]
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Timed Math Drills",
+      "description": "Free timed arithmetic drills for grades 2–5. Three formats: two-minute deliberate practice, 60-second speed challenge, and mental math with two-digit numbers.",
+      "url": "https://www.mathpractice.com/timed-drills",
+      "educationalLevel": ["Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+      "teaches": "Arithmetic Fluency",
+      "provider": {
+        "@type": "Organization",
+        "name": "Math Practice",
+        "url": "https://www.mathpractice.com"
+      }
+    })} />
+  </Fragment>
+
+  <!-- Site Header -->
+  <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 group">
+        <span class="w-7 h-7 rounded-lg bg-[#4F46E5] flex items-center justify-center text-white font-black text-sm leading-none select-none group-hover:bg-[#6366F1] transition-colors">÷</span>
+        <span class="text-base font-bold text-white tracking-tight">Math Practice</span>
+      </a>
+      <nav class="hidden sm:flex items-center gap-1">
+        <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Addition</a>
+        <a href="/subtraction" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Subtraction</a>
+        <a href="/multiplication" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Multiplication</a>
+        <a href="/division" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Division</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#A5B4FC] flex items-center flex-wrap gap-1">
+      <a href="/" class="hover:text-[#4F46E5] transition-colors">Home</a>
+      <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>
+      <span class="text-[#6B7280]">Timed Math Drills</span>
+    </nav>
+
+    <!-- H1 + intro -->
+    <h1 class="text-3xl font-bold text-[#1E293B]">Timed Math Drills</h1>
+    <p class="mt-3 mb-8 text-[#6B7280] text-base leading-relaxed max-w-xl">
+      Free timed arithmetic practice for grades 2–5. Three drill formats — choose the one that matches where you are and what you're working on.
+    </p>
+
+    <!-- Mode cards -->
+    <section aria-labelledby="modes-heading">
+      <h2 id="modes-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Choose a Drill</h2>
+      <div class="flex flex-col gap-4">
+        {modes.map((m) => (
+          <a
+            href={m.href}
+            class="flex items-start gap-4 bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#4F46E5] hover:shadow-md transition-all group"
+          >
+            <div class="w-16 h-14 rounded-xl bg-[#EEF2FF] flex items-center justify-center font-mono text-sm font-bold text-[#4F46E5] shrink-0 leading-tight text-center">
+              {m.symbol}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-baseline gap-2 flex-wrap">
+                <span class="font-semibold text-[#1E293B] group-hover:text-[#4F46E5] transition-colors">{m.label}</span>
+                <span class="text-xs font-medium text-[#6366F1] bg-[#EEF2FF] px-2 py-0.5 rounded-full">{m.grade}</span>
+              </div>
+              <p class="text-sm text-[#6B7280] mt-1 leading-relaxed">{m.description}</p>
+            </div>
+            <span class="text-[#A5B4FC] group-hover:text-[#4F46E5] transition-colors text-lg leading-none mt-1" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Grade progression -->
+    <section class="mt-12" aria-labelledby="progression-heading">
+      <h2 id="progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2–3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Math Drills — Build Fluency</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Use the two-minute Math Drills to practice all four operations. The longer session and answer feedback make it ideal for learning from mistakes while building fluency across addition, subtraction, multiplication, and division facts.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3–4</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Speed Drill — Test Your Speed</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Once facts are known, the 60-second Speed Drill tests how quickly they can be recalled. It's a reaction-speed test — no answer feedback, just rapid-fire problems. Students who score well here have genuinely automated their facts.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4–5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Mental Math — Two-Digit Arithmetic</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Mental Math Practice extends beyond memorized facts to two-digit addition and subtraction. Students develop the calculation strategies used in real life — rounding, splitting, compensating — without relying on pencil and paper.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips section -->
+    <section class="mt-12" aria-labelledby="tips-heading">
+      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Timed drills are a <strong>fluency tool, not a learning tool.</strong> Students need to understand the operations before using timed practice. Start with the untimed <a href="/addition" class="text-[#4F46E5] font-medium hover:underline">addition</a>, <a href="/subtraction" class="text-[#4F46E5] font-medium hover:underline">subtraction</a>, <a href="/multiplication" class="text-[#4F46E5] font-medium hover:underline">multiplication</a>, and <a href="/division" class="text-[#4F46E5] font-medium hover:underline">division</a> practice pages, then move to timed drills once the facts feel familiar.
+        </p>
+        <p>
+          Start with <a href="/math-drills" class="text-[#4F46E5] font-medium hover:underline">Math Drills</a> before moving to the <a href="/arithmetic-speed-drill" class="text-[#4F46E5] font-medium hover:underline">Speed Drill</a>. Math Drills shows the correct answer for wrong responses, which reinforces learning. The Speed Drill is pure speed — it doesn't teach, it measures.
+        </p>
+        <p>
+          Short, daily sessions outperform occasional long ones. Two to five minutes per day is enough — the goal is to make fact recall automatic, and that happens through consistent repetition over time, not marathon sessions.
+        </p>
+      </div>
+    </section>
+
+    <!-- Related links -->
+    <section class="mt-12" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="text-base font-semibold text-[#1E293B] mb-3">Related Practice</h2>
+      <InternalLinks client:load links={relatedLinks} />
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-12" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="border-t-2 border-[#E0E7FF] bg-[#EEF2FF] mt-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1]">
+        <a href="/" class="hover:text-[#3730A3] transition-colors">Home</a>
+        <a href="/math-practice" class="hover:text-[#3730A3] transition-colors">Math Practice</a>
+        <a href="/addition" class="hover:text-[#3730A3] transition-colors">Addition</a>
+        <a href="/subtraction" class="hover:text-[#3730A3] transition-colors">Subtraction</a>
+        <a href="/multiplication" class="hover:text-[#3730A3] transition-colors">Multiplication</a>
+        <a href="/division" class="hover:text-[#3730A3] transition-colors">Division</a>
+        <a href="/math-worksheets" class="hover:text-[#3730A3] transition-colors">Worksheets</a>
+      </div>
+      <p class="text-xs text-[#A5B4FC] mt-4">© {new Date().getFullYear()} Math Practice. Free arithmetic practice for students of all ages.</p>
+    </div>
+  </footer>
+</BaseLayout>
