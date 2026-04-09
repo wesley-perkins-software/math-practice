@@ -166,13 +166,15 @@ export default function PracticeWidget({ config, topContent }: Props) {
     totalAnsweredRef.current += 1;
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
-    // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
-    const currentStats = loadStats(config.storageKey);
-    const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
-    const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
-    const updatedStats = { ...currentStats, currentStreak: newCurrentStreak, longestStreak: newLongestStreak };
-    saveStats(config.storageKey, updatedStats);
-    setStats(updatedStats);
+    if (!isTimed) {
+      // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
+      const currentStats = loadStats(config.storageKey);
+      const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
+      const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
+      const updatedStats = { ...currentStats, currentStreak: newCurrentStreak, longestStreak: newLongestStreak };
+      saveStats(config.storageKey, updatedStats);
+      setStats(updatedStats);
+    }
 
     if (isCorrect) {
       setCorrect((c) => c + 1);
@@ -275,39 +277,40 @@ export default function PracticeWidget({ config, topContent }: Props) {
             />
           )}
 
-          {/* Current streak */}
-          <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
-            {/* Streak label — always visible so Reset has context */}
-            <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}>
-              {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
-            </span>
+          {!isTimed && (
+            <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
+              {/* Streak label — always visible so Reset has context */}
+              <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}>
+                {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
+              </span>
 
-            {/* Reset / inline confirm */}
-            {!resetPending ? (
-              <button
-                onClick={() => setResetPending(true)}
-                className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
-              >
-                Reset
-              </button>
-            ) : (
-              <div className="flex items-center gap-1">
-                <span className="text-xs text-[#6B7280] mr-1">Reset streak?</span>
+              {/* Reset / inline confirm */}
+              {!resetPending ? (
                 <button
-                  onClick={handleResetCurrentStreak}
-                  className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                  onClick={() => setResetPending(true)}
+                  className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
                 >
-                  Yes
+                  Reset
                 </button>
-                <button
-                  onClick={() => setResetPending(false)}
-                  className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            )}
-          </div>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-[#6B7280] mr-1">Reset streak?</span>
+                  <button
+                    onClick={handleResetCurrentStreak}
+                    className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setResetPending(false)}
+                    className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
