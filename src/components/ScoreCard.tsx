@@ -40,16 +40,18 @@ export default function ScoreCard({ result, stats, isTimed, onRestart }: Props) 
         )}
       </div>
 
-      <div className="grid grid-cols-2 gap-3 w-full">
-        <div className="bg-[#F5F3FF] border border-[#E0E7FF] rounded-xl p-3 text-center">
-          <div className="text-lg font-bold text-[#1E1B4B]">{stats.currentStreak}</div>
-          <div className="text-xs text-[#6B7280]">Current Streak</div>
+      {!isTimed && (
+        <div className="grid grid-cols-2 gap-3 w-full">
+          <div className="bg-[#F5F3FF] border border-[#E0E7FF] rounded-xl p-3 text-center">
+            <div className="text-lg font-bold text-[#1E1B4B]">{stats.currentStreak}</div>
+            <div className="text-xs text-[#6B7280]">Current Streak</div>
+          </div>
+          <div className="bg-[#F5F3FF] border border-[#E0E7FF] rounded-xl p-3 text-center">
+            <div className="text-lg font-bold text-[#1E1B4B]">{stats.longestStreak}</div>
+            <div className="text-xs text-[#6B7280]">Best Streak</div>
+          </div>
         </div>
-        <div className="bg-[#F5F3FF] border border-[#E0E7FF] rounded-xl p-3 text-center">
-          <div className="text-lg font-bold text-[#1E1B4B]">{stats.longestStreak}</div>
-          <div className="text-xs text-[#6B7280]">Best Streak</div>
-        </div>
-      </div>
+      )}
 
       <button
         onClick={onRestart}
