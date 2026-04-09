@@ -64,6 +64,8 @@ export interface PageStats {
   longestStreak: number;
   /** Correct answers per 60s, normalized across durations */
   bestTimedScore: number;
+  /** Highest correct count achieved in a timed session for this practice */
+  personalBestScore: number;
   /** 0–100 percent correct from most recent session */
   lastSessionScore: number;
   /** ISO 8601 date */

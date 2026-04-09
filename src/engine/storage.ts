@@ -9,6 +9,7 @@ export const DEFAULT_STATS: PageStats = {
   currentStreak: 0,
   longestStreak: 0,
   bestTimedScore: 0,
+  personalBestScore: 0,
   lastSessionScore: 0,
   lastSessionDate: '',
   totalProblemsAttempted: 0,
@@ -58,6 +59,7 @@ export function updateStatsAfterSession(
     currentStreak: existing.currentStreak,
     longestStreak: existing.longestStreak,
     bestTimedScore: Math.max(existing.bestTimedScore, timedScore),
+    personalBestScore: isTimed ? Math.max(existing.personalBestScore, result.correct) : existing.personalBestScore,
     lastSessionScore: sessionScore,
     lastSessionDate: new Date().toISOString().slice(0, 10),
     totalProblemsAttempted: existing.totalProblemsAttempted + result.total,
@@ -73,4 +75,9 @@ export function resetCurrentStreak(key: string): void {
 export function resetLongestStreak(key: string): void {
   const stats = loadStats(key);
   saveStats(key, { ...stats, longestStreak: 0 });
+}
+
+export function resetPersonalBestScore(key: string): void {
+  const stats = loadStats(key);
+  saveStats(key, { ...stats, personalBestScore: 0, bestTimedScore: 0 });
 }

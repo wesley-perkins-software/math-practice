@@ -11,8 +11,8 @@ export default function ScoreCard({ result, stats, isTimed, onRestart }: Props) 
   const isPerfect = result.correct === result.total && result.total > 0;
   const isPersonalBest =
     isTimed &&
-    stats.bestTimedScore > 0 &&
-    Math.round((result.correct / result.durationSeconds) * 60) >= stats.bestTimedScore;
+    stats.personalBestScore > 0 &&
+    result.correct >= stats.personalBestScore;
 
   const accuracy = result.total > 0 ? Math.round((result.correct / result.total) * 100) : 0;
 

@@ -3,7 +3,7 @@ import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import WrittenProblemInput from './WrittenProblemInput';
@@ -37,6 +37,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
   const [resetPending, setResetPending] = useState(false);
+  const [personalBestResetPending, setPersonalBestResetPending] = useState(false);
 
   // Timer state
   const [duration, setDuration] = useState<TimerDuration>(() => {
@@ -69,6 +70,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   // Clear reset confirmation when difficulty changes
   useEffect(() => {
     setResetPending(false);
+    setPersonalBestResetPending(false);
   }, [config.storageKey]);
 
   // Keep duration synchronized with fixed-duration timed pages.
@@ -212,6 +214,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
     setResetPending(false);
   }
 
+  function handleResetPersonalBest() {
+    resetPersonalBestScore(config.storageKey);
+    setStats(loadStats(config.storageKey));
+    setPersonalBestResetPending(false);
+  }
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -303,6 +311,38 @@ export default function PracticeWidget({ config, topContent }: Props) {
                   </button>
                   <button
                     onClick={() => setResetPending(false)}
+                    className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+
+          {isTimed && (
+            <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
+              <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
+                Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+              </span>
+              {!personalBestResetPending ? (
+                <button
+                  onClick={() => setPersonalBestResetPending(true)}
+                  className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
+                >
+                  Reset
+                </button>
+              ) : (
+                <div className="flex items-center gap-1">
+                  <span className="text-xs text-[#6B7280] mr-1">Reset personal best?</span>
+                  <button
+                    onClick={handleResetPersonalBest}
+                    className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                  >
+                    Yes
+                  </button>
+                  <button
+                    onClick={() => setPersonalBestResetPending(false)}
                     className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
                   >
                     Cancel
