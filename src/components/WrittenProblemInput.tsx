@@ -134,7 +134,8 @@ export default function WrittenProblemInput({
         <div className="text-right mt-1 min-h-[2.5rem] md:min-h-[3rem] flex items-center justify-end">
           {isPlaceholder ? (
             <span className="text-4xl md:text-5xl font-bold tabular-nums text-[#C7D2FE] inline-flex items-center font-['JetBrains_Mono']">
-              ?{isFocused && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
+              <span aria-hidden="true" className="opacity-0 select-none">?</span>
+              {isFocused && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
             </span>
           ) : (
             <span className={`text-4xl md:text-5xl font-bold tabular-nums transition-colors duration-150 font-['JetBrains_Mono'] ${answerColor}`}>
