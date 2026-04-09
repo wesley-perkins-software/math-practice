@@ -3,7 +3,7 @@ import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import WrittenProblemInput from './WrittenProblemInput';
@@ -212,6 +212,13 @@ export default function PracticeWidget({ config, topContent }: Props) {
     setResetPending(false);
   }
 
+  function handleResetPersonalBest() {
+    const shouldReset = window.confirm('Reset your personal best score for this drill?');
+    if (!shouldReset) return;
+    resetPersonalBestScore(config.storageKey);
+    setStats(loadStats(config.storageKey));
+  }
+
   // Cleanup on unmount
   useEffect(() => {
     return () => {
@@ -309,6 +316,20 @@ export default function PracticeWidget({ config, topContent }: Props) {
                   </button>
                 </div>
               )}
+            </div>
+          )}
+
+          {isTimed && (
+            <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
+              <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
+                Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+              </span>
+              <button
+                onClick={handleResetPersonalBest}
+                className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
+              >
+                Reset
+              </button>
             </div>
           )}
         </div>
