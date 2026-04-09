@@ -218,6 +218,9 @@ export default function PracticeWidget({ config, topContent }: Props) {
     resetPersonalBestScore(config.storageKey);
     setStats(loadStats(config.storageKey));
     setPersonalBestResetPending(false);
+    setResult(null);
+    setFeedbackState('hidden');
+    startSession();
   }
 
   // Cleanup on unmount
