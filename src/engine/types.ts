@@ -17,6 +17,8 @@ export interface PracticeConfig {
   mode: PracticeMode;
   /** Used only when mode === 'timed'. Default 60. */
   timerDuration: TimerDuration;
+  /** If true, timer duration is fixed and users cannot change it in the UI. */
+  fixedTimerDuration?: boolean;
   operandA: DigitRange;
   operandB: DigitRange;
   /** Addition: if false, generator guarantees no carrying */

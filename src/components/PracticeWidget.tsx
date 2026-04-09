@@ -23,6 +23,7 @@ interface Props {
 
 export default function PracticeWidget({ config, topContent }: Props) {
   const isTimed = config.mode === 'timed';
+  const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
   // Session state
   const [phase, setPhase] = useState<Phase>('idle');
@@ -39,10 +40,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
 
   // Timer state
   const [duration, setDuration] = useState<TimerDuration>(() => {
-    try {
-      const saved = localStorage.getItem(DURATION_PREF_KEY);
-      if (saved) return Number(saved) as TimerDuration;
-    } catch {}
+    if (!isTimerDurationFixed) {
+      try {
+        const saved = localStorage.getItem(DURATION_PREF_KEY);
+        if (saved) return Number(saved) as TimerDuration;
+      } catch {}
+    }
     return (config.timerDuration ?? 60) as TimerDuration;
   });
   const [secondsRemaining, setSecondsRemaining] = useState<number>(duration);
@@ -67,6 +70,13 @@ export default function PracticeWidget({ config, topContent }: Props) {
   useEffect(() => {
     setResetPending(false);
   }, [config.storageKey]);
+
+  // Keep duration synchronized with fixed-duration timed pages.
+  useEffect(() => {
+    if (!isTimerDurationFixed) return;
+    setDuration(config.timerDuration);
+    setSecondsRemaining(config.timerDuration);
+  }, [config.timerDuration, isTimerDurationFixed]);
 
   // On mount and whenever the difficulty (storageKey) changes: load new config's stats.
   // Always auto-start a session (skip idle). If active mid-session: generate a new problem.
@@ -232,7 +242,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
                 : <span className="text-sm text-[#A5B4FC] font-medium">Timer starts on first answer</span>
               }
               {/* Duration picker only available before timer starts */}
-              {!timerStarted && (
+              {!timerStarted && !isTimerDurationFixed && (
                 <DurationPicker value={duration} onChange={handleDurationChange} />
               )}
             </div>
