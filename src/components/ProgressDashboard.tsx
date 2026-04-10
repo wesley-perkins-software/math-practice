@@ -179,7 +179,9 @@ export default function ProgressDashboard() {
 
   if (!loaded) return null;
 
-  const practiced = rows.filter((r) => r.stats.totalSessions > 0);
+  // Include any practice type with problems attempted (untimed sessions track per-answer)
+  // or completed sessions (timed sessions record at timer expiry).
+  const practiced = rows.filter((r) => r.stats.totalProblemsAttempted > 0 || r.stats.totalSessions > 0);
 
   if (practiced.length === 0) {
     return (

@@ -100,6 +100,34 @@ export default function PracticeWidget({ config, topContent }: Props) {
   function startSession() {
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+
+    // For untimed mode: record the previous session if the user answered any problems.
+    // endSession() is never called for untimed (no timer), so this is the only session boundary.
+    if (!isTimed && totalAnsweredRef.current > 0) {
+      const elapsed = sessionStartTimeRef.current > 0
+        ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
+        : 0;
+      const sessionResult = buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed);
+      const current = loadStats(config.storageKey);
+      // totalProblemsAttempted is already tracked per-answer; only update session count + scores
+      saveStats(config.storageKey, {
+        ...current,
+        lastSessionScore: sessionResult.score,
+        lastSessionDate: new Date().toISOString().slice(0, 10),
+        totalSessions: current.totalSessions + 1,
+      });
+      appendSessionLog({
+        storageKey: config.storageKey,
+        label: config.label ?? config.storageKey,
+        correct: sessionResult.correct,
+        total: sessionResult.total,
+        score: sessionResult.score,
+        durationSeconds: sessionResult.durationSeconds,
+        isTimed: false,
+        timestamp: sessionResult.timestamp,
+      });
+    }
+
     totalAnsweredRef.current = 0;
     timerStartedRef.current = false;
     setTimerStarted(false);
@@ -108,7 +136,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
     const currentStats = loadStats(config.storageKey);
     setPreSessionScore(currentStats.lastSessionScore);
     setIsNewStreakRecord(false);
-    // sessionStartTime is NOT captured here — it's captured on the first answer submission
+    // For untimed: capture start time now. For timed: captured on first answer submission.
+    if (!isTimed) {
+      const now = Date.now();
+      setSessionStartTime(now);
+      sessionStartTimeRef.current = now;
+    }
     setProblem(generateProblem(config));
     setProblemIndex(0);
     setCorrect(0);
@@ -187,11 +220,19 @@ export default function PracticeWidget({ config, topContent }: Props) {
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
     if (!isTimed) {
-      // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
+      // Update streak and problem count per answer for untimed mode.
+      // Sessions never end via timer, so tracking totalProblemsAttempted here ensures
+      // the progress dashboard reflects activity even before a session is formally closed.
       const currentStats = loadStats(config.storageKey);
       const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
       const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
-      const updatedStats = { ...currentStats, currentStreak: newCurrentStreak, longestStreak: newLongestStreak };
+      const updatedStats = {
+        ...currentStats,
+        currentStreak: newCurrentStreak,
+        longestStreak: newLongestStreak,
+        totalProblemsAttempted: currentStats.totalProblemsAttempted + 1,
+        lastSessionDate: new Date().toISOString().slice(0, 10),
+      };
       saveStats(config.storageKey, updatedStats);
       setStats(updatedStats);
     }
