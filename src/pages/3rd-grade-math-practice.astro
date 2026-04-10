@@ -1,0 +1,118 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Learn all times tables 1–12' },
+  { href: '/multiplication-practice', label: 'Multiplication Practice Hub', description: 'All multiplication levels' },
+  { href: '/addition/2-digit-with-carrying', label: 'Addition with Carrying', description: 'Reinforce regrouping skills' },
+  { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'Reinforce regrouping in subtraction' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print times table practice sheets' },
+  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice', description: 'Next level: division facts and fluency' },
+];
+
+const faqItems = [
+  {
+    q: 'What math do 3rd graders learn?',
+    a: 'Third grade is when multiplication and division are formally introduced. Students learn multiplication as repeated addition and begin memorizing times tables, typically up to ×10 or ×12. They also continue developing fluency with two-digit addition and subtraction, and are introduced to fractions and simple measurement.',
+  },
+  {
+    q: 'Which multiplication tables should a 3rd grader know?',
+    a: 'By end of 3rd grade, most curricula expect fluency with times tables ×1 through ×10. The ×11 and ×12 tables are often covered but may not be required for full fluency until 4th grade. The ×2, ×5, and ×10 tables are usually mastered first because they have patterns that are easy to recognize.',
+  },
+  {
+    q: 'How do I help my child memorize times tables?',
+    a: 'Start with the easy tables (×1, ×2, ×5, ×10) since they have clear patterns. Then tackle ×3, ×4, ×6, and ×9 (the ×9 finger trick is popular). Save ×7 and ×8 for last as they\'re hardest. Daily practice of 5–10 minutes is far more effective than long, infrequent sessions. Use this site to drill specific tables in isolation.',
+  },
+  {
+    q: 'Is 3rd grade when kids start division?',
+    a: 'Yes — division is introduced in 3rd grade, but primarily as the inverse of multiplication rather than a separate procedure. Students learn that if 4 × 7 = 28, then 28 ÷ 4 = 7. Formal division algorithms (long division) come in 4th–5th grade.',
+  },
+];
+---
+
+<PracticeLayout
+  title="3rd Grade Math Practice — Multiplication Facts & Times Tables"
+  description="Free 3rd grade math practice covering multiplication facts, times tables 1–12, and two-digit arithmetic. Instant feedback, no login required."
+  canonical={`${SITE}/3rd-grade-math-practice`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '3rd Grade Math Practice' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "3rd Grade Math Practice",
+      "description": "Free online math practice for 3rd grade students. Covers multiplication facts, times tables 1–12, and two-digit addition and subtraction.",
+      "url": `${SITE}/3rd-grade-math-practice`,
+      "educationalLevel": ["Grade 3"],
+      "teaches": ["Multiplication", "Addition", "Subtraction"],
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">3rd Grade Math Practice</h1>
+  <p slot="intro">Third grade is where multiplication begins. Build times table fluency and reinforce two-digit addition and subtraction with instant feedback — the foundation for all upper-elementary math.</p>
+
+  <InternalLinks slot="links" title="3rd Grade Practice Activities" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Grade Level: Grade 3</span>
+    </div>
+
+    <section aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Key Skills for 3rd Grade</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Multiplication facts ×1 through ×10 (and into ×12)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Understanding multiplication as repeated addition</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Introduction to division as the inverse of multiplication</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Fluency with two-digit addition and subtraction</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Using properties of multiplication (commutative, distributive)</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="tables-heading">
+      <h2 id="tables-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Times Tables: Recommended Order</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-xs font-semibold text-[#059669] mb-1">Start Here</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">×1, ×2, ×5, ×10</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">These have clear patterns (×2 = doubles, ×5 ends in 0 or 5, ×10 just adds a zero). Master these first.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-xs font-semibold text-[#F59E0B] mb-1">Then</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">×3, ×4, ×6, ×9</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">×9 has a famous finger trick. ×4 = double ×2. ×6 = ×5 plus one more group. Tackle one at a time.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-xs font-semibold text-[#DC2626] mb-1">Hardest</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">×7, ×8, ×11, ×12</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Save these for last. By this point, many facts are already known from earlier tables (7×8 = 8×7, etc.).</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

@@ -1,29 +1,53 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import WorksheetGenerator from '@/components/WorksheetGenerator';
 import InternalLinks from '@/components/InternalLinks';
-import { MULTIPLICATION_GENERAL } from '@/engine/presets';
+import {
+  MULTIPLICATION_FACTS,
+  MULTIPLICATION_1_12,
+  MULTIPLICATION_GENERAL,
+} from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
+const configs = [
+  { label: 'Facts (×1–×12)', config: MULTIPLICATION_FACTS },
+  { label: 'Times Tables 1–12', config: MULTIPLICATION_1_12 },
+  { label: 'Mixed Multiplication', config: MULTIPLICATION_GENERAL },
+];
+
 const links = [
   { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Full 1–12 drill' },
-  { href: '/multiplication/facts', label: 'Times Tables 1–12', description: 'Times table practice' },
+  { href: '/multiplication', label: 'Times Tables Hub', description: 'All times table pages' },
   { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Practice division' },
   { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
 ];
 ---
 
 <PracticeLayout
-  title="Multiplication Worksheets — Free Online Times Table Practice"
-  description="Free multiplication worksheet practice online. Times tables 1–12 with instant feedback. No printing needed. Track your score and streak."
+  title="Multiplication Worksheets — Free Printable Times Table Practice"
+  description="Generate free multiplication worksheets with 20–40 problems. Times tables 1–12 with instant answers. Print or practice online — no signup required."
   canonical={`${SITE}/math-worksheets/multiplication-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Multiplication Worksheets' }]}
 >
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Worksheets</h1>
-  <div slot="intro">
-    <p>Practice multiplication facts like a worksheet — 20 randomized times table problems with instant feedback on every answer. Covers the full 1–12 times table range.</p>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Multiplication Worksheets",
+      "description": "Free printable multiplication worksheets with 20–40 problems. Times tables 1–12, generate a new worksheet instantly.",
+      "url": `${SITE}/math-worksheets/multiplication-worksheets`,
+      "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
+      "teaches": "Multiplication",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Multiplication Worksheets</h1>
+  <div slot="intro" class="no-print">
+    <p>Generate a free multiplication worksheet with 20, 30, or 40 problems. Covers times tables 1–12 with randomized problems every time. Print with or without the answer key.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={MULTIPLICATION_GENERAL} />
+
+  <WorksheetGenerator slot="widget" configs={configs} title="Multiplication Worksheet" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>
