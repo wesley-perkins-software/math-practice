@@ -36,7 +36,7 @@ export default function StatsPanel({ storageKey, onReset }: Props) {
         action={{ label: 'Reset', onClick: handleResetStreak }}
       />
       <StatCard
-        label="Best Streak"
+        label="Longest Streak"
         value={stats.longestStreak}
         action={null}
       />

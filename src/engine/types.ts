@@ -12,6 +12,8 @@ export interface PracticeConfig {
   storageKey: string;
   /** Human-readable name for display in the progress dashboard */
   label?: string;
+  /** URL path to the practice page, used for "Practice →" links in the dashboard */
+  path?: string;
   operation: Operation;
   /** Default mode when page loads */
   mode: PracticeMode;
@@ -72,4 +74,17 @@ export interface PageStats {
   lastSessionDate: string;
   totalProblemsAttempted: number;
   totalSessions: number;
+}
+
+export interface SessionLogEntry {
+  storageKey: string;
+  label: string;
+  correct: number;
+  total: number;
+  /** 0–100 percent correct */
+  score: number;
+  durationSeconds: number;
+  isTimed: boolean;
+  /** ISO 8601 */
+  timestamp: string;
 }

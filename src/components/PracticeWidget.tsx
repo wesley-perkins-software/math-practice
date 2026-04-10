@@ -3,7 +3,7 @@ import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import WrittenProblemInput from './WrittenProblemInput';
@@ -36,6 +36,8 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [feedbackCorrectRemainder, setFeedbackCorrectRemainder] = useState<number | undefined>(undefined);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
+  const [preSessionScore, setPreSessionScore] = useState<number>(0);
+  const [isNewStreakRecord, setIsNewStreakRecord] = useState(false);
   const [resetPending, setResetPending] = useState(false);
   const [personalBestResetPending, setPersonalBestResetPending] = useState(false);
 
@@ -102,6 +104,10 @@ export default function PracticeWidget({ config, topContent }: Props) {
     timerStartedRef.current = false;
     setTimerStarted(false);
     setSecondsRemaining(duration);
+    // Capture the score from the previous session before starting a new one
+    const currentStats = loadStats(config.storageKey);
+    setPreSessionScore(currentStats.lastSessionScore);
+    setIsNewStreakRecord(false);
     // sessionStartTime is NOT captured here — it's captured on the first answer submission
     setProblem(generateProblem(config));
     setProblemIndex(0);
@@ -141,11 +147,23 @@ export default function PracticeWidget({ config, topContent }: Props) {
   useEffect(() => {
     if (phase === 'complete' && result) {
       const current = loadStats(config.storageKey);
+      const prevLongestStreak = current.longestStreak;
       const updated = updateStatsAfterSession(current, result, isTimed);
       saveStats(config.storageKey, updated);
       setStats(updated);
+      setIsNewStreakRecord(!isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0);
+      appendSessionLog({
+        storageKey: config.storageKey,
+        label: config.label ?? config.storageKey,
+        correct: result.correct,
+        total: result.total,
+        score: result.score,
+        durationSeconds: result.durationSeconds,
+        isTimed,
+        timestamp: result.timestamp,
+      });
     }
-  }, [phase, result, config.storageKey, isTimed]);
+  }, [phase, result, config.storageKey, config.label, isTimed]);
 
   function handleDurationChange(d: TimerDuration) {
     setDuration(d);
@@ -363,6 +381,8 @@ export default function PracticeWidget({ config, topContent }: Props) {
           result={result}
           stats={stats}
           isTimed={isTimed}
+          preSessionScore={preSessionScore}
+          isNewStreakRecord={isNewStreakRecord}
           onRestart={handleRestart}
         />
       )}
