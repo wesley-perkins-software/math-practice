@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { PracticeConfig, Problem } from '@/engine/types';
 import { generateProblemSet } from '@/engine/generator';
 
@@ -22,26 +22,33 @@ const OP_SYMBOL: Record<string, string> = {
 const COUNTS = [20, 30, 40] as const;
 type Count = (typeof COUNTS)[number];
 
-function WorksheetProblem({ problem, index, showAnswer }: { problem: Problem; index: number; showAnswer: boolean }) {
-  const symbol = OP_SYMBOL[problem.operation];
-  const answerText = problem.remainder !== undefined
+function formatAnswer(problem: Problem) {
+  return problem.remainder !== undefined
     ? `${problem.correctAnswer} R${problem.remainder}`
     : String(problem.correctAnswer);
+}
+
+function getPrintDensityClass(count: Count) {
+  if (count === 20) return 'worksheet-density-20';
+  if (count === 30) return 'worksheet-density-30';
+  return 'worksheet-density-40';
+}
+
+function WorksheetProblem({ problem, index }: { problem: Problem; index: number }) {
+  const symbol = OP_SYMBOL[problem.operation];
 
   return (
-    <div className="worksheet-problem flex flex-col items-end border border-[#E0E7FF] rounded-xl p-4 bg-white min-h-[120px]">
-      <div className="text-xs text-[#A5B4FC] font-medium self-start mb-1">{index + 1}.</div>
-      <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums">{problem.operandA}</div>
-      <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums flex items-center gap-2">
-        <span className="text-[#4F46E5]">{symbol}</span>
-        <span>{problem.operandB}</span>
+    <div className="worksheet-problem rounded-xl border border-[#E0E7FF] bg-white p-3.5 print:rounded-none print:border-none print:bg-transparent print:p-0">
+      <div className="mb-2 text-xs font-semibold text-[#6366F1] print:mb-1 print:text-[10px] print:text-black">{index + 1}.</div>
+      <div className="worksheet-problem-stack flex flex-col items-end text-[#1E1B4B]">
+        <div className="font-mono text-2xl font-bold leading-tight tabular-nums print:text-[24px]">{problem.operandA}</div>
+        <div className="font-mono text-2xl font-bold leading-tight tabular-nums print:text-[24px]">
+          <span className="mr-2">{symbol}</span>
+          <span>{problem.operandB}</span>
+        </div>
+        <div className="mt-1 h-[2px] w-full bg-[#1E1B4B] print:mt-1.5" />
+        <div className="worksheet-answer-space mt-2 h-9 w-full print:mt-1" aria-hidden="true" />
       </div>
-      <div className="border-t-2 border-[#1E1B4B] w-full mt-1 mb-2" />
-      {showAnswer ? (
-        <div className="font-mono text-xl font-bold text-[#059669] tabular-nums">{answerText}</div>
-      ) : (
-        <div className="h-7" aria-hidden="true" />
-      )}
     </div>
   );
 }
@@ -50,130 +57,184 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [count, setCount] = useState<Count>(20);
   const [problems, setProblems] = useState<Problem[]>([]);
-  const [showAnswers, setShowAnswers] = useState(false);
-  const [generated, setGenerated] = useState(false);
+  const [showAnswerKeyPreview, setShowAnswerKeyPreview] = useState(false);
+  const [includeAnswerKeyInPrint, setIncludeAnswerKeyInPrint] = useState(false);
+  const [generatedAt, setGeneratedAt] = useState<string>('');
+
+  const selectedLabel = configs[selectedIndex]?.label ?? '';
+
+  const worksheetHeading = useMemo(
+    () => `${selectedLabel} ${title}`.replace(/\s+/g, ' ').trim(),
+    [selectedLabel, title],
+  );
 
   function generate() {
     const { config } = configs[selectedIndex];
     setProblems(generateProblemSet(config, count));
-    setShowAnswers(false);
-    setGenerated(true);
+    setGeneratedAt(new Date().toLocaleDateString());
   }
 
   function handlePrint() {
     window.print();
   }
 
+  const hasWorksheet = problems.length > 0;
+  const printDensityClass = getPrintDensityClass(count);
+
   return (
-    <div className="space-y-6">
-      {/* Controls panel — hidden when printing */}
-      <div className="no-print bg-white border border-[#E0E7FF] rounded-2xl p-5 space-y-5">
-        <h2 className="text-base font-semibold text-[#1E1B4B]">Generate a Worksheet</h2>
+    <section className="space-y-6">
+      <div className="no-print rounded-2xl border border-[#E0E7FF] bg-white p-5 shadow-sm">
+        <h2 className="text-lg font-semibold text-[#1E1B4B]">Build your worksheet</h2>
+        <p className="mt-1 text-sm text-[#6B7280]">Choose worksheet options, generate problems, then print.</p>
 
-        {/* Config selector */}
-        <div>
-          <label className="block text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-2">
-            Difficulty / Type
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {configs.map((opt, i) => (
-              <button
-                key={opt.label}
-                onClick={() => setSelectedIndex(i)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${
-                  selectedIndex === i
-                    ? 'bg-[#4F46E5] text-white border-[#4F46E5]'
-                    : 'bg-white text-[#1E1B4B] border-[#E0E7FF] hover:border-[#4F46E5]'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+        <div className="mt-5 space-y-5">
+          <fieldset>
+            <legend className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
+              Worksheet Type
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {configs.map((opt, i) => (
+                <button
+                  key={opt.label}
+                  onClick={() => setSelectedIndex(i)}
+                  className={`rounded-lg border px-3 py-2 text-sm font-medium transition-all ${
+                    selectedIndex === i
+                      ? 'border-[#4338CA] bg-[#EEF2FF] text-[#312E81] ring-2 ring-[#C7D2FE]'
+                      : 'border-[#E0E7FF] bg-white text-[#1E1B4B] hover:border-[#4F46E5]'
+                  }`}
+                  aria-pressed={selectedIndex === i}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset>
+            <legend className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
+              Problem Count
+            </legend>
+            <div className="flex flex-wrap gap-2">
+              {COUNTS.map((n) => (
+                <button
+                  key={n}
+                  onClick={() => setCount(n)}
+                  className={`rounded-lg border px-4 py-2 text-sm font-medium transition-all ${
+                    count === n
+                      ? 'border-[#4338CA] bg-[#EEF2FF] text-[#312E81] ring-2 ring-[#C7D2FE]'
+                      : 'border-[#E0E7FF] bg-white text-[#1E1B4B] hover:border-[#4F46E5]'
+                  }`}
+                  aria-pressed={count === n}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </fieldset>
+
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            <button
+              onClick={generate}
+              className="rounded-xl bg-[#4F46E5] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#4338CA]"
+            >
+              Generate Worksheet
+            </button>
+            {hasWorksheet && (
+              <>
+                <button
+                  onClick={handlePrint}
+                  className="rounded-xl border border-[#4F46E5] px-5 py-2.5 text-sm font-semibold text-[#4F46E5] transition-colors hover:bg-[#EEF2FF]"
+                >
+                  Print Worksheet
+                </button>
+                <label className="inline-flex items-center gap-2 rounded-lg border border-[#E0E7FF] bg-[#FAFAFF] px-3 py-2 text-sm text-[#312E81]">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 accent-[#4F46E5]"
+                    checked={includeAnswerKeyInPrint}
+                    onChange={(event) => setIncludeAnswerKeyInPrint(event.target.checked)}
+                  />
+                  Include answer key when printing
+                </label>
+                <button
+                  onClick={() => setShowAnswerKeyPreview((value) => !value)}
+                  className="rounded-lg border border-[#E0E7FF] px-3 py-2 text-sm font-medium text-[#4F46E5] transition-colors hover:border-[#4F46E5]"
+                >
+                  {showAnswerKeyPreview ? 'Hide answer key preview' : 'Show answer key preview'}
+                </button>
+              </>
+            )}
           </div>
-        </div>
 
-        {/* Problem count */}
-        <div>
-          <label className="block text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-2">
-            Number of Problems
-          </label>
-          <div className="flex gap-2">
-            {COUNTS.map((n) => (
-              <button
-                key={n}
-                onClick={() => setCount(n)}
-                className={`px-4 py-1.5 rounded-lg text-sm font-medium border transition-all ${
-                  count === n
-                    ? 'bg-[#4F46E5] text-white border-[#4F46E5]'
-                    : 'bg-white text-[#1E1B4B] border-[#E0E7FF] hover:border-[#4F46E5]'
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
+          {hasWorksheet && (
+            <p className="text-xs text-[#6B7280]">
+              Printing includes only the worksheet and optional answer key. Site navigation and controls are excluded.
+            </p>
+          )}
         </div>
-
-        <button
-          onClick={generate}
-          className="w-full sm:w-auto px-6 py-2.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold rounded-xl text-sm transition-colors"
-        >
-          Generate Worksheet
-        </button>
       </div>
 
-      {/* Worksheet area — shown on screen and when printing */}
-      {generated && (
-        <div className="worksheet-area space-y-4">
-          {/* Worksheet header — print only */}
-          <div className="print-only-header hidden print:block mb-4">
-            <div className="flex gap-10 text-sm text-[#1E1B4B] border-b-2 border-[#1E1B4B] pb-2">
-              <span>Name: ____________________________</span>
-              <span>Date: ________________</span>
+      {hasWorksheet && (
+        <div className="worksheet-print-root space-y-6">
+          <article className={`worksheet-page rounded-2xl border border-[#E0E7FF] bg-white p-5 shadow-sm print:p-0 print:shadow-none ${printDensityClass}`}>
+            <header className="worksheet-header border-b border-[#CBD5E1] pb-3 print:pb-2">
+              <h3 className="text-xl font-bold text-[#1E1B4B] print:text-[20px] print:text-black">{worksheetHeading}</h3>
+              <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-[#475569] print:text-[12px] print:text-black">
+                <span>{count} Problems</span>
+                <span>Type: {selectedLabel}</span>
+                {generatedAt && <span>Generated: {generatedAt}</span>}
+              </div>
+              <div className="mt-3 flex flex-wrap gap-x-8 gap-y-2 text-sm text-[#334155] print:mt-2 print:text-[12px] print:text-black">
+                <span>Name: ______________________________</span>
+                <span>Date: __________________</span>
+              </div>
+              <p className="mt-2 text-sm text-[#64748B] print:text-[12px] print:text-black">Solve each problem. Show your work when needed.</p>
+            </header>
+
+            <div className="worksheet-grid mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 print:mt-3 print:grid-cols-4 print:gap-x-6 print:gap-y-4">
+              {problems.map((problem, i) => (
+                <WorksheetProblem key={problem.id} problem={problem} index={i} />
+              ))}
             </div>
-          </div>
+          </article>
 
-          {/* Screen-only toolbar */}
-          <div className="no-print flex items-center justify-between">
-            <p className="text-sm text-[#6B7280]">
-              {count} problems — <span className="font-medium text-[#1E1B4B]">{configs[selectedIndex].label}</span>
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setShowAnswers((v) => !v)}
-                className="px-3 py-1.5 text-sm font-medium border border-[#E0E7FF] rounded-lg text-[#4F46E5] hover:border-[#4F46E5] transition-all"
-              >
-                {showAnswers ? 'Hide Answers' : 'Show Answer Key'}
-              </button>
-              <button
-                onClick={handlePrint}
-                className="px-3 py-1.5 text-sm font-medium bg-[#4F46E5] text-white rounded-lg hover:bg-[#4338CA] transition-all"
-              >
-                Print
-              </button>
+          <section className="worksheet-answer-key rounded-2xl border border-[#E0E7FF] bg-white p-5 shadow-sm print:shadow-none">
+            <div className="mb-3 flex items-center justify-between">
+              <h4 className="text-lg font-semibold text-[#1E1B4B] print:text-[18px] print:text-black">Answer Key</h4>
+              <span className="text-xs font-medium uppercase tracking-wide text-[#6366F1] print:text-[11px] print:text-black">Match by problem number</span>
             </div>
-          </div>
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm text-[#1E293B] sm:grid-cols-3 lg:grid-cols-4 print:grid-cols-4 print:gap-x-5 print:gap-y-1 print:text-[12px] print:text-black">
+              {problems.map((problem, index) => (
+                <div key={`${problem.id}-answer`} className="font-mono tabular-nums">
+                  <span className="font-semibold">{index + 1}.</span> {formatAnswer(problem)}
+                </div>
+              ))}
+            </div>
+          </section>
 
-          {/* Problem grid */}
-          <div className="grid grid-cols-4 gap-3 print:gap-4">
-            {problems.map((problem, i) => (
-              <WorksheetProblem
-                key={problem.id}
-                problem={problem}
-                index={i}
-                showAnswer={showAnswers}
-              />
-            ))}
-          </div>
-
-          {/* Print answer key — always shown when printing if answers toggled, or as separate section */}
-          <div className="no-print mt-6 border-t border-[#E0E7FF] pt-4">
-            <p className="text-xs text-[#A5B4FC] text-center">
-              Click <strong>Show Answer Key</strong> then <strong>Print</strong> to include answers on the printout.
+          {!showAnswerKeyPreview && (
+            <p className="no-print text-sm text-[#6B7280]">
+              Answer key is hidden in preview. Use “Show answer key preview” or print with “Include answer key when printing”.
             </p>
-          </div>
+          )}
         </div>
       )}
-    </div>
+
+      {hasWorksheet && !showAnswerKeyPreview && (
+        <style>{`.worksheet-answer-key { display: none; }`}</style>
+      )}
+
+      {hasWorksheet && (
+        <style>{`
+          @media print {
+            .worksheet-answer-key {
+              display: ${includeAnswerKeyInPrint ? 'block' : 'none'} !important;
+              break-before: page;
+              page-break-before: always;
+            }
+          }
+        `}</style>
+      )}
+    </section>
   );
 }
