@@ -22,7 +22,7 @@ const OP_SYMBOL: Record<string, string> = {
 const COUNTS = [20, 30, 40] as const;
 type Count = (typeof COUNTS)[number];
 
-function WorksheetProblem({ problem, index, showAnswer }: { problem: Problem; index: number; showAnswer: boolean }) {
+function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
   const symbol = OP_SYMBOL[problem.operation];
   const answerText = problem.remainder !== undefined
     ? `${problem.correctAnswer} R${problem.remainder}`
@@ -30,18 +30,19 @@ function WorksheetProblem({ problem, index, showAnswer }: { problem: Problem; in
 
   return (
     <div className="worksheet-problem flex flex-col items-end border border-[#E0E7FF] rounded-xl p-4 bg-white min-h-[120px]">
-      <div className="text-xs text-[#A5B4FC] font-medium self-start mb-1">{index + 1}.</div>
-      <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums">{problem.operandA}</div>
-      <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums flex items-center gap-2">
-        <span className="text-[#4F46E5]">{symbol}</span>
-        <span>{problem.operandB}</span>
+      <div className="problem-inner flex flex-col items-end">
+        <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums">{problem.operandA}</div>
+        <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums flex items-center gap-2">
+          <span className="text-[#4F46E5]">{symbol}</span>
+          <span>{problem.operandB}</span>
+        </div>
+        <div className="border-t-2 border-[#1E1B4B] w-full mt-1 mb-2" />
+        {showAnswer ? (
+          <div className="font-mono text-xl font-bold text-[#059669] tabular-nums">{answerText}</div>
+        ) : (
+          <div className="h-7" aria-hidden="true" />
+        )}
       </div>
-      <div className="border-t-2 border-[#1E1B4B] w-full mt-1 mb-2" />
-      {showAnswer ? (
-        <div className="font-mono text-xl font-bold text-[#059669] tabular-nums">{answerText}</div>
-      ) : (
-        <div className="h-7" aria-hidden="true" />
-      )}
     </div>
   );
 }
@@ -60,8 +61,17 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
     setGenerated(true);
   }
 
-  function handlePrint() {
-    window.print();
+  function handlePrintWorksheet() {
+    setShowAnswers(false);
+    setTimeout(() => window.print(), 50);
+  }
+
+  function handlePrintAnswerKey() {
+    setShowAnswers(true);
+    setTimeout(() => {
+      window.print();
+      setShowAnswers(false);
+    }, 50);
   }
 
   return (
@@ -126,10 +136,12 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
       {generated && (
         <div className="worksheet-area space-y-4">
           {/* Worksheet header — print only */}
-          <div className="print-only-header hidden print:block mb-4">
-            <div className="flex gap-10 text-sm text-[#1E1B4B] border-b-2 border-[#1E1B4B] pb-2">
-              <span>Name: ____________________________</span>
-              <span>Date: ________________</span>
+          <div className="print-only-header hidden print:block mb-5">
+            <div className="flex items-end gap-2 text-sm text-[#1E1B4B] border-b-2 border-[#1E1B4B] pb-2">
+              <span>Name:</span>
+              <div className="print-name-line" />
+              <span className="ml-8">Date:</span>
+              <div className="print-date-line" />
             </div>
           </div>
 
@@ -146,10 +158,16 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
                 {showAnswers ? 'Hide Answers' : 'Show Answer Key'}
               </button>
               <button
-                onClick={handlePrint}
+                onClick={handlePrintWorksheet}
+                className="px-3 py-1.5 text-sm font-medium border border-[#4F46E5] text-[#4F46E5] rounded-lg hover:bg-[#EEF2FF] transition-all"
+              >
+                Print Worksheet
+              </button>
+              <button
+                onClick={handlePrintAnswerKey}
                 className="px-3 py-1.5 text-sm font-medium bg-[#4F46E5] text-white rounded-lg hover:bg-[#4338CA] transition-all"
               >
-                Print
+                Print Answer Key
               </button>
             </div>
           </div>
@@ -160,18 +178,11 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
               <WorksheetProblem
                 key={problem.id}
                 problem={problem}
-                index={i}
                 showAnswer={showAnswers}
               />
             ))}
           </div>
 
-          {/* Print answer key — always shown when printing if answers toggled, or as separate section */}
-          <div className="no-print mt-6 border-t border-[#E0E7FF] pt-4">
-            <p className="text-xs text-[#A5B4FC] text-center">
-              Click <strong>Show Answer Key</strong> then <strong>Print</strong> to include answers on the printout.
-            </p>
-          </div>
         </div>
       )}
     </div>

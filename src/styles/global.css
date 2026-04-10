@@ -78,35 +78,49 @@
     display: block !important;
   }
 
-  /* 4-column problem grid, compact row gap */
+  /* Name / Date field solid underlines */
+  .print-name-line {
+    display: inline-block !important;
+    width: 55mm !important;
+    border-bottom: 1.5pt solid #1E1B4B !important;
+    margin-right: 16mm !important;
+  }
+  .print-date-line {
+    display: inline-block !important;
+    width: 38mm !important;
+    border-bottom: 1.5pt solid #1E1B4B !important;
+  }
+
+  /* 4-column problem grid with breathing room between rows */
   .worksheet-area .grid {
     grid-template-columns: repeat(4, 1fr) !important;
     column-gap: 8mm !important;
-    row-gap: 6mm !important;
+    row-gap: 10mm !important;
   }
 
-  /* Strip card styling; size each cell to fit 4 rows on a letter page */
+  /* Strip card styling; size each cell to fit 5 rows on a letter page */
   .worksheet-problem {
     border: none !important;
     border-radius: 0 !important;
     background: transparent !important;
     padding: 0 !important;
     min-height: unset !important;
-    height: 44mm !important;
+    height: 40mm !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: flex-end !important;
+    justify-content: center !important;
     overflow: hidden !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
   }
 
-  /* Problem number label */
-  .worksheet-problem .text-xs {
-    font-size: 7.5pt !important;
-    line-height: 1 !important;
-    margin-bottom: 1mm !important;
-    color: #aaa !important;
+  /* Constrain inner problem width so answer line matches the numbers, not the full cell */
+  .problem-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    width: 30mm !important;
   }
 
   /* Operand number rows */
