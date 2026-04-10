@@ -3,7 +3,7 @@ import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 
 import WrittenProblemInput from './WrittenProblemInput';
@@ -36,6 +36,8 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [feedbackCorrectRemainder, setFeedbackCorrectRemainder] = useState<number | undefined>(undefined);
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
+  const [preSessionScore, setPreSessionScore] = useState<number>(0);
+  const [isNewStreakRecord, setIsNewStreakRecord] = useState(false);
   const [resetPending, setResetPending] = useState(false);
   const [personalBestResetPending, setPersonalBestResetPending] = useState(false);
 
@@ -98,11 +100,48 @@ export default function PracticeWidget({ config, topContent }: Props) {
   function startSession() {
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+
+    // For untimed mode: record the previous session if the user answered any problems.
+    // endSession() is never called for untimed (no timer), so this is the only session boundary.
+    if (!isTimed && totalAnsweredRef.current > 0) {
+      const elapsed = sessionStartTimeRef.current > 0
+        ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
+        : 0;
+      const sessionResult = buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed);
+      const current = loadStats(config.storageKey);
+      // totalProblemsAttempted is already tracked per-answer; only update session count + scores
+      saveStats(config.storageKey, {
+        ...current,
+        lastSessionScore: sessionResult.score,
+        lastSessionDate: new Date().toISOString().slice(0, 10),
+        totalSessions: current.totalSessions + 1,
+      });
+      appendSessionLog({
+        storageKey: config.storageKey,
+        label: config.label ?? config.storageKey,
+        correct: sessionResult.correct,
+        total: sessionResult.total,
+        score: sessionResult.score,
+        durationSeconds: sessionResult.durationSeconds,
+        isTimed: false,
+        timestamp: sessionResult.timestamp,
+      });
+    }
+
     totalAnsweredRef.current = 0;
     timerStartedRef.current = false;
     setTimerStarted(false);
     setSecondsRemaining(duration);
-    // sessionStartTime is NOT captured here — it's captured on the first answer submission
+    // Capture the score from the previous session before starting a new one
+    const currentStats = loadStats(config.storageKey);
+    setPreSessionScore(currentStats.lastSessionScore);
+    setIsNewStreakRecord(false);
+    // For untimed: capture start time now. For timed: captured on first answer submission.
+    if (!isTimed) {
+      const now = Date.now();
+      setSessionStartTime(now);
+      sessionStartTimeRef.current = now;
+    }
     setProblem(generateProblem(config));
     setProblemIndex(0);
     setCorrect(0);
@@ -141,11 +180,23 @@ export default function PracticeWidget({ config, topContent }: Props) {
   useEffect(() => {
     if (phase === 'complete' && result) {
       const current = loadStats(config.storageKey);
+      const prevLongestStreak = current.longestStreak;
       const updated = updateStatsAfterSession(current, result, isTimed);
       saveStats(config.storageKey, updated);
       setStats(updated);
+      setIsNewStreakRecord(!isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0);
+      appendSessionLog({
+        storageKey: config.storageKey,
+        label: config.label ?? config.storageKey,
+        correct: result.correct,
+        total: result.total,
+        score: result.score,
+        durationSeconds: result.durationSeconds,
+        isTimed,
+        timestamp: result.timestamp,
+      });
     }
-  }, [phase, result, config.storageKey, isTimed]);
+  }, [phase, result, config.storageKey, config.label, isTimed]);
 
   function handleDurationChange(d: TimerDuration) {
     setDuration(d);
@@ -169,11 +220,19 @@ export default function PracticeWidget({ config, topContent }: Props) {
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
     if (!isTimed) {
-      // Update streak immediately per answer: +1 on correct, reset to 0 on wrong
+      // Update streak and problem count per answer for untimed mode.
+      // Sessions never end via timer, so tracking totalProblemsAttempted here ensures
+      // the progress dashboard reflects activity even before a session is formally closed.
       const currentStats = loadStats(config.storageKey);
       const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
       const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
-      const updatedStats = { ...currentStats, currentStreak: newCurrentStreak, longestStreak: newLongestStreak };
+      const updatedStats = {
+        ...currentStats,
+        currentStreak: newCurrentStreak,
+        longestStreak: newLongestStreak,
+        totalProblemsAttempted: currentStats.totalProblemsAttempted + 1,
+        lastSessionDate: new Date().toISOString().slice(0, 10),
+      };
       saveStats(config.storageKey, updatedStats);
       setStats(updatedStats);
     }
@@ -363,6 +422,8 @@ export default function PracticeWidget({ config, topContent }: Props) {
           result={result}
           stats={stats}
           isTimed={isTimed}
+          preSessionScore={preSessionScore}
+          isNewStreakRecord={isNewStreakRecord}
           onRestart={handleRestart}
         />
       )}

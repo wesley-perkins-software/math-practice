@@ -4,10 +4,14 @@ interface Props {
   result: SessionResult;
   stats: PageStats;
   isTimed: boolean;
+  /** lastSessionScore from before this session started, for comparison */
+  preSessionScore: number;
+  /** True when this session set a new all-time longest streak record */
+  isNewStreakRecord: boolean;
   onRestart: () => void;
 }
 
-export default function ScoreCard({ result, stats, isTimed, onRestart }: Props) {
+export default function ScoreCard({ result, stats, isTimed, preSessionScore, isNewStreakRecord, onRestart }: Props) {
   const isPersonalBest =
     isTimed &&
     stats.personalBestScore > 0 &&
@@ -15,10 +19,18 @@ export default function ScoreCard({ result, stats, isTimed, onRestart }: Props) 
 
   const accuracy = result.total > 0 ? Math.round((result.correct / result.total) * 100) : 0;
 
+  // Session-over-session accuracy comparison (untimed only, skip if first session)
+  const scoreDelta = !isTimed && preSessionScore > 0 ? accuracy - preSessionScore : null;
+  const showComparison = scoreDelta !== null && Math.abs(scoreDelta) >= 5;
+
   return (
     <div className="flex flex-col items-center gap-5 py-4 w-full">
       <div className="text-center">
-        {isPersonalBest ? (
+        {isNewStreakRecord ? (
+          <div className="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-50 px-4 py-1.5 rounded-full mb-4 inline-block border border-amber-200 shadow-sm">
+            New Streak Record!
+          </div>
+        ) : isPersonalBest ? (
           <div className="text-xs font-bold uppercase tracking-widest text-[#3730A3] bg-gradient-to-r from-[#EEF2FF] to-[#E0E7FF] px-4 py-1.5 rounded-full mb-4 inline-block border border-[#C7D2FE] shadow-sm">
             Personal Best!
           </div>
@@ -36,6 +48,11 @@ export default function ScoreCard({ result, stats, isTimed, onRestart }: Props) 
         {!isTimed && (
           <div className="text-3xl font-bold text-[#4F46E5] mt-2 font-['JetBrains_Mono']">{accuracy}%</div>
         )}
+        {showComparison && (
+          <div className={`text-xs font-medium mt-1 ${scoreDelta! > 0 ? 'text-emerald-600' : 'text-red-500'}`}>
+            {scoreDelta! > 0 ? '▲' : '▼'} {scoreDelta! > 0 ? '+' : ''}{scoreDelta}% vs last session
+          </div>
+        )}
       </div>
 
       {!isTimed && (
@@ -46,7 +63,7 @@ export default function ScoreCard({ result, stats, isTimed, onRestart }: Props) 
           </div>
           <div className="bg-[#F5F3FF] border border-[#E0E7FF] rounded-xl p-3 text-center">
             <div className="text-lg font-bold text-[#1E1B4B]">{stats.longestStreak}</div>
-            <div className="text-xs text-[#6B7280]">Best Streak</div>
+            <div className="text-xs text-[#6B7280]">Longest Streak</div>
           </div>
         </div>
       )}

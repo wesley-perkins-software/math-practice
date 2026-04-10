@@ -1,4 +1,4 @@
-import type { PageStats, SessionResult } from './types';
+import type { PageStats, SessionResult, SessionLogEntry } from './types';
 import { calculateTimedScore, calculateSessionScore } from './scorer';
 
 const NAMESPACE = 'mp_stats_';
@@ -80,4 +80,31 @@ export function resetLongestStreak(key: string): void {
 export function resetPersonalBestScore(key: string): void {
   const stats = loadStats(key);
   saveStats(key, { ...stats, personalBestScore: 0, bestTimedScore: 0 });
+}
+
+// ─── Session Log ─────────────────────────────────────────────────────────────
+
+const SESSION_LOG_KEY = 'mp_session_log';
+const SESSION_LOG_MAX = 50;
+
+export function loadSessionLog(): SessionLogEntry[] {
+  try {
+    const raw = localStorage.getItem(SESSION_LOG_KEY);
+    if (!raw) return [];
+    return JSON.parse(raw) as SessionLogEntry[];
+  } catch {
+    return [];
+  }
+}
+
+export function appendSessionLog(entry: SessionLogEntry): void {
+  try {
+    const log = loadSessionLog();
+    log.push(entry);
+    // Keep only the most recent SESSION_LOG_MAX entries
+    const trimmed = log.length > SESSION_LOG_MAX ? log.slice(log.length - SESSION_LOG_MAX) : log;
+    localStorage.setItem(SESSION_LOG_KEY, JSON.stringify(trimmed));
+  } catch {
+    // Private browsing or storage full — silently ignore
+  }
 }
