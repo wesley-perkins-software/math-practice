@@ -74,6 +74,12 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, isN
       >
         Play Again
       </button>
+      <a
+        href="/progress"
+        className="text-xs text-[#4F46E5] hover:text-[#3730A3] font-medium transition-colors text-center w-full block"
+      >
+        View my full progress →
+      </a>
     </div>
   );
 }

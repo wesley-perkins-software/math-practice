@@ -144,14 +144,18 @@ interface AchievementBadgeProps {
 function AchievementBadge({ achievement, earned }: AchievementBadgeProps) {
   return (
     <div
-      title={achievement.description}
-      className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition-all ${
+      className={`rounded-xl border p-3 text-left transition-all ${
         earned
-          ? 'bg-[#4F46E5] text-white border-[#4338CA] shadow-sm'
-          : 'bg-white text-[#CBD5E1] border-[#E2E8F0]'
+          ? 'bg-[#4F46E5] border-[#4338CA] shadow-sm'
+          : 'bg-white border-[#E2E8F0]'
       }`}
     >
-      {achievement.label}
+      <div className={`text-xs font-bold leading-snug ${earned ? 'text-white' : 'text-[#CBD5E1]'}`}>
+        {achievement.label}
+      </div>
+      <div className={`text-[11px] mt-0.5 leading-snug ${earned ? 'text-[#C7D2FE]' : 'text-[#CBD5E1]'}`}>
+        {achievement.description}
+      </div>
     </div>
   );
 }
@@ -219,9 +223,15 @@ export default function ProgressDashboard() {
   const uniqueDates = new Set(practiced.map((r) => r.stats.lastSessionDate).filter(Boolean));
   const daysActive = uniqueDates.size;
 
-  // Avg accuracy: weighted by sessions per practice type
-  const totalWeightedScore = practiced.reduce((s, r) => s + r.stats.lastSessionScore * r.stats.totalSessions, 0);
-  const avgAccuracy = totalSessions > 0 ? Math.round(totalWeightedScore / totalSessions) : 0;
+  // Avg accuracy: simple mean of last session scores across practiced types, clamped to 0–100
+  const accuracyRows = practiced.filter((r) => r.stats.lastSessionScore > 0);
+  const avgAccuracy =
+    accuracyRows.length > 0
+      ? Math.round(
+          accuracyRows.reduce((s, r) => s + Math.min(100, Math.max(0, r.stats.lastSessionScore)), 0) /
+            accuracyRows.length,
+        )
+      : 0;
 
   // Operations practiced (for achievements + grouping)
   const operationsPracticed = new Set<Operation>(practiced.map((r) => r.operation));
@@ -240,19 +250,19 @@ export default function ProgressDashboard() {
         <HeroCard label="Total Problems" value={totalProblems.toLocaleString()} />
         <HeroCard label="Total Sessions" value={totalSessions.toLocaleString()} />
         <HeroCard
-          label="Best Speed"
+          label="Best Score"
           value={bestSpeed > 0 ? `${bestSpeed}/min` : '—'}
-          sub={bestSpeed > 0 ? 'timed drills' : undefined}
+          sub={bestSpeed > 0 ? 'problems per minute' : undefined}
         />
         <HeroCard label="Longest Streak" value={longestStreak > 0 ? longestStreak.toLocaleString() : '—'} sub={longestStreak > 0 ? 'in a row' : undefined} />
         <HeroCard label="Days Active" value={daysActive.toLocaleString()} />
-        <HeroCard label="Avg Accuracy" value={avgAccuracy > 0 ? `${avgAccuracy}%` : '—'} sub={avgAccuracy > 0 ? 'last session each' : undefined} />
+        <HeroCard label="Avg Accuracy" value={avgAccuracy > 0 ? `${avgAccuracy}%` : '—'} sub={avgAccuracy > 0 ? 'across drill types' : undefined} />
       </div>
 
       {/* ── Achievements ─────────────────────────────────────────────────────── */}
       <div>
         <h2 className="text-base font-semibold text-[#1E293B] mb-3">Achievements</h2>
-        <div className="flex flex-wrap gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {ACHIEVEMENTS.map((a) => (
             <AchievementBadge key={a.id} achievement={a} earned={a.check(achievementData)} />
           ))}
@@ -282,7 +292,7 @@ export default function ProgressDashboard() {
                       <th className="text-right px-3 py-2.5 text-[#64748B] font-medium">Problems</th>
                       <th className="text-right px-3 py-2.5 text-[#64748B] font-medium hidden md:table-cell">Accuracy</th>
                       <th className="text-right px-3 py-2.5 text-[#64748B] font-medium hidden sm:table-cell">
-                        {key === 'mixed' ? 'Best Speed' : 'Longest Streak'}
+                        {key === 'mixed' ? 'Best Score' : 'Longest Streak'}
                       </th>
                       <th className="px-3 py-2.5 hidden sm:table-cell" />
                     </tr>
@@ -293,7 +303,21 @@ export default function ProgressDashboard() {
                         key={row.storageKey}
                         className={i < group.length - 1 ? 'border-b border-[#E2E8F0]' : ''}
                       >
-                        <td className="px-4 py-3 text-[#1E293B] font-medium">{row.label}</td>
+                        <td className="px-4 py-3">
+                          <div className="text-[#1E293B] font-medium">{row.label}</div>
+                          <div className="sm:hidden text-[11px] text-[#94A3B8] mt-0.5">
+                            {row.isTimed
+                              ? (row.stats.bestTimedScore > 0
+                                  ? `${row.stats.bestTimedScore}/min best`
+                                  : 'No timed sessions yet')
+                              : (row.stats.longestStreak > 0
+                                  ? `${row.stats.longestStreak} streak best`
+                                  : '')}
+                            {row.stats.lastSessionDate
+                              ? ` · ${relativeDate(row.stats.lastSessionDate)}`
+                              : ''}
+                          </div>
+                        </td>
                         <td className="px-3 py-3 text-right text-[#64748B] hidden sm:table-cell">
                           {relativeDate(row.stats.lastSessionDate)}
                         </td>
