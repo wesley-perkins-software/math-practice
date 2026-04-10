@@ -137,7 +137,7 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
         <div className="worksheet-area space-y-4">
           {/* Worksheet header — print only */}
           <div className="print-only-header hidden print:block mb-5">
-            <div className="flex items-end gap-2 text-sm text-[#1E1B4B] border-b-2 border-[#1E1B4B] pb-2">
+            <div className="flex items-end gap-2 text-sm text-[#1E1B4B] pb-2">
               <span>Name:</span>
               <div className="print-name-line" />
               <span className="ml-8">Date:</span>
