@@ -125,16 +125,11 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
       {/* Worksheet area — shown on screen and when printing */}
       {generated && (
         <div className="worksheet-area space-y-4">
-          {/* Worksheet header */}
-          <div className="print-only-header hidden print:block mb-6">
-            <div className="text-center mb-4">
-              <h1 className="text-xl font-bold text-[#1E1B4B]">{configs[selectedIndex].label}</h1>
-              <p className="text-sm text-[#6B7280]">mathpractice.com — {count} problems</p>
-            </div>
-            <div className="flex gap-8 text-sm text-[#1E1B4B] border-b border-[#E0E7FF] pb-3">
+          {/* Worksheet header — print only */}
+          <div className="print-only-header hidden print:block mb-4">
+            <div className="flex gap-10 text-sm text-[#1E1B4B] border-b-2 border-[#1E1B4B] pb-2">
               <span>Name: ____________________________</span>
               <span>Date: ________________</span>
-              <span>Score: _______ / {count}</span>
             </div>
           </div>
 

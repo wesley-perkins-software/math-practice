@@ -47,17 +47,24 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* @page margin: 0 removes the browser's printed URL / date line from the footer */
+@page {
+  size: letter portrait;
+  margin: 0;
+}
+
 @media print {
-  /* Hide site chrome */
-  header, footer, nav,
-  .no-print {
-    display: none !important;
+  /* Restore content margins (replaces the @page margins we zeroed out) */
+  body {
+    margin: 14mm 16mm !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
 
-  /* Reset page for clean print */
-  body {
-    background: white !important;
-    font-size: 11pt;
+  /* Hide site chrome and on-screen-only elements */
+  header, footer, nav, .no-print {
+    display: none !important;
   }
 
   main {
@@ -66,24 +73,60 @@
     margin: 0 !important;
   }
 
-  /* Show print-only elements */
+  /* Show print-only header */
   .print-only-header {
     display: block !important;
   }
 
-  /* Worksheet problem grid: 4 columns */
+  /* 4-column problem grid, compact row gap */
   .worksheet-area .grid {
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12pt;
+    grid-template-columns: repeat(4, 1fr) !important;
+    column-gap: 8mm !important;
+    row-gap: 6mm !important;
   }
 
-  /* Worksheet problem boxes */
+  /* Strip card styling; size each cell to fit 4 rows on a letter page */
   .worksheet-problem {
-    border: 1pt solid #ccc !important;
-    border-radius: 4pt !important;
-    padding: 8pt !important;
-    min-height: 80pt !important;
-    page-break-inside: avoid;
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    min-height: unset !important;
+    height: 44mm !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Problem number label */
+  .worksheet-problem .text-xs {
+    font-size: 7.5pt !important;
+    line-height: 1 !important;
+    margin-bottom: 1mm !important;
+    color: #aaa !important;
+  }
+
+  /* Operand number rows */
+  .worksheet-problem .font-mono {
+    font-size: 20pt !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Horizontal rule between problem and answer space */
+  .worksheet-problem .border-t-2 {
+    margin-top: 1mm !important;
+    margin-bottom: 0 !important;
+    border-top-width: 1.5pt !important;
+    border-color: #1E1B4B !important;
+  }
+
+  /* Blank answer space */
+  .worksheet-problem .h-7 {
+    height: 10mm !important;
+    flex-shrink: 0 !important;
   }
 }
 
