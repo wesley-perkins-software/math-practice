@@ -1,10 +1,22 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import WorksheetGenerator from '@/components/WorksheetGenerator';
 import InternalLinks from '@/components/InternalLinks';
-import { ADDITION_GENERAL } from '@/engine/presets';
+import {
+  ADDITION_1_DIGIT,
+  ADDITION_2_DIGIT,
+  ADDITION_2_DIGIT_CARRYING,
+  ADDITION_GENERAL,
+} from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
+
+const configs = [
+  { label: '1-Digit', config: ADDITION_1_DIGIT },
+  { label: '2-Digit (No Carrying)', config: ADDITION_2_DIGIT },
+  { label: 'With Carrying', config: ADDITION_2_DIGIT_CARRYING },
+  { label: 'Mixed Addition', config: ADDITION_GENERAL },
+];
 
 const links = [
   { href: '/addition', label: 'Addition Practice Hub', description: 'All addition levels with difficulty guide' },
@@ -17,15 +29,29 @@ const links = [
 ---
 
 <PracticeLayout
-  title="Addition Worksheets — Free Online Addition Practice"
-  description="Free addition worksheet practice online. Addition problems with instant feedback — no printing needed. Covers 1-digit through 2-digit addition."
+  title="Addition Worksheets — Free Printable & Online Practice"
+  description="Generate free addition worksheets with instant answers. Choose 1-digit, 2-digit, or carrying problems. Print or practice online — no signup required."
   canonical={`${SITE}/math-worksheets/addition-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Addition Worksheets' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Addition Worksheets",
+      "description": "Free printable addition worksheets with 20–40 problems. Choose difficulty level and generate a new worksheet instantly.",
+      "url": `${SITE}/math-worksheets/addition-worksheets`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
+      "teaches": "Addition",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Addition Worksheets</h1>
   <div slot="intro">
-    <p>Practice addition just like a worksheet with instant feedback on every answer. No printing, no setup. Use the links below to choose a specific difficulty level.</p>
+    <p>Generate a free addition worksheet with 20, 30, or 40 problems. Pick a difficulty level, click Generate, then print — or practice directly on screen with instant feedback.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={ADDITION_GENERAL} />
+
+  <WorksheetGenerator slot="widget" configs={configs} title="Addition Worksheet" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

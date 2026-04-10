@@ -1,0 +1,115 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/multiplication/facts', label: 'Multiplication Facts (×1–×12)', description: 'Build fluency across all times tables' },
+  { href: '/division/facts', label: 'Division Facts', description: 'Division facts with divisors 1–12' },
+  { href: '/division-practice', label: 'Division Practice Hub', description: 'All division difficulty levels' },
+  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Mixed multiplication and division drill' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print multiplication fact sheets' },
+  { href: '/5th-grade-math-practice', label: '5th Grade Math Practice', description: 'Next level: all-operations fluency' },
+];
+
+const faqItems = [
+  {
+    q: 'What math do 4th graders learn?',
+    a: 'Fourth graders deepen their understanding of multiplication and division. Key skills include fluency with all multiplication facts through ×12, introduction to multi-digit multiplication, long division with single-digit divisors, understanding factors and multiples, and building early fraction concepts. By end of 4th grade, times table recall should be automatic.',
+  },
+  {
+    q: 'How fast should a 4th grader be at multiplication?',
+    a: 'Most education standards expect 4th graders to recall any times table fact within 3 seconds. On a 60-second timed drill, a proficient 4th grader should answer 20+ multiplication facts correctly. Speed builds with consistent daily practice — even 5 minutes per day makes a measurable difference over weeks.',
+  },
+  {
+    q: 'When do kids learn long division?',
+    a: 'Long division with single-digit divisors is typically introduced in 4th grade. Before starting long division, students should have solid fluency with multiplication facts (since division requires working backwards from multiplication) and a basic understanding of division as the inverse of multiplication.',
+  },
+  {
+    q: 'What are factors and multiples?',
+    a: 'A factor is a number that divides evenly into another number. For example, the factors of 12 are 1, 2, 3, 4, 6, and 12. A multiple is what you get when you multiply a number by any whole number — the multiples of 4 are 4, 8, 12, 16, 20, etc. Understanding factors and multiples builds the foundation for fractions and algebra.',
+  },
+];
+---
+
+<PracticeLayout
+  title="4th Grade Math Practice — Multiplication & Division Facts Fluency"
+  description="Free 4th grade math practice for multiplication facts ×1–×12 and division facts. Build fluency for all times tables with instant feedback. No login required."
+  canonical={`${SITE}/4th-grade-math-practice`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '4th Grade Math Practice' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "4th Grade Math Practice",
+      "description": "Free online math practice for 4th grade students. Covers multiplication facts ×1–×12, division facts, and mixed operations.",
+      "url": `${SITE}/4th-grade-math-practice`,
+      "educationalLevel": ["Grade 4"],
+      "teaches": ["Multiplication", "Division"],
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">4th Grade Math Practice</h1>
+  <p slot="intro">Fourth grade is about multiplication and division fluency. Build automatic recall of all times tables through ×12 and master division facts — the skills that make every future math topic easier.</p>
+
+  <InternalLinks slot="links" title="4th Grade Practice Activities" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Grade Level: Grade 4</span>
+    </div>
+
+    <section aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Key Skills for 4th Grade</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Automatic recall of all multiplication facts ×1 through ×12</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Division facts — understanding that 56 ÷ 7 = 8 is the inverse of 7 × 8 = 56</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Multi-digit multiplication (e.g., 3 × 47) using the distributive property</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Introduction to long division with single-digit divisors</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Understanding factors, multiples, and prime vs. composite numbers</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="fluency-heading">
+      <h2 id="fluency-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Why Multiplication Fluency Matters</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Fractions</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Finding equivalent fractions, common denominators, and simplifying fractions all require instant times table recall.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Long Division</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Every step of long division requires a multiplication fact check. Slow recall makes the entire process error-prone and exhausting.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Algebra Readiness</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Students who have automatic fact recall can focus on the new concepts in algebra instead of getting stuck on arithmetic.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

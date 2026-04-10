@@ -1,28 +1,53 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import WorksheetGenerator from '@/components/WorksheetGenerator';
 import InternalLinks from '@/components/InternalLinks';
-import { DIVISION_GENERAL } from '@/engine/presets';
+import {
+  DIVISION_FACTS,
+  DIVISION_GENERAL,
+  DIVISION_REMAINDERS,
+} from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
+const configs = [
+  { label: 'Division Facts', config: DIVISION_FACTS },
+  { label: 'Division Practice', config: DIVISION_GENERAL },
+  { label: 'With Remainders', config: DIVISION_REMAINDERS },
+];
+
 const links = [
   { href: '/division/facts', label: 'Division Facts', description: 'Focused drill' },
+  { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient and remainder' },
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Practice multiplication' },
   { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
 ];
 ---
 
 <PracticeLayout
-  title="Division Worksheets — Free Online Division Practice"
-  description="Free division worksheet practice online. Whole-number division facts with instant feedback. Divisors 1–12, clean integer answers only."
+  title="Division Worksheets — Free Printable Division Practice"
+  description="Generate free division worksheets with 20–40 problems. Divisors 1–12, with or without remainders. Print or practice online — no signup required."
   canonical={`${SITE}/math-worksheets/division-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Division Worksheets' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Division Worksheets",
+      "description": "Free printable division worksheets with 20–40 problems. Divisors 1–12, with optional remainders. Generate a new worksheet instantly.",
+      "url": `${SITE}/math-worksheets/division-worksheets`,
+      "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
+      "teaches": "Division",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division Worksheets</h1>
   <div slot="intro">
-    <p>Interactive division practice that works like a worksheet. All problems use divisors 1–12 and have clean whole-number answers — just like a standard division facts worksheet, but with instant feedback.</p>
+    <p>Generate a free division worksheet with 20, 30, or 40 problems. Choose standard division facts or problems with remainders. Print with or without the answer key.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={DIVISION_GENERAL} />
+
+  <WorksheetGenerator slot="widget" configs={configs} title="Division Worksheet" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

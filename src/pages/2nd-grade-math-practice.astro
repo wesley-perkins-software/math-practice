@@ -1,0 +1,123 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Add two-digit numbers without regrouping' },
+  { href: '/addition/2-digit-with-carrying', label: 'Addition with Carrying', description: 'Two-digit addition with regrouping' },
+  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction', description: 'Subtract two-digit numbers' },
+  { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'Two-digit subtraction with regrouping' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Print 2-digit addition problems' },
+  { href: '/3rd-grade-math-practice', label: '3rd Grade Math Practice', description: 'Next level: intro to multiplication' },
+];
+
+const faqItems = [
+  {
+    q: 'What math do 2nd graders learn?',
+    a: 'Second graders build fluency with addition and subtraction within 100. Key skills include two-digit addition and subtraction (with and without regrouping), counting by 2s, 5s, and 10s, understanding even and odd numbers, and beginning to use mental math strategies for fast calculations.',
+  },
+  {
+    q: 'What is carrying in addition, and when do kids learn it?',
+    a: 'Carrying (also called regrouping) happens when a column\'s sum is 10 or more. For example, 47 + 35: the ones column (7+5=12) carries a 1 to the tens column. Most children learn carrying in 2nd grade after mastering two-digit addition without regrouping.',
+  },
+  {
+    q: 'What is borrowing in subtraction?',
+    a: 'Borrowing (or regrouping) in subtraction occurs when the top digit in a column is smaller than the bottom digit. For example, 52 − 27: since 2 < 7, you borrow 1 ten from the tens column, turning 52 into 40 + 12, so the ones column becomes 12 − 7 = 5. This is a key 2nd–3rd grade skill.',
+  },
+  {
+    q: 'How can I help my 2nd grader get faster at math?',
+    a: 'The most effective approach is short, daily practice — 5 to 10 minutes per day beats one long weekly session. Start with 1-digit facts to solidify the foundation, then progress to 2-digit without carrying, then with carrying. Timed practice (60 seconds) helps build speed once accuracy is solid.',
+  },
+];
+---
+
+<PracticeLayout
+  title="2nd Grade Math Practice — 2-Digit Addition & Subtraction"
+  description="Free 2nd grade math practice for two-digit addition and subtraction, with and without carrying or borrowing. Instant feedback, no login required."
+  canonical={`${SITE}/2nd-grade-math-practice`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '2nd Grade Math Practice' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "2nd Grade Math Practice",
+      "description": "Free online math practice for 2nd grade students. Covers two-digit addition and subtraction with and without regrouping.",
+      "url": `${SITE}/2nd-grade-math-practice`,
+      "educationalLevel": ["Grade 2"],
+      "teaches": ["Addition", "Subtraction"],
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2nd Grade Math Practice</h1>
+  <p slot="intro">Practice the two-digit addition and subtraction skills that define 2nd grade math. Build speed and accuracy with carrying and borrowing before moving on to multiplication.</p>
+
+  <InternalLinks slot="links" title="2nd Grade Practice Activities" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Grade Level: Grade 2</span>
+    </div>
+
+    <section aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Key Skills for 2nd Grade</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Fluency with addition and subtraction facts within 20</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit addition without carrying (e.g., 34 + 25)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit addition with carrying / regrouping (e.g., 47 + 35)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit subtraction with and without borrowing</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Mental math strategies for two-digit numbers</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="progression-heading">
+      <h2 id="progression-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Recommended Practice Order</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-xs font-semibold text-[#4F46E5] mb-1">Step 1</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">2-Digit Addition (No Carrying)</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Master two-digit addition where no column exceeds 9. Builds column-by-column thinking before regrouping.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-xs font-semibold text-[#4F46E5] mb-1">Step 2</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Addition with Carrying</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Practice regrouping when a column's sum is 10 or more. This is the critical 2nd grade skill.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-xs font-semibold text-[#4F46E5] mb-1">Step 3</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">2-Digit Subtraction (No Borrowing)</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Subtract two-digit numbers without needing to regroup. Reinforces place value understanding.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-xs font-semibold text-[#4F46E5] mb-1">Step 4</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Subtraction with Borrowing</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">The subtraction equivalent of carrying. A key skill before 3rd grade multiplication begins.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

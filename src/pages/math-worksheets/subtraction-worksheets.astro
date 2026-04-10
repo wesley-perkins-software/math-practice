@@ -1,30 +1,56 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import PracticeWidget from '@/components/PracticeWidget';
+import WorksheetGenerator from '@/components/WorksheetGenerator';
 import InternalLinks from '@/components/InternalLinks';
-import { SUBTRACTION_GENERAL } from '@/engine/presets';
+import {
+  SUBTRACTION_1_DIGIT,
+  SUBTRACTION_2_DIGIT,
+  SUBTRACTION_2_DIGIT_BORROWING,
+  SUBTRACTION_GENERAL,
+} from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
+const configs = [
+  { label: '1-Digit', config: SUBTRACTION_1_DIGIT },
+  { label: '2-Digit (No Borrowing)', config: SUBTRACTION_2_DIGIT },
+  { label: 'With Borrowing', config: SUBTRACTION_2_DIGIT_BORROWING },
+  { label: 'Mixed Subtraction', config: SUBTRACTION_GENERAL },
+];
+
 const links = [
   { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Simple problems' },
-  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Two-digit problems without regrouping' },
-  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Regrouping subtraction practice' },
+  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit (No Borrowing)', description: 'Two-digit without regrouping' },
+  { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'Regrouping practice' },
   { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Practice addition' },
   { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
 ];
 ---
 
 <PracticeLayout
-  title="Subtraction Worksheets — Free Online Subtraction Practice"
-  description="Free subtraction worksheet practice online. 1-digit through 2-digit subtraction with instant feedback. No printing required."
+  title="Subtraction Worksheets — Free Printable & Online Practice"
+  description="Generate free subtraction worksheets with 20–40 problems. Choose 1-digit, 2-digit, or borrowing problems. Print or practice online — no signup required."
   canonical={`${SITE}/math-worksheets/subtraction-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Subtraction Worksheets' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Subtraction Worksheets",
+      "description": "Free printable subtraction worksheets with 20–40 problems. Choose difficulty level and generate a new worksheet instantly.",
+      "url": `${SITE}/math-worksheets/subtraction-worksheets`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
+      "teaches": "Subtraction",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Subtraction Worksheets</h1>
   <div slot="intro">
-    <p>Interactive subtraction practice that works like a worksheet with instant feedback. Covers subtraction from 1-digit through 2-digit problems with borrowing.</p>
+    <p>Generate a free subtraction worksheet with 20, 30, or 40 problems. Pick a difficulty level — from simple 1-digit facts up to 2-digit subtraction with borrowing — then print or practice on screen.</p>
   </div>
-  <PracticeWidget slot="widget" client:load config={SUBTRACTION_GENERAL} />
+
+  <WorksheetGenerator slot="widget" configs={configs} title="Subtraction Worksheet" client:load />
   <InternalLinks slot="links" links={links} />
 </PracticeLayout>

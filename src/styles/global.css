@@ -47,6 +47,46 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@media print {
+  /* Hide site chrome */
+  header, footer, nav,
+  .no-print {
+    display: none !important;
+  }
+
+  /* Reset page for clean print */
+  body {
+    background: white !important;
+    font-size: 11pt;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Show print-only elements */
+  .print-only-header {
+    display: block !important;
+  }
+
+  /* Worksheet problem grid: 4 columns */
+  .worksheet-area .grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12pt;
+  }
+
+  /* Worksheet problem boxes */
+  .worksheet-problem {
+    border: 1pt solid #ccc !important;
+    border-radius: 4pt !important;
+    padding: 8pt !important;
+    min-height: 80pt !important;
+    page-break-inside: avoid;
+  }
+}
+
 @layer base {
   html {
     font-family: var(--font-sans);
