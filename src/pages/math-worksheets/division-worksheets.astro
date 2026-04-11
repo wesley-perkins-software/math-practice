@@ -30,7 +30,7 @@ const faqItems = [
   },
   {
     q: 'What is the difference between the three worksheet options?',
-    a: 'Easy Division (÷1–÷9) covers the most common single-digit divisors — great for Grade 3 students just learning division. Division Facts (÷1–÷12) extends the range to include divisors 10, 11, and 12. With Remainders generates problems where the dividend does not divide evenly, displayed in the traditional long division bracket format.',
+    a: 'Easy Division (÷1–÷9) covers the most common single-digit divisors — great for Grade 3 students just learning division. Division Facts (÷1–÷12) extends the range to include divisors 10, 11, and 12. With Remainders generates non-exact problems in the traditional long division bracket format and uses a classroom-style 12-problem page layout (4×3) so students have room to show work.',
   },
   {
     q: 'Why does the "With Remainders" worksheet use a different format?',
@@ -58,7 +58,7 @@ const faqItems = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Division Worksheets",
-      "description": "Free printable division worksheets with 20–40 problems. Easy facts (÷1–÷9), full division facts (÷1–÷12), or long division with remainders. Generate a new worksheet instantly.",
+      "description": "Free printable division worksheets. Generate 20–40 division fact problems or a classroom-style long division with remainders worksheet using a 12-problem (4×3) layout.",
       "url": `${SITE}/math-worksheets/division-worksheets`,
       "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
       "teaches": "Division",
@@ -77,7 +77,7 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Division Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free division worksheet with 20, 30, or 40 problems. Choose easy single-digit facts, full facts through ÷12, or division with remainders in the standard long division format. Print with or without the answer key.</p>
+    <p>Generate a free division worksheet with 20, 30, or 40 problems for fact fluency, or choose With Remainders for a classroom-style long division worksheet with 12 problems (4×3) and extra workspace. Print with or without the answer key.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} title="Division Worksheet" client:load />
