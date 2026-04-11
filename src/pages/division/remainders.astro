@@ -9,20 +9,124 @@ const links = [
   { href: '/division/facts', label: 'Division Facts Practice', description: 'Exact division fundamentals' },
   { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Single-divisor focus' },
   { href: '/division/divide-by/12', label: 'Divide by 12 Practice', description: 'Challenge one divisor' },
+  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Printable long division practice' },
   { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: 'Mixed timed arithmetic practice' },
+];
+
+const faqItems = [
+  {
+    q: 'What is a remainder in division?',
+    a: 'A remainder is the amount left over when a number cannot be divided into equal groups. For example, 29 ÷ 6 = 4 remainder 5 — six fits into 29 four times (4×6=24) with 5 left over. The remainder is always smaller than the divisor.',
+  },
+  {
+    q: 'What grade level introduces division with remainders?',
+    a: 'Division with remainders is typically introduced in late Grade 3 and becomes a core skill in Grade 4. Students should know their multiplication and division facts before working with remainders, since you need fact fluency to quickly determine how many times a divisor fits into a dividend.',
+  },
+  {
+    q: 'How do you find the quotient and remainder?',
+    a: 'Determine how many times the divisor fits into the dividend without exceeding it — that is the quotient. Multiply the quotient by the divisor and subtract from the dividend to get the remainder. For 29 ÷ 6: 6 fits 4 times (4×6=24), so quotient = 4 and remainder = 29 − 24 = 5.',
+  },
+  {
+    q: 'What is the difference between exact division and division with remainders?',
+    a: 'Exact division (division facts) always produces a whole-number answer with nothing left over — for example, 42÷6=7. Division with remainders produces a quotient plus a leftover amount — for example, 29÷6=4 remainder 5. Real-world division problems often have remainders that carry meaning in context.',
+  },
+  {
+    q: 'How does this practice work?',
+    a: 'Each problem asks you to enter both the quotient and the remainder. Instant feedback is shown after each answer — a longer pause on incorrect answers gives you time to reflect. Your streak and scores are saved automatically in your browser.',
+  },
 ];
 ---
 
 <PracticeLayout
-  title="Division with Remainders Practice"
-  description="Practice division with remainders by entering quotient and remainder. Strengthen understanding for long division and non-exact division problems."
+  title="Division with Remainders Practice — Free Online Drills"
+  description="Practice division with remainders by entering quotient and remainder. Build the understanding needed for long division, Grade 3–4 problem solving, and real-world math."
   canonical={`${SITE}/division/remainders`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division' }, { label: 'Remainders' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division' }, { label: 'Remainders' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Division with Remainders Practice",
+      "description": "Free online practice for division with remainders. Enter the quotient and remainder for each problem. Builds understanding for long division and Grade 4 problem solving.",
+      "url": `${SITE}/division/remainders`,
+      "educationalLevel": ["Grade 3", "Grade 4"],
+      "teaches": "Division",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division with Remainders Practice</h1>
   <div slot="intro">
-    <p>Work on division problems that do not divide evenly. Enter the quotient and remainder to develop conceptual understanding, accuracy, and readiness for long-division style work.</p>
+    <p>Work on division problems that do not divide evenly. Enter the quotient and remainder for each problem to develop conceptual understanding, accuracy, and readiness for long division and multi-step problem solving.</p>
   </div>
   <DivisionPracticeHub slot="widget" active="remainders" client:load />
   <InternalLinks slot="links" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12" aria-labelledby="remainders-progression-heading">
+      <h2 id="remainders-progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Introduction to Remainders</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">After mastering exact division facts, begin exploring what happens when a number doesn't divide evenly. Build the concept of quotient + remainder as "groups plus leftovers."</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Application to Word Problems</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Interpret remainders in real-world contexts — when do you round up (e.g., how many buses needed?) versus round down (e.g., how many full rows fit?). Apply remainder division to multi-step problems.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Long Division Foundation</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Remainder understanding is essential for multi-digit long division. Students who can fluently find quotient and remainder for single-digit divisors are well-prepared to extend this to two-digit divisors.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby="remainders-tips-heading">
+      <h2 id="remainders-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Make sure <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">exact division facts</a> are fluent before introducing remainders. Students who aren't sure whether 54÷6=9 will struggle to figure out where 55÷6 lands — the remainder process requires fact recall as a starting point.
+        </p>
+        <p>
+          Use real-world examples to make remainders concrete: "If 29 students need to form groups of 6, how many full groups form and how many students are left over?" This frames the quotient and remainder as meaningful quantities, not just numbers to write.
+        </p>
+        <p>
+          Once students are confident here, use the <a href="/math-worksheets/division-worksheets" class="text-[#4F46E5] font-medium hover:underline">division with remainders worksheet</a>, which displays problems in the standard long division bracket format — the same notation students use for written work in school.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby="remainders-faq-heading">
+      <h2 id="remainders-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
 </PracticeLayout>

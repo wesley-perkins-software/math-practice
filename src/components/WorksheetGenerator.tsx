@@ -22,11 +22,35 @@ const OP_SYMBOL: Record<string, string> = {
 const COUNTS = [20, 30, 40] as const;
 type Count = (typeof COUNTS)[number];
 
+function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
+  return (
+    <div className="worksheet-problem flex flex-col border border-[#E0E7FF] rounded-xl p-4 bg-white min-h-[120px] justify-end">
+      {showAnswer ? (
+        <div className="font-mono text-xl font-bold text-[#059669] text-right mb-1 tabular-nums">
+          {problem.correctAnswer} R{problem.remainder}
+        </div>
+      ) : (
+        <div className="h-7 mb-1" aria-hidden="true" />
+      )}
+      <div className="flex items-stretch">
+        <div className="font-mono text-2xl font-bold text-[#1E1B4B] border-r-2 border-b-2 border-[#1E1B4B] pr-2 pb-1 tabular-nums leading-tight self-end">
+          {problem.operandB}
+        </div>
+        <div className="font-mono text-2xl font-bold text-[#1E1B4B] border-t-2 border-[#1E1B4B] pl-2 pt-1 flex-1 tabular-nums leading-tight">
+          {problem.operandA}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
+  if (problem.remainder !== undefined) {
+    return <LongDivisionProblem problem={problem} showAnswer={showAnswer} />;
+  }
+
   const symbol = OP_SYMBOL[problem.operation];
-  const answerText = problem.remainder !== undefined
-    ? `${problem.correctAnswer} R${problem.remainder}`
-    : String(problem.correctAnswer);
+  const answerText = String(problem.correctAnswer);
 
   return (
     <div className="worksheet-problem flex flex-col items-end border border-[#E0E7FF] rounded-xl p-4 bg-white min-h-[120px]">
