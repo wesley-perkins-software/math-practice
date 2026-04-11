@@ -36,14 +36,16 @@ function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAn
         <div className="mb-3 h-9 w-full" aria-hidden="true" />
       )}
 
-      <div className="long-division-figure inline-flex items-end justify-center font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
-        <span className="long-division-divisor pr-3">{problem.operandB}</span>
-        <span
-          className="long-division-dividend border-l-[3px] border-t-[3px] border-[#1E1B4B] pl-3 pr-1 pt-2"
-          style={{ '--dividend-digits': dividendDigits } as CSSProperties}
-        >
-          {problem.operandA}
-        </span>
+      <div className="problem-inner long-division-inner">
+        <div className="long-division font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
+          <span className="divisor">{problem.operandB}</span>
+          <span
+            className="division-bracket"
+            style={{ '--dividend-digits': dividendDigits } as CSSProperties}
+          >
+            <span className="dividend">{problem.operandA}</span>
+          </span>
+        </div>
       </div>
 
       <div className="mt-5 h-10 w-full" aria-hidden="true" />
@@ -51,11 +53,7 @@ function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAn
   );
 }
 
-function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
-  if (problem.remainder !== undefined) {
-    return <LongDivisionProblem problem={problem} showAnswer={showAnswer} />;
-  }
-
+function StandardWorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
   const symbol = OP_SYMBOL[problem.operation];
   const answerText = String(problem.correctAnswer);
 
@@ -74,6 +72,22 @@ function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswe
           <div className="h-7" aria-hidden="true" />
         )}
       </div>
+    </div>
+  );
+}
+
+function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
+  if (problem.remainder !== undefined) {
+    return (
+      <div className="problem-cell">
+        <LongDivisionProblem problem={problem} showAnswer={showAnswer} />
+      </div>
+    );
+  }
+
+  return (
+    <div className="problem-cell">
+      <StandardWorksheetProblem problem={problem} showAnswer={showAnswer} />
     </div>
   );
 }
@@ -212,16 +226,21 @@ export default function WorksheetGenerator({ configs }: Props) {
             </div>
           </div>
 
-          <div
-            className={`worksheet-grid grid ${
-              isLongDivisionMode
-                ? 'grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 print:grid-cols-4 print:gap-0'
-                : 'grid-cols-4 gap-3 print:gap-4'
-            }`}
-          >
-            {problems.map((problem) => (
-              <WorksheetProblem key={problem.id} problem={problem} showAnswer={showAnswers} />
-            ))}
+          <div className="worksheet-page">
+            <div className="worksheet-header" />
+            <div className="worksheet-body">
+              <div
+                className={`problem-grid worksheet-grid grid ${
+                  isLongDivisionMode
+                    ? 'grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 print:grid-cols-4 print:gap-0'
+                    : 'grid-cols-4 gap-3 print:gap-4'
+                }`}
+              >
+                {problems.map((problem) => (
+                  <WorksheetProblem key={problem.id} problem={problem} showAnswer={showAnswers} />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       )}
