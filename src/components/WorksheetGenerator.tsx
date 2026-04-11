@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { PracticeConfig, Problem } from '@/engine/types';
 import { generateProblemSet } from '@/engine/generator';
 
@@ -9,7 +10,6 @@ interface ConfigOption {
 
 interface Props {
   configs: ConfigOption[];
-  title?: string;
 }
 
 const OP_SYMBOL: Record<string, string> = {
@@ -20,26 +20,33 @@ const OP_SYMBOL: Record<string, string> = {
 };
 
 const COUNTS = [20, 30, 40] as const;
+const LONG_DIVISION_COUNT = 12;
 type Count = (typeof COUNTS)[number];
 
 function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
+  const dividendDigits = String(problem.operandA).length;
+
   return (
-    <div className="worksheet-problem flex flex-col border border-[#E0E7FF] rounded-xl p-4 bg-white min-h-[120px] justify-end">
+    <div className="worksheet-problem long-division-problem flex min-h-[220px] flex-col items-center justify-start rounded-xl border border-[#C7D2FE] bg-white px-4 py-5">
       {showAnswer ? (
-        <div className="font-mono text-xl font-bold text-[#059669] text-right mb-1 tabular-nums">
+        <div className="mb-3 min-h-9 w-full text-right font-mono text-xl font-bold tabular-nums text-[#059669]">
           {problem.correctAnswer} R{problem.remainder}
         </div>
       ) : (
-        <div className="h-7 mb-1" aria-hidden="true" />
+        <div className="mb-3 h-9 w-full" aria-hidden="true" />
       )}
-      <div className="flex items-stretch">
-        <div className="font-mono text-2xl font-bold text-[#1E1B4B] border-r-2 border-b-2 border-[#1E1B4B] pr-2 pb-1 tabular-nums leading-tight self-end">
-          {problem.operandB}
-        </div>
-        <div className="font-mono text-2xl font-bold text-[#1E1B4B] border-t-2 border-[#1E1B4B] pl-2 pt-1 flex-1 tabular-nums leading-tight">
+
+      <div className="long-division-figure inline-flex items-end justify-center font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
+        <span className="long-division-divisor pr-3">{problem.operandB}</span>
+        <span
+          className="long-division-dividend border-l-[3px] border-t-[3px] border-[#1E1B4B] pl-3 pr-1 pt-2"
+          style={{ '--dividend-digits': dividendDigits } as CSSProperties}
+        >
           {problem.operandA}
-        </div>
+        </span>
       </div>
+
+      <div className="mt-5 h-10 w-full" aria-hidden="true" />
     </div>
   );
 }
@@ -53,16 +60,16 @@ function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswe
   const answerText = String(problem.correctAnswer);
 
   return (
-    <div className="worksheet-problem flex flex-col items-end border border-[#E0E7FF] rounded-xl p-4 bg-white min-h-[120px]">
+    <div className="worksheet-problem flex min-h-[120px] flex-col items-end rounded-xl border border-[#E0E7FF] bg-white p-4">
       <div className="problem-inner flex flex-col items-end">
-        <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums">{problem.operandA}</div>
-        <div className="font-mono text-2xl font-bold text-[#1E1B4B] tabular-nums flex items-center gap-2">
+        <div className="font-mono text-2xl font-bold tabular-nums text-[#1E1B4B]">{problem.operandA}</div>
+        <div className="flex items-center gap-2 font-mono text-2xl font-bold tabular-nums text-[#1E1B4B]">
           <span className="text-[#4F46E5]">{symbol}</span>
           <span>{problem.operandB}</span>
         </div>
-        <div className="border-t-2 border-[#1E1B4B] w-full mt-1 mb-2" />
+        <div className="mb-2 mt-1 w-full border-t-2 border-[#1E1B4B]" />
         {showAnswer ? (
-          <div className="font-mono text-xl font-bold text-[#059669] tabular-nums">{answerText}</div>
+          <div className="font-mono text-xl font-bold tabular-nums text-[#059669]">{answerText}</div>
         ) : (
           <div className="h-7" aria-hidden="true" />
         )}
@@ -71,16 +78,25 @@ function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswe
   );
 }
 
-export default function WorksheetGenerator({ configs, title = 'Worksheet Generator' }: Props) {
+export default function WorksheetGenerator({ configs }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [count, setCount] = useState<Count>(20);
   const [problems, setProblems] = useState<Problem[]>([]);
   const [showAnswers, setShowAnswers] = useState(false);
   const [generated, setGenerated] = useState(false);
 
+  const selectedConfig = configs[selectedIndex]?.config;
+  const isLongDivisionMode = Boolean(selectedConfig?.withRemainder);
+  const effectiveCount = isLongDivisionMode ? LONG_DIVISION_COUNT : count;
+
+  useEffect(() => {
+    if (isLongDivisionMode && count !== COUNTS[0]) {
+      setCount(COUNTS[0]);
+    }
+  }, [count, isLongDivisionMode]);
+
   function generate() {
-    const { config } = configs[selectedIndex];
-    setProblems(generateProblemSet(config, count));
+    setProblems(generateProblemSet(selectedConfig, effectiveCount));
     setShowAnswers(false);
     setGenerated(true);
   }
@@ -100,13 +116,11 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
 
   return (
     <div className="space-y-6">
-      {/* Controls panel — hidden when printing */}
-      <div className="no-print bg-white border border-[#E0E7FF] rounded-2xl p-5 space-y-5">
+      <div className="no-print space-y-5 rounded-2xl border border-[#E0E7FF] bg-white p-5">
         <h2 className="text-base font-semibold text-[#1E1B4B]">Generate a Worksheet</h2>
 
-        {/* Config selector */}
         <div>
-          <label className="block text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-2">
+          <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
             Difficulty / Type
           </label>
           <div className="flex flex-wrap gap-2">
@@ -114,10 +128,10 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
               <button
                 key={opt.label}
                 onClick={() => setSelectedIndex(i)}
-                className={`px-3 py-1.5 rounded-lg text-sm font-medium border transition-all ${
+                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
                   selectedIndex === i
-                    ? 'bg-[#4F46E5] text-white border-[#4F46E5]'
-                    : 'bg-white text-[#1E1B4B] border-[#E0E7FF] hover:border-[#4F46E5]'
+                    ? 'border-[#4F46E5] bg-[#4F46E5] text-white'
+                    : 'border-[#E0E7FF] bg-white text-[#1E1B4B] hover:border-[#4F46E5]'
                 }`}
               >
                 {opt.label}
@@ -126,42 +140,45 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
           </div>
         </div>
 
-        {/* Problem count */}
         <div>
-          <label className="block text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-2">
+          <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
             Number of Problems
           </label>
-          <div className="flex gap-2">
-            {COUNTS.map((n) => (
-              <button
-                key={n}
-                onClick={() => setCount(n)}
-                className={`px-4 py-1.5 rounded-lg text-sm font-medium border transition-all ${
-                  count === n
-                    ? 'bg-[#4F46E5] text-white border-[#4F46E5]'
-                    : 'bg-white text-[#1E1B4B] border-[#E0E7FF] hover:border-[#4F46E5]'
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
+          {isLongDivisionMode ? (
+            <p className="rounded-lg border border-[#C7D2FE] bg-[#EEF2FF] px-3 py-2 text-sm font-medium text-[#3730A3]">
+              Long Division worksheets use a classroom layout of {LONG_DIVISION_COUNT} problems (4 across × 3 down).
+            </p>
+          ) : (
+            <div className="flex gap-2">
+              {COUNTS.map((n) => (
+                <button
+                  key={n}
+                  onClick={() => setCount(n)}
+                  className={`rounded-lg border px-4 py-1.5 text-sm font-medium transition-all ${
+                    count === n
+                      ? 'border-[#4F46E5] bg-[#4F46E5] text-white'
+                      : 'border-[#E0E7FF] bg-white text-[#1E1B4B] hover:border-[#4F46E5]'
+                  }`}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <button
           onClick={generate}
-          className="w-full sm:w-auto px-6 py-2.5 bg-[#4F46E5] hover:bg-[#4338CA] text-white font-semibold rounded-xl text-sm transition-colors"
+          className="w-full rounded-xl bg-[#4F46E5] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#4338CA] sm:w-auto"
         >
           Generate Worksheet
         </button>
       </div>
 
-      {/* Worksheet area — shown on screen and when printing */}
       {generated && (
-        <div className="worksheet-area space-y-4">
-          {/* Worksheet header — print only */}
-          <div className="print-only-header hidden print:block mb-5">
-            <div className="flex items-end gap-2 text-sm text-[#1E1B4B] pb-2">
+        <div className={`worksheet-area space-y-4 ${isLongDivisionMode ? 'long-division-mode' : ''}`}>
+          <div className="print-only-header mb-3 hidden print:block">
+            <div className="flex items-end gap-2 border-b border-[#E2E8F0] pb-3 text-sm text-[#1E1B4B]">
               <span>Name:</span>
               <div className="print-name-line" />
               <span className="ml-8">Date:</span>
@@ -169,44 +186,43 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
             </div>
           </div>
 
-          {/* Screen-only toolbar */}
           <div className="no-print flex items-center justify-between">
             <p className="text-sm text-[#6B7280]">
-              {count} problems — <span className="font-medium text-[#1E1B4B]">{configs[selectedIndex].label}</span>
+              {effectiveCount} problems — <span className="font-medium text-[#1E1B4B]">{configs[selectedIndex].label}</span>
             </p>
             <div className="flex gap-2">
               <button
                 onClick={() => setShowAnswers((v) => !v)}
-                className="px-3 py-1.5 text-sm font-medium border border-[#E0E7FF] rounded-lg text-[#4F46E5] hover:border-[#4F46E5] transition-all"
+                className="rounded-lg border border-[#E0E7FF] px-3 py-1.5 text-sm font-medium text-[#4F46E5] transition-all hover:border-[#4F46E5]"
               >
                 {showAnswers ? 'Hide Answers' : 'Show Answer Key'}
               </button>
               <button
                 onClick={handlePrintWorksheet}
-                className="px-3 py-1.5 text-sm font-medium border border-[#4F46E5] text-[#4F46E5] rounded-lg hover:bg-[#EEF2FF] transition-all"
+                className="rounded-lg border border-[#4F46E5] px-3 py-1.5 text-sm font-medium text-[#4F46E5] transition-all hover:bg-[#EEF2FF]"
               >
                 Print Worksheet
               </button>
               <button
                 onClick={handlePrintAnswerKey}
-                className="px-3 py-1.5 text-sm font-medium bg-[#4F46E5] text-white rounded-lg hover:bg-[#4338CA] transition-all"
+                className="rounded-lg bg-[#4F46E5] px-3 py-1.5 text-sm font-medium text-white transition-all hover:bg-[#4338CA]"
               >
                 Print Answer Key
               </button>
             </div>
           </div>
 
-          {/* Problem grid */}
-          <div className="grid grid-cols-4 gap-3 print:gap-4">
-            {problems.map((problem, i) => (
-              <WorksheetProblem
-                key={problem.id}
-                problem={problem}
-                showAnswer={showAnswers}
-              />
+          <div
+            className={`worksheet-grid grid ${
+              isLongDivisionMode
+                ? 'grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 print:grid-cols-4 print:gap-0'
+                : 'grid-cols-4 gap-3 print:gap-4'
+            }`}
+          >
+            {problems.map((problem) => (
+              <WorksheetProblem key={problem.id} problem={problem} showAnswer={showAnswers} />
             ))}
           </div>
-
         </div>
       )}
     </div>
