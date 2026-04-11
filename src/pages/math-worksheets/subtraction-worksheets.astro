@@ -19,17 +19,41 @@ const configs = [
 ];
 
 const links = [
-  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Simple problems' },
+  { href: '/subtraction', label: 'Subtraction Practice Hub', description: 'All subtraction levels with difficulty guide' },
+  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Simple differences' },
   { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit (No Borrowing)', description: 'Two-digit without regrouping' },
   { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'Regrouping practice' },
   { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Practice addition' },
   { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
 ];
+
+const faqItems = [
+  {
+    q: 'What grade levels are these subtraction worksheets for?',
+    a: 'The subtraction worksheets span Kindergarten through Grade 3. The 1-Digit worksheet is ideal for K–Grade 1 students. 2-Digit (No Borrowing) suits Grade 1–2, and With Borrowing targets Grade 2–3 students learning regrouping.',
+  },
+  {
+    q: 'What is borrowing (regrouping) in subtraction?',
+    a: 'Borrowing (also called regrouping) occurs when the digit being subtracted is larger than the digit above it in that column. You borrow 1 ten from the tens column, turning it into 10 ones. For example, in 52 − 37, the ones column is 2 − 7, which requires borrowing: you take 1 ten from the 5, making it 4 tens and 12 ones, so 12 − 7 = 5.',
+  },
+  {
+    q: 'What is the difference between the four worksheet types?',
+    a: '1-Digit covers basic subtraction facts with numbers 1–9. 2-Digit (No Borrowing) uses two-digit numbers where no column requires regrouping, isolating place-value alignment. With Borrowing introduces regrouping for more advanced work. Mixed Subtraction combines all ranges for comprehensive practice.',
+  },
+  {
+    q: 'How many problems are on each worksheet?',
+    a: 'Choose 20, 30, or 40 problems per worksheet. Every Generate click creates a fresh set of randomized problems, so students get a different worksheet each time.',
+  },
+  {
+    q: 'Can I print an answer key?',
+    a: 'Yes. Use "Print Answer Key" to print with all correct answers shown, or "Print Worksheet" to print a blank version for students. On-screen controls are hidden during printing so only the problems and a Name/Date line appear.',
+  },
+];
 ---
 
 <PracticeLayout
   title="Subtraction Worksheets — Free Printable & Online Practice"
-  description="Generate free subtraction worksheets with 20–40 problems. Choose 1-digit, 2-digit, or borrowing problems. Print or practice online — no signup required."
+  description="Generate free subtraction worksheets with 20–40 problems. Choose 1-digit, 2-digit, or borrowing problems. Print with or without the answer key — no signup required."
   canonical={`${SITE}/math-worksheets/subtraction-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Subtraction Worksheets' }]}
 >
@@ -38,19 +62,86 @@ const links = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Subtraction Worksheets",
-      "description": "Free printable subtraction worksheets with 20–40 problems. Choose difficulty level and generate a new worksheet instantly.",
+      "description": "Free printable subtraction worksheets with 20–40 problems. Choose 1-digit, 2-digit without borrowing, or 2-digit with borrowing. Generate a new worksheet instantly.",
       "url": `${SITE}/math-worksheets/subtraction-worksheets`,
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
       "teaches": "Subtraction",
       "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
     })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Subtraction Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free subtraction worksheet with 20, 30, or 40 problems. Pick a difficulty level — from simple 1-digit facts up to 2-digit subtraction with borrowing — then print or practice on screen.</p>
+    <p>Generate a free subtraction worksheet with 20, 30, or 40 problems. Pick a difficulty level — from simple 1-digit facts up to 2-digit subtraction with borrowing — then practice on screen with instant feedback or print the worksheet with an optional answer key.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} title="Subtraction Worksheet" client:load />
   <InternalLinks slot="links" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12 no-print" aria-labelledby="sub-progression-heading">
+      <h2 id="sub-progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Subtraction Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">K – Grade 1</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">1-Digit Subtraction</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Learn basic subtraction facts alongside addition. Understanding that addition and subtraction are inverse operations builds both skills at once.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 1–2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Subtraction (No Borrowing)</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Extend to two-digit numbers where each column subtracts cleanly. Builds place-value alignment habits before the added complexity of regrouping.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2–3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Subtraction with Borrowing</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Master regrouping. When a digit is too small to subtract from, borrow 1 ten from the next column. This skill is the subtraction equivalent of carrying in addition.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="sub-tips-heading">
+      <h2 id="sub-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Teach subtraction alongside addition from the start. Knowing that 3+5=8 means 8−5=3 and 8−3=5 helps students learn twice as many facts with the same effort. Use the <a href="/subtraction/1-digit" class="text-[#4F46E5] font-medium hover:underline">1-digit drill</a> daily until all single-digit pairs feel automatic.
+        </p>
+        <p>
+          Move to <a href="/subtraction/2-digit-no-borrowing" class="text-[#4F46E5] font-medium hover:underline">2-digit without borrowing</a> first. This isolates the column-subtraction process from the more complex skill of regrouping, making the overall transition smoother.
+        </p>
+        <p>
+          Introduce <a href="/subtraction/2-digit-with-borrowing" class="text-[#4F46E5] font-medium hover:underline">borrowing</a> only once no-borrowing problems feel easy. Use base-ten blocks or visual grouping tools to make the "trade 1 ten for 10 ones" concept concrete before it becomes an automatic pencil-and-paper skill.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="sub-faq-heading">
+      <h2 id="sub-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
 </PracticeLayout>

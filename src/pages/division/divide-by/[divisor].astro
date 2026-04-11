@@ -15,13 +15,52 @@ export function getStaticPaths() {
 const { divisor } = Astro.props;
 
 const title = `Divide by ${divisor} Practice`;
-const description = `Practice division by ${divisor} with exact whole-number answers. Build speed and confidence with focused divide by ${divisor} drills.`;
+const description = `Practice dividing by ${divisor} with exact whole-number answers. Build speed and confidence with focused ÷${divisor} drills — all ${divisor === 1 ? '12' : '12'} facts in one place. No signup required.`;
+
+// Grade context based on divisor
+const gradeContext = divisor <= 5
+  ? 'Grade 3 (early focus)'
+  : divisor <= 9
+  ? 'Grade 3 (core facts)'
+  : 'Grade 4 (extended tables)';
+
+// Neighbor divisors for internal linking (clamped to 1–12)
+const prevDivisor = divisor > 1 ? divisor - 1 : null;
+const nextDivisor = divisor < 12 ? divisor + 1 : null;
+
+// A sample of the divide-by-N facts for the FAQ answer
+const sampleFacts = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => `${n * divisor}÷${divisor}=${n}`).join(', ');
+
+const faqItems = [
+  {
+    q: `What are the divide by ${divisor} facts?`,
+    a: `The divide by ${divisor} facts are all problems where ${divisor} is the divisor and the quotient is a whole number from 1 to 12: ${sampleFacts}. These ${12} facts form one complete division fact family for the divisor ${divisor}.`,
+  },
+  {
+    q: `What grade level focuses on dividing by ${divisor}?`,
+    a: `Dividing by ${divisor} is typically covered in ${gradeContext}. Division facts are introduced in Grade 3 alongside the matching multiplication fact family. Divisors through 9 are the core Grade 3 focus; divisors 10, 11, and 12 are commonly extended in Grade 4.`,
+  },
+  {
+    q: `How does practicing one divisor at a time help?`,
+    a: `Focusing on a single divisor (like ÷${divisor}) lets students recognize patterns within one fact family before mixing all divisors together. This targeted approach builds confidence faster and makes specific weak spots easier to identify and close. Once ÷${divisor} feels automatic, mixed practice reinforces all facts together.`,
+  },
+  {
+    q: `What should I practice after mastering divide by ${divisor}?`,
+    a: nextDivisor
+      ? `After ÷${divisor} feels automatic, move to divide by ${nextDivisor} to continue building through the fact families. Once all individual divisors are solid, use Division Facts practice to mix all divisors together for comprehensive fluency.`
+      : `After ÷${divisor} feels automatic, use Division Facts practice to mix all divisors together. You can also move on to division with remainders, which extends fluency to non-exact problems.`,
+  },
+  {
+    q: 'How does this practice work?',
+    a: `Problems appear one at a time with instant right/wrong feedback after every answer. Only ÷${divisor} problems are shown, keeping every problem in this single fact family. Your streak and best scores are saved automatically in your browser. No login or account required.`,
+  },
+];
 
 const links = [
-  { href: '/division/facts', label: 'Division Facts Practice', description: 'Mixed exact division facts' },
+  { href: '/division/facts', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
-  { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Start with foundational facts' },
-  { href: '/division/divide-by/12', label: 'Divide by 12 Practice', description: 'Advance single-divisor fluency' },
+  ...(prevDivisor ? [{ href: `/division/divide-by/${prevDivisor}`, label: `Divide by ${prevDivisor} Practice`, description: `Previous fact family` }] : []),
+  ...(nextDivisor ? [{ href: `/division/divide-by/${nextDivisor}`, label: `Divide by ${nextDivisor} Practice`, description: `Next fact family` }] : []),
 ];
 ---
 
@@ -29,12 +68,75 @@ const links = [
   title={title}
   description={description}
   canonical={`${SITE}/division/divide-by/${divisor}`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division' }, { label: `Divide by ${divisor}` }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division' }, { label: `Divide by ${divisor}` }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": `Divide by ${divisor} Practice`,
+      "description": `Free online practice for dividing by ${divisor}. All 12 divide-by-${divisor} facts with instant feedback. Grade 3–4 division fluency.`,
+      "url": `${SITE}/division/divide-by/${divisor}`,
+      "educationalLevel": ["Grade 3", "Grade 4"],
+      "teaches": "Division",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{title}</h1>
   <div slot="intro">
-    <p>Focus on one fact family at a time with divide by {divisor} problems. This targeted practice helps students improve speed, sharpen accuracy, and gain confidence before mixing divisors.</p>
+    <p>Focus on one fact family at a time with divide by {divisor} problems. This targeted practice helps students improve speed, sharpen accuracy, and gain confidence before mixing all divisors together in full division facts practice.</p>
   </div>
   <DivisionPracticeHub slot="widget" active="divide-by" selectedDivisor={divisor} client:load />
   <InternalLinks slot="links" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12" aria-labelledby={`div-by-${divisor}-context-heading`}>
+      <h2 id={`div-by-${divisor}-context-heading`} class="text-lg font-semibold text-[#1E293B] mb-4">About Divide by {divisor} Facts</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          The divide by {divisor} facts are the division half of the ×{divisor} multiplication fact family. Every fact you know from the {divisor} times table gives you a division fact for free — <span class="font-mono font-semibold text-[#1E1B4B]">{divisor}×8={divisor * 8}</span> means <span class="font-mono font-semibold text-[#1E1B4B]">{divisor * 8}÷{divisor}=8</span>.
+        </p>
+        <p>
+          There are 12 divide by {divisor} facts ({divisor}÷{divisor}=1 through {divisor * 12}÷{divisor}=12). Mastering all 12 in this focused mode makes mixed division practice significantly faster. Grade context: <span class="font-semibold text-[#4F46E5]">{gradeContext}</span>.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby={`div-by-${divisor}-tips-heading`}>
+      <h2 id={`div-by-${divisor}-tips-heading`} class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Use this page to close a specific gap. If a student is slow on the ÷{divisor} facts in mixed practice, come here for a focused session of just those 12 problems before returning to the mixed drill.
+        </p>
+        <p>
+          Connect each divide by {divisor} fact explicitly to its multiplication partner. Ask: "What times {divisor} equals {divisor * 7}?" — then confirm: "So {divisor * 7} ÷ {divisor} = 7." This bidirectional thinking builds the fact family connection that makes both operations stick.
+        </p>
+        <p>
+          Once ÷{divisor} facts are automatic,{nextDivisor ? ` move to <a href="/division/divide-by/${nextDivisor}" class="text-[#4F46E5] font-medium hover:underline">divide by ${nextDivisor}</a> or return to` : ' return to'} <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">mixed division facts</a> to consolidate fluency across all divisors.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby={`div-by-${divisor}-faq-heading`}>
+      <h2 id={`div-by-${divisor}-faq-heading`} class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed" set:html={a} />
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
 </PracticeLayout>

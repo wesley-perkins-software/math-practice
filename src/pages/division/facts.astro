@@ -6,23 +6,127 @@ import InternalLinks from '@/components/InternalLinks';
 const SITE = 'https://www.mathpractice.com';
 
 const links = [
-  { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Build fluency with one divisor' },
-  { href: '/division/divide-by/6', label: 'Divide by 6 Practice', description: 'Target one fact family' },
+  { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Start with the simplest fact family' },
+  { href: '/division/divide-by/6', label: 'Divide by 6 Practice', description: 'Target one of the trickier divisors' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder' },
-  { href: '/math-facts-practice', label: 'Math Facts Practice', description: 'Mixed multiplication and division facts' },
+  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Printable division practice' },
+  { href: '/division', label: 'Division Practice Hub', description: 'All division modes in one place' },
+];
+
+const faqItems = [
+  {
+    q: 'What are division facts?',
+    a: 'Division facts are the basic exact division problems from 1÷1 through 144÷12. They are the inverse of multiplication facts — knowing 7×8=56 means you also know 56÷7=8 and 56÷8=7. Mastering all division facts gives students fast, automatic recall for any basic division problem.',
+  },
+  {
+    q: 'What grade level are division facts?',
+    a: 'Division facts are typically introduced in Grade 3 alongside multiplication fact families. By the end of Grade 3, students are expected to recall basic division facts fluently. Continued practice in Grade 4 builds the speed needed for multi-step problems and long division work.',
+  },
+  {
+    q: 'How do I help my child learn division facts?',
+    a: 'Start by making sure multiplication facts are solid — division fluency follows naturally from multiplication fluency. Practice one divisor at a time using the Divide by N pages, then mix all divisors here for comprehensive practice. Short daily sessions of 5–10 minutes produce faster results than occasional longer sessions.',
+  },
+  {
+    q: 'What is the fastest way to memorize division facts?',
+    a: 'The most effective method is connecting division facts to known multiplication facts through fact families. For example: "8×7=56, so 56÷8=7." Practice the specific divisors that feel weakest using the divide-by-N pages, then return to mixed practice here. Consistent short sessions outperform rare long study sessions.',
+  },
+  {
+    q: 'How does this practice work?',
+    a: 'Problems appear one at a time with instant right/wrong feedback after every answer. Your streak, personal best score, and session history are saved automatically in your browser. No login or account is required.',
+  },
 ];
 ---
 
 <PracticeLayout
-  title="Division Facts Practice"
-  description="Practice basic division facts 1–12 with exact whole-number answers. Build speed, accuracy, and confidence with clean division fact drills."
+  title="Division Facts Practice — Free Online Division Drills"
+  description="Practice basic division facts 1÷1 through 144÷12 with instant feedback. Build speed, accuracy, and confidence with mixed division fact drills. No signup required."
   canonical={`${SITE}/division/facts`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division' }, { label: 'Facts' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division' }, { label: 'Facts' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Division Facts Practice",
+      "description": "Free online division facts practice covering all exact division problems from 1÷1 through 144÷12. Instant feedback and progress tracking.",
+      "url": `${SITE}/division/facts`,
+      "educationalLevel": ["Grade 3", "Grade 4"],
+      "teaches": "Division",
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division Facts Practice</h1>
   <div slot="intro">
-    <p>Practice mixed exact division problems across facts 1–12. Every problem divides evenly so you can reinforce core division facts, improve recall speed, and build a strong base for more advanced division.</p>
+    <p>Practice mixed exact division problems across all facts 1÷1 through 144÷12. Every problem divides evenly so you can reinforce core division facts, improve recall speed, and build a strong foundation for more advanced division and long division work.</p>
   </div>
   <DivisionPracticeHub slot="widget" active="facts" client:load />
   <InternalLinks slot="links" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12" aria-labelledby="facts-progression-heading">
+      <h2 id="facts-progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Division Facts and Fact Families</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Learn division as equal sharing and grouping. Build fluency with all exact facts and connect each fact to its multiplication partner (e.g., 56÷7=8 because 7×8=56).</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Speed and Application</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Increase recall speed for use in multi-step problems, long division, and real-world contexts. Strong fact fluency makes every other division skill faster to learn.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Long Division Foundation</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Automatic fact recall is the key input for multi-digit long division. Students who hesitate on basic facts spend extra mental effort on each step of long division, slowing the whole process down.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby="facts-tips-heading">
+      <h2 id="facts-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Practice one divisor at a time if students feel overwhelmed by mixed facts. Use <a href="/division/divide-by/2" class="text-[#4F46E5] font-medium hover:underline">divide by 2</a>, <a href="/division/divide-by/5" class="text-[#4F46E5] font-medium hover:underline">divide by 5</a>, and <a href="/division/divide-by/10" class="text-[#4F46E5] font-medium hover:underline">divide by 10</a> first — these tend to click quickly and build early confidence.
+        </p>
+        <p>
+          Reinforce the connection between multiplication and division. For every multiplication fact students know, they also know two division facts. Point this out explicitly: "If 6×9=54, that gives us both 54÷6=9 and 54÷9=6."
+        </p>
+        <p>
+          Once facts feel fluent here, move to <a href="/division/remainders" class="text-[#4F46E5] font-medium hover:underline">division with remainders</a> to extend understanding to non-exact division. Print a <a href="/math-worksheets/division-worksheets" class="text-[#4F46E5] font-medium hover:underline">division worksheet</a> for offline practice between sessions.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby="facts-faq-heading">
+      <h2 id="facts-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
 </PracticeLayout>

@@ -11,22 +11,45 @@ import {
 const SITE = 'https://www.mathpractice.com';
 
 const configs = [
-  { label: 'Facts (×1–×12)', config: MULTIPLICATION_FACTS },
-  { label: 'Times Tables 1–12', config: MULTIPLICATION_1_12 },
-  { label: 'Mixed Multiplication', config: MULTIPLICATION_GENERAL },
+  { label: 'Single-Digit (×1–×9)', config: MULTIPLICATION_1_12 },
+  { label: 'Full Tables (×1–×12)', config: MULTIPLICATION_FACTS },
+  { label: 'Harder Facts (×4–×12)', config: MULTIPLICATION_GENERAL },
 ];
 
 const links = [
-  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Full 1–12 drill' },
-  { href: '/multiplication', label: 'Times Tables Hub', description: 'All times table pages' },
+  { href: '/multiplication/facts', label: 'Multiplication Facts Practice', description: 'Interactive drill — full 1–12 range' },
+  { href: '/multiplication', label: 'Times Tables Hub', description: 'Practice one times table at a time' },
   { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Practice division' },
   { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
+];
+
+const faqItems = [
+  {
+    q: 'What grade levels are these multiplication worksheets for?',
+    a: 'Multiplication worksheets are best suited for Grade 3 through Grade 5. Grade 3 students typically start with single-digit facts (×1–×9), while Grade 4–5 students extend to ×10, ×11, and ×12. The Harder Facts option (×4–×12) targets the facts students find most challenging and is great for Grade 4 fluency building.',
+  },
+  {
+    q: 'What is the difference between the three worksheet options?',
+    a: 'Single-Digit (×1–×9) covers the core 81 basic multiplication facts — the standard starting point for Grade 3. Full Tables (×1–×12) extends the range to include ×10, ×11, and ×12 for a complete set. Harder Facts (×4–×12) skips the easier ×1, ×2, and ×3 problems and focuses on the combinations most students find challenging.',
+  },
+  {
+    q: 'How many problems are on each worksheet?',
+    a: 'Choose 20, 30, or 40 problems per worksheet. Problems are randomly selected each time you click Generate, so you get a fresh set every time. For younger students or shorter sessions, 20 problems is a good starting point.',
+  },
+  {
+    q: 'How often should a child practice multiplication worksheets?',
+    a: 'Short daily sessions of 5–10 minutes are more effective than occasional longer sessions. Consistent practice builds the automatic recall students need for more advanced math. Once single-digit facts feel solid, move up to the Full Tables or Harder Facts worksheets.',
+  },
+  {
+    q: 'Can I print an answer key?',
+    a: 'Yes. Click "Print Answer Key" to print the worksheet with all answers shown. Use "Print Worksheet" to print a blank version for students. On-screen controls are hidden during printing so only the problems and Name/Date line appear.',
+  },
 ];
 ---
 
 <PracticeLayout
   title="Multiplication Worksheets — Free Printable Times Table Practice"
-  description="Generate free multiplication worksheets with 20–40 problems. Times tables 1–12 with instant answers. Print or practice online — no signup required."
+  description="Generate free multiplication worksheets with 20–40 problems. Single-digit (×1–×9), full tables (×1–×12), or harder facts (×4–×12). Print or practice online — no signup required."
   canonical={`${SITE}/math-worksheets/multiplication-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Multiplication Worksheets' }]}
 >
@@ -35,19 +58,86 @@ const links = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Multiplication Worksheets",
-      "description": "Free printable multiplication worksheets with 20–40 problems. Times tables 1–12, generate a new worksheet instantly.",
+      "description": "Free printable multiplication worksheets with 20–40 problems. Single-digit facts (×1–×9), full times tables (×1–×12), or harder facts (×4–×12). Generate a new worksheet instantly.",
       "url": `${SITE}/math-worksheets/multiplication-worksheets`,
       "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
       "teaches": "Multiplication",
       "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
     })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Multiplication Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free multiplication worksheet with 20, 30, or 40 problems. Covers times tables 1–12 with randomized problems every time. Print with or without the answer key.</p>
+    <p>Generate a free multiplication worksheet with 20, 30, or 40 problems. Choose single-digit facts, full times tables through ×12, or a harder-facts challenge. Randomized every time — print with or without the answer key.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} title="Multiplication Worksheet" client:load />
   <InternalLinks slot="links" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12 no-print" aria-labelledby="mult-progression-heading">
+      <h2 id="mult-progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Multiplication Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Single-Digit Facts (×1–×9)</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Introduction to multiplication as repeated addition and equal groups. Master all 81 single-digit facts and connect them to division fact families.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Full Times Tables (×1–×12)</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Extend fluency to ×10, ×11, and ×12. Apply multiplication facts to multi-digit multiplication and division problems.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Fluency for Multi-Step Problems</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Automatic fact recall supports long multiplication, long division, fractions, and ratio work. The Harder Facts worksheet targets the ×6–×9 combinations students most often get wrong.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="mult-tips-heading">
+      <h2 id="mult-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Start with <a href="/math-worksheets/multiplication-worksheets" class="text-[#4F46E5] font-medium hover:underline">single-digit worksheets (×1–×9)</a> until students can answer any of the 81 basic facts quickly without counting. Fluency here, typically by end of Grade 3, makes everything that follows easier.
+        </p>
+        <p>
+          When moving to the full range, use <a href="/multiplication" class="text-[#4F46E5] font-medium hover:underline">one-times-table practice</a> to isolate any fact families that still feel shaky. A single session on the ×7 table, for example, can close specific gaps faster than mixed practice.
+        </p>
+        <p>
+          Once the full table is solid, the <a href="/multiplication/facts" class="text-[#4F46E5] font-medium hover:underline">Harder Facts worksheet</a> keeps skills sharp by focusing on the ×4–×12 combinations — the ones most likely to slow students down in multi-digit work.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="mult-faq-heading">
+      <h2 id="mult-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
 </PracticeLayout>

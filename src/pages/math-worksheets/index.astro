@@ -5,25 +5,113 @@ import InternalLinks from '@/components/InternalLinks';
 const SITE = 'https://www.mathpractice.com';
 
 const links = [
-  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Practice addition problems' },
-  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Practice subtraction problems' },
-  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Times tables practice' },
-  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Division facts practice' },
-  { href: '/addition-practice', label: 'Addition Practice (Interactive)', description: 'Try the interactive drill' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: '1-digit, 2-digit, and carrying problems' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: '1-digit, 2-digit, and borrowing problems' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Times tables ×1–×12 and harder facts' },
+  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Division facts and long division with remainders' },
+  { href: '/addition', label: 'Addition Practice (Interactive)', description: 'Try the interactive drill' },
   { href: '/multiplication', label: 'Multiplication Practice (Interactive)', description: 'Interactive times tables' },
+];
+
+const faqItems = [
+  {
+    q: 'How do these math worksheets work?',
+    a: 'Choose an operation and a difficulty level, then click Generate to create a fresh set of randomized problems. Practice directly on screen with instant right/wrong feedback, or click Print Worksheet to print a blank copy. Click Print Answer Key to print the same worksheet with all answers filled in.',
+  },
+  {
+    q: 'Can I print these worksheets?',
+    a: 'Yes. Every worksheet includes Print Worksheet and Print Answer Key buttons. The printed version hides all on-screen controls and shows only the problems along with a Name and Date line at the top — just like a classroom handout.',
+  },
+  {
+    q: 'What grades are these worksheets for?',
+    a: 'The worksheets span Kindergarten through Grade 5. Addition and subtraction worksheets cover grades K–3, while multiplication and division worksheets are designed for grades 3–5. Each worksheet page offers multiple difficulty options so you can match the right level to each student.',
+  },
+  {
+    q: 'How many problems are on each worksheet?',
+    a: 'You can choose 20, 30, or 40 problems per worksheet. Problems are randomly generated each time, so every worksheet is unique. For younger students or shorter sessions, 20 problems is a good starting point.',
+  },
+  {
+    q: 'Are these worksheets free?',
+    a: 'Yes, all worksheets are completely free. There is no signup, no account required, and no limit on how many worksheets you can generate or print.',
+  },
 ];
 ---
 
 <PracticeLayout
-  title="Math Worksheets — Free Online Arithmetic Practice"
-  description="Free interactive math worksheets for addition, subtraction, multiplication, and division. Practice online with instant feedback instead of printing."
+  title="Math Worksheets — Free Online & Printable Arithmetic Practice"
+  description="Free math worksheets for addition, subtraction, multiplication, and division. Generate 20–40 randomized problems, practice online with instant feedback, or print with an answer key."
   canonical={`${SITE}/math-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets' }]}
 >
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Math Worksheets",
+      "description": "Free printable math worksheets for addition, subtraction, multiplication, and division. Generate randomized problems for grades K–5 instantly.",
+      "url": `${SITE}/math-worksheets`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+      "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Math Worksheets</h1>
   <div slot="intro">
-    <p>Looking for math worksheet practice? These interactive pages work like worksheets — a set of arithmetic problems with instant feedback — but you don't need to print anything. Choose your topic below.</p>
-    <p class="mt-2">Each page focuses on one operation and skill level, just like a printed worksheet, but with the added benefit of immediate right/wrong feedback and automatic scoring.</p>
+    <p>Free math worksheets for addition, subtraction, multiplication, and division. Choose a topic below, select your difficulty level, and click Generate — each click creates a brand-new set of randomized problems. Practice on screen with instant feedback or print with a single click.</p>
+    <p class="mt-2">Each worksheet focuses on one operation and skill level, just like a printed classroom handout, with the added benefit of immediate feedback and an optional answer key you can print separately.</p>
   </div>
   <InternalLinks slot="links" title="Choose a Worksheet Topic" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12" aria-labelledby="grade-guide-heading">
+      <h2 id="grade-guide-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Worksheet Guide by Grade Level</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-24 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">K – Grade 2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Addition & Subtraction Worksheets</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Start with 1-digit facts, then progress to 2-digit addition and subtraction with and without regrouping. Builds the arithmetic foundation for all later math.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-24 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Multiplication & Division Facts</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Introduction to times tables and basic division facts. Single-digit multiplication (×1–×9) and division (÷1–÷9) are the core Grade 3 focus.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-24 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4–5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Extended Tables & Division with Remainders</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Extend multiplication to ×12 and division to ÷12. Introduce long division with remainders in the standard bracket format. Builds fluency for fractions and multi-step problems.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby="worksheets-faq-heading">
+      <h2 id="worksheets-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
 </PracticeLayout>

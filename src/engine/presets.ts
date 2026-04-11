@@ -116,15 +116,15 @@ export const MULTIPLICATION_FACTS: PracticeConfig = {
 
 export const MULTIPLICATION_1_12: PracticeConfig = {
   storageKey: 'mult-1-12',
-  label: 'Times Tables 1–12',
+  label: 'Single-Digit Multiplication',
   path: '/multiplication',
   operation: 'multiplication',
   mode: 'untimed',
   timerDuration: 60,
-  operandA: { min: 1, max: 12 },
-  operandB: { min: 1, max: 12 },
+  operandA: { min: 1, max: 9 },
+  operandB: { min: 1, max: 9 },
   factsMode: true,
-  maxFactor: 12,
+  maxFactor: 9,
 };
 
 
@@ -143,13 +143,13 @@ export function multiplyTableConfig(n: number): PracticeConfig {
 
 export const MULTIPLICATION_GENERAL: PracticeConfig = {
   storageKey: 'mult-general',
-  label: 'Multiplication Practice',
+  label: 'Harder Facts',
   path: '/multiplication-practice',
   operation: 'multiplication',
   mode: 'untimed',
   timerDuration: 60,
-  operandA: { min: 2, max: 12 },
-  operandB: { min: 2, max: 12 },
+  operandA: { min: 4, max: 12 },
+  operandB: { min: 4, max: 12 },
   factsMode: true,
   maxFactor: 12,
 };
@@ -187,15 +187,15 @@ export const DIVISION_FACTS: PracticeConfig = {
 
 export const DIVISION_GENERAL: PracticeConfig = {
   storageKey: 'div-general',
-  label: 'Division Practice',
+  label: 'Easy Division Facts',
   path: '/division-practice',
   operation: 'division',
   mode: 'untimed',
   timerDuration: 60,
-  operandA: { min: 1, max: 12 },
-  operandB: { min: 1, max: 12 },
+  operandA: { min: 1, max: 9 },
+  operandB: { min: 1, max: 9 },
   factsMode: true,
-  maxFactor: 12,
+  maxFactor: 9,
 };
 
 export const DIVISION_REMAINDERS: PracticeConfig = {
