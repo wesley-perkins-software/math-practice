@@ -54,14 +54,9 @@
 }
 
 @media print {
-  html, body {
-    height: 100%;
-    margin: 0;
-  }
-
   /* Restore content margins (replaces the @page margins we zeroed out) */
   body {
-    margin: 0 !important;
+    margin: 14mm 16mm !important;
     background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -81,12 +76,6 @@
   /* Show print-only header */
   .print-only-header {
     display: block !important;
-  }
-
-  .worksheet-page {
-    height: 100% !important;
-    box-sizing: border-box !important;
-    padding: 14mm 16mm !important;
   }
 
   /* Name / Date field solid underlines */
@@ -154,82 +143,38 @@
     flex-shrink: 0 !important;
   }
 
-  /* Long division worksheets: centered 4x3 classroom layout */
+  /* Long division worksheets: 4 x 3 layout with extra writing space */
   .worksheet-area.long-division-mode {
-    height: 100% !important;
+    display: block !important;
+    padding-top: 1mm !important;
   }
 
-  .worksheet-area.long-division-mode .worksheet-page {
-    height: 100% !important;
-    display: flex !important;
-    flex-direction: column !important;
-  }
-
-  .worksheet-area.long-division-mode .worksheet-body {
-    flex: 1 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-  }
-
-  .worksheet-area.long-division-mode .problem-grid {
-    display: grid !important;
+  .worksheet-area.long-division-mode .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
-    grid-template-rows: repeat(3, auto) !important;
-    gap: 12mm 8mm !important;
-    width: 100% !important;
-    max-width: 180mm !important;
-    margin: 0 auto !important;
-  }
-
-  .worksheet-area.long-division-mode .problem-cell {
-    min-height: 35mm !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: flex-start !important;
+    column-gap: 7mm !important;
+    row-gap: 6mm !important;
+    margin-top: 4mm !important;
   }
 
   .worksheet-area.long-division-mode .worksheet-problem {
-    height: auto !important;
-    min-height: 0 !important;
+    height: 50mm !important;
     justify-content: flex-start !important;
     align-items: center !important;
-    padding-top: 0 !important;
+    padding-top: 1mm !important;
   }
 
-  .worksheet-area.long-division-mode .long-division-inner {
-    width: 26mm !important;
-    text-align: center !important;
-    display: flex !important;
-    justify-content: center !important;
-  }
-
-  .worksheet-area.long-division-mode .long-division {
-    display: inline-flex !important;
-    align-items: flex-start !important;
+  .worksheet-area.long-division-mode .long-division-problem .long-division-divisor,
+  .worksheet-area.long-division-mode .long-division-problem .long-division-dividend {
     font-size: 20pt !important;
     line-height: 1 !important;
   }
 
-  .worksheet-area.long-division-mode .divisor {
-    margin-right: 1.2mm !important;
-  }
-
-  .worksheet-area.long-division-mode .division-bracket {
-    border-left: 1.5pt solid #1E1B4B !important;
-    border-top: 1.5pt solid #1E1B4B !important;
+  .worksheet-area.long-division-mode .long-division-problem .long-division-dividend {
+    border-top-width: 1.5pt !important;
+    border-left-width: 1.5pt !important;
+    padding-top: 1.2mm !important;
     padding-left: 1.5mm !important;
-    padding-top: 1mm !important;
     min-width: calc(var(--dividend-digits, 2) * 1ch + 6mm) !important;
-  }
-
-  .worksheet-area.long-division-mode .long-division-problem .mb-3 {
-    margin-bottom: 1.5mm !important;
-  }
-
-  .worksheet-area.long-division-mode .long-division-problem .h-10 {
-    height: 8mm !important;
-    margin-top: 3mm !important;
   }
 }
 
@@ -252,7 +197,7 @@
     -moz-appearance: textfield;
   }
 
-  .division-bracket {
+  .long-division-dividend {
     min-width: calc(var(--dividend-digits, 2) * 1ch + 0.9rem);
   }
 }
