@@ -10,7 +10,6 @@ interface ConfigOption {
 
 interface Props {
   configs: ConfigOption[];
-  title?: string;
 }
 
 const OP_SYMBOL: Record<string, string> = {
@@ -30,11 +29,11 @@ function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAn
   return (
     <div className="worksheet-problem long-division-problem flex min-h-[220px] flex-col items-center justify-start rounded-xl border border-[#C7D2FE] bg-white px-4 py-5">
       {showAnswer ? (
-        <div className="mb-5 min-h-9 w-full text-right font-mono text-xl font-bold tabular-nums text-[#059669]">
+        <div className="mb-3 min-h-9 w-full text-right font-mono text-xl font-bold tabular-nums text-[#059669]">
           {problem.correctAnswer} R{problem.remainder}
         </div>
       ) : (
-        <div className="mb-5 h-9 w-full" aria-hidden="true" />
+        <div className="mb-3 h-9 w-full" aria-hidden="true" />
       )}
 
       <div className="long-division-figure inline-flex items-end justify-center font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
@@ -47,7 +46,7 @@ function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAn
         </span>
       </div>
 
-      <div className="mt-8 h-16 w-full" aria-hidden="true" />
+      <div className="mt-5 h-10 w-full" aria-hidden="true" />
     </div>
   );
 }
@@ -79,7 +78,7 @@ function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswe
   );
 }
 
-export default function WorksheetGenerator({ configs, title = 'Worksheet Generator' }: Props) {
+export default function WorksheetGenerator({ configs }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [count, setCount] = useState<Count>(20);
   const [problems, setProblems] = useState<Problem[]>([]);
@@ -178,14 +177,13 @@ export default function WorksheetGenerator({ configs, title = 'Worksheet Generat
 
       {generated && (
         <div className={`worksheet-area space-y-4 ${isLongDivisionMode ? 'long-division-mode' : ''}`}>
-          <div className="print-only-header mb-5 hidden print:block">
+          <div className="print-only-header mb-3 hidden print:block">
             <div className="flex items-end gap-2 border-b border-[#E2E8F0] pb-3 text-sm text-[#1E1B4B]">
               <span>Name:</span>
               <div className="print-name-line" />
               <span className="ml-8">Date:</span>
               <div className="print-date-line" />
             </div>
-            <p className="mt-3 text-base font-semibold text-[#1E1B4B]">{title}</p>
           </div>
 
           <div className="no-print flex items-center justify-between">

@@ -145,24 +145,22 @@
 
   /* Long division worksheets: 4 x 3 layout with extra writing space */
   .worksheet-area.long-division-mode {
-    min-height: calc(100vh - 24mm) !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: space-between !important;
+    display: block !important;
+    padding-top: 1mm !important;
   }
 
   .worksheet-area.long-division-mode .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
     column-gap: 7mm !important;
-    row-gap: 8mm !important;
-    align-content: space-between !important;
+    row-gap: 6mm !important;
+    margin-top: 4mm !important;
   }
 
   .worksheet-area.long-division-mode .worksheet-problem {
-    height: 58mm !important;
+    height: 50mm !important;
     justify-content: flex-start !important;
     align-items: center !important;
-    padding-top: 2mm !important;
+    padding-top: 1mm !important;
   }
 
   .worksheet-area.long-division-mode .long-division-problem .long-division-divisor,
