@@ -92,6 +92,24 @@ export default function RemainderProblemInput({
 
   const activeValue = activeSlot === 'quotient' ? quotientValue : remainderValue;
 
+  function renderSlotValue(value: string, isActive: boolean, inactiveColor: string) {
+    if (value.length > 0) return value;
+
+    if (isActive) {
+      return (
+        <span aria-hidden="true" className="inline-block w-[0.6em] text-center animate-pulse">
+          |
+        </span>
+      );
+    }
+
+    return (
+      <span aria-hidden="true" className={`inline-block w-[0.6em] ${inactiveColor} opacity-0`}>
+        0
+      </span>
+    );
+  }
+
   function switchSlot(slot: 'quotient' | 'remainder') {
     if (!disabled) {
       setActiveSlot(slot);
@@ -160,10 +178,10 @@ export default function RemainderProblemInput({
                 : 'text-[#A5B4FC] border-[#E0E7FF]'
             }`}
           >
-            {quotientValue.length === 0 ? (
-              <span className={activeSlot === 'quotient' ? 'text-[#1E1B4B]' : 'text-[#C7D2FE]'}>?</span>
-            ) : (
-              quotientValue
+            {renderSlotValue(
+              quotientValue,
+              activeSlot === 'quotient',
+              'text-[#C7D2FE]'
             )}
           </span>
         </div>
@@ -184,10 +202,10 @@ export default function RemainderProblemInput({
                   : 'text-[#C7D2FE] border-[#E0E7FF]'
               }`}
             >
-              {remainderValue.length === 0 ? (
-                <span className={activeSlot === 'remainder' ? 'text-[#1E1B4B]' : 'text-[#C7D2FE]'}>?</span>
-              ) : (
-                remainderValue
+              {renderSlotValue(
+                remainderValue,
+                activeSlot === 'remainder',
+                'text-[#C7D2FE]'
               )}
             </span>
           </div>
