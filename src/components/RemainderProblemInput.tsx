@@ -165,10 +165,14 @@ export default function RemainderProblemInput({
           >
             {quotientValue.length === 0 ? (
               <span className="inline-flex items-center">
-                <span aria-hidden="true" className="opacity-0 select-none">?</span>
-                {activeSlot === 'quotient' && isFocused && (
-                  <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>
-                )}
+                <span
+                  aria-hidden="true"
+                  className={`animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light ${
+                    activeSlot === 'quotient' && isFocused ? 'opacity-100' : 'opacity-0'
+                  }`}
+                >
+                  |
+                </span>
               </span>
             ) : (
               quotientValue
@@ -194,10 +198,14 @@ export default function RemainderProblemInput({
             >
               {remainderValue.length === 0 ? (
                 <span className="inline-flex items-center">
-                  <span aria-hidden="true" className="opacity-0 select-none">?</span>
-                  {activeSlot === 'remainder' && isFocused && (
-                    <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>
-                  )}
+                  <span
+                    aria-hidden="true"
+                    className={`animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light ${
+                      activeSlot === 'remainder' && isFocused ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  >
+                    |
+                  </span>
                 </span>
               ) : (
                 remainderValue
