@@ -132,15 +132,15 @@ export default function RemainderProblemInput({
 
         {/* Row 1: dividend, right-aligned */}
         <div className="text-right">
-          <span className="text-5xl md:text-6xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
+          <span className="text-4xl md:text-5xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
             {problem.operandA}
           </span>
         </div>
 
         {/* Row 2: ÷ divisor */}
         <div className="flex items-center justify-end gap-3">
-          <span className="text-4xl font-semibold text-[#4F46E5]">÷</span>
-          <span className="text-5xl md:text-6xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
+          <span className="text-3xl md:text-4xl font-semibold text-[#4F46E5]">÷</span>
+          <span className="text-4xl md:text-5xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
             {problem.operandB}
           </span>
         </div>
@@ -154,14 +154,17 @@ export default function RemainderProblemInput({
           onClick={() => switchSlot('quotient')}
         >
           <span
-            className={`text-5xl md:text-6xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
+            className={`text-4xl md:text-5xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
               activeSlot === 'quotient'
                 ? 'text-[#1E1B4B] border-[#4F46E5]'
                 : 'text-[#A5B4FC] border-[#E0E7FF]'
             }`}
           >
             {quotientValue.length === 0 ? (
-              <span className={activeSlot === 'quotient' ? 'text-[#1E1B4B]' : 'text-[#C7D2FE]'}>?</span>
+              <span className="inline-flex items-center">
+                <span aria-hidden="true" className="opacity-0 select-none">0</span>
+                {activeSlot === 'quotient' && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
+              </span>
             ) : (
               quotientValue
             )}
@@ -178,14 +181,17 @@ export default function RemainderProblemInput({
           </div>
           <div className="flex justify-end">
             <span
-              className={`text-5xl md:text-6xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
+              className={`text-4xl md:text-5xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
                 activeSlot === 'remainder'
                   ? 'text-[#1E1B4B] border-[#4F46E5]'
                   : 'text-[#C7D2FE] border-[#E0E7FF]'
               }`}
             >
               {remainderValue.length === 0 ? (
-                <span className={activeSlot === 'remainder' ? 'text-[#1E1B4B]' : 'text-[#C7D2FE]'}>?</span>
+                <span className="inline-flex items-center">
+                  <span aria-hidden="true" className="opacity-0 select-none">0</span>
+                  {activeSlot === 'remainder' && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
+                </span>
               ) : (
                 remainderValue
               )}
