@@ -21,6 +21,7 @@ export default function RemainderProblemInput({
   const [quotientValue, setQuotientValue] = useState('');
   const [remainderValue, setRemainderValue] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
 
@@ -128,6 +129,8 @@ export default function RemainderProblemInput({
           disabled={disabled}
           aria-label={activeSlot === 'quotient' ? 'Enter quotient' : 'Enter remainder'}
           className="sr-only"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
 
         {/* Row 1: dividend, right-aligned */}
@@ -161,7 +164,12 @@ export default function RemainderProblemInput({
             }`}
           >
             {quotientValue.length === 0 ? (
-              <span className={activeSlot === 'quotient' ? 'text-[#1E1B4B]' : 'text-[#C7D2FE]'}>?</span>
+              <span className="inline-flex items-center">
+                <span aria-hidden="true" className="opacity-0 select-none">?</span>
+                {activeSlot === 'quotient' && isFocused && (
+                  <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>
+                )}
+              </span>
             ) : (
               quotientValue
             )}
@@ -185,7 +193,12 @@ export default function RemainderProblemInput({
               }`}
             >
               {remainderValue.length === 0 ? (
-                <span className={activeSlot === 'remainder' ? 'text-[#1E1B4B]' : 'text-[#C7D2FE]'}>?</span>
+                <span className="inline-flex items-center">
+                  <span aria-hidden="true" className="opacity-0 select-none">?</span>
+                  {activeSlot === 'remainder' && isFocused && (
+                    <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>
+                  )}
+                </span>
               ) : (
                 remainderValue
               )}
