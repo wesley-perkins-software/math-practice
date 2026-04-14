@@ -46,6 +46,20 @@ export function clearStats(key: string): void {
   }
 }
 
+export function clearAllProgress(): void {
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(NAMESPACE)) keysToRemove.push(k);
+    }
+    keysToRemove.forEach((k) => localStorage.removeItem(k));
+    localStorage.removeItem(SESSION_LOG_KEY);
+  } catch {
+    // ignore
+  }
+}
+
 export function updateStatsAfterSession(
   existing: PageStats,
   result: SessionResult,
@@ -61,7 +75,7 @@ export function updateStatsAfterSession(
     bestTimedScore: Math.max(existing.bestTimedScore, timedScore),
     personalBestScore: isTimed ? Math.max(existing.personalBestScore, result.correct) : existing.personalBestScore,
     lastSessionScore: sessionScore,
-    lastSessionDate: new Date().toISOString().slice(0, 10),
+    lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
     totalProblemsAttempted: existing.totalProblemsAttempted + result.total,
     totalSessions: existing.totalSessions + 1,
   };
