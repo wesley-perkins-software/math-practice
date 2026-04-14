@@ -10,7 +10,6 @@ export default defineConfig({
     '/addition-practice': '/addition',
     '/timed-drills': '/arithmetic-speed-drill',
     '/math-drills': '/arithmetic-speed-drill',
-    '/mental-math-practice': '/arithmetic-speed-drill',
     '/speed-drill': '/arithmetic-speed-drill',
   },
   integrations: [

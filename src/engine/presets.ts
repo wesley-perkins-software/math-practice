@@ -240,19 +240,6 @@ export const MATH_DRILLS: PracticeConfig = {
   factsMode: true,
 };
 
-export const MENTAL_MATH: PracticeConfig = {
-  storageKey: 'mental-math',
-  label: 'Mental Math',
-  path: '/math-practice',
-  operation: 'mixed',
-  mode: 'timed',
-  timerDuration: 60,
-  fixedTimerDuration: true,
-  operandA: { min: 1, max: 30 },
-  operandB: { min: 1, max: 30 },
-  operations: ['addition', 'subtraction'],
-};
-
 export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
   storageKey: 'speed-drill',
   label: 'Arithmetic Speed Drill',
@@ -267,19 +254,6 @@ export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
   factsMode: true,
   correctFeedbackDelayMs: 200,
   incorrectFeedbackDelayMs: 400,
-};
-
-export const MATH_FACTS_PRACTICE: PracticeConfig = {
-  storageKey: 'math-facts',
-  label: 'Math Facts Practice',
-  path: '/math-facts-practice',
-  operation: 'mixed',
-  mode: 'untimed',
-  timerDuration: 60,
-  operandA: { min: 1, max: 12 },
-  operandB: { min: 1, max: 12 },
-  operations: ['multiplication', 'division'],
-  factsMode: true,
 };
 
 export const MATH_PRACTICE_GENERAL: PracticeConfig = {
@@ -314,6 +288,5 @@ export const ALL_PRESETS: PracticeConfig[] = [
   MIXED_PRACTICE,
   MATH_DRILLS,
   ARITHMETIC_SPEED_DRILL,
-  MATH_FACTS_PRACTICE,
   MATH_PRACTICE_GENERAL,
 ];
