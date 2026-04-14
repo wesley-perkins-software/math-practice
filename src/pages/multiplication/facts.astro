@@ -35,7 +35,7 @@ const faqItems = [
 
 <PracticeLayout
   title="Multiplication Facts Practice | Mixed Multiplication 1–12"
-  description="Practice mixed multiplication facts from 1×1 to 12×12. Build multiplication fluency with instant feedback, streak tracking, and optional timed drills."
+  description="Practice mixed multiplication facts from 1×1 to 12×12. Build multiplication fluency with instant feedback and streak tracking."
   canonical={`${SITE}/multiplication/facts`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Multiplication', href: '/multiplication' }, { label: 'Facts' }]}
 >
@@ -64,7 +64,7 @@ const faqItems = [
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Facts Practice</h1>
   <div slot="intro">
     <p>Practice mixed multiplication facts from 1 through 12 in random order. This broad mode helps students strengthen overall multiplication fluency across the entire fact family.</p>
-    <p class="mt-2">Use untimed practice for accuracy first, then switch to timed mode to improve speed and automatic recall.</p>
+    <p class="mt-2">Practice consistently to build speed and automatic recall across all fact families.</p>
   </div>
   <MultiplicationPracticeHub slot="widget" client:load active="facts" />
   <InternalLinks slot="links" links={links} />
