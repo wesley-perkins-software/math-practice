@@ -47,6 +47,11 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
 /* @page margin: 0 removes the browser's printed URL / date line from the footer */
 @page {
   size: letter portrait;
