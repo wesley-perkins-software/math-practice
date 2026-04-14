@@ -157,12 +157,15 @@
   .worksheet-area.long-division-mode .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
     column-gap: 10mm !important;
-    row-gap: 12mm !important;
+    row-gap: 10mm !important;
     margin-top: 4mm !important;
+    /* Prevent the grid from splitting across pages on mobile */
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
   }
 
   .worksheet-area.long-division-mode .worksheet-problem {
-    height: 70mm !important;
+    height: 60mm !important;
     justify-content: flex-start !important;
     align-items: center !important;
     padding-top: 2mm !important;
