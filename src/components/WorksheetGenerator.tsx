@@ -28,22 +28,27 @@ function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAn
 
   return (
     <div className="worksheet-problem long-division-problem flex min-h-[220px] flex-col items-center justify-start rounded-xl border border-[#C7D2FE] bg-white px-4 py-5">
-      {showAnswer ? (
-        <div className="mb-3 min-h-9 w-full text-right font-mono text-xl font-bold tabular-nums text-[#059669]">
-          {problem.correctAnswer} R{problem.remainder}
-        </div>
-      ) : (
-        <div className="mb-3 h-9 w-full" aria-hidden="true" />
-      )}
+      <div className="long-division-figure inline-flex items-end font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
+        {/* Divisor — self-end keeps it vertically aligned with the dividend */}
+        <span className="long-division-divisor self-end pr-3">{problem.operandB}</span>
 
-      <div className="long-division-figure inline-flex items-end justify-center font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
-        <span className="long-division-divisor pr-3">{problem.operandB}</span>
-        <span
-          className="long-division-dividend border-l-[3px] border-t-[3px] border-[#1E1B4B] pl-3 pr-1 pt-2"
-          style={{ '--dividend-digits': dividendDigits } as CSSProperties}
-        >
-          {problem.operandA}
-        </span>
+        {/* Dividend column: answer sits directly above the bracket */}
+        <div className="flex flex-col items-center">
+          {showAnswer ? (
+            <div className="long-division-answer mb-1 flex items-baseline gap-1 font-mono font-bold text-[#059669]">
+              <span className="text-[1.75rem] leading-none">{problem.correctAnswer}</span>
+              <span className="text-base leading-none">R{problem.remainder}</span>
+            </div>
+          ) : (
+            <div className="long-division-answer-blank mb-1 h-9" aria-hidden="true" />
+          )}
+          <span
+            className="long-division-dividend border-l-[3px] border-t-[3px] border-[#1E1B4B] pl-3 pr-1 pt-2"
+            style={{ '--dividend-digits': dividendDigits } as CSSProperties}
+          >
+            {problem.operandA}
+          </span>
+        </div>
       </div>
 
       <div className="mt-5 h-10 w-full" aria-hidden="true" />
@@ -84,6 +89,7 @@ export default function WorksheetGenerator({ configs }: Props) {
   const [problems, setProblems] = useState<Problem[]>([]);
   const [showAnswers, setShowAnswers] = useState(false);
   const [generated, setGenerated] = useState(false);
+  const [printMode, setPrintMode] = useState<'worksheet' | 'answers' | null>(null);
 
   const selectedConfig = configs[selectedIndex]?.config;
   const isLongDivisionMode = Boolean(selectedConfig?.withRemainder);
@@ -101,17 +107,36 @@ export default function WorksheetGenerator({ configs }: Props) {
     setGenerated(true);
   }
 
+  // Trigger print AFTER React has painted the new showAnswers state.
+  // Double rAF guarantees the browser has committed the render to screen
+  // before the print dialog opens — critical for mobile browsers.
+  useEffect(() => {
+    if (!printMode) return;
+    let rafId: number;
+    const handleAfterPrint = () => {
+      setShowAnswers(false);
+      setPrintMode(null);
+    };
+    window.addEventListener('afterprint', handleAfterPrint, { once: true });
+    rafId = requestAnimationFrame(() => {
+      rafId = requestAnimationFrame(() => {
+        window.print();
+      });
+    });
+    return () => {
+      cancelAnimationFrame(rafId);
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, [printMode]);
+
   function handlePrintWorksheet() {
     setShowAnswers(false);
-    setTimeout(() => window.print(), 50);
+    setPrintMode('worksheet');
   }
 
   function handlePrintAnswerKey() {
     setShowAnswers(true);
-    setTimeout(() => {
-      window.print();
-      setShowAnswers(false);
-    }, 50);
+    setPrintMode('answers');
   }
 
   return (
@@ -180,7 +205,7 @@ export default function WorksheetGenerator({ configs }: Props) {
       {generated && (
         <div className={`worksheet-area space-y-4 ${isLongDivisionMode ? 'long-division-mode' : ''}`}>
           <div className="print-only-header mb-3 hidden print:block">
-            <div className="flex items-end gap-2 border-b border-[#E2E8F0] pb-3 text-sm text-[#1E1B4B]">
+            <div className="flex items-end gap-2 pb-3 text-sm text-[#1E1B4B]">
               <span>Name:</span>
               <div className="print-name-line" />
               <span className="ml-8">Date:</span>
