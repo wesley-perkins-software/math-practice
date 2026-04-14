@@ -61,7 +61,7 @@ export function updateStatsAfterSession(
     bestTimedScore: Math.max(existing.bestTimedScore, timedScore),
     personalBestScore: isTimed ? Math.max(existing.personalBestScore, result.correct) : existing.personalBestScore,
     lastSessionScore: sessionScore,
-    lastSessionDate: new Date().toISOString().slice(0, 10),
+    lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
     totalProblemsAttempted: existing.totalProblemsAttempted + result.total,
     totalSessions: existing.totalSessions + 1,
   };

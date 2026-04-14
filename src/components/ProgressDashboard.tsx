@@ -15,12 +15,18 @@ interface PresetRow {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
+function localDateString(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
 function relativeDate(isoDate: string): string {
   if (!isoDate) return '—';
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const d = new Date(isoDate);
-  d.setHours(0, 0, 0, 0);
+  // Parse as local midnight to avoid UTC-shift bug
+  const [y, m, day] = isoDate.split('-').map(Number);
+  const d = new Date(y, m - 1, day);
   const diffDays = Math.round((today.getTime() - d.getTime()) / 86400000);
   if (diffDays === 0) return 'Today';
   if (diffDays === 1) return 'Yesterday';
@@ -51,61 +57,130 @@ const OPERATION_GROUPS: { key: Operation; label: string; color: string }[] = [
   { key: 'subtraction', label: 'Subtraction', color: 'text-sky-700 bg-sky-50 border-sky-200' },
   { key: 'multiplication', label: 'Multiplication', color: 'text-violet-700 bg-violet-50 border-violet-200' },
   { key: 'division', label: 'Division', color: 'text-orange-700 bg-orange-50 border-orange-200' },
-  { key: 'mixed', label: 'Mixed & Speed', color: 'text-rose-700 bg-rose-50 border-rose-200' },
+  { key: 'mixed', label: 'Speed Drills', color: 'text-rose-700 bg-rose-50 border-rose-200' },
 ];
 
 // ─── Achievement definitions ──────────────────────────────────────────────────
 
-interface Achievement {
+interface AchievementDef {
   id: string;
   label: string;
   description: string;
-  check: (data: { totalProblems: number; totalSessions: number; bestSpeed: number; longestStreak: number; operationsPracticed: Set<Operation> }) => boolean;
+  check: (data: AchievementData) => boolean;
+  /** Returns 0–1 progress ratio for unearned achievements (used for "Next Achievement" hint) */
+  progress?: (data: AchievementData) => number;
 }
 
-const ACHIEVEMENTS: Achievement[] = [
+interface AchievementData {
+  totalProblems: number;
+  totalSessions: number;
+  longestStreak: number;
+  operationsPracticed: Set<Operation>;
+}
+
+const ACHIEVEMENTS: AchievementDef[] = [
+  // ── Sessions ──
   {
     id: 'first-session',
     label: 'First Steps',
     description: 'Complete your first session',
     check: ({ totalSessions }) => totalSessions >= 1,
+    progress: ({ totalSessions }) => Math.min(1, totalSessions / 1),
   },
   {
     id: 'consistent',
     label: 'Consistent Learner',
     description: 'Complete 5 sessions',
     check: ({ totalSessions }) => totalSessions >= 5,
+    progress: ({ totalSessions }) => Math.min(1, totalSessions / 5),
   },
+  {
+    id: 'dedicated-student',
+    label: 'Dedicated Student',
+    description: 'Complete 25 sessions',
+    check: ({ totalSessions }) => totalSessions >= 25,
+    progress: ({ totalSessions }) => Math.min(1, totalSessions / 25),
+  },
+  {
+    id: 'math-scholar',
+    label: 'Math Scholar',
+    description: 'Complete 100 sessions',
+    check: ({ totalSessions }) => totalSessions >= 100,
+    progress: ({ totalSessions }) => Math.min(1, totalSessions / 100),
+  },
+  // ── Problems solved ──
   {
     id: 'problem-solver',
     label: 'Problem Solver',
     description: 'Solve 100 problems',
     check: ({ totalProblems }) => totalProblems >= 100,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 100),
   },
   {
     id: 'math-machine',
     label: 'Math Machine',
     description: 'Solve 500 problems',
     check: ({ totalProblems }) => totalProblems >= 500,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 500),
   },
   {
-    id: 'speed-racer',
-    label: 'Speed Racer',
-    description: 'Score on a timed drill',
-    check: ({ bestSpeed }) => bestSpeed > 0,
+    id: 'math-whiz',
+    label: 'Math Whiz',
+    description: 'Solve 1,000 problems',
+    check: ({ totalProblems }) => totalProblems >= 1000,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 1000),
   },
+  {
+    id: 'math-titan',
+    label: 'Math Titan',
+    description: 'Solve 2,500 problems',
+    check: ({ totalProblems }) => totalProblems >= 2500,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 2500),
+  },
+  {
+    id: 'math-juggernaut',
+    label: 'Math Juggernaut',
+    description: 'Solve 10,000 problems',
+    check: ({ totalProblems }) => totalProblems >= 10000,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 10000),
+  },
+  // ── Streaks ──
   {
     id: 'streak-starter',
     label: 'Streak Starter',
     description: 'Reach a 10-answer streak',
     check: ({ longestStreak }) => longestStreak >= 10,
+    progress: ({ longestStreak }) => Math.min(1, longestStreak / 10),
   },
   {
     id: 'streak-champion',
     label: 'Streak Champion',
     description: 'Reach a 25-answer streak',
     check: ({ longestStreak }) => longestStreak >= 25,
+    progress: ({ longestStreak }) => Math.min(1, longestStreak / 25),
   },
+  {
+    id: 'streak-master',
+    label: 'Streak Master',
+    description: 'Reach a 50-answer streak',
+    check: ({ longestStreak }) => longestStreak >= 50,
+    progress: ({ longestStreak }) => Math.min(1, longestStreak / 50),
+  },
+  {
+    id: 'unstoppable',
+    label: 'Unstoppable',
+    description: 'Reach a 100-answer streak',
+    check: ({ longestStreak }) => longestStreak >= 100,
+    progress: ({ longestStreak }) => Math.min(1, longestStreak / 100),
+  },
+  // ── Speed ──
+  {
+    id: 'speed-racer',
+    label: 'Speed Racer',
+    description: 'Complete a timed drill',
+    check: ({ totalSessions }) => totalSessions >= 1,
+  },
+  // ── Breadth ──
   {
     id: 'well-rounded',
     label: 'Well-Rounded',
@@ -115,6 +190,10 @@ const ACHIEVEMENTS: Achievement[] = [
       operationsPracticed.has('subtraction') &&
       operationsPracticed.has('multiplication') &&
       operationsPracticed.has('division'),
+    progress: ({ operationsPracticed }) => {
+      const ops: Operation[] = ['addition', 'subtraction', 'multiplication', 'division'];
+      return ops.filter((o) => operationsPracticed.has(o)).length / 4;
+    },
   },
 ];
 
@@ -137,7 +216,7 @@ function HeroCard({ label, value, sub }: HeroCardProps) {
 }
 
 interface AchievementBadgeProps {
-  achievement: Achievement;
+  achievement: AchievementDef;
   earned: boolean;
 }
 
@@ -183,8 +262,6 @@ export default function ProgressDashboard() {
 
   if (!loaded) return null;
 
-  // Include any practice type with problems attempted (untimed sessions track per-answer)
-  // or completed sessions (timed sessions record at timer expiry).
   const practiced = rows.filter((r) => r.stats.totalProblemsAttempted > 0 || r.stats.totalSessions > 0);
 
   if (practiced.length === 0) {
@@ -216,28 +293,53 @@ export default function ProgressDashboard() {
   // ── Aggregate stats ─────────────────────────────────────────────────────────
   const totalProblems = practiced.reduce((s, r) => s + r.stats.totalProblemsAttempted, 0);
   const totalSessions = practiced.reduce((s, r) => s + r.stats.totalSessions, 0);
-  const bestSpeed = practiced.reduce((m, r) => Math.max(m, r.stats.bestTimedScore), 0);
   const longestStreak = practiced.reduce((m, r) => Math.max(m, r.stats.longestStreak), 0);
 
   // Days active: count unique lastSessionDate values
   const uniqueDates = new Set(practiced.map((r) => r.stats.lastSessionDate).filter(Boolean));
   const daysActive = uniqueDates.size;
 
-  // Avg accuracy: simple mean of last session scores across practiced types, clamped to 0–100
-  const accuracyRows = practiced.filter((r) => r.stats.lastSessionScore > 0);
-  const avgAccuracy =
-    accuracyRows.length > 0
-      ? Math.round(
-          accuracyRows.reduce((s, r) => s + Math.min(100, Math.max(0, r.stats.lastSessionScore)), 0) /
-            accuracyRows.length,
-        )
-      : 0;
-
   // Operations practiced (for achievements + grouping)
   const operationsPracticed = new Set<Operation>(practiced.map((r) => r.operation));
 
+  // ── Today's Stats ───────────────────────────────────────────────────────────
+  const todayStr = localDateString();
+  const todayLog = sessionLog.filter((e) => e.timestamp.slice(0, 10) === todayStr);
+  const todayProblems = todayLog.reduce((s, e) => s + e.total, 0);
+  const currentStreakToday = practiced.reduce((m, r) => Math.max(m, r.stats.currentStreak), 0);
+
   // ── Achievements ────────────────────────────────────────────────────────────
-  const achievementData = { totalProblems, totalSessions, bestSpeed, longestStreak, operationsPracticed };
+  const achievementData: AchievementData = { totalProblems, totalSessions, longestStreak, operationsPracticed };
+  const earnedIds = new Set(ACHIEVEMENTS.filter((a) => a.check(achievementData)).map((a) => a.id));
+
+  // Next achievements: unearned with progress >= 10%, sorted by closest to completion
+  const nextAchievements = ACHIEVEMENTS
+    .filter((a) => !earnedIds.has(a.id) && a.progress)
+    .map((a) => ({ achievement: a, ratio: a.progress!(achievementData) }))
+    .filter(({ ratio }) => ratio >= 0.1)
+    .sort((a, b) => b.ratio - a.ratio)
+    .slice(0, 2);
+
+  // ── Operations Strength ─────────────────────────────────────────────────────
+  const OP_KEYS: { key: Operation; label: string; color: string }[] = [
+    { key: 'addition', label: 'Addition', color: 'bg-emerald-500' },
+    { key: 'subtraction', label: 'Subtraction', color: 'bg-sky-500' },
+    { key: 'multiplication', label: 'Multiplication', color: 'bg-violet-500' },
+    { key: 'division', label: 'Division', color: 'bg-orange-500' },
+  ];
+  const opTotals = OP_KEYS.map(({ key }) =>
+    practiced.filter((r) => r.operation === key).reduce((s, r) => s + r.stats.totalProblemsAttempted, 0)
+  );
+  const opMax = Math.max(...opTotals, 1);
+
+  // ── Practice Calendar (5 weeks = 35 days) ──────────────────────────────────
+  const calendarDays: { date: string; active: boolean; isToday: boolean }[] = [];
+  for (let i = 34; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    const dateStr = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    calendarDays.push({ date: dateStr, active: uniqueDates.has(dateStr), isToday: dateStr === todayStr });
+  }
 
   // ── Recent sessions ─────────────────────────────────────────────────────────
   const recentSessions = [...sessionLog].reverse().slice(0, 6);
@@ -245,27 +347,158 @@ export default function ProgressDashboard() {
   return (
     <div className="space-y-8">
 
+      {/* ── Today's Stats banner ─────────────────────────────────────────────── */}
+      {todayProblems > 0 && (
+        <div className="bg-[#4F46E5] rounded-xl px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
+          <div>
+            <div className="text-white font-semibold text-sm">Today's Practice</div>
+            <div className="text-[#C7D2FE] text-xs mt-0.5">Keep up the great work!</div>
+          </div>
+          <div className="flex gap-6">
+            <div className="text-center">
+              <div className="text-white font-bold text-xl">{todayProblems}</div>
+              <div className="text-[#C7D2FE] text-[11px]">problems today</div>
+            </div>
+            {currentStreakToday > 0 && (
+              <div className="text-center">
+                <div className="text-white font-bold text-xl">{currentStreakToday}</div>
+                <div className="text-[#C7D2FE] text-[11px]">current streak</div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── Hero stats ───────────────────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <HeroCard label="Total Problems" value={totalProblems.toLocaleString()} />
         <HeroCard label="Total Sessions" value={totalSessions.toLocaleString()} />
-        <HeroCard
-          label="Best Score"
-          value={bestSpeed > 0 ? `${bestSpeed}/min` : '—'}
-          sub={bestSpeed > 0 ? 'problems per minute' : undefined}
-        />
-        <HeroCard label="Longest Streak" value={longestStreak > 0 ? longestStreak.toLocaleString() : '—'} sub={longestStreak > 0 ? 'in a row' : undefined} />
         <HeroCard label="Days Active" value={daysActive.toLocaleString()} />
-        <HeroCard label="Avg Accuracy" value={avgAccuracy > 0 ? `${avgAccuracy}%` : '—'} sub={avgAccuracy > 0 ? 'across drill types' : undefined} />
+        <HeroCard label="Longest Streak" value={longestStreak > 0 ? longestStreak.toLocaleString() : '—'} sub={longestStreak > 0 ? 'in a row' : undefined} />
       </div>
 
       {/* ── Achievements ─────────────────────────────────────────────────────── */}
       <div>
         <h2 className="text-base font-semibold text-[#1E293B] mb-3">Achievements</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {ACHIEVEMENTS.map((a) => (
-            <AchievementBadge key={a.id} achievement={a} earned={a.check(achievementData)} />
+            <AchievementBadge key={a.id} achievement={a} earned={earnedIds.has(a.id)} />
           ))}
+        </div>
+
+        {/* Next Achievement hints */}
+        {nextAchievements.length > 0 && (
+          <div className="mt-3 space-y-2">
+            {nextAchievements.map(({ achievement, ratio }) => {
+              const pct = Math.round(ratio * 100);
+              // Compute the "X away" label
+              let awayLabel = '';
+              if (achievement.id.startsWith('math-') || achievement.id === 'problem-solver') {
+                const targets: Record<string, number> = {
+                  'problem-solver': 100, 'math-machine': 500,
+                  'math-whiz': 1000, 'math-titan': 2500, 'math-juggernaut': 10000,
+                };
+                const target = targets[achievement.id];
+                if (target) awayLabel = `${(target - totalProblems).toLocaleString()} problems away`;
+              } else if (achievement.id.includes('streak')) {
+                const targets: Record<string, number> = {
+                  'streak-starter': 10, 'streak-champion': 25,
+                  'streak-master': 50, 'unstoppable': 100,
+                };
+                const target = targets[achievement.id];
+                if (target) awayLabel = `${target - longestStreak} streak away`;
+              } else if (achievement.id.includes('session') || achievement.id === 'consistent' || achievement.id === 'dedicated-student' || achievement.id === 'math-scholar') {
+                const targets: Record<string, number> = {
+                  'consistent': 5, 'dedicated-student': 25, 'math-scholar': 100,
+                };
+                const target = targets[achievement.id];
+                if (target) awayLabel = `${target - totalSessions} sessions away`;
+              } else if (achievement.id === 'well-rounded') {
+                const ops: Operation[] = ['addition', 'subtraction', 'multiplication', 'division'];
+                const missing = ops.filter((o) => !operationsPracticed.has(o));
+                awayLabel = `Practice ${missing.join(', ')} to unlock`;
+              }
+              return (
+                <div key={achievement.id} className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-xs font-semibold text-[#1E293B]">Next: {achievement.label}</span>
+                    <span className="text-[11px] text-[#64748B]">{awayLabel}</span>
+                  </div>
+                  <div className="h-1.5 bg-[#E2E8F0] rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-[#4F46E5] rounded-full transition-all"
+                      style={{ width: `${pct}%` }}
+                    />
+                  </div>
+                  <div className="text-[10px] text-[#94A3B8] mt-1">{pct}% complete</div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* ── Operations Strength ───────────────────────────────────────────────── */}
+      {opTotals.some((t) => t > 0) && (
+        <div>
+          <h2 className="text-base font-semibold text-[#1E293B] mb-3">Operations Strength</h2>
+          <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 space-y-3">
+            {OP_KEYS.map(({ label, color }, i) => (
+              <div key={label}>
+                <div className="flex items-center justify-between mb-1">
+                  <span className="text-xs text-[#64748B] font-medium">{label}</span>
+                  <span className="text-xs text-[#94A3B8]">{opTotals[i].toLocaleString()} problems</span>
+                </div>
+                <div className="h-2 bg-[#F1F5F9] rounded-full overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all ${color}`}
+                    style={{ width: `${Math.round((opTotals[i] / opMax) * 100)}%` }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ── Practice Calendar ─────────────────────────────────────────────────── */}
+      <div>
+        <h2 className="text-base font-semibold text-[#1E293B] mb-3">Practice Calendar</h2>
+        <div className="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div className="grid grid-cols-7 gap-1.5">
+            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+              <div key={i} className="text-center text-[10px] font-semibold text-[#94A3B8] pb-1">{d}</div>
+            ))}
+            {/* Pad the first week so the calendar starts on the correct weekday */}
+            {Array.from({ length: new Date(calendarDays[0].date).getDay() }).map((_, i) => (
+              <div key={`pad-${i}`} />
+            ))}
+            {calendarDays.map(({ date, active, isToday }) => (
+              <div
+                key={date}
+                title={date}
+                className={`aspect-square rounded-md transition-colors ${
+                  isToday
+                    ? active
+                      ? 'bg-[#4F46E5] ring-2 ring-[#4F46E5] ring-offset-1'
+                      : 'ring-2 ring-[#C7D2FE] ring-offset-1 bg-white'
+                    : active
+                    ? 'bg-[#4F46E5]'
+                    : 'bg-[#F1F5F9]'
+                }`}
+              />
+            ))}
+          </div>
+          <div className="flex items-center gap-4 mt-3 text-[11px] text-[#94A3B8]">
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-sm bg-[#4F46E5] inline-block" />
+              Practiced
+            </span>
+            <span className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-sm bg-[#F1F5F9] inline-block border border-[#E2E8F0]" />
+              No practice
+            </span>
+          </div>
         </div>
       </div>
 
@@ -290,7 +523,6 @@ export default function ProgressDashboard() {
                       <th className="text-right px-3 py-2.5 text-[#64748B] font-medium hidden sm:table-cell">Last Practiced</th>
                       <th className="text-right px-3 py-2.5 text-[#64748B] font-medium">Sessions</th>
                       <th className="text-right px-3 py-2.5 text-[#64748B] font-medium">Problems</th>
-                      <th className="text-right px-3 py-2.5 text-[#64748B] font-medium hidden md:table-cell">Accuracy</th>
                       <th className="text-right px-3 py-2.5 text-[#64748B] font-medium hidden sm:table-cell">
                         {key === 'mixed' ? 'Best Score' : 'Longest Streak'}
                       </th>
@@ -323,9 +555,6 @@ export default function ProgressDashboard() {
                         </td>
                         <td className="px-3 py-3 text-right text-[#64748B]">{row.stats.totalSessions}</td>
                         <td className="px-3 py-3 text-right text-[#64748B]">{row.stats.totalProblemsAttempted}</td>
-                        <td className="px-3 py-3 text-right text-[#64748B] hidden md:table-cell">
-                          {row.stats.lastSessionScore > 0 ? `${row.stats.lastSessionScore}%` : '—'}
-                        </td>
                         <td className="px-3 py-3 text-right text-[#64748B] hidden sm:table-cell">
                           {row.isTimed
                             ? (row.stats.bestTimedScore > 0 ? `${row.stats.bestTimedScore}/min` : '—')

@@ -113,7 +113,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
       saveStats(config.storageKey, {
         ...current,
         lastSessionScore: sessionResult.score,
-        lastSessionDate: new Date().toISOString().slice(0, 10),
+        lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
         totalSessions: current.totalSessions + 1,
       });
       appendSessionLog({
@@ -231,7 +231,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
         currentStreak: newCurrentStreak,
         longestStreak: newLongestStreak,
         totalProblemsAttempted: currentStats.totalProblemsAttempted + 1,
-        lastSessionDate: new Date().toISOString().slice(0, 10),
+        lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
       };
       saveStats(config.storageKey, updatedStats);
       setStats(updatedStats);
