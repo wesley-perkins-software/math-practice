@@ -119,26 +119,28 @@ export default function WorksheetGenerator({ configs }: Props) {
       <div className="no-print space-y-5 rounded-2xl border border-[#E0E7FF] bg-white p-5">
         <h2 className="text-base font-semibold text-[#1E1B4B]">Generate a Worksheet</h2>
 
-        <div>
-          <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
-            Difficulty / Type
-          </label>
-          <div className="flex flex-wrap gap-2">
-            {configs.map((opt, i) => (
-              <button
-                key={opt.label}
-                onClick={() => setSelectedIndex(i)}
-                className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
-                  selectedIndex === i
-                    ? 'border-[#4F46E5] bg-[#4F46E5] text-white'
-                    : 'border-[#E0E7FF] bg-white text-[#1E1B4B] hover:border-[#4F46E5]'
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+        {configs.length > 1 && (
+          <div>
+            <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
+              Difficulty / Type
+            </label>
+            <div className="flex flex-wrap gap-2">
+              {configs.map((opt, i) => (
+                <button
+                  key={opt.label}
+                  onClick={() => setSelectedIndex(i)}
+                  className={`rounded-lg border px-3 py-1.5 text-sm font-medium transition-all ${
+                    selectedIndex === i
+                      ? 'border-[#4F46E5] bg-[#4F46E5] text-white'
+                      : 'border-[#E0E7FF] bg-white text-[#1E1B4B] hover:border-[#4F46E5]'
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
 
         <div>
           <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">

@@ -4,15 +4,13 @@ import WorksheetGenerator from '@/components/WorksheetGenerator';
 import InternalLinks from '@/components/InternalLinks';
 import {
   DIVISION_FACTS,
-  DIVISION_GENERAL,
   DIVISION_REMAINDERS,
 } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
 
 const configs = [
-  { label: 'Easy Facts (÷1–÷9)', config: DIVISION_GENERAL },
-  { label: 'Division Facts (÷1–÷12)', config: DIVISION_FACTS },
+  { label: 'Division Facts', config: DIVISION_FACTS },
   { label: 'With Remainders', config: DIVISION_REMAINDERS },
 ];
 
@@ -26,11 +24,11 @@ const links = [
 const faqItems = [
   {
     q: 'What grade levels are these division worksheets for?',
-    a: 'The Easy Facts (÷1–÷9) and Division Facts (÷1–÷12) worksheets are ideal for Grade 3 and Grade 4 students building basic division fluency. The With Remainders worksheet uses the standard long division bracket format and is typically a Grade 4–5 skill.',
+    a: 'The Division Facts worksheet is ideal for Grade 3 and Grade 4 students building basic division fluency. The With Remainders worksheet uses the standard long division bracket format and is typically a Grade 4–5 skill.',
   },
   {
-    q: 'What is the difference between the three worksheet options?',
-    a: 'Easy Division (÷1–÷9) covers the most common single-digit divisors — great for Grade 3 students just learning division. Division Facts (÷1–÷12) extends the range to include divisors 10, 11, and 12. With Remainders generates non-exact problems in the traditional long division bracket format and uses a classroom-style 12-problem page layout (4×3) so students have room to show work.',
+    q: 'What is the difference between the two worksheet options?',
+    a: 'Division Facts generates problems with clean, whole-number answers using divisors ÷1–÷12. With Remainders generates non-exact problems in the traditional long division bracket format and uses a classroom-style 12-problem page layout (4×3) so students have room to show work.',
   },
   {
     q: 'Why does the "With Remainders" worksheet use a different format?',
@@ -49,7 +47,7 @@ const faqItems = [
 
 <PracticeLayout
   title="Division Worksheets — Free Printable Division Practice"
-  description="Generate free division worksheets with 20–40 problems. Easy facts (÷1–÷9), full facts (÷1–÷12), or long division with remainders. Print or practice online — no signup required."
+  description="Generate free division worksheets with 20–40 problems, or choose With Remainders for a classroom-style long division worksheet. Print with or without the answer key — no signup required."
   canonical={`${SITE}/math-worksheets/division-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Division Worksheets' }]}
 >
@@ -77,7 +75,7 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Division Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free division worksheet with 20, 30, or 40 problems for fact fluency, or choose With Remainders for a classroom-style long division worksheet with 12 problems (4×3) and extra workspace. Print with or without the answer key.</p>
+    <p>Generate a free division worksheet with 20, 30, or 40 problems, or choose With Remainders for a classroom-style long division worksheet with 12 problems (4×3) and extra workspace. Print with or without the answer key.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} client:load />
@@ -91,15 +89,15 @@ const faqItems = [
           <div class="flex items-start gap-4 px-5 py-4">
             <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
             <div>
-              <p class="text-sm font-medium text-[#1E293B]">Easy Division Facts (÷1–÷9)</p>
-              <p class="text-sm text-[#6B7280] mt-0.5">Introduction to division as equal sharing and grouping. Build fluency with the core single-digit divisors alongside multiplication fact families.</p>
+              <p class="text-sm font-medium text-[#1E293B]">Introduction to Division</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Introduction to division as equal sharing and grouping. Build fluency with division fact families alongside multiplication.</p>
             </div>
           </div>
           <div class="flex items-start gap-4 px-5 py-4">
             <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4</span>
             <div>
-              <p class="text-sm font-medium text-[#1E293B]">Division Facts (÷1–÷12) + Remainders</p>
-              <p class="text-sm text-[#6B7280] mt-0.5">Extend fact fluency to ÷10, ÷11, and ÷12. Introduce division with remainders and apply division to multi-step word problems.</p>
+              <p class="text-sm font-medium text-[#1E293B]">Division Facts + Remainders</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Extend fact fluency through ÷12. Introduce division with remainders and apply division to multi-step word problems.</p>
             </div>
           </div>
           <div class="flex items-start gap-4 px-5 py-4">
@@ -117,10 +115,7 @@ const faqItems = [
       <h2 id="division-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
       <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
         <p>
-          Start with <a href="/math-worksheets/division-worksheets" class="text-[#4F46E5] font-medium hover:underline">Easy Division (÷1–÷9)</a> worksheets until students can solve single-digit division problems automatically. This builds the fact fluency that makes all later division work easier.
-        </p>
-        <p>
-          Once single-digit facts are solid, move to <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">Division Facts (÷1–÷12)</a> to extend the range. Use <a href="/division/divide-by/6" class="text-[#4F46E5] font-medium hover:underline">divide-by practice</a> for any divisors that still feel shaky.
+          Start with <a href="/math-worksheets/division-worksheets" class="text-[#4F46E5] font-medium hover:underline">Division Facts</a> worksheets until students can solve problems automatically. Use <a href="/division/divide-by/6" class="text-[#4F46E5] font-medium hover:underline">divide-by practice</a> for any divisors that still feel shaky.
         </p>
         <p>
           Introduce the <a href="/division/remainders" class="text-[#4F46E5] font-medium hover:underline">With Remainders</a> worksheet only after exact division facts are fluent. Help students understand what the remainder means in real-world terms — not just as a number to write, but as the "leftover" that doesn't fit into a complete group.
