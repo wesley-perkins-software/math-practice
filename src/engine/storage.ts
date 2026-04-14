@@ -46,6 +46,20 @@ export function clearStats(key: string): void {
   }
 }
 
+export function clearAllProgress(): void {
+  try {
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const k = localStorage.key(i);
+      if (k && k.startsWith(NAMESPACE)) keysToRemove.push(k);
+    }
+    keysToRemove.forEach((k) => localStorage.removeItem(k));
+    localStorage.removeItem(SESSION_LOG_KEY);
+  } catch {
+    // ignore
+  }
+}
+
 export function updateStatsAfterSession(
   existing: PageStats,
   result: SessionResult,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ALL_PRESETS } from '@/engine/presets';
-import { loadStats, loadSessionLog, DEFAULT_STATS } from '@/engine/storage';
+import { loadStats, loadSessionLog, DEFAULT_STATS, clearAllProgress } from '@/engine/storage';
 import type { PageStats, SessionLogEntry } from '@/engine/types';
 import type { Operation } from '@/engine/types';
 
@@ -78,8 +78,8 @@ interface AchievementData {
   operationsPracticed: Set<Operation>;
 }
 
+// Ordered easiest → hardest
 const ACHIEVEMENTS: AchievementDef[] = [
-  // ── Sessions ──
   {
     id: 'first-session',
     label: 'First Steps',
@@ -88,27 +88,11 @@ const ACHIEVEMENTS: AchievementDef[] = [
     progress: ({ totalSessions }) => Math.min(1, totalSessions / 1),
   },
   {
-    id: 'consistent',
-    label: 'Consistent Learner',
-    description: 'Complete 5 sessions',
-    check: ({ totalSessions }) => totalSessions >= 5,
-    progress: ({ totalSessions }) => Math.min(1, totalSessions / 5),
+    id: 'speed-racer',
+    label: 'Speed Racer',
+    description: 'Complete a timed drill',
+    check: ({ totalSessions }) => totalSessions >= 1,
   },
-  {
-    id: 'dedicated-student',
-    label: 'Dedicated Student',
-    description: 'Complete 25 sessions',
-    check: ({ totalSessions }) => totalSessions >= 25,
-    progress: ({ totalSessions }) => Math.min(1, totalSessions / 25),
-  },
-  {
-    id: 'math-scholar',
-    label: 'Math Scholar',
-    description: 'Complete 100 sessions',
-    check: ({ totalSessions }) => totalSessions >= 100,
-    progress: ({ totalSessions }) => Math.min(1, totalSessions / 100),
-  },
-  // ── Problems solved ──
   {
     id: 'problem-solver',
     label: 'Problem Solver',
@@ -117,35 +101,6 @@ const ACHIEVEMENTS: AchievementDef[] = [
     progress: ({ totalProblems }) => Math.min(1, totalProblems / 100),
   },
   {
-    id: 'math-machine',
-    label: 'Math Machine',
-    description: 'Solve 500 problems',
-    check: ({ totalProblems }) => totalProblems >= 500,
-    progress: ({ totalProblems }) => Math.min(1, totalProblems / 500),
-  },
-  {
-    id: 'math-whiz',
-    label: 'Math Whiz',
-    description: 'Solve 1,000 problems',
-    check: ({ totalProblems }) => totalProblems >= 1000,
-    progress: ({ totalProblems }) => Math.min(1, totalProblems / 1000),
-  },
-  {
-    id: 'math-titan',
-    label: 'Math Titan',
-    description: 'Solve 2,500 problems',
-    check: ({ totalProblems }) => totalProblems >= 2500,
-    progress: ({ totalProblems }) => Math.min(1, totalProblems / 2500),
-  },
-  {
-    id: 'math-juggernaut',
-    label: 'Math Juggernaut',
-    description: 'Solve 10,000 problems',
-    check: ({ totalProblems }) => totalProblems >= 10000,
-    progress: ({ totalProblems }) => Math.min(1, totalProblems / 10000),
-  },
-  // ── Streaks ──
-  {
     id: 'streak-starter',
     label: 'Streak Starter',
     description: 'Reach a 10-answer streak',
@@ -153,34 +108,12 @@ const ACHIEVEMENTS: AchievementDef[] = [
     progress: ({ longestStreak }) => Math.min(1, longestStreak / 10),
   },
   {
-    id: 'streak-champion',
-    label: 'Streak Champion',
-    description: 'Reach a 25-answer streak',
-    check: ({ longestStreak }) => longestStreak >= 25,
-    progress: ({ longestStreak }) => Math.min(1, longestStreak / 25),
+    id: 'consistent',
+    label: 'Consistent Learner',
+    description: 'Complete 5 sessions',
+    check: ({ totalSessions }) => totalSessions >= 5,
+    progress: ({ totalSessions }) => Math.min(1, totalSessions / 5),
   },
-  {
-    id: 'streak-master',
-    label: 'Streak Master',
-    description: 'Reach a 50-answer streak',
-    check: ({ longestStreak }) => longestStreak >= 50,
-    progress: ({ longestStreak }) => Math.min(1, longestStreak / 50),
-  },
-  {
-    id: 'unstoppable',
-    label: 'Unstoppable',
-    description: 'Reach a 100-answer streak',
-    check: ({ longestStreak }) => longestStreak >= 100,
-    progress: ({ longestStreak }) => Math.min(1, longestStreak / 100),
-  },
-  // ── Speed ──
-  {
-    id: 'speed-racer',
-    label: 'Speed Racer',
-    description: 'Complete a timed drill',
-    check: ({ totalSessions }) => totalSessions >= 1,
-  },
-  // ── Breadth ──
   {
     id: 'well-rounded',
     label: 'Well-Rounded',
@@ -194,6 +127,69 @@ const ACHIEVEMENTS: AchievementDef[] = [
       const ops: Operation[] = ['addition', 'subtraction', 'multiplication', 'division'];
       return ops.filter((o) => operationsPracticed.has(o)).length / 4;
     },
+  },
+  {
+    id: 'math-machine',
+    label: 'Math Machine',
+    description: 'Solve 500 problems',
+    check: ({ totalProblems }) => totalProblems >= 500,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 500),
+  },
+  {
+    id: 'streak-champion',
+    label: 'Streak Champion',
+    description: 'Reach a 25-answer streak',
+    check: ({ longestStreak }) => longestStreak >= 25,
+    progress: ({ longestStreak }) => Math.min(1, longestStreak / 25),
+  },
+  {
+    id: 'dedicated-student',
+    label: 'Dedicated Student',
+    description: 'Complete 25 sessions',
+    check: ({ totalSessions }) => totalSessions >= 25,
+    progress: ({ totalSessions }) => Math.min(1, totalSessions / 25),
+  },
+  {
+    id: 'math-whiz',
+    label: 'Math Whiz',
+    description: 'Solve 1,000 problems',
+    check: ({ totalProblems }) => totalProblems >= 1000,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 1000),
+  },
+  {
+    id: 'streak-master',
+    label: 'Streak Master',
+    description: 'Reach a 50-answer streak',
+    check: ({ longestStreak }) => longestStreak >= 50,
+    progress: ({ longestStreak }) => Math.min(1, longestStreak / 50),
+  },
+  {
+    id: 'math-scholar',
+    label: 'Math Scholar',
+    description: 'Complete 100 sessions',
+    check: ({ totalSessions }) => totalSessions >= 100,
+    progress: ({ totalSessions }) => Math.min(1, totalSessions / 100),
+  },
+  {
+    id: 'math-titan',
+    label: 'Math Titan',
+    description: 'Solve 2,500 problems',
+    check: ({ totalProblems }) => totalProblems >= 2500,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 2500),
+  },
+  {
+    id: 'unstoppable',
+    label: 'Unstoppable',
+    description: 'Reach a 100-answer streak',
+    check: ({ longestStreak }) => longestStreak >= 100,
+    progress: ({ longestStreak }) => Math.min(1, longestStreak / 100),
+  },
+  {
+    id: 'math-juggernaut',
+    label: 'Math Juggernaut',
+    description: 'Solve 5,000 problems',
+    check: ({ totalProblems }) => totalProblems >= 5000,
+    progress: ({ totalProblems }) => Math.min(1, totalProblems / 5000),
   },
 ];
 
@@ -226,13 +222,13 @@ function AchievementBadge({ achievement, earned }: AchievementBadgeProps) {
       className={`rounded-xl border p-3 text-left transition-all ${
         earned
           ? 'bg-[#4F46E5] border-[#4338CA] shadow-sm'
-          : 'bg-white border-[#E2E8F0]'
+          : 'bg-[#F8FAFC] border-[#E2E8F0]'
       }`}
     >
-      <div className={`text-xs font-bold leading-snug ${earned ? 'text-white' : 'text-[#CBD5E1]'}`}>
+      <div className={`text-xs font-bold leading-snug ${earned ? 'text-white' : 'text-[#475569]'}`}>
         {achievement.label}
       </div>
-      <div className={`text-[11px] mt-0.5 leading-snug ${earned ? 'text-[#C7D2FE]' : 'text-[#CBD5E1]'}`}>
+      <div className={`text-[11px] mt-0.5 leading-snug ${earned ? 'text-[#C7D2FE]' : 'text-[#94A3B8]'}`}>
         {achievement.description}
       </div>
     </div>
@@ -245,6 +241,7 @@ export default function ProgressDashboard() {
   const [rows, setRows] = useState<PresetRow[]>([]);
   const [sessionLog, setSessionLog] = useState<SessionLogEntry[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [showResetConfirm, setShowResetConfirm] = useState(false);
 
   useEffect(() => {
     const data = ALL_PRESETS.map((preset) => ({
@@ -396,7 +393,7 @@ export default function ProgressDashboard() {
               if (achievement.id.startsWith('math-') || achievement.id === 'problem-solver') {
                 const targets: Record<string, number> = {
                   'problem-solver': 100, 'math-machine': 500,
-                  'math-whiz': 1000, 'math-titan': 2500, 'math-juggernaut': 10000,
+                  'math-whiz': 1000, 'math-titan': 2500, 'math-juggernaut': 5000,
                 };
                 const target = targets[achievement.id];
                 if (target) awayLabel = `${(target - totalProblems).toLocaleString()} problems away`;
@@ -441,7 +438,10 @@ export default function ProgressDashboard() {
       {/* ── Operations Strength ───────────────────────────────────────────────── */}
       {opTotals.some((t) => t > 0) && (
         <div>
-          <h2 className="text-base font-semibold text-[#1E293B] mb-3">Operations Strength</h2>
+          <div className="mb-3">
+            <h2 className="text-base font-semibold text-[#1E293B]">Operations Strength</h2>
+            <p className="text-xs text-[#64748B] mt-0.5">How many problems you've solved in each type of math — a longer bar means more practice in that area.</p>
+          </div>
           <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 space-y-3">
             {OP_KEYS.map(({ label, color }, i) => (
               <div key={label}>
@@ -465,30 +465,36 @@ export default function ProgressDashboard() {
       <div>
         <h2 className="text-base font-semibold text-[#1E293B] mb-3">Practice Calendar</h2>
         <div className="bg-white border border-[#E2E8F0] rounded-xl p-4">
-          <div className="grid grid-cols-7 gap-1.5">
-            {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-              <div key={i} className="text-center text-[10px] font-semibold text-[#94A3B8] pb-1">{d}</div>
-            ))}
-            {/* Pad the first week so the calendar starts on the correct weekday */}
-            {Array.from({ length: new Date(calendarDays[0].date).getDay() }).map((_, i) => (
-              <div key={`pad-${i}`} />
-            ))}
-            {calendarDays.map(({ date, active, isToday }) => (
-              <div
-                key={date}
-                title={date}
-                className={`aspect-square rounded-md transition-colors ${
-                  isToday
-                    ? active
-                      ? 'bg-[#4F46E5] ring-2 ring-[#4F46E5] ring-offset-1'
-                      : 'ring-2 ring-[#C7D2FE] ring-offset-1 bg-white'
-                    : active
-                    ? 'bg-[#4F46E5]'
-                    : 'bg-[#F1F5F9]'
-                }`}
-              />
-            ))}
-          </div>
+          {/* Parse first day as local midnight to get the correct weekday */}
+          {(() => {
+            const [fy, fm, fd] = calendarDays[0].date.split('-').map(Number);
+            const firstDayOfWeek = new Date(fy, fm - 1, fd).getDay();
+            return (
+              <div className="inline-grid grid-cols-7 gap-1">
+                {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
+                  <div key={i} className="w-6 text-center text-[10px] font-semibold text-[#94A3B8] pb-0.5">{d}</div>
+                ))}
+                {Array.from({ length: firstDayOfWeek }).map((_, i) => (
+                  <div key={`pad-${i}`} className="w-6 h-6" />
+                ))}
+                {calendarDays.map(({ date, active, isToday }) => (
+                  <div
+                    key={date}
+                    title={date}
+                    className={`w-6 h-6 rounded transition-colors ${
+                      isToday
+                        ? active
+                          ? 'bg-[#4F46E5] ring-2 ring-[#4F46E5] ring-offset-1'
+                          : 'ring-2 ring-[#C7D2FE] ring-offset-1 bg-white'
+                        : active
+                        ? 'bg-[#4F46E5]'
+                        : 'bg-[#F1F5F9]'
+                    }`}
+                  />
+                ))}
+              </div>
+            );
+          })()}
           <div className="flex items-center gap-4 mt-3 text-[11px] text-[#94A3B8]">
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#4F46E5] inline-block" />
@@ -621,6 +627,47 @@ export default function ProgressDashboard() {
           </div>
         </div>
       )}
+
+      {/* ── Reset all progress ───────────────────────────────────────────────── */}
+      <div className="pt-2 border-t border-[#E2E8F0]">
+        {!showResetConfirm ? (
+          <button
+            onClick={() => setShowResetConfirm(true)}
+            className="text-xs text-[#94A3B8] hover:text-red-500 transition-colors font-medium"
+          >
+            Reset All Progress
+          </button>
+        ) : (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <div className="text-red-500 text-xl leading-none mt-0.5">⚠️</div>
+              <div className="flex-1">
+                <div className="text-sm font-bold text-red-700">DANGER: This Cannot Be Undone!</div>
+                <div className="text-xs text-red-600 mt-1 leading-relaxed">
+                  You are about to permanently erase <strong>ALL</strong> of your practice history — every session, every streak, every achievement, and every record. Once deleted, this data is gone forever and cannot be recovered.
+                </div>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => {
+                      clearAllProgress();
+                      window.location.reload();
+                    }}
+                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors"
+                  >
+                    Yes, Delete Everything Forever
+                  </button>
+                  <button
+                    onClick={() => setShowResetConfirm(false)}
+                    className="px-3 py-1.5 bg-white border border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#475569] text-xs font-medium rounded-lg transition-colors"
+                  >
+                    Cancel, Keep My Progress
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
