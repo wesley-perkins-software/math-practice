@@ -257,7 +257,7 @@ export default function ProgressDashboard() {
     setLoaded(true);
   }, []);
 
-  if (!loaded) return null;
+  if (!loaded) return <div className="min-h-[500px] rounded-xl" />;
 
   const practiced = rows.filter((r) => r.stats.totalProblemsAttempted > 0 || r.stats.totalSessions > 0);
 
@@ -376,7 +376,10 @@ export default function ProgressDashboard() {
 
       {/* ── Achievements ─────────────────────────────────────────────────────── */}
       <div>
-        <h2 className="text-base font-semibold text-[#1E293B] mb-3">Achievements</h2>
+        <div className="mb-3">
+          <h2 className="text-base font-semibold text-[#1E293B]">Achievements</h2>
+          <p className="text-xs text-[#64748B] mt-0.5">Earn badges by reaching milestones in your practice.</p>
+        </div>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {ACHIEVEMENTS.map((a) => (
             <AchievementBadge key={a.id} achievement={a} earned={earnedIds.has(a.id)} />
@@ -463,8 +466,11 @@ export default function ProgressDashboard() {
 
       {/* ── Practice Calendar ─────────────────────────────────────────────────── */}
       <div>
-        <h2 className="text-base font-semibold text-[#1E293B] mb-3">Practice Calendar</h2>
-        <div className="bg-white border border-[#E2E8F0] rounded-xl p-4">
+        <div className="mb-3">
+          <h2 className="text-base font-semibold text-[#1E293B]">Practice Calendar</h2>
+          <p className="text-xs text-[#64748B] mt-0.5">Each square is a day. Filled squares show when you practiced over the last 5 weeks.</p>
+        </div>
+        <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 w-fit">
           {/* Parse first day as local midnight to get the correct weekday */}
           {(() => {
             const [fy, fm, fd] = calendarDays[0].date.split('-').map(Number);
@@ -510,7 +516,10 @@ export default function ProgressDashboard() {
 
       {/* ── Per-operation grouped practice table ─────────────────────────────── */}
       <div>
-        <h2 className="text-base font-semibold text-[#1E293B] mb-3">By Practice Type</h2>
+        <div className="mb-3">
+          <h2 className="text-base font-semibold text-[#1E293B]">By Practice Type</h2>
+          <p className="text-xs text-[#64748B] mt-0.5">Your stats broken down by each individual practice type.</p>
+        </div>
         <div className="space-y-4">
           {OPERATION_GROUPS.map(({ key, label, color }) => {
             const group = practiced.filter((r) => r.operation === key);
@@ -589,7 +598,10 @@ export default function ProgressDashboard() {
       {/* ── Recent sessions ──────────────────────────────────────────────────── */}
       {recentSessions.length > 0 && (
         <div>
-          <h2 className="text-base font-semibold text-[#1E293B] mb-3">Recent Sessions</h2>
+          <div className="mb-3">
+            <h2 className="text-base font-semibold text-[#1E293B]">Recent Sessions</h2>
+            <p className="text-xs text-[#64748B] mt-0.5">Your 6 most recent practice sessions.</p>
+          </div>
           <div className="border border-[#E2E8F0] rounded-xl overflow-hidden">
             <table className="w-full text-sm">
               <thead>

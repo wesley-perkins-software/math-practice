@@ -97,36 +97,40 @@ export default function PracticeWidget({ config, topContent }: Props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [config.storageKey]);
 
+  function savePendingUntimedSession() {
+    if (isTimed || totalAnsweredRef.current === 0) return;
+    const elapsed = sessionStartTimeRef.current > 0
+      ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
+      : 0;
+    const sessionResult = buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed);
+    const current = loadStats(config.storageKey);
+    // totalProblemsAttempted is already tracked per-answer; only update session count + scores
+    saveStats(config.storageKey, {
+      ...current,
+      lastSessionScore: sessionResult.score,
+      lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
+      totalSessions: current.totalSessions + 1,
+    });
+    appendSessionLog({
+      storageKey: config.storageKey,
+      label: config.label ?? config.storageKey,
+      correct: sessionResult.correct,
+      total: sessionResult.total,
+      score: sessionResult.score,
+      durationSeconds: sessionResult.durationSeconds,
+      isTimed: false,
+      timestamp: sessionResult.timestamp,
+    });
+    totalAnsweredRef.current = 0; // prevent double-save
+  }
+
   function startSession() {
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
 
     // For untimed mode: record the previous session if the user answered any problems.
     // endSession() is never called for untimed (no timer), so this is the only session boundary.
-    if (!isTimed && totalAnsweredRef.current > 0) {
-      const elapsed = sessionStartTimeRef.current > 0
-        ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
-        : 0;
-      const sessionResult = buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed);
-      const current = loadStats(config.storageKey);
-      // totalProblemsAttempted is already tracked per-answer; only update session count + scores
-      saveStats(config.storageKey, {
-        ...current,
-        lastSessionScore: sessionResult.score,
-        lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
-        totalSessions: current.totalSessions + 1,
-      });
-      appendSessionLog({
-        storageKey: config.storageKey,
-        label: config.label ?? config.storageKey,
-        correct: sessionResult.correct,
-        total: sessionResult.total,
-        score: sessionResult.score,
-        durationSeconds: sessionResult.durationSeconds,
-        isTimed: false,
-        timestamp: sessionResult.timestamp,
-      });
-    }
+    savePendingUntimedSession();
 
     totalAnsweredRef.current = 0;
     timerStartedRef.current = false;
@@ -282,12 +286,22 @@ export default function PracticeWidget({ config, topContent }: Props) {
     startSession();
   }
 
-  // Cleanup on unmount
+  // Cleanup on unmount + save untimed session when navigating away or hiding the tab
   useEffect(() => {
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'hidden') {
+        savePendingUntimedSession();
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      savePendingUntimedSession();
       if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     };
+    // savePendingUntimedSession reads only refs and stable per-instance values — no stale closure risk
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
