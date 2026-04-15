@@ -242,8 +242,8 @@ export default function WorksheetGenerator({ configs }: Props) {
           <div
             className={`worksheet-grid grid ${
               isLongDivisionMode
-                ? 'grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4 print:grid-cols-4 print:gap-0'
-                : 'grid-cols-4 gap-3 print:gap-4'
+                ? 'grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4'
+                : 'grid-cols-4 gap-3'
             }`}
           >
             {problems.map((problem) => (

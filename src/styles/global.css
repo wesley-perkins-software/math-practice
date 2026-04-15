@@ -61,7 +61,7 @@
 @media print {
   /* Restore content margins (replaces the @page margins we zeroed out) */
   body {
-    margin: 14mm 16mm !important;
+    margin: 10mm 12mm !important;
     background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -76,6 +76,16 @@
     max-width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+  }
+
+  .worksheet-area {
+    break-inside: avoid-page !important;
+    page-break-inside: avoid !important;
+  }
+
+  .worksheet-area .worksheet-grid {
+    break-inside: avoid-page !important;
+    page-break-inside: avoid !important;
   }
 
   /* Show print-only header */
@@ -99,8 +109,8 @@
   /* Default worksheet grid */
   .worksheet-area .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
-    column-gap: 8mm !important;
-    row-gap: 6mm !important;
+    column-gap: 7mm !important;
+    row-gap: 4mm !important;
   }
 
   /* Strip card styling; size each cell to fit 5 rows on a letter page */
@@ -110,7 +120,7 @@
     background: transparent !important;
     padding: 0 !important;
     min-height: unset !important;
-    height: 36mm !important;
+    height: 31mm !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -144,7 +154,7 @@
 
   /* Blank answer space */
   .worksheet-problem .h-7 {
-    height: 10mm !important;
+    height: 7mm !important;
     flex-shrink: 0 !important;
   }
 
@@ -156,16 +166,16 @@
 
   .worksheet-area.long-division-mode .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
-    column-gap: 10mm !important;
-    row-gap: 10mm !important;
-    margin-top: 4mm !important;
+    column-gap: 8mm !important;
+    row-gap: 6mm !important;
+    margin-top: 2mm !important;
   }
 
   .worksheet-area.long-division-mode .worksheet-problem {
-    height: 60mm !important;
+    height: 52mm !important;
     justify-content: flex-start !important;
     align-items: center !important;
-    padding-top: 2mm !important;
+    padding-top: 1mm !important;
   }
 
   .worksheet-area.long-division-mode .long-division-problem .long-division-divisor,
@@ -194,7 +204,7 @@
   }
 
   .worksheet-area.long-division-mode .long-division-answer-blank {
-    height: 8mm !important;
+    height: 7mm !important;
     margin-bottom: 1mm !important;
   }
 }
