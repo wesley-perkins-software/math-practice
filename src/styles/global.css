@@ -78,16 +78,16 @@
     margin: 0 !important;
   }
 
-  /* Worksheet area fills exactly one printed page (279.4mm − 20mm body margins) */
+  /* Keep worksheet content within a single printed sheet without forcing exact page height */
   .worksheet-area {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 259.4mm !important;
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid-page !important;
   }
 
-  /* Suppress Tailwind space-y-4 gaps between flex children in print */
+  /* Suppress Tailwind spacing in print to avoid accidental overflow */
   .worksheet-area > * + * {
     margin-top: 0 !important;
   }
@@ -95,8 +95,8 @@
   /* Show and pin the name/date header */
   .print-only-header {
     display: block !important;
-    flex-shrink: 0 !important;
-    padding-bottom: 4mm !important;
+    margin: 0 !important;
+    padding-bottom: 3mm !important;
   }
 
   /* Name / Date field solid underlines */
@@ -112,15 +112,15 @@
     border-bottom: 1.5pt solid #1E1B4B !important;
   }
 
-  /* 4×3 grid that stretches to fill remaining page height */
+  /* 4×3 print grid with conservative spacing so 12 problems stay on one page */
   .worksheet-area .worksheet-grid {
-    flex: 1 !important;
-    min-height: 0 !important;
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    grid-template-rows: repeat(3, 1fr) !important;
-    column-gap: 8mm !important;
-    row-gap: 8mm !important;
+    grid-template-rows: repeat(3, auto) !important;
+    column-gap: 7mm !important;
+    row-gap: 6mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* Each problem fills its grid cell */
@@ -130,7 +130,7 @@
     background: transparent !important;
     padding: 0 !important;
     min-height: unset !important;
-    height: 100% !important;
+    height: auto !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
