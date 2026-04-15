@@ -100,7 +100,7 @@
   .worksheet-area .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
     column-gap: 8mm !important;
-    row-gap: 10mm !important;
+    row-gap: 6mm !important;
   }
 
   /* Strip card styling; size each cell to fit 5 rows on a letter page */
@@ -110,7 +110,7 @@
     background: transparent !important;
     padding: 0 !important;
     min-height: unset !important;
-    height: 40mm !important;
+    height: 36mm !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -156,16 +156,16 @@
 
   .worksheet-area.long-division-mode .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
-    column-gap: 7mm !important;
-    row-gap: 6mm !important;
+    column-gap: 10mm !important;
+    row-gap: 10mm !important;
     margin-top: 4mm !important;
   }
 
   .worksheet-area.long-division-mode .worksheet-problem {
-    height: 50mm !important;
+    height: 60mm !important;
     justify-content: flex-start !important;
     align-items: center !important;
-    padding-top: 1mm !important;
+    padding-top: 2mm !important;
   }
 
   .worksheet-area.long-division-mode .long-division-problem .long-division-divisor,
@@ -180,6 +180,22 @@
     padding-top: 1.2mm !important;
     padding-left: 1.5mm !important;
     min-width: calc(var(--dividend-digits, 2) * 1ch + 6mm) !important;
+  }
+
+  /* Answer positioned above dividend bracket */
+  .worksheet-area.long-division-mode .long-division-answer {
+    font-size: 18pt !important;
+    line-height: 1 !important;
+    margin-bottom: 1mm !important;
+  }
+
+  .worksheet-area.long-division-mode .long-division-answer span:last-child {
+    font-size: 12pt !important;
+  }
+
+  .worksheet-area.long-division-mode .long-division-answer-blank {
+    height: 8mm !important;
+    margin-bottom: 1mm !important;
   }
 }
 
