@@ -59,9 +59,16 @@
 }
 
 @media print {
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
   /* Restore content margins (replaces the @page margins we zeroed out) */
   body {
-    margin: 10mm 12mm !important;
+    margin: 8mm 10mm !important;
     background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -78,16 +85,25 @@
     margin: 0 !important;
   }
 
-  /* Worksheet area fills exactly one printed page (279.4mm − 20mm body margins) */
+  /* Single-page worksheet box with a safety buffer to prevent a trailing blank page */
   .worksheet-area {
     display: flex !important;
     flex-direction: column !important;
-    height: 259.4mm !important;
+    height: 247mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid-page !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
   }
 
-  /* Suppress Tailwind space-y-4 gaps between flex children in print */
+  .worksheet-area:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Suppress Tailwind spacing in print to avoid accidental overflow */
   .worksheet-area > * + * {
     margin-top: 0 !important;
   }
@@ -95,8 +111,8 @@
   /* Show and pin the name/date header */
   .print-only-header {
     display: block !important;
-    flex-shrink: 0 !important;
-    padding-bottom: 4mm !important;
+    margin: 0 !important;
+    padding-bottom: 2.5mm !important;
   }
 
   /* Name / Date field solid underlines */
@@ -112,15 +128,17 @@
     border-bottom: 1.5pt solid #1E1B4B !important;
   }
 
-  /* 4×3 grid that stretches to fill remaining page height */
+  /* 4×3 grid that fills the remaining worksheet space */
   .worksheet-area .worksheet-grid {
     flex: 1 !important;
     min-height: 0 !important;
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    grid-template-rows: repeat(3, 1fr) !important;
-    column-gap: 8mm !important;
-    row-gap: 8mm !important;
+    grid-template-rows: repeat(3, minmax(0, 1fr)) !important;
+    column-gap: 7mm !important;
+    row-gap: 6mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* Each problem fills its grid cell */
