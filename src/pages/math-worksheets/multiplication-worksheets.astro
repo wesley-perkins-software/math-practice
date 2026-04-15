@@ -26,7 +26,7 @@ const faqItems = [
   },
   {
     q: 'How many problems are on each worksheet?',
-    a: 'Each worksheet contains exactly 12 problems in a 4×3 grid, sized to fit on one printed page. Problems are randomly selected each time you click Generate, so you get a fresh set every time.',
+    a: 'Each worksheet has 12 problems, sized to fit on one printed page. Problems are randomly selected each time you click Generate, so you get a fresh set every time.',
   },
   {
     q: 'How often should a child practice multiplication worksheets?',
@@ -69,7 +69,7 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Multiplication Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free multiplication worksheet with 12 randomly mixed problems from ×1 through ×12. Randomized every time — print with or without the answer key.</p>
+    <p>Click Generate to get 12 multiplication problems drawn from all the times tables, 1 through 12. Every click creates a new set — print the worksheet to practice on paper, or print the answer key when you're ready to check your work. For best results, print from a desktop or laptop.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} title="Multiplication Worksheet" client:load />

@@ -6,7 +6,6 @@ import {
   SUBTRACTION_1_DIGIT,
   SUBTRACTION_2_DIGIT,
   SUBTRACTION_2_DIGIT_BORROWING,
-  SUBTRACTION_GENERAL,
 } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
@@ -15,7 +14,6 @@ const configs = [
   { label: '1-Digit', config: SUBTRACTION_1_DIGIT },
   { label: '2-Digit (No Borrowing)', config: SUBTRACTION_2_DIGIT },
   { label: 'With Borrowing', config: SUBTRACTION_2_DIGIT_BORROWING },
-  { label: 'Mixed Subtraction', config: SUBTRACTION_GENERAL },
 ];
 
 const links = [
@@ -37,12 +35,12 @@ const faqItems = [
     a: 'Borrowing (also called regrouping) occurs when the digit being subtracted is larger than the digit above it in that column. You borrow 1 ten from the tens column, turning it into 10 ones. For example, in 52 − 37, the ones column is 2 − 7, which requires borrowing: you take 1 ten from the 5, making it 4 tens and 12 ones, so 12 − 7 = 5.',
   },
   {
-    q: 'What is the difference between the four worksheet types?',
-    a: '1-Digit covers basic subtraction facts with numbers 1–9. 2-Digit (No Borrowing) uses two-digit numbers where no column requires regrouping, isolating place-value alignment. With Borrowing introduces regrouping for more advanced work. Mixed Subtraction combines all ranges for comprehensive practice.',
+    q: 'What is the difference between the three worksheet types?',
+    a: '1-Digit covers basic subtraction facts with numbers 1–9. 2-Digit (No Borrowing) uses two-digit numbers where no column requires regrouping, so students can focus on place-value alignment. With Borrowing introduces regrouping for more advanced two-digit work.',
   },
   {
     q: 'How many problems are on each worksheet?',
-    a: 'Each worksheet contains exactly 12 problems in a 4×3 grid, sized to fit on one printed page. Every Generate click creates a fresh set of randomized problems, so students get a different worksheet each time.',
+    a: 'Each worksheet has 12 problems, sized to fit on one printed page. Every Generate click creates a fresh set of randomized problems, so students get a different worksheet each time.',
   },
   {
     q: 'Can I print an answer key?',
@@ -81,7 +79,7 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Subtraction Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free subtraction worksheet with 12 problems. Pick a difficulty level — from simple 1-digit facts up to 2-digit subtraction with borrowing — then practice on screen with instant feedback or print the worksheet with an optional answer key.</p>
+    <p>Pick a difficulty level — from simple 1-digit facts to 2-digit subtraction with borrowing — and click Generate. Each click creates a fresh set of 12 problems ready to print, with an optional answer key. For best results, print from a desktop or laptop.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} title="Subtraction Worksheet" client:load />

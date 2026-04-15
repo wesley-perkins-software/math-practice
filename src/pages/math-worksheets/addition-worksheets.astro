@@ -6,7 +6,6 @@ import {
   ADDITION_1_DIGIT,
   ADDITION_2_DIGIT,
   ADDITION_2_DIGIT_CARRYING,
-  ADDITION_GENERAL,
 } from '@/engine/presets';
 
 const SITE = 'https://www.mathpractice.com';
@@ -15,7 +14,6 @@ const configs = [
   { label: '1-Digit', config: ADDITION_1_DIGIT },
   { label: '2-Digit (No Carrying)', config: ADDITION_2_DIGIT },
   { label: 'With Carrying', config: ADDITION_2_DIGIT_CARRYING },
-  { label: 'Mixed Addition', config: ADDITION_GENERAL },
 ];
 
 const links = [
@@ -37,12 +35,12 @@ const faqItems = [
     a: 'Carrying (also called regrouping) occurs when the digits in a column add up to 10 or more. You write the ones digit of the sum and carry the tens digit to the next column. For example, in 47 + 38, the ones column is 7+8=15 — write 5 and carry 1 to the tens column.',
   },
   {
-    q: 'What is the difference between the four worksheet types?',
-    a: '1-Digit covers basic facts with numbers 1–9, building single-digit fluency. 2-Digit (No Carrying) uses two-digit numbers where no column totals 10 or more, isolating place-value alignment. With Carrying introduces regrouping for more advanced two-digit work. Mixed Addition combines all ranges for comprehensive practice.',
+    q: 'What is the difference between the three worksheet types?',
+    a: '1-Digit covers basic facts with numbers 1–9, building single-digit fluency. 2-Digit (No Carrying) uses two-digit numbers where no column totals 10 or more, so students can focus on place-value alignment without regrouping. With Carrying introduces carrying for more advanced two-digit work.',
   },
   {
     q: 'How many problems are on each worksheet?',
-    a: 'Each worksheet contains exactly 12 problems in a 4×3 grid, sized to fit on one printed page. Every click of Generate creates a fresh set of randomized problems, so students get a different worksheet each time.',
+    a: 'Each worksheet has 12 problems, sized to fit on one printed page. Every click of Generate creates a fresh set of randomized problems, so students get a different worksheet each time.',
   },
   {
     q: 'Can I print an answer key?',
@@ -81,7 +79,7 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Addition Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free addition worksheet with 12 problems. Pick a difficulty level — from simple 1-digit facts up to 2-digit addition with carrying — then practice on screen with instant feedback or print the worksheet with an optional answer key.</p>
+    <p>Pick a difficulty level — from simple 1-digit facts to 2-digit addition with carrying — and click Generate. Each click creates a fresh set of 12 problems ready to print, with an optional answer key. For best results, print from a desktop or laptop.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} title="Addition Worksheet" client:load />
