@@ -100,7 +100,7 @@
   .worksheet-area .worksheet-grid {
     grid-template-columns: repeat(4, 1fr) !important;
     column-gap: 8mm !important;
-    row-gap: 10mm !important;
+    row-gap: 6mm !important;
   }
 
   /* Strip card styling; size each cell to fit 5 rows on a letter page */
@@ -110,7 +110,7 @@
     background: transparent !important;
     padding: 0 !important;
     min-height: unset !important;
-    height: 40mm !important;
+    height: 36mm !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -159,9 +159,6 @@
     column-gap: 10mm !important;
     row-gap: 10mm !important;
     margin-top: 4mm !important;
-    /* Prevent the grid from splitting across pages on mobile */
-    break-inside: avoid !important;
-    page-break-inside: avoid !important;
   }
 
   .worksheet-area.long-division-mode .worksheet-problem {
