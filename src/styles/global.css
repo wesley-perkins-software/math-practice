@@ -78,19 +78,25 @@
     margin: 0 !important;
   }
 
+  /* Worksheet area fills exactly one printed page (279.4mm − 20mm body margins) */
   .worksheet-area {
-    break-inside: avoid-page !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 259.4mm !important;
     page-break-inside: avoid !important;
+    break-inside: avoid-page !important;
   }
 
-  .worksheet-area .worksheet-grid {
-    break-inside: avoid-page !important;
-    page-break-inside: avoid !important;
+  /* Suppress Tailwind space-y-4 gaps between flex children in print */
+  .worksheet-area > * + * {
+    margin-top: 0 !important;
   }
 
-  /* Show print-only header */
+  /* Show and pin the name/date header */
   .print-only-header {
     display: block !important;
+    flex-shrink: 0 !important;
+    padding-bottom: 4mm !important;
   }
 
   /* Name / Date field solid underlines */
@@ -106,21 +112,25 @@
     border-bottom: 1.5pt solid #1E1B4B !important;
   }
 
-  /* Default worksheet grid */
+  /* 4×3 grid that stretches to fill remaining page height */
   .worksheet-area .worksheet-grid {
+    flex: 1 !important;
+    min-height: 0 !important;
+    display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
-    column-gap: 7mm !important;
-    row-gap: 4mm !important;
+    grid-template-rows: repeat(3, 1fr) !important;
+    column-gap: 8mm !important;
+    row-gap: 8mm !important;
   }
 
-  /* Strip card styling; size each cell to fit 5 rows on a letter page */
+  /* Each problem fills its grid cell */
   .worksheet-problem {
     border: none !important;
     border-radius: 0 !important;
     background: transparent !important;
     padding: 0 !important;
     min-height: unset !important;
-    height: 31mm !important;
+    height: 100% !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -158,24 +168,10 @@
     flex-shrink: 0 !important;
   }
 
-  /* Long division worksheets: 4 x 3 layout with extra writing space */
-  .worksheet-area.long-division-mode {
-    display: block !important;
-    padding-top: 1mm !important;
-  }
-
-  .worksheet-area.long-division-mode .worksheet-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
-    column-gap: 8mm !important;
-    row-gap: 6mm !important;
-    margin-top: 2mm !important;
-  }
-
+  /* Long division: pin content to top of cell so student work space falls below */
   .worksheet-area.long-division-mode .worksheet-problem {
-    height: 52mm !important;
     justify-content: flex-start !important;
-    align-items: center !important;
-    padding-top: 1mm !important;
+    padding-top: 8mm !important;
   }
 
   .worksheet-area.long-division-mode .long-division-problem .long-division-divisor,

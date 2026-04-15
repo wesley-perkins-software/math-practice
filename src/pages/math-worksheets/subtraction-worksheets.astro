@@ -42,7 +42,7 @@ const faqItems = [
   },
   {
     q: 'How many problems are on each worksheet?',
-    a: 'Choose 20, 30, or 40 problems per worksheet. Every Generate click creates a fresh set of randomized problems, so students get a different worksheet each time.',
+    a: 'Each worksheet contains exactly 12 problems in a 4×3 grid, sized to fit on one printed page. Every Generate click creates a fresh set of randomized problems, so students get a different worksheet each time.',
   },
   {
     q: 'Can I print an answer key?',
@@ -53,7 +53,7 @@ const faqItems = [
 
 <PracticeLayout
   title="Subtraction Worksheets — Free Printable & Online Practice"
-  description="Generate free subtraction worksheets with 20–40 problems. Choose 1-digit, 2-digit, or borrowing problems. Print with or without the answer key — no signup required."
+  description="Generate free subtraction worksheets with 12 problems per page. Choose 1-digit, 2-digit, or borrowing problems. Print with or without the answer key — no signup required."
   canonical={`${SITE}/math-worksheets/subtraction-worksheets`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Subtraction Worksheets' }]}
 >
@@ -62,7 +62,7 @@ const faqItems = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Subtraction Worksheets",
-      "description": "Free printable subtraction worksheets with 20–40 problems. Choose 1-digit, 2-digit without borrowing, or 2-digit with borrowing. Generate a new worksheet instantly.",
+      "description": "Free printable subtraction worksheets with 12 problems per page. Choose 1-digit, 2-digit without borrowing, or 2-digit with borrowing. Generate a new worksheet instantly.",
       "url": `${SITE}/math-worksheets/subtraction-worksheets`,
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
       "teaches": "Subtraction",
@@ -81,7 +81,7 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Subtraction Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free subtraction worksheet with 20, 30, or 40 problems. Pick a difficulty level — from simple 1-digit facts up to 2-digit subtraction with borrowing — then practice on screen with instant feedback or print the worksheet with an optional answer key.</p>
+    <p>Generate a free subtraction worksheet with 12 problems. Pick a difficulty level — from simple 1-digit facts up to 2-digit subtraction with borrowing — then practice on screen with instant feedback or print the worksheet with an optional answer key.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} title="Subtraction Worksheet" client:load />

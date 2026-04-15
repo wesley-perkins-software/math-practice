@@ -19,9 +19,7 @@ const OP_SYMBOL: Record<string, string> = {
   division: '÷',
 };
 
-const COUNTS = [20, 30, 40] as const;
-const LONG_DIVISION_COUNT = 12;
-type Count = (typeof COUNTS)[number];
+const PROBLEM_COUNT = 12;
 
 function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
   const dividendDigits = String(problem.operandA).length;
@@ -85,7 +83,6 @@ function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswe
 
 export default function WorksheetGenerator({ configs }: Props) {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [count, setCount] = useState<Count>(20);
   const [problems, setProblems] = useState<Problem[]>([]);
   const [showAnswers, setShowAnswers] = useState(false);
   const [generated, setGenerated] = useState(false);
@@ -93,16 +90,9 @@ export default function WorksheetGenerator({ configs }: Props) {
 
   const selectedConfig = configs[selectedIndex]?.config;
   const isLongDivisionMode = Boolean(selectedConfig?.withRemainder);
-  const effectiveCount = isLongDivisionMode ? LONG_DIVISION_COUNT : count;
-
-  useEffect(() => {
-    if (isLongDivisionMode && count !== COUNTS[0]) {
-      setCount(COUNTS[0]);
-    }
-  }, [count, isLongDivisionMode]);
 
   function generate() {
-    setProblems(generateProblemSet(selectedConfig, effectiveCount));
+    setProblems(generateProblemSet(selectedConfig, PROBLEM_COUNT));
     setShowAnswers(false);
     setGenerated(true);
   }
@@ -167,33 +157,6 @@ export default function WorksheetGenerator({ configs }: Props) {
           </div>
         )}
 
-        <div>
-          <label className="mb-2 block text-xs font-semibold uppercase tracking-wide text-[#6B7280]">
-            Number of Problems
-          </label>
-          {isLongDivisionMode ? (
-            <p className="rounded-lg border border-[#C7D2FE] bg-[#EEF2FF] px-3 py-2 text-sm font-medium text-[#3730A3]">
-              Long Division worksheets use a classroom layout of {LONG_DIVISION_COUNT} problems (4 across × 3 down).
-            </p>
-          ) : (
-            <div className="flex gap-2">
-              {COUNTS.map((n) => (
-                <button
-                  key={n}
-                  onClick={() => setCount(n)}
-                  className={`rounded-lg border px-4 py-1.5 text-sm font-medium transition-all ${
-                    count === n
-                      ? 'border-[#4F46E5] bg-[#4F46E5] text-white'
-                      : 'border-[#E0E7FF] bg-white text-[#1E1B4B] hover:border-[#4F46E5]'
-                  }`}
-                >
-                  {n}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
         <button
           onClick={generate}
           className="w-full rounded-xl bg-[#4F46E5] px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#4338CA] sm:w-auto"
@@ -215,7 +178,7 @@ export default function WorksheetGenerator({ configs }: Props) {
 
           <div className="no-print flex items-center justify-between">
             <p className="text-sm text-[#6B7280]">
-              {effectiveCount} problems — <span className="font-medium text-[#1E1B4B]">{configs[selectedIndex].label}</span>
+              {PROBLEM_COUNT} problems — <span className="font-medium text-[#1E1B4B]">{configs[selectedIndex].label}</span>
             </p>
             <div className="flex gap-2">
               <button
@@ -239,13 +202,7 @@ export default function WorksheetGenerator({ configs }: Props) {
             </div>
           </div>
 
-          <div
-            className={`worksheet-grid grid ${
-              isLongDivisionMode
-                ? 'grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4'
-                : 'grid-cols-4 gap-3'
-            }`}
-          >
+          <div className="worksheet-grid grid grid-cols-2 gap-4 sm:grid-cols-4">
             {problems.map((problem) => (
               <WorksheetProblem key={problem.id} problem={problem} showAnswer={showAnswers} />
             ))}
