@@ -59,9 +59,11 @@
 }
 
 @media print {
-  /* Restore content margins (replaces the @page margins we zeroed out) */
+  /* Restore content margins (replaces the @page margins we zeroed out).
+     Keep top/bottom tight so content fits on one page even when the browser
+     ignores @page margin:0 and adds its own header/footer space. */
   body {
-    margin: 14mm 16mm !important;
+    margin: 8mm 14mm !important;
     background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -109,6 +111,7 @@
     grid-template-columns: repeat(4, 1fr) !important;
     column-gap: 8mm !important;
     row-gap: 6mm !important;
+    margin-top: 4mm !important;
   }
 
   /* Strip card styling; size each cell to fit 5 rows on a letter page */
