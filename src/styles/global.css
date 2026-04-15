@@ -65,6 +65,7 @@
     background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    min-height: 0 !important;
   }
 
   /* Hide site chrome and on-screen-only elements */
@@ -76,6 +77,13 @@
     max-width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
+  }
+
+  /* Override space-y-6 phantom margin-top on worksheet-area: its preceding
+     no-print sibling is display:none but lacks the HTML hidden attribute,
+     so Tailwind's space-y selector still applies margin-top */
+  .worksheet-area {
+    margin-top: 0 !important;
   }
 
   /* Show print-only header */
