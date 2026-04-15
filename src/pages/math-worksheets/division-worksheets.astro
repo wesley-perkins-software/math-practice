@@ -28,7 +28,7 @@ const faqItems = [
   },
   {
     q: 'What is the difference between the two worksheet options?',
-    a: 'Division Facts generates problems with clean, whole-number answers using divisors ÷1–÷12. With Remainders generates non-exact problems in the traditional long division bracket format and uses a classroom-style 12-problem page layout (4×3) so students have room to show work.',
+    a: 'Division Facts generates problems with clean, whole-number answers using divisors ÷1–÷12. With Remainders generates non-exact problems in the traditional long division bracket format, with extra space so students can show their work.',
   },
   {
     q: 'Why does the "With Remainders" worksheet use a different format?',
@@ -56,7 +56,7 @@ const faqItems = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Division Worksheets",
-      "description": "Free printable division worksheets with 12 problems per page in a 4×3 grid. Choose division facts or long division with remainders — both fit on one printed page.",
+      "description": "Free printable division worksheets with 12 problems per page. Choose division facts or long division with remainders — both fit on one printed page.",
       "url": `${SITE}/math-worksheets/division-worksheets`,
       "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
       "teaches": "Division",
@@ -75,7 +75,7 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Division Worksheets</h1>
   <div slot="intro" class="no-print">
-    <p>Generate a free division worksheet with 12 problems in a 4×3 grid, sized to fit one printed page. Choose division facts or With Remainders for a long division worksheet with extra workspace. Print with or without the answer key.</p>
+    <p>Click Generate for 12 division problems. Choose Division Facts for straightforward fact practice, or choose With Remainders for long division problems with room to show your work. Print the worksheet or the answer key. For best results, print from a desktop or laptop.</p>
   </div>
 
   <WorksheetGenerator slot="widget" configs={configs} client:load />
