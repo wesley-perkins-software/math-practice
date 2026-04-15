@@ -1,37 +1,14 @@
 ---
-import BaseLayout from './BaseLayout.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
 
-interface BreadcrumbItem {
-  label: string;
-  href?: string;
-}
-
-interface Props {
-  title: string;
-  description: string;
-  canonical: string;
-  breadcrumb?: BreadcrumbItem[];
-}
-
-const { title, description, canonical, breadcrumb = [] } = Astro.props;
+const SITE = 'https://www.mathpractice.com';
 ---
 
-<BaseLayout title={title} description={description} canonical={canonical}>
-  <Fragment slot="head">
-    {breadcrumb.length > 0 && (
-      <script type="application/ld+json" set:html={JSON.stringify({
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": breadcrumb.map((item, i) => ({
-          "@type": "ListItem",
-          "position": i + 1,
-          "name": item.label,
-          ...(item.href ? { "item": `https://www.mathpractice.com${item.href}` } : {})
-        }))
-      })} />
-    )}
-    <slot name="head" />
-  </Fragment>
+<BaseLayout
+  title="Page Not Found — Math Practice"
+  description="The page you're looking for doesn't exist. Head back to Math Practice to keep practicing."
+  canonical={`${SITE}/404`}
+>
   <!-- Site Header -->
   <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
@@ -51,39 +28,26 @@ const { title, description, canonical, breadcrumb = [] } = Astro.props;
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-    <!-- Breadcrumb -->
-    {breadcrumb.length > 0 && (
-      <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#A5B4FC] flex items-center flex-wrap gap-1">
-        {breadcrumb.map((item, i) => (
-          <>
-            {i > 0 && <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>}
-            {item.href ? (
-              <a href={item.href} class="hover:text-[#4F46E5] transition-colors">{item.label}</a>
-            ) : (
-              <span class="text-[#6B7280]">{item.label}</span>
-            )}
-          </>
-        ))}
-      </nav>
-    )}
-
-    <!-- H1 -->
-    <slot name="h1" />
-
-    <!-- Intro text -->
-    <div class="mt-3 mb-6 text-[#6B7280] text-base leading-relaxed max-w-xl">
-      <slot name="intro" />
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-16 text-center">
+    <div class="mb-6">
+      <span class="text-7xl font-black text-[#E0E7FF] select-none">404</span>
     </div>
+    <h1 class="text-2xl font-bold text-[#1E1B4B] mb-3">Page not found</h1>
+    <p class="text-[#6B7280] mb-8 max-w-sm mx-auto">
+      That page doesn't exist. Try heading back to the homepage or pick a section below to keep practicing.
+    </p>
+    <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-sm font-semibold hover:bg-[#4338CA] transition-colors">
+      ← Back to Home
+    </a>
 
-    <!-- Practice Widget -->
-    <slot name="widget" />
-
-    <!-- Internal Links -->
-    <slot name="links" />
-
-    <!-- How it works section -->
-    <slot name="how-it-works" />
+    <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+      <a href="/addition" class="p-4 rounded-xl bg-white ring-1 ring-[#DBEAFE] text-[#1D4ED8] font-medium hover:ring-[#2563EB] hover:bg-[#EFF6FF] transition-all">Addition</a>
+      <a href="/subtraction" class="p-4 rounded-xl bg-white ring-1 ring-[#EDE9FE] text-[#6D28D9] font-medium hover:ring-[#7C3AED] hover:bg-[#F5F3FF] transition-all">Subtraction</a>
+      <a href="/multiplication" class="p-4 rounded-xl bg-white ring-1 ring-[#D1FAE5] text-[#047857] font-medium hover:ring-[#059669] hover:bg-[#ECFDF5] transition-all">Multiplication</a>
+      <a href="/division/facts" class="p-4 rounded-xl bg-white ring-1 ring-[#FEF3C7] text-[#B45309] font-medium hover:ring-[#D97706] hover:bg-[#FFFBEB] transition-all">Division</a>
+      <a href="/arithmetic-speed-drill" class="p-4 rounded-xl bg-white ring-1 ring-[#E0E7FF] text-[#4338CA] font-medium hover:ring-[#4F46E5] hover:bg-[#EEF2FF] transition-all col-span-2 sm:col-span-2">Speed Drill</a>
+      <a href="/math-worksheets" class="p-4 rounded-xl bg-white ring-1 ring-[#E0E7FF] text-[#4338CA] font-medium hover:ring-[#4F46E5] hover:bg-[#EEF2FF] transition-all col-span-2 sm:col-span-2">Worksheets</a>
+    </div>
   </main>
 
   <!-- Site Footer -->
@@ -99,13 +63,6 @@ const { title, description, canonical, breadcrumb = [] } = Astro.props;
         <a href="/arithmetic-speed-drill" class="hover:text-[#3730A3] transition-colors">Speed Drill</a>
         <a href="/math-worksheets" class="hover:text-[#3730A3] transition-colors">Worksheets</a>
         <a href="/progress" class="hover:text-[#3730A3] transition-colors">My Progress</a>
-      </div>
-      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1] mt-2">
-        <a href="/1st-grade-math-practice" class="hover:text-[#3730A3] transition-colors">1st Grade</a>
-        <a href="/2nd-grade-math-practice" class="hover:text-[#3730A3] transition-colors">2nd Grade</a>
-        <a href="/3rd-grade-math-practice" class="hover:text-[#3730A3] transition-colors">3rd Grade</a>
-        <a href="/4th-grade-math-practice" class="hover:text-[#3730A3] transition-colors">4th Grade</a>
-        <a href="/5th-grade-math-practice" class="hover:text-[#3730A3] transition-colors">5th Grade</a>
       </div>
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#A5B4FC] mt-2">
         <a href="/about" class="hover:text-[#6366F1] transition-colors">About</a>
