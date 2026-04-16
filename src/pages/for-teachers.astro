@@ -1,0 +1,190 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpractice.com';
+
+const links = [
+  { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: '60-second whole-class warm-up drill' },
+  { href: '/math-worksheets', label: 'Printable Worksheets', description: 'Generate & print a fresh worksheet in seconds' },
+  { href: '/addition', label: 'Addition Practice', description: '1-digit through 2-digit with carrying' },
+  { href: '/subtraction', label: 'Subtraction Practice', description: '1-digit through 2-digit with borrowing' },
+  { href: '/multiplication', label: 'Multiplication Practice', description: 'Times tables 1–12 and mixed facts' },
+  { href: '/division', label: 'Division Practice', description: 'Divide-by facts and division with remainders' },
+];
+
+const faqItems = [
+  {
+    q: 'Does this site require student accounts or logins?',
+    a: 'No accounts, no logins, no setup. Students open any page and start practicing immediately. Teachers can share a direct link to any topic and students are in without any friction.'
+  },
+  {
+    q: 'How can I use the Arithmetic Speed Drill in my classroom?',
+    a: 'The Speed Drill runs for 60 seconds and counts every correct answer. Project it on a whiteboard and have the class answer together, or let students work individually on their devices. It works as a warm-up, a cool-down activity, or a quick assessment of fluency progress.'
+  },
+  {
+    q: 'Can I print worksheets for students who don\'t have devices?',
+    a: 'Yes. Every worksheet page has a Generate button that creates 12 randomized problems and a Print Worksheet button for a clean, printer-ready page. There\'s also a Print Answer Key button for quick grading. Each worksheet fits on a single page, just like a classroom handout.'
+  },
+  {
+    q: 'How do I differentiate for different skill levels?',
+    a: 'Each operation has multiple difficulty levels. For addition and subtraction, that means 1-digit facts, 2-digit without regrouping, and 2-digit with regrouping. Multiplication offers individual times tables (1–12) for targeted practice or mixed facts for broader fluency. Division offers focused divide-by pages (÷1 through ÷12) and a mixed division facts drill. Share different URLs with different students to differentiate without any special setup.'
+  },
+  {
+    q: 'Does this align with Common Core or state math standards?',
+    a: 'The content maps directly to K–5 arithmetic fluency standards. Kindergarten and Grade 1 cover addition and subtraction within 20. Grade 2 covers 2-digit addition and subtraction with regrouping. Grade 3 introduces multiplication and division facts, with fluency expected by end of year. Grades 4–5 reinforce fact fluency and extend to multi-step operations. The specific skills practiced here match the fluency benchmarks emphasized in most state standards and Common Core.'
+  },
+  {
+    q: 'Is student progress saved between sessions?',
+    a: 'Yes — scores, streaks, and session history are stored in the student\'s browser automatically. No account is needed. If a student clears their browser data or switches devices, their history won\'t carry over, but for typical daily classroom use, progress is saved reliably.'
+  },
+  {
+    q: 'Is this site free for classroom use?',
+    a: 'Yes, completely free. No site license, no per-student fee, no subscription. Every practice mode and every worksheet is free for any teacher, student, or parent.'
+  },
+];
+---
+
+<PracticeLayout
+  title="Free Math Practice for Teachers — Classroom Drills & Printable Worksheets"
+  description="Free math practice for elementary teachers. No login, no setup — share any practice page with your class instantly. Arithmetic drills, times tables, and printable worksheets for grades K–5."
+  canonical={`${SITE}/for-teachers`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'For Teachers' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Free Math Practice for Teachers",
+      "description": "Free classroom arithmetic practice for elementary teachers. No login or setup required. Arithmetic drills, times tables, printable worksheets, and speed drills for grades K–5.",
+      "url": `${SITE}/for-teachers`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+      "teaches": ["Addition", "Subtraction", "Multiplication", "Division", "Arithmetic"],
+      "audience": { "@type": "EducationalAudience", "educationalRole": "teacher" },
+      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Free Math Practice for Teachers</h1>
+  <div slot="intro">
+    <p>Everything on this site is free, requires no student accounts, and works in any browser on any device. Share a link to any practice page and students are practicing in seconds — no IT setup, no app downloads, no permission forms.</p>
+  </div>
+
+  <InternalLinks slot="links" title="Practice Modes for Your Classroom" links={links} />
+
+  <Fragment slot="how-it-works">
+
+    <!-- How to use in class -->
+    <section class="mt-12" aria-labelledby="how-to-use-heading">
+      <h2 id="how-to-use-heading" class="text-lg font-semibold text-[#1E293B] mb-4">How to Use This in Your Classroom</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-8 h-8 rounded-lg bg-[#4F46E5] text-white flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">1</span>
+            <div>
+              <p class="text-sm font-semibold text-[#1E293B]">Warm-up drills</p>
+              <p class="text-sm text-[#6B7280] mt-0.5 leading-relaxed">Open the <a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a> at the start of class. 60 seconds, any mix of operations. Project on the board for a whole-class drill, or send the link to students for individual pacing.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-8 h-8 rounded-lg bg-[#4F46E5] text-white flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">2</span>
+            <div>
+              <p class="text-sm font-semibold text-[#1E293B]">Targeted skill practice</p>
+              <p class="text-sm text-[#6B7280] mt-0.5 leading-relaxed">Share a direct link to any specific skill — like <a href="/multiplication/times-tables/7" class="text-[#4F46E5] hover:underline">the 7 times table</a> or <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] hover:underline">2-digit addition with carrying</a>. Students practice only the skill you assign without navigating the rest of the site.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-8 h-8 rounded-lg bg-[#4F46E5] text-white flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">3</span>
+            <div>
+              <p class="text-sm font-semibold text-[#1E293B]">Printable worksheets</p>
+              <p class="text-sm text-[#6B7280] mt-0.5 leading-relaxed">Use <a href="/math-worksheets" class="text-[#4F46E5] hover:underline">Math Worksheets</a> to generate randomized problems and print a class set in under a minute. Each worksheet includes a Print Answer Key button for fast grading. Great for morning work, homework, or centers.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-8 h-8 rounded-lg bg-[#4F46E5] text-white flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">4</span>
+            <div>
+              <p class="text-sm font-semibold text-[#1E293B]">Differentiated practice</p>
+              <p class="text-sm text-[#6B7280] mt-0.5 leading-relaxed">Every operation has multiple difficulty levels. Share <a href="/addition/1-digit" class="text-[#4F46E5] hover:underline">1-digit addition</a> with students who need foundational support and <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] hover:underline">2-digit addition with carrying</a> with those ready for a challenge — same site, different URLs.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Grade-level guide -->
+    <section class="mt-12" aria-labelledby="grade-guide-heading">
+      <h2 id="grade-guide-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-Level Practice Guide</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Kindergarten – Grade 1</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">1-Digit Addition & Subtraction</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Build number sense and fact fluency within 20. <a href="/addition/1-digit" class="text-[#4F46E5] hover:underline">1-Digit Addition</a> and <a href="/subtraction/1-digit" class="text-[#4F46E5] hover:underline">1-Digit Subtraction</a> are the core tools for this grade band.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition & Subtraction with Regrouping</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Progress to multi-digit arithmetic. <a href="/addition/2-digit-no-carrying" class="text-[#4F46E5] hover:underline">2-Digit Addition (No Carrying)</a> first, then <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] hover:underline">with Carrying</a>. Same progression for subtraction.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Multiplication & Division Facts</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">The key fluency year. Start <a href="/multiplication/times-tables/1" class="text-[#4F46E5] hover:underline">times tables one at a time</a>, then move to <a href="/multiplication/facts" class="text-[#4F46E5] hover:underline">mixed multiplication facts</a> and <a href="/division/facts" class="text-[#4F46E5] hover:underline">division facts</a>.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grades 4–5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Fluency & Division with Remainders</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Solidify all operations and tackle <a href="/division/remainders" class="text-[#4F46E5] hover:underline">division with remainders</a>. The <a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a> is ideal for fluency assessment at this level.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why no login -->
+    <section class="mt-12" aria-labelledby="no-login-heading">
+      <h2 id="no-login-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Why No Login Required</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Login walls are the biggest friction point for classroom math tools. This site was built specifically to remove that friction. Students open a link and they're practicing — no account creation, no password reset emails, no parent permission forms for data collection.
+        </p>
+        <p>
+          Progress is stored in each student's browser automatically. There's no teacher dashboard (by design), but students can check their own <a href="/progress" class="text-[#4F46E5] font-medium hover:underline">Progress page</a> anytime to see scores, streaks, and session history.
+        </p>
+        <p>
+          No personal data is collected — not from students and not from teachers. The site works on school Chromebooks, shared classroom computers, iPads, and personal devices without any IT configuration.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-12" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+  </Fragment>
+</PracticeLayout>
