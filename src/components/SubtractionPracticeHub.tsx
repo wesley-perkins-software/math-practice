@@ -16,7 +16,7 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
     label: (
       <>
         <span className="block">2-Digit</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Borrow</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Borrowing</span>
       </>
     ),
     config: SUBTRACTION_2_DIGIT,
