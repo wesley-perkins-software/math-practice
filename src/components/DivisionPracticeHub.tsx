@@ -5,9 +5,9 @@ import { DIVISION_FACTS, DIVISION_REMAINDERS, divideByConfig } from '@/engine/pr
 type Mode = 'facts' | 'divide-by' | 'remainders';
 
 const TABS: { id: Mode; label: string; href: string }[] = [
-  { id: 'divide-by', label: 'Divide by X', href: '/division/divide-by/1' },
-  { id: 'facts', label: 'Facts', href: '/division/facts' },
-  { id: 'remainders', label: 'Remainders', href: '/division/remainders' },
+  { id: 'divide-by', label: 'Divide by 1–12', href: '/division/divide-by/1' },
+  { id: 'facts', label: 'Division Facts', href: '/division/facts' },
+  { id: 'remainders', label: 'With Remainders', href: '/division/remainders' },
 ];
 
 interface Props {

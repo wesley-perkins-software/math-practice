@@ -6,7 +6,7 @@ type Mode = 'times-tables' | 'facts' | 'mixed';
 
 const TABS: { id: 'times-tables' | 'facts'; label: string; href: string }[] = [
   { id: 'times-tables', label: 'Times Tables', href: '/multiplication/times-tables/1' },
-  { id: 'facts', label: 'Mixed Practice', href: '/multiplication/facts' },
+  { id: 'facts', label: 'Multiplication Facts', href: '/multiplication/facts' },
 ];
 
 const SCROLL_KEY = 'mult-practice:scroll-y';
