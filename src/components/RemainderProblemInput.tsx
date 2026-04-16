@@ -173,7 +173,7 @@ export default function RemainderProblemInput({
 
         {/* Remainder label + slot — tappable */}
         <div
-          className="mt-4 cursor-pointer"
+          className="mt-4 mb-2 cursor-pointer"
           onClick={() => switchSlot('remainder')}
         >
           <div className="text-xs font-medium text-[#A5B4FC] uppercase tracking-wide text-right mb-1">
