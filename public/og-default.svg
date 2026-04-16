@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0F0C29"/>
+      <stop offset="50%" style="stop-color:#1E1B4B"/>
+      <stop offset="100%" style="stop-color:#312E81"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" style="stop-color:#6366F1;stop-opacity:0.35"/>
+      <stop offset="100%" style="stop-color:#1E1B4B;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Ghost math symbols -->
+  <text x="60" y="240" font-family="Georgia, serif" font-size="220" font-weight="900" fill="white" opacity="0.04">+</text>
+  <text x="980" y="220" font-family="Georgia, serif" font-size="200" font-weight="900" fill="white" opacity="0.04">÷</text>
+  <text x="200" y="560" font-family="Georgia, serif" font-size="180" font-weight="900" fill="white" opacity="0.04">×</text>
+  <text x="870" y="580" font-family="Georgia, serif" font-size="190" font-weight="900" fill="white" opacity="0.04">−</text>
+
+  <!-- Logo mark -->
+  <rect x="540" y="148" width="120" height="120" rx="28" fill="#4F46E5"/>
+  <text x="600" y="230" font-family="Georgia, serif" font-size="72" font-weight="900" fill="white" text-anchor="middle">÷</text>
+
+  <!-- Site name -->
+  <text x="600" y="330" font-family="Georgia, 'Times New Roman', serif" font-size="56" font-weight="700" fill="white" text-anchor="middle" letter-spacing="-1">Math Practice</text>
+
+  <!-- Tagline -->
+  <text x="600" y="388" font-family="Georgia, 'Times New Roman', serif" font-size="26" fill="#A5B4FC" text-anchor="middle">Free Arithmetic Practice for Grades K–5</text>
+
+  <!-- Operation badges -->
+  <g transform="translate(246, 438)">
+    <rect width="148" height="48" rx="24" fill="#2563EB" opacity="0.85"/>
+    <text x="74" y="31" font-family="Georgia, serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">Addition</text>
+  </g>
+  <g transform="translate(412, 438)">
+    <rect width="172" height="48" rx="24" fill="#7C3AED" opacity="0.85"/>
+    <text x="86" y="31" font-family="Georgia, serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">Subtraction</text>
+  </g>
+  <g transform="translate(602, 438)">
+    <rect width="192" height="48" rx="24" fill="#059669" opacity="0.85"/>
+    <text x="96" y="31" font-family="Georgia, serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">Multiplication</text>
+  </g>
+  <g transform="translate(812, 438)">
+    <rect width="148" height="48" rx="24" fill="#D97706" opacity="0.85"/>
+    <text x="74" y="31" font-family="Georgia, serif" font-size="20" font-weight="700" fill="white" text-anchor="middle">Division</text>
+  </g>
+
+  <!-- Footer URL -->
+  <text x="600" y="572" font-family="Georgia, 'Times New Roman', serif" font-size="20" fill="#6366F1" text-anchor="middle" opacity="0.8">mathpractice.com · Free · No login required</text>
+</svg>

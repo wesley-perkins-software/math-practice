@@ -52,6 +52,20 @@ const operations = [
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Math Practice",
+      "url": "https://www.mathpractice.com",
+      "description": "Free arithmetic practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback.",
+      "logo": "https://www.mathpractice.com/favicon.svg"
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Math Practice",
+      "url": "https://www.mathpractice.com"
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
       "@type": "EducationalApplication",
       "name": "Math Practice",
       "url": "https://www.mathpractice.com/",
