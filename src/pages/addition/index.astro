@@ -1,5 +1,5 @@
 ---
-import BaseLayout from '@/layouts/BaseLayout.astro';
+import HubLayout from '@/layouts/HubLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
 const SITE = 'https://www.mathpractice.com';
@@ -59,7 +59,7 @@ const faqItems = [
 ];
 ---
 
-<BaseLayout
+<HubLayout
   title="Addition Practice — Free Online Addition Drills | Math Practice"
   description="Free online addition practice for grades K–3. Choose 1-digit addition, 2-digit addition without carrying, or 2-digit addition with carrying. Instant feedback and streak tracking."
   canonical={`${SITE}/addition`}
@@ -97,22 +97,6 @@ const faqItems = [
       }
     })} />
   </Fragment>
-
-  <!-- Site Header -->
-  <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2 group">
-        <span class="w-7 h-7 rounded-lg bg-[#4F46E5] flex items-center justify-center text-white font-black text-sm leading-none select-none group-hover:bg-[#6366F1] transition-colors">÷</span>
-        <span class="text-base font-bold text-white tracking-tight">Math Practice</span>
-      </a>
-      <nav class="hidden sm:flex items-center gap-1">
-        <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-white bg-white/10 transition-all">Addition</a>
-        <a href="/subtraction" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Subtraction</a>
-        <a href="/multiplication" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Multiplication</a>
-        <a href="/division" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Division</a>
-      </nav>
-    </div>
-  </header>
 
   <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
     <!-- Breadcrumb -->
@@ -219,18 +203,4 @@ const faqItems = [
     </section>
   </main>
 
-  <!-- Site Footer -->
-  <footer class="border-t-2 border-[#E0E7FF] bg-[#EEF2FF] mt-16">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
-      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1]">
-        <a href="/" class="hover:text-[#3730A3] transition-colors">Home</a>
-        <a href="/addition" class="hover:text-[#3730A3] transition-colors">Addition</a>
-        <a href="/subtraction" class="hover:text-[#3730A3] transition-colors">Subtraction</a>
-        <a href="/multiplication" class="hover:text-[#3730A3] transition-colors">Multiplication</a>
-        <a href="/division" class="hover:text-[#3730A3] transition-colors">Division</a>
-        <a href="/math-worksheets" class="hover:text-[#3730A3] transition-colors">Worksheets</a>
-      </div>
-      <p class="text-xs text-[#A5B4FC] mt-4">© {new Date().getFullYear()} Math Practice. Free arithmetic practice for students of all ages.</p>
-    </div>
-  </footer>
-</BaseLayout>
+</HubLayout>
