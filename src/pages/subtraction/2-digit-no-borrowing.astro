@@ -3,7 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/subtraction', label: 'All Subtraction Levels', description: 'Compare levels or start from the beginning' },
@@ -34,7 +34,7 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="2-Digit Subtraction Practice (No Borrowing) | Math Practice"
+  title="2-Digit Subtraction Practice (No Borrowing) | Math Practice Online"
   description="Practice 2-digit subtraction without borrowing online. Build place-value accuracy with subtraction problems that do not require regrouping. Instant feedback and streak tracking."
   canonical={`${SITE}/subtraction/2-digit-no-borrowing`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '2-Digit Subtraction (No Borrowing)' }]}
@@ -48,7 +48,7 @@ const faqItems = [
       "url": `${SITE}/subtraction/2-digit-no-borrowing`,
       "educationalLevel": ["Grade 1", "Grade 2"],
       "teaches": "Two-digit subtraction without regrouping",
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

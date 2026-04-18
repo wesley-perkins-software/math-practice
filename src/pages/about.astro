@@ -1,12 +1,12 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 ---
 
 <PracticeLayout
-  title="About Math Practice — Free K–5 Arithmetic Drills"
-  description="Math Practice is a free, no-account arithmetic site for K–5 students. Learn about our mission, what we offer, and how we protect student privacy."
+  title="About Math Practice Online — Free K–5 Arithmetic Drills"
+  description="Math Practice Online is a free, no-account arithmetic site for K–5 students. Learn about our mission, what we offer, and how we protect student privacy."
   canonical={`${SITE}/about`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'About' }]}
 >
@@ -14,12 +14,12 @@ const SITE = 'https://www.mathpractice.com';
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "AboutPage",
-      "name": "About Math Practice",
+      "name": "About Math Practice Online",
       "url": `${SITE}/about`,
-      "description": "Math Practice is a free, no-account arithmetic practice site for K–5 students, parents, and teachers.",
+      "description": "Math Practice Online is a free, no-account arithmetic practice site for K–5 students, parents, and teachers.",
       "mainEntity": {
         "@type": "Organization",
-        "name": "Math Practice",
+        "name": "Math Practice Online",
         "url": SITE,
         "description": "Free arithmetic practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback. No account or login required.",
         "foundingDate": "2024",
@@ -29,7 +29,7 @@ const SITE = 'https://www.mathpractice.com';
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">About Math Practice</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">About Math Practice Online</h1>
   <p slot="intro">
     Free arithmetic practice for K–5 students, parents, and teachers — no account, no cost, no tracking.
   </p>
@@ -37,9 +37,9 @@ const SITE = 'https://www.mathpractice.com';
   <div slot="links" class="space-y-8 text-sm text-[#374151] leading-relaxed max-w-xl">
 
     <section>
-      <h2 class="text-base font-semibold text-[#1E293B] mb-2">What is Math Practice?</h2>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">What is Math Practice Online?</h2>
       <p>
-        Math Practice is a free website built to help K–5 students build fluency with the four core
+        Math Practice Online is a free website built to help K–5 students build fluency with the four core
         arithmetic operations: addition, subtraction, multiplication, and division. Every problem,
         every drill, and every worksheet on this site is free — always.
       </p>

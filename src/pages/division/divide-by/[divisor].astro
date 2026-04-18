@@ -3,7 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import DivisionPracticeHub from '@/components/DivisionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 export function getStaticPaths() {
   return Array.from({ length: 12 }, (_, i) => i + 1).map((divisor) => ({
@@ -79,7 +79,7 @@ const links = [
       "url": `${SITE}/division/divide-by/${divisor}`,
       "educationalLevel": ["Grade 3", "Grade 4"],
       "teaches": "Division",
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

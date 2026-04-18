@@ -2,7 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const tables = Array.from({ length: 12 }, (_, i) => i + 1);
 
@@ -54,7 +54,7 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="Times Tables 1–12 — Practice Every Multiplication Table | Math Practice"
+  title="Times Tables 1–12 — Practice Every Multiplication Table | Math Practice Online"
   description="Practice all 12 times tables with focused, table-by-table multiplication drills. Free online practice for 1× through 12× with instant feedback and strategy tips. Grade 2–4."
   canonical={`${SITE}/multiplication/times-tables`}
   breadcrumb={[
@@ -72,7 +72,7 @@ const faqItems = [
       "url": `${SITE}/multiplication/times-tables`,
       "educationalLevel": ["Grade 2", "Grade 3", "Grade 4"],
       "teaches": "Multiplication times tables 1 through 12",
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

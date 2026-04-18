@@ -3,7 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/subtraction', label: 'All Subtraction Levels', description: 'Choose a difficulty or compare all levels' },
@@ -34,7 +34,7 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="1-Digit Subtraction Practice | Math Practice"
+  title="1-Digit Subtraction Practice | Math Practice Online"
   description="Practice 1-digit subtraction facts online with instant feedback, streak tracking, and timed drills. Build early elementary subtraction fluency and confidence."
   canonical={`${SITE}/subtraction/1-digit`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '1-Digit Subtraction' }]}
@@ -48,7 +48,7 @@ const faqItems = [
       "url": `${SITE}/subtraction/1-digit`,
       "educationalLevel": ["Kindergarten", "Grade 1"],
       "teaches": "Single-digit subtraction",
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

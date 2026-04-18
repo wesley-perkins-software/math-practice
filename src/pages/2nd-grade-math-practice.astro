@@ -2,7 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Add two-digit numbers without regrouping' },
@@ -10,7 +10,7 @@ const links = [
   { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction', description: 'Subtract two-digit numbers' },
   { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'Two-digit subtraction with regrouping' },
   { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Print 2-digit addition problems' },
-  { href: '/3rd-grade-math-practice', label: '3rd Grade Math Practice', description: 'Next level: intro to multiplication' },
+  { href: '/3rd-grade-math-practice', label: '3rd Grade Math Practice Online', description: 'Next level: intro to multiplication' },
 ];
 
 const faqItems = [
@@ -34,21 +34,21 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="2nd Grade Math Practice — 2-Digit Addition & Subtraction"
+  title="2nd Grade Math Practice Online — 2-Digit Addition & Subtraction"
   description="Free 2nd grade math practice for two-digit addition and subtraction, with and without carrying or borrowing. Instant feedback, no login required."
   canonical={`${SITE}/2nd-grade-math-practice`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: '2nd Grade Math Practice' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '2nd Grade Math Practice Online' }]}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "2nd Grade Math Practice",
+      "name": "2nd Grade Math Practice Online",
       "description": "Free online math practice for 2nd grade students. Covers two-digit addition and subtraction with and without regrouping.",
       "url": `${SITE}/2nd-grade-math-practice`,
       "educationalLevel": ["Grade 2"],
       "teaches": ["Addition", "Subtraction"],
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -61,7 +61,7 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2nd Grade Math Practice</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2nd Grade Math Practice Online</h1>
   <p slot="intro">Practice the two-digit addition and subtraction skills that define 2nd grade math. Build speed and accuracy with carrying and borrowing before moving on to multiplication.</p>
 
   <InternalLinks slot="links" title="2nd Grade Practice Activities" links={links} />

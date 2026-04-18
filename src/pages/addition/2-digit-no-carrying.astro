@@ -3,7 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/addition', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
@@ -34,7 +34,7 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="2-Digit Addition Practice (No Carrying) | Math Practice"
+  title="2-Digit Addition Practice (No Carrying) | Math Practice Online"
   description="Practice 2-digit addition without carrying. Every problem avoids regrouping so students can master place value and multi-digit setup first."
   canonical={`${SITE}/addition/2-digit-no-carrying`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition (No Carrying)' }]}
@@ -48,7 +48,7 @@ const faqItems = [
       "url": `${SITE}/addition/2-digit-no-carrying`,
       "educationalLevel": ["Grade 1", "Grade 2"],
       "teaches": "Two-digit addition without regrouping",
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
