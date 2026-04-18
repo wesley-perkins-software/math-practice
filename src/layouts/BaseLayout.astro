@@ -15,6 +15,21 @@ const { title, description, canonical, ogType = 'website' } = Astro.props;
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D6S5F1HFRM"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      // send_page_view: false — fired manually on astro:page-load to cover View Transitions navigations
+      gtag('config', 'G-D6S5F1HFRM', { send_page_view: false });
+      document.addEventListener('astro:page-load', function() {
+        gtag('event', 'page_view', {
+          page_path: window.location.pathname,
+          page_title: document.title,
+        });
+      });
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
