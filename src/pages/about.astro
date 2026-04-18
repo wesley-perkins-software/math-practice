@@ -1,0 +1,122 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+
+const SITE = 'https://www.mathpracticeonline.com';
+---
+
+<PracticeLayout
+  title="About Math Practice Online — Free K–5 Arithmetic Drills"
+  description="Math Practice Online is a free, no-account arithmetic site for K–5 students. Learn about our mission, what we offer, and how we protect student privacy."
+  canonical={`${SITE}/about`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'About' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "name": "About Math Practice Online",
+      "url": `${SITE}/about`,
+      "description": "Math Practice Online is a free, no-account arithmetic practice site for K–5 students, parents, and teachers.",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "Math Practice Online",
+        "url": SITE,
+        "description": "Free arithmetic practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback. No account or login required.",
+        "foundingDate": "2024",
+        "areaServed": "Worldwide",
+        "serviceType": "Educational Technology"
+      }
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">About Math Practice Online</h1>
+  <p slot="intro">
+    Free arithmetic practice for K–5 students, parents, and teachers — no account, no cost, no tracking.
+  </p>
+
+  <div slot="links" class="space-y-8 text-sm text-[#374151] leading-relaxed max-w-xl">
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">What is Math Practice Online?</h2>
+      <p>
+        Math Practice Online is a free website built to help K–5 students build fluency with the four core
+        arithmetic operations: addition, subtraction, multiplication, and division. Every problem,
+        every drill, and every worksheet on this site is free — always.
+      </p>
+      <p class="mt-2">
+        The site covers 40+ practice pages spanning kindergarten through 5th grade: single-digit
+        facts, 2-digit arithmetic with regrouping, times tables 1–12, division facts, division with
+        remainders, a 60-second speed drill, and printable worksheets for every operation.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Who is it for?</h2>
+      <ul class="list-disc list-inside space-y-1.5 mt-2">
+        <li><strong>Students</strong> in kindergarten through 5th grade who want to sharpen their arithmetic facts and build automatic recall</li>
+        <li><strong>Parents</strong> looking for a safe, distraction-free practice tool for at-home use — no signup required, works on any device</li>
+        <li><strong>Teachers</strong> who need a zero-friction warm-up activity, targeted skill practice, or printable worksheets for the classroom</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">What does it offer?</h2>
+      <ul class="list-disc list-inside space-y-1.5 mt-2">
+        <li><strong><a href="/addition" class="text-[#4F46E5] hover:underline">Addition</a>, <a href="/subtraction" class="text-[#4F46E5] hover:underline">Subtraction</a>, <a href="/multiplication" class="text-[#4F46E5] hover:underline">Multiplication</a>, <a href="/division" class="text-[#4F46E5] hover:underline">Division</a></strong> — practice at every difficulty level from 1-digit facts through 2-digit problems with regrouping</li>
+        <li><strong><a href="/multiplication/times-tables" class="text-[#4F46E5] hover:underline">Times Tables 1–12</a></strong> — focused table-by-table practice with per-table strategy tips</li>
+        <li><strong><a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a></strong> — a 60-second challenge to build fluency under time pressure, great as a classroom warm-up</li>
+        <li><strong><a href="/math-worksheets" class="text-[#4F46E5] hover:underline">Printable Worksheets</a></strong> — generate and print randomized practice sheets with answer keys for each operation</li>
+        <li><strong><a href="/progress" class="text-[#4F46E5] hover:underline">Progress Tracking</a></strong> — scores and streaks saved automatically in the browser, no account needed</li>
+        <li><strong>Grade-Level Guides</strong> — curated practice paths for <a href="/1st-grade-math-practice" class="text-[#4F46E5] hover:underline">1st</a> through <a href="/5th-grade-math-practice" class="text-[#4F46E5] hover:underline">5th grade</a></li>
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Our philosophy</h2>
+      <p>
+        Every student deserves access to quality practice tools without barriers. That means no accounts,
+        no subscriptions, no ads targeting children, and no data collection. Students open a page and
+        practice. Teachers share a link and students are in. Parents bookmark a page and it's always ready.
+      </p>
+      <p class="mt-2">
+        Progress data is stored only in the student's own browser using local storage. It never leaves
+        the device and is never sent to any server. We don't know who uses this site or how often —
+        and that's by design.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Content quality & accuracy</h2>
+      <p>
+        All practice content is aligned to the arithmetic fluency expectations in K–5 math curricula,
+        including the grade-level benchmarks described in Common Core State Standards and widely
+        adopted state standards. Grade progressions, difficulty levels, and skill descriptions are
+        reviewed for accuracy and age-appropriateness.
+      </p>
+      <p class="mt-2">
+        The site covers the complete K–5 arithmetic fluency progression: addition and subtraction
+        facts within 20 (K–Grade 2), 2-digit arithmetic with regrouping (Grade 2), multiplication
+        and division fact fluency (Grade 3), and all-operations fluency including remainders
+        (Grades 4–5).
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Privacy</h2>
+      <p>
+        No personal information is collected from anyone — not from students, parents, or teachers.
+        No cookies for tracking, no analytics that identify individual users, no email collection.
+        Read the full <a href="/privacy" class="text-[#4F46E5] hover:underline">Privacy Policy</a> for complete details.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Get started</h2>
+      <p>
+        Jump in at the <a href="/" class="text-[#4F46E5] hover:underline">homepage</a>, pick
+        a grade level or operation, and practice. No sign-up needed.
+      </p>
+    </section>
+
+  </div>
+</PracticeLayout>

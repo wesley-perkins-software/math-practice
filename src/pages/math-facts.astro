@@ -1,0 +1,171 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/addition', label: 'Addition Facts Practice', description: '1-digit through 2-digit addition with carrying' },
+  { href: '/subtraction', label: 'Subtraction Facts Practice', description: '1-digit through 2-digit subtraction with borrowing' },
+  { href: '/multiplication', label: 'Multiplication Facts Practice', description: 'Times tables 1–12 and mixed multiplication facts' },
+  { href: '/division', label: 'Division Facts Practice', description: 'Divide-by facts and division with remainders' },
+  { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: 'Timed 60-second drill across all four operations' },
+  { href: '/math-worksheets', label: 'Math Facts Worksheets', description: 'Printable worksheets for all four operations' },
+];
+
+const faqItems = [
+  {
+    q: 'What are math facts?',
+    a: 'Math facts are the basic arithmetic combinations for all four operations: addition (like 3+4=7), subtraction (like 9−5=4), multiplication (like 6×7=42), and division (like 56÷8=7). "Knowing your math facts" means being able to recall these answers quickly and automatically — without counting or calculating each time. Fluency with math facts is a foundational skill that makes all higher math significantly easier.'
+  },
+  {
+    q: 'What are addition facts?',
+    a: 'Addition facts are all the single-digit combinations: 1+1 through 9+9 (81 total facts). Students are expected to know these automatically by the end of 1st or 2nd grade. Mastery of addition facts supports subtraction, carrying in multi-digit addition, and mental arithmetic of all kinds.'
+  },
+  {
+    q: 'What are multiplication facts?',
+    a: 'Multiplication facts (also called times tables) cover 1×1 through 12×12 — a total of 144 combinations. Students are expected to know all multiplication facts fluently by the end of 3rd grade. Knowing multiplication facts makes long division, fractions, and algebra significantly easier. The most commonly practiced are ×2 through ×12.'
+  },
+  {
+    q: 'What are division facts?',
+    a: 'Division facts are the inverse of multiplication facts: every multiplication fact generates a corresponding division fact. For example, since 7×8=56, the division facts are 56÷7=8 and 56÷8=7. Students who know their multiplication facts well can usually derive division facts quickly. Division facts are typically a Grade 3–4 focus.'
+  },
+  {
+    q: 'What grade do students learn math facts?',
+    a: 'Addition and subtraction facts (within 20) are the core focus in Kindergarten through Grade 2. Multiplication and division facts are introduced in Grade 3, with full fluency expected by end of 3rd grade. Grades 4 and 5 reinforce all four operations and extend division to problems with remainders. Each grade level page on this site lists the specific fact fluency targets for that year.'
+  },
+  {
+    q: 'What is the best way to memorize math facts?',
+    a: 'Daily practice in short, focused sessions (5–10 minutes) consistently outperforms longer, infrequent sessions. Targeted practice on specific weak facts is more effective than always doing mixed drills. Starting with easier facts (×1, ×2, ×5, ×10) and building to harder ones (×6, ×7, ×8) reduces frustration and accelerates overall memorization. Connecting multiplication and division facts as families — "7×8=56 means 56÷8=7 and 56÷7=8" — builds both operations simultaneously.'
+  },
+];
+---
+
+<PracticeLayout
+  title="Math Facts — Addition, Subtraction, Multiplication & Division Practice"
+  description="Practice all four math facts: addition, subtraction, multiplication, and division. Free online drills and printable worksheets for grades K–5. Build automatic fact recall with instant feedback."
+  canonical={`${SITE}/math-facts`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Facts' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Math Facts Practice",
+      "description": "Free online practice for all four math facts: addition, subtraction, multiplication, and division. Instant feedback drills and printable worksheets for grades K–5.",
+      "url": `${SITE}/math-facts`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+      "teaches": ["Addition facts", "Subtraction facts", "Multiplication facts", "Division facts", "Arithmetic fluency"],
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Math Facts Practice</h1>
+  <div slot="intro">
+    <p>Math facts are the basic arithmetic combinations — addition, subtraction, multiplication, and division — that students need to recall automatically. This site has free, focused practice for every fact type, from kindergarten through 5th grade.</p>
+  </div>
+
+  <InternalLinks slot="links" title="Practice by Operation" links={links} />
+
+  <Fragment slot="how-it-works">
+
+    <!-- The four fact types -->
+    <section class="mt-12" aria-labelledby="fact-types-heading">
+      <h2 id="fact-types-heading" class="text-lg font-semibold text-[#1E293B] mb-4">The Four Math Fact Types</h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <a href="/addition" class="block bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#2563EB] hover:shadow-md transition-all group">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center text-xl font-black">+</span>
+            <h3 class="text-base font-semibold text-[#1E293B] group-hover:text-[#2563EB] transition-colors">Addition Facts</h3>
+          </div>
+          <p class="text-sm text-[#6B7280] leading-relaxed">All 81 single-digit combinations (1+1 through 9+9), plus 2-digit addition with and without carrying. Kindergarten through Grade 2 focus.</p>
+          <span class="mt-3 inline-block text-sm font-semibold text-[#2563EB]">Practice Addition →</span>
+        </a>
+        <a href="/subtraction" class="block bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#7C3AED] hover:shadow-md transition-all group">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 rounded-xl bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center text-xl font-black">−</span>
+            <h3 class="text-base font-semibold text-[#1E293B] group-hover:text-[#7C3AED] transition-colors">Subtraction Facts</h3>
+          </div>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Single-digit differences and 2-digit subtraction with and without borrowing. Paired with addition facts as inverse operations. Grade 1–3 focus.</p>
+          <span class="mt-3 inline-block text-sm font-semibold text-[#7C3AED]">Practice Subtraction →</span>
+        </a>
+        <a href="/multiplication" class="block bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#059669] hover:shadow-md transition-all group">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 rounded-xl bg-[#ECFDF5] text-[#059669] flex items-center justify-center text-xl font-black">×</span>
+            <h3 class="text-base font-semibold text-[#1E293B] group-hover:text-[#059669] transition-colors">Multiplication Facts</h3>
+          </div>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Times tables 1×1 through 12×12 (144 total facts). Practice table-by-table or as mixed facts. Fluency expected by end of Grade 3.</p>
+          <span class="mt-3 inline-block text-sm font-semibold text-[#059669]">Practice Multiplication →</span>
+        </a>
+        <a href="/division" class="block bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#D97706] hover:shadow-md transition-all group">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="w-10 h-10 rounded-xl bg-[#FFFBEB] text-[#D97706] flex items-center justify-center text-xl font-black">÷</span>
+            <h3 class="text-base font-semibold text-[#1E293B] group-hover:text-[#D97706] transition-colors">Division Facts</h3>
+          </div>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Exact division facts (÷1 through ÷12) plus division with remainders. The inverse of multiplication facts. Grade 3–5 focus.</p>
+          <span class="mt-3 inline-block text-sm font-semibold text-[#D97706]">Practice Division →</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Grade progression -->
+    <section class="mt-12" aria-labelledby="fluency-progression-heading">
+      <h2 id="fluency-progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Math Fact Fluency by Grade</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">K – Grade 1</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Addition & subtraction facts within 20</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">The foundational layer. Students build number sense and practice adding and subtracting single-digit numbers automatically.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">2-digit addition & subtraction with regrouping</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Carrying and borrowing extend single-digit fact fluency to multi-digit problems. Place value understanding deepens.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Multiplication & division fact fluency</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">The major fluency goal: students should know all 1–12 times tables by heart by end of Grade 3. Division facts are taught alongside multiplication.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grades 4–5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">All-operations fluency & division with remainders</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Students consolidate fluency across all four operations. Division extends to problems with remainders. Speed and accuracy prepare students for middle school math.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-12" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+  </Fragment>
+</PracticeLayout>

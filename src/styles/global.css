@@ -1,0 +1,248 @@
+@import "tailwindcss";
+
+@theme {
+  /* ── Brand ─────────────────────────────────────── */
+  --color-brand:          #4F46E5;
+  --color-brand-dark:     #3730A3;
+  --color-brand-light:    #EEF2FF;
+
+  /* ── Page Canvas ────────────────────────────────── */
+  --color-bg:             #F5F3FF;
+  --color-surface:        #FFFFFF;
+  --color-surface-raised: #FAFAFE;
+
+  /* ── Borders ────────────────────────────────────── */
+  --color-border:         #E0E7FF;
+  --color-border-strong:  #C7D2FE;
+
+  /* ── Text ───────────────────────────────────────── */
+  --color-text-primary:   #1E1B4B;
+  --color-text-secondary: #4338CA;
+  --color-text-muted:     #6B7280;
+  --color-text-on-dark:   #EEF2FF;
+
+  /* ── Semantic ───────────────────────────────────── */
+  --color-success:        #059669;
+  --color-success-bg:     #ECFDF5;
+  --color-error:          #DC2626;
+  --color-error-bg:       #FEF2F2;
+  --color-timer-warn:     #EA580C;
+
+  /* ── Header ─────────────────────────────────────── */
+  --color-header-bg:      #1E1B4B;
+  --color-header-border:  #312E81;
+
+  /* ── Typography ─────────────────────────────────── */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+}
+
+@keyframes cursor-blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+/* @page margin: 0 removes the browser's printed URL / date line from the footer */
+@page {
+  size: letter portrait;
+  margin: 0;
+}
+
+@media print {
+  html,
+  body {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+  }
+
+  /* Restore content margins (replaces the @page margins we zeroed out) */
+  body {
+    margin: 8mm 10mm !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Hide site chrome and on-screen-only elements */
+  header, footer, nav, .no-print {
+    display: none !important;
+  }
+
+  main {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Single-page worksheet box with a safety buffer to prevent a trailing blank page */
+  .worksheet-area {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 247mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid-page !important;
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  .worksheet-area:last-child {
+    margin-bottom: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  /* Suppress Tailwind spacing in print to avoid accidental overflow */
+  .worksheet-area > * + * {
+    margin-top: 0 !important;
+  }
+
+  /* Show and pin the name/date header */
+  .print-only-header {
+    display: block !important;
+    margin: 0 !important;
+    padding-bottom: 2.5mm !important;
+  }
+
+  /* Name / Date field solid underlines */
+  .print-name-line {
+    display: inline-block !important;
+    width: 55mm !important;
+    border-bottom: 1.5pt solid #1E1B4B !important;
+    margin-right: 16mm !important;
+  }
+  .print-date-line {
+    display: inline-block !important;
+    width: 55mm !important;
+    border-bottom: 1.5pt solid #1E1B4B !important;
+  }
+
+  /* 4×3 grid that fills the remaining worksheet space */
+  .worksheet-area .worksheet-grid {
+    flex: 1 !important;
+    min-height: 0 !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-template-rows: repeat(3, minmax(0, 1fr)) !important;
+    column-gap: 7mm !important;
+    row-gap: 6mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Each problem fills its grid cell */
+  .worksheet-problem {
+    border: none !important;
+    border-radius: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    min-height: unset !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Constrain inner problem width so answer line matches the numbers, not the full cell */
+  .problem-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-end !important;
+    width: 30mm !important;
+  }
+
+  /* Operand number rows */
+  .worksheet-problem .font-mono {
+    font-size: 20pt !important;
+    line-height: 1.25 !important;
+  }
+
+  /* Horizontal rule between problem and answer space */
+  .worksheet-problem .border-t-2 {
+    margin-top: 1mm !important;
+    margin-bottom: 0 !important;
+    border-top-width: 1.5pt !important;
+    border-color: #1E1B4B !important;
+  }
+
+  /* Blank answer space */
+  .worksheet-problem .h-7 {
+    height: 7mm !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Long division: pin content to top of cell so student work space falls below */
+  .worksheet-area.long-division-mode .worksheet-problem {
+    justify-content: flex-start !important;
+    padding-top: 8mm !important;
+  }
+
+  .worksheet-area.long-division-mode .long-division-problem .long-division-divisor,
+  .worksheet-area.long-division-mode .long-division-problem .long-division-dividend {
+    font-size: 20pt !important;
+    line-height: 1 !important;
+  }
+
+  .worksheet-area.long-division-mode .long-division-problem .long-division-dividend {
+    border-top-width: 1.5pt !important;
+    border-left-width: 1.5pt !important;
+    padding-top: 1.2mm !important;
+    padding-left: 1.5mm !important;
+    min-width: calc(var(--dividend-digits, 2) * 1ch + 6mm) !important;
+  }
+
+  /* Answer positioned above dividend bracket */
+  .worksheet-area.long-division-mode .long-division-answer {
+    font-size: 18pt !important;
+    line-height: 1 !important;
+    margin-bottom: 1mm !important;
+  }
+
+  .worksheet-area.long-division-mode .long-division-answer span:last-child {
+    font-size: 12pt !important;
+  }
+
+  .worksheet-area.long-division-mode .long-division-answer-blank {
+    height: 7mm !important;
+    margin-bottom: 1mm !important;
+  }
+}
+
+@layer base {
+  html {
+    font-family: var(--font-sans);
+    background-color: var(--color-bg);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Remove number input spinners */
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  .long-division-dividend {
+    min-width: calc(var(--dividend-digits, 2) * 1ch + 0.9rem);
+  }
+}

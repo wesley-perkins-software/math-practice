@@ -1,0 +1,199 @@
+---
+import HubLayout from '@/layouts/HubLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const modes = [
+  {
+    href: '/multiplication/times-tables/1',
+    label: 'Times Tables 1–12',
+    grade: 'Grade 3 – Grade 4',
+    description: 'Focus on one times table at a time. The best starting point for Grade 3 students building multiplication fluency.',
+    symbol: '7 × 8',
+  },
+  {
+    href: '/multiplication/facts',
+    label: 'Multiplication Facts',
+    grade: 'Grade 3 – Grade 4',
+    description: 'Practice all 144 multiplication facts from 1×1 to 12×12 in random order. Build full fluency across every times table.',
+    symbol: '6 × 7',
+  },
+];
+
+const relatedLinks = [
+  { href: '/division/facts', label: 'Division Facts Practice', description: 'Use your times-table facts to solve division' },
+  { href: '/3rd-grade-math-practice', label: '3rd Grade Math Practice Online', description: 'See what most 3rd graders practice next' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print times-table pages for extra practice' },
+  { href: '/division', label: 'Division Practice', description: 'Ready for the next step? Try division' },
+];
+
+const faqItems = [
+  {
+    q: 'What grade level is multiplication?',
+    a: 'Grade 2 introduces the concept through repeated addition and skip counting. Grade 3 is where students learn all multiplication facts and build fluency. By Grade 4, facts are expected to be memorized and are applied to multi-digit multiplication.',
+  },
+  {
+    q: 'How many multiplication facts are there?',
+    a: 'There are 144 facts from 1×1 through 12×12. Thanks to the commutative property (3×4 = 4×3), there are only 78 unique facts to learn.',
+  },
+  {
+    q: 'What is the best order to learn times tables?',
+    a: 'Start with 2s, 5s, and 10s — they have clear patterns and are easiest to grasp. Then add 3s, 4s, and 9s (which have a helpful finger trick). Tackle 6s, 7s, and 8s last, since they require more repetition.',
+  },
+  {
+    q: 'How do I help my child memorize times tables?',
+    a: 'Short daily practice sessions (5–10 minutes) are more effective than long occasional ones. Start with tables the child already partially knows to build confidence. Consistent repetition over days and weeks is what builds lasting speed.',
+  },
+  {
+    q: 'How does this multiplication practice work?',
+    a: 'Practice runs continuously with instant right/wrong feedback after every answer. Scores and streaks are saved in your browser automatically.',
+  },
+];
+---
+
+<HubLayout
+  title="Multiplication Practice — Free Online Times Tables Drills | Math Practice Online"
+  description="Free online multiplication practice for grades 2–4. Choose mixed multiplication facts (1×1–12×12) or focus on one times table at a time. Instant feedback and streak tracking."
+  canonical={`${SITE}/multiplication`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mathpracticeonline.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Multiplication Practice" }
+      ]
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Multiplication Practice",
+      "description": "Free online multiplication practice for grades 2–4 covering all times tables from 1×1 to 12×12. Instant feedback and progress tracking.",
+      "url": "https://www.mathpracticeonline.com/multiplication",
+      "educationalLevel": ["Grade 2", "Grade 3", "Grade 4"],
+      "teaches": "Multiplication",
+      "provider": {
+        "@type": "Organization",
+        "name": "Math Practice Online",
+        "url": "https://www.mathpracticeonline.com"
+      }
+    })} />
+  </Fragment>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#A5B4FC] flex items-center flex-wrap gap-1">
+      <a href="/" class="hover:text-[#4F46E5] transition-colors">Home</a>
+      <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>
+      <span class="text-[#6B7280]">Multiplication Practice</span>
+    </nav>
+
+    <!-- H1 + intro -->
+    <h1 class="text-3xl font-bold text-[#1E293B]">Multiplication Practice</h1>
+    <p class="mt-3 mb-8 text-[#6B7280] text-base leading-relaxed max-w-xl">
+      Free online multiplication practice for grades 2–4. Choose a practice mode below — each opens an interactive drill with instant feedback and streak tracking.
+    </p>
+
+    <!-- Practice mode cards -->
+    <section aria-labelledby="modes-heading">
+      <h2 id="modes-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Choose a Practice Mode</h2>
+      <div class="flex flex-col gap-4">
+        {modes.map((m) => (
+          <a
+            href={m.href}
+            class="flex items-start gap-4 bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#4F46E5] hover:shadow-md transition-all group"
+          >
+            <div class="w-16 h-14 rounded-xl bg-[#EEF2FF] flex items-center justify-center font-mono text-sm font-bold text-[#4F46E5] shrink-0 leading-tight text-center">
+              {m.symbol}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-baseline gap-2 flex-wrap">
+                <span class="font-semibold text-[#1E293B] group-hover:text-[#4F46E5] transition-colors">{m.label}</span>
+                <span class="text-xs font-medium text-[#6366F1] bg-[#EEF2FF] px-2 py-0.5 rounded-full">{m.grade}</span>
+              </div>
+              <p class="text-sm text-[#6B7280] mt-1 leading-relaxed">{m.description}</p>
+            </div>
+            <span class="text-[#A5B4FC] group-hover:text-[#4F46E5] transition-colors text-lg leading-none mt-1" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Grade progression -->
+    <section class="mt-12" aria-labelledby="progression-heading">
+      <h2 id="progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Introduction to Multiplication</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Explore repeated addition, equal groups, and arrays. Skip count by 2s, 5s, and 10s to build the concept before formal memorization begins.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Learn All Multiplication Facts</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">This is the core multiplication year. Students build fluency with all facts and learn multiplication and division together as inverse operations.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Apply Multiplication Skills</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Facts are expected to be memorized. Focus shifts to multi-digit multiplication, long multiplication, and applying fluency in problem solving.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips section -->
+    <section class="mt-12" aria-labelledby="tips-heading">
+      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Start with the easiest tables — 2s, 5s, and 10s all have clear patterns that students can grasp quickly. Use <a href="/multiplication/times-tables/2" class="text-[#4F46E5] font-medium hover:underline">times table practice</a> to build one table at a time before mixing them together.
+        </p>
+        <p>
+          The <a href="/multiplication/times-tables/9" class="text-[#4F46E5] font-medium hover:underline">9s table</a> has a well-known finger trick: hold up 10 fingers, fold down the nth finger, and read the tens and ones on either side. Teaching this early prevents the 9s from becoming a stumbling block.
+        </p>
+        <p>
+          Once individual tables feel solid, move to <a href="/multiplication/facts" class="text-[#4F46E5] font-medium hover:underline">mixed facts practice</a> to build the cross-table fluency students need for division, fractions, and multi-digit multiplication.
+        </p>
+      </div>
+    </section>
+
+    <!-- Related links -->
+    <section class="mt-12" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="text-base font-semibold text-[#1E293B] mb-3">Related Practice</h2>
+      <InternalLinks client:load links={relatedLinks} />
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-12" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+</HubLayout>

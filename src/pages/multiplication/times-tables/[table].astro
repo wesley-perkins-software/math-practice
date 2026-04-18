@@ -1,0 +1,180 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+export function getStaticPaths() {
+  return Array.from({ length: 12 }, (_, i) => ({
+    params: { table: String(i + 1) },
+  }));
+}
+
+const { table } = Astro.params;
+const tableNumber = Number(table);
+
+if (!Number.isInteger(tableNumber) || tableNumber < 1 || tableNumber > 12) {
+  return Astro.redirect('/multiplication/times-tables/1', 302);
+}
+
+// Per-table strategy tips
+const TABLE_STRATEGIES: Record<number, { name: string; tip: string }> = {
+  1: { name: 'Identity Property', tip: 'Any number multiplied by 1 equals itself. 1×7=7, 1×12=12. The 1s table is instant once you know the rule — no memorization needed.' },
+  2: { name: 'Doubling', tip: 'The 2s table is just doubling. 2×8 is the same as 8+8=16. If you can add a number to itself, you already know the 2s table.' },
+  3: { name: 'Triple the Number', tip: 'Multiply by 2 first, then add one more group. 3×7: double 7 is 14, plus 7 more = 21. Build on the 2s table you already know.' },
+  4: { name: 'Double Twice', tip: 'The 4s are just doubling twice. 4×6: double 6 to get 12, then double 12 to get 24. Combine it with what you know about the 2s table.' },
+  5: { name: 'Count by Fives', tip: 'Every product ends in 0 or 5. 5×7=35, 5×8=40. Skip-count by fives to quickly verify any answer in the 5s table.' },
+  6: { name: 'Use the 5s as a Stepping Stone', tip: '6×n = 5×n + n. For 6×7: 5×7=35, then add 7 more = 42. For even numbers, the product ends in the same digit as the multiplicand: 6×4=24, 6×6=36, 6×8=48.' },
+  7: { name: 'Build from What You Know', tip: 'No shortcut exists for the 7s — but you likely know many already (7×2, 7×5, 7×10). Use commutativity: 7×8 is the same as 8×7, which you can learn from the 8s table.' },
+  8: { name: 'Triple Doubling', tip: '8s are tripled doubles: double once (×2), double again (×4), double one more time (×8). For 8×7: 7 → 14 → 28 → 56. Consistent doubling builds speed.' },
+  9: { name: 'The Finger Trick', tip: 'Hold up 10 fingers. To find 9×n, fold down finger n. Count fingers to the left for the tens digit, fingers to the right for the ones digit. 9×7: fold finger 7, see 6 fingers left and 3 right → 63.' },
+  10: { name: 'Append a Zero', tip: 'Multiply any number by 10 by appending a 0. 10×7=70, 10×12=120. This understanding extends directly to multiplying by 100, 1000, and powers of 10.' },
+  11: { name: 'Repeat the Digit', tip: 'For 11×1 through 11×9, repeat the digit: 11×7=77, 11×5=55, 11×3=33. Memorize the three exceptions separately: 11×10=110, 11×11=121, 11×12=132.' },
+  12: { name: '10 Plus 2', tip: '12×n = 10×n + 2×n. For 12×7: 10×7=70, 2×7=14, add them: 70+14=84. This combines the easy ×10 rule with a simple doubling step.' },
+};
+
+// Grade badges by table
+const GRADE_BADGE: Partial<Record<number, string>> = {
+  1: 'Grade 2 – Grade 3',
+  2: 'Grade 2 – Grade 3',
+  5: 'Grade 2 – Grade 3',
+  10: 'Grade 2 – Grade 3',
+};
+const gradeBadge = GRADE_BADGE[tableNumber] ?? 'Grade 3 – Grade 4';
+
+const strategy = TABLE_STRATEGIES[tableNumber];
+
+// Build the full times table list for the FAQ answer
+const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}×${i + 1}=${tableNumber * (i + 1)}`).join(', ');
+
+const faqItems = [
+  {
+    q: `What is the ${tableNumber} times table?`,
+    a: `The ${tableNumber} times table lists the products of ${tableNumber} multiplied by 1 through 12: ${tableList}.`,
+  },
+  {
+    q: `What grade do students learn the ${tableNumber} times table?`,
+    a: tableNumber <= 2 || tableNumber === 5 || tableNumber === 10
+      ? `The ${tableNumber}s table is often introduced in Grade 2 as part of early multiplication concepts. Grade 3 students deepen fluency with it alongside all other times tables.`
+      : `The ${tableNumber}s table is typically a Grade 3 focus. Students learn all multiplication facts in Grade 3 and are expected to recall them fluently by the end of the year.`,
+  },
+  {
+    q: `What is the trick for the ${tableNumber} times table?`,
+    a: strategy.tip,
+  },
+  {
+    q: `How does this times table practice work?`,
+    a: `This page drills ${tableNumber}×1 through ${tableNumber}×12 in random order with instant right/wrong feedback after every answer. Scores and streaks are saved in your browser automatically.`,
+  },
+];
+
+const links = [
+  { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
+  { href: '/multiplication/facts', label: 'Mixed Facts Practice', description: 'All 144 facts from 1–12 in random order' },
+  {
+    href: tableNumber < 12 ? `/multiplication/times-tables/${tableNumber + 1}` : `/multiplication/times-tables/1`,
+    label: tableNumber < 12 ? `Next: ${tableNumber + 1} Times Table` : 'Back to 1 Times Table',
+    description: 'Continue table-by-table practice',
+  },
+  { href: '/division/facts', label: 'Division Facts', description: 'The inverse operation of multiplication' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Worksheet-style timed practice' },
+];
+
+const pageTitle = `${tableNumber} Times Table Practice | Multiplication Table ${tableNumber}`;
+const pageDescription = `Practice the ${tableNumber} times table with focused multiplication problems. Build fast recall for ${tableNumber}×1 through ${tableNumber}×12 with instant feedback and streak tracking.`;
+const h1 = `${tableNumber} Times Table Practice`;
+const introLead = `Focus on the ${tableNumber} times table to build automatic recall for one number at a time.`;
+const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}×12 so students can master the ${tableNumber}s before moving on to mixed multiplication practice.`;
+---
+
+<PracticeLayout
+  title={pageTitle}
+  description={pageDescription}
+  canonical={`${SITE}/multiplication/times-tables/${tableNumber}`}
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Multiplication', href: '/multiplication' },
+    { label: 'Times Tables', href: '/multiplication/times-tables' },
+    { label: `${tableNumber} Times Table` },
+  ]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": `${tableNumber} Times Table Practice`,
+      "description": pageDescription,
+      "url": `${SITE}/multiplication/times-tables/${tableNumber}`,
+      "educationalLevel": tableNumber <= 2 || tableNumber === 5 || tableNumber === 10
+        ? ["Grade 2", "Grade 3"]
+        : ["Grade 3", "Grade 4"],
+      "teaches": `${tableNumber} times table multiplication facts`,
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{h1}</h1>
+  <div slot="intro">
+    <p>{introLead}</p>
+    <p class="mt-2">{introSupport}</p>
+  </div>
+
+  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
+  <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: {gradeBadge}</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 12 facts in the {tableNumber} times table ({tableNumber}×1 through {tableNumber}×12)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems presented in random order to build genuine recall</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Scores and best streak saved in your browser automatically</li>
+      </ul>
+    </section>
+
+    <!-- Strategy -->
+    <section aria-labelledby="strategy-heading">
+      <h2 id="strategy-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Strategy for the {tableNumber}s</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">{strategy.name}</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">{strategy.tip}</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Every fact in the {tableNumber}s table appears in another table too. If you know 7×{tableNumber}, you already know {tableNumber}×7. Flip any difficult fact to find a familiar one.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

@@ -1,0 +1,121 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/addition', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Review single-digit addition fluency first' },
+  { href: '/addition/2-digit-with-carrying', label: '2-Digit Addition with Carrying', description: 'Next step: add regrouping to the mix' },
+  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Pair two-digit addition and subtraction' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style practice with instant feedback' },
+];
+
+const faqItems = [
+  {
+    q: 'What is two-digit addition without carrying?',
+    a: 'Two-digit addition without carrying (also called addition without regrouping) means every column adds up to 9 or less, so no digits need to be carried. For example, 23 + 45: the ones column is 3 + 5 = 8, and the tens column is 2 + 4 = 6, giving 68. Each column is completely independent.'
+  },
+  {
+    q: 'Why practice addition without carrying before carrying?',
+    a: 'Learning to align digits by place value and add each column separately is a distinct skill from regrouping. Practicing no-carrying problems first lets students focus entirely on column alignment and place value without the extra cognitive load of regrouping. Once no-carrying addition feels automatic, carrying is much easier to learn.'
+  },
+  {
+    q: 'What grade is two-digit addition without carrying?',
+    a: 'Two-digit addition without regrouping is typically a late Grade 1 and Grade 2 skill. Students usually master it after achieving fluency with single-digit addition facts.'
+  },
+  {
+    q: 'How is two-digit addition different from single-digit addition?',
+    a: 'Two-digit addition requires working with place value. You must align the numbers by their ones and tens columns, then add each column from right to left. Single-digit addition works with one column only, while two-digit addition extends the process to two columns.'
+  },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Addition Practice (No Carrying) | Math Practice Online"
+  description="Practice 2-digit addition without carrying. Every problem avoids regrouping so students can master place value and multi-digit setup first."
+  canonical={`${SITE}/addition/2-digit-no-carrying`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition (No Carrying)' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "2-Digit Addition Practice (No Carrying)",
+      "description": "Interactive online practice for two-digit addition without regrouping. Every problem is designed so no carrying is needed, isolating the place-value column addition skill.",
+      "url": `${SITE}/addition/2-digit-no-carrying`,
+      "educationalLevel": ["Grade 1", "Grade 2"],
+      "teaches": "Two-digit addition without regrouping",
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition Practice (No Carrying)</h1>
+  <p slot="intro">Work on two-digit addition without regrouping to strengthen place-value alignment and written addition steps before introducing carrying.</p>
+  <AdditionPracticeHub slot="widget" active="2-digit-no-carrying" client:load />
+  <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Grade 1 – Grade 2</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit addition problems (10–99 + 10–99) where no column sums to 10 or more</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Aligning tens and ones columns by place value</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Adding each column independently from right to left</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak and score tracking</li>
+      </ul>
+    </section>
+
+    <!-- How to solve -->
+    <section aria-labelledby="howto-heading">
+      <h2 id="howto-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Solve Two-Digit Addition</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align by Place Value</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Write the numbers so the ones digits are in one column and the tens digits are in another. Alignment prevents place-value errors.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Ones Column</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Start on the right. Add the two ones digits together and write the result below the ones column.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Tens Column</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Move left to the tens column. Add those two digits and write the result. Since there is no carrying, you're done.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

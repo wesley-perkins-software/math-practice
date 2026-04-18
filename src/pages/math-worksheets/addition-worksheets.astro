@@ -1,0 +1,145 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import WorksheetGenerator from '@/components/WorksheetGenerator';
+import InternalLinks from '@/components/InternalLinks';
+import {
+  ADDITION_1_DIGIT,
+  ADDITION_2_DIGIT,
+  ADDITION_2_DIGIT_CARRYING,
+} from '@/engine/presets';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const configs = [
+  { label: '1-Digit', config: ADDITION_1_DIGIT },
+  { label: '2-Digit (No Carrying)', config: ADDITION_2_DIGIT },
+  { label: 'With Carrying', config: ADDITION_2_DIGIT_CARRYING },
+];
+
+const links = [
+  { href: '/addition', label: 'Addition Practice Hub', description: 'All addition levels with difficulty guide' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Simple sums' },
+  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition', description: 'Two-digit problems' },
+  { href: '/addition/2-digit-with-carrying', label: 'Addition with Carrying', description: 'Regrouping practice' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Practice subtraction' },
+  { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
+];
+
+const faqItems = [
+  {
+    q: 'What grade levels are these addition worksheets for?',
+    a: 'The addition worksheets span Kindergarten through Grade 3. The 1-Digit worksheet is best for K–Grade 1 students building basic fact fluency. 2-Digit (No Carrying) is ideal for Grade 1–2, and With Carrying targets Grade 2–3 students learning regrouping.',
+  },
+  {
+    q: 'What is carrying in addition?',
+    a: 'Carrying (also called regrouping) occurs when the digits in a column add up to 10 or more. You write the ones digit of the sum and carry the tens digit to the next column. For example, in 47 + 38, the ones column is 7+8=15 — write 5 and carry 1 to the tens column.',
+  },
+  {
+    q: 'What is the difference between the three worksheet types?',
+    a: '1-Digit covers basic facts with numbers 1–9, building single-digit fluency. 2-Digit (No Carrying) uses two-digit numbers where no column totals 10 or more, so students can focus on place-value alignment without regrouping. With Carrying introduces carrying for more advanced two-digit work.',
+  },
+  {
+    q: 'How many problems are on each worksheet?',
+    a: 'Each worksheet has 12 problems, sized to fit on one printed page. Every click of Generate creates a fresh set of randomized problems, so students get a different worksheet each time.',
+  },
+  {
+    q: 'Can I print an answer key?',
+    a: 'Yes. Use the "Print Answer Key" button to print the worksheet with all correct answers shown. Use "Print Worksheet" to print a blank version for students. All on-screen controls are hidden during printing.',
+  },
+];
+---
+
+<PracticeLayout
+  title="Addition Worksheets — Free Printable & Online Practice"
+  description="Generate free addition worksheets with 12 problems per page. Choose 1-digit, 2-digit, or carrying problems. Print with or without the answer key — no signup required."
+  canonical={`${SITE}/math-worksheets/addition-worksheets`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Addition Worksheets' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Addition Worksheets",
+      "description": "Free printable addition worksheets with 12 problems per page. Choose 1-digit, 2-digit without carrying, or 2-digit with carrying. Generate a new worksheet instantly.",
+      "url": `${SITE}/math-worksheets/addition-worksheets`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
+      "teaches": "Addition",
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Addition Worksheets</h1>
+  <div slot="intro" class="no-print">
+    <p>Pick a difficulty level — from simple 1-digit facts to 2-digit addition with carrying — and click Generate. Each click creates a fresh set of 12 problems ready to print, with an optional answer key. For best results, print from a desktop or laptop.</p>
+  </div>
+
+  <WorksheetGenerator slot="widget" configs={configs} title="Addition Worksheet" client:load />
+  <InternalLinks slot="links" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12 no-print" aria-labelledby="addition-progression-heading">
+      <h2 id="addition-progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Addition Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">K – Grade 1</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">1-Digit Addition</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Learn all 81 basic addition facts (1+1 through 9+9). Fluency here is the foundation for every later arithmetic skill.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 1–2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition (No Carrying)</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Extend to two-digit numbers without regrouping. Isolates place-value alignment so students build the column-addition habit before introducing carrying.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2–3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Addition with Carrying</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Master regrouping. When a column sums to 10 or more, carry the tens digit to the next column. This skill extends directly to 3-digit and larger addition.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="addition-tips-heading">
+      <h2 id="addition-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Begin with <a href="/addition/1-digit" class="text-[#4F46E5] font-medium hover:underline">1-digit addition</a> and practice daily until students respond to any fact without hesitation. Fact fluency at this level (typically by the end of Grade 1) makes every later addition skill faster to learn.
+        </p>
+        <p>
+          Move to <a href="/addition/2-digit-no-carrying" class="text-[#4F46E5] font-medium hover:underline">2-digit without carrying</a> before introducing carrying. This lets students practice aligning digits by place value without the additional step of regrouping.
+        </p>
+        <p>
+          Introduce <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] font-medium hover:underline">carrying</a> only once no-carrying problems feel easy. Use base-ten blocks alongside the worksheet to make regrouping concrete before it becomes automatic.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="addition-faq-heading">
+      <h2 id="addition-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
+</PracticeLayout>

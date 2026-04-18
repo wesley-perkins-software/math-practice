@@ -1,0 +1,122 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import SpeedDrillSetup from '@/components/SpeedDrillSetup';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Untimed × facts drill' },
+  { href: '/division/facts', label: 'Division Facts', description: 'Untimed ÷ facts drill' },
+  { href: '/addition', label: 'Addition Practice', description: 'Build adding speed before drilling' },
+];
+
+const faqItems = [
+  {
+    q: 'What is the Arithmetic Speed Drill?',
+    a: 'The Arithmetic Speed Drill is a 60-second test of arithmetic speed. Choose which operations to include — addition, subtraction, multiplication, division, or any combination — with numbers 1–12. Problems clear almost instantly after each answer. Your score is how many you answer correctly in 60 seconds.',
+  },
+  {
+    q: 'Who is the Speed Drill for?',
+    a: 'Anyone who wants to measure or improve how fast they can recall arithmetic facts. It\'s best for students who already know their facts and want to build speed. Students still learning their facts will benefit more from untimed practice on the individual operation pages first.',
+  },
+  {
+    q: 'Why would I choose fewer than all 4 operations?',
+    a: 'Focusing on one or two operations lets you target your weakest area. If division always slows you down, drill division alone for a session. Once your score on that operation improves, switch back to the full mixed drill.',
+  },
+  {
+    q: 'What is a good score?',
+    a: 'There is no universal target — every student starts from a different baseline. Focus on improving your own personal best over time rather than comparing to others. If facts feel automatic, you\'ll naturally move faster. If you notice a specific operation slowing you down, drill that one in isolation.',
+  },
+  {
+    q: 'Does it save my score?',
+    a: 'Yes. Your personal best is saved automatically in your browser — no account or login required. Your best score displays at the start of each session.',
+  },
+];
+---
+
+<PracticeLayout
+  title="Arithmetic Speed Drill — 60-Second Math Challenge | Math Practice Online"
+  description="How many arithmetic problems can you answer in 60 seconds? Choose addition, subtraction, multiplication, and division facts 1–12. Free online speed drill with personal best tracking."
+  canonical={`${SITE}/arithmetic-speed-drill`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Arithmetic Speed Drill' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Arithmetic Speed Drill",
+      "description": "60-second arithmetic speed drill. Choose addition, subtraction, multiplication, and division facts 1–12. Free with personal best tracking.",
+      "url": "https://www.mathpracticeonline.com/arithmetic-speed-drill",
+      "teaches": "Arithmetic Fluency",
+      "provider": {
+        "@type": "Organization",
+        "name": "Math Practice Online",
+        "url": "https://www.mathpracticeonline.com"
+      }
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Arithmetic Speed Drill</h1>
+  <div slot="intro">
+    <p>60 seconds. Choose your operations, then go. The drill moves as fast as you do — answers clear almost instantly so nothing slows you down.</p>
+    <p class="mt-2">All facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
+  </div>
+
+  <SpeedDrillSetup slot="widget" client:load />
+  <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-10">
+    <!-- What you'll practice -->
+    <section aria-labelledby="hiw-heading">
+      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-4">What You'll Practice</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5">
+        <ul class="text-sm text-[#4B5563] leading-relaxed space-y-1.5">
+          <li>• Choose any combination of the 4 operations — or mix all of them</li>
+          <li>• All facts from 1×1 through 12×12 (and their addition/subtraction equivalents)</li>
+          <li>• Near-instant transitions — the fastest drill on the site</li>
+          <li>• Score = number of correct answers in 60 seconds</li>
+          <li>• Personal best tracked automatically in your browser</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- Tips -->
+    <section aria-labelledby="tips-heading">
+      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">How to Improve Your Score</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          <strong>Find your weak operation.</strong> If division always slows you down, drill division alone for a session using the operation selector. Targeted drilling on your weakest operation is the fastest path to a higher score.
+        </p>
+        <p>
+          <strong>Build the facts first.</strong> If you're still working to recall facts reliably, spend time on untimed practice — <a href="/multiplication/facts" class="text-[#4F46E5] font-medium hover:underline">multiplication facts</a>, <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">division facts</a> — before pushing for speed.
+        </p>
+        <p>
+          <strong>Don't sacrifice accuracy for speed.</strong> Wrong answers don't count — only correct answers add to your score. A calm, accurate pace beats frantic guessing every time.
+        </p>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

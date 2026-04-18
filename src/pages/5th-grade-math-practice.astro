@@ -1,0 +1,113 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: '60-second all-operations challenge' },
+  { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient and remainder problems' },
+  { href: '/math-worksheets', label: 'Math Worksheets', description: 'Printable practice for all operations' },
+  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice Online', description: 'Review prior grade skills' },
+];
+
+const faqItems = [
+  {
+    q: 'What math do 5th graders learn?',
+    a: 'Fifth grade is a major transition year. Students solidify fluency with all four operations while extending their work with fractions and decimals, and building algebraic thinking through expressions and patterns. Arithmetic fluency — the ability to recall and compute facts quickly — becomes essential because it frees up working memory for new, more complex concepts.',
+  },
+  {
+    q: 'What is arithmetic fluency and why does it matter?',
+    a: 'Arithmetic fluency means being able to recall math facts quickly and accurately without counting on fingers or pausing to think. Research consistently shows that students who lack fact fluency struggle with fractions, algebra, and higher math — not because those topics are harder, but because slow arithmetic overloads working memory. Fluency is the foundation.',
+  },
+  {
+    q: 'How fast should a 5th grader be at multiplication and division?',
+    a: 'A fluent 5th grader should recall any times table fact (and its corresponding division fact) in about 2–3 seconds. The key indicator is automaticity — answers come without counting or pausing. Students still developing fluency should aim for accuracy first, then speed through consistent daily practice.',
+  },
+  {
+    q: 'What is division with remainders?',
+    a: 'When a dividend doesn\'t divide evenly by the divisor, the leftover amount is called the remainder. For example, 17 ÷ 5 = 3 remainder 2, written as 3 R2. Remainders are important because they\'re the foundation for understanding fractions (17 ÷ 5 = 3 and 2/5) and modular arithmetic used in higher math and computer science.',
+  },
+];
+---
+
+<PracticeLayout
+  title="5th Grade Math Practice Online — All-Operations Fluency & Speed Drills"
+  description="Free 5th grade math practice for all four operations. Mixed drills, division with remainders, and timed speed challenges. No login required."
+  canonical={`${SITE}/5th-grade-math-practice`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '5th Grade Math Practice Online' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "5th Grade Math Practice Online",
+      "description": "Free online math practice for 5th grade students. Mixed operations, division with remainders, and timed speed drills for all four arithmetic operations.",
+      "url": `${SITE}/5th-grade-math-practice`,
+      "educationalLevel": ["Grade 5"],
+      "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">5th Grade Math Practice Online</h1>
+  <p slot="intro">Fifth grade is about mastering all four operations. Speed drills, mixed practice, and division with remainders build the fluency needed for fractions, decimals, and middle school math.</p>
+
+  <InternalLinks slot="links" title="5th Grade Practice Activities" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Grade Level: Grade 5</span>
+    </div>
+
+    <section aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Key Skills for 5th Grade</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Fluent recall of all four arithmetic operations</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Division with remainders (quotient + remainder form)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Multi-digit multiplication and long division</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Speed and accuracy under timed conditions</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Mental math strategies for efficient calculation</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="drills-heading">
+      <h2 id="drills-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Recommended Practice for 5th Grade</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Speed Drill (60 sec)</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">The fastest way to identify weak spots. Mixed operations in 60 seconds shows exactly which facts still need work.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Division with Remainders</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">An important bridge to fractions. Every remainder problem builds intuition for what it means when numbers don't divide evenly.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Mixed Practice (Untimed)</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">All four operations in a single session. Great for daily maintenance of skills across the full arithmetic curriculum.</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

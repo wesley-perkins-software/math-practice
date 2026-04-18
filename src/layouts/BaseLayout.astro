@@ -1,0 +1,99 @@
+---
+import '@/styles/global.css';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogType?: string;
+}
+
+const { title, description, canonical, ogType = 'website' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-D6S5F1HFRM"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      // send_page_view: false — fired manually on astro:page-load to cover View Transitions navigations
+      gtag('config', 'G-D6S5F1HFRM', { send_page_view: false });
+      document.addEventListener('astro:page-load', function() {
+        gtag('event', 'page_view', {
+          page_path: window.location.pathname,
+          page_title: document.title,
+        });
+      });
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content="Math Practice Online" />
+    <meta property="og:image" content="https://www.mathpracticeonline.com/og-default.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="https://www.mathpracticeonline.com/og-default.png" />
+
+    <!-- Favicons + Web App -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#1E1B4B" />
+
+    <ClientRouter />
+
+    <!-- Plus Jakarta Sans + JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen bg-[#F5F3FF] text-[#1E1B4B]">
+    <slot />
+  </body>
+  <script>
+    let savedScrollY = 0;
+    let shouldPreserveScroll = false;
+
+    document.addEventListener('astro:before-swap', (e: any) => {
+      const fromBase = e.from?.url?.pathname?.split('/').filter(Boolean)[0];
+      const toBase = e.to?.url?.pathname?.split('/').filter(Boolean)[0];
+      if (fromBase && fromBase === toBase) {
+        savedScrollY = window.scrollY;
+        shouldPreserveScroll = true;
+      } else {
+        shouldPreserveScroll = false;
+      }
+    });
+
+    document.addEventListener('astro:after-swap', () => {
+      if (shouldPreserveScroll) {
+        window.scrollTo(0, savedScrollY);
+      }
+    });
+  </script>
+</html>

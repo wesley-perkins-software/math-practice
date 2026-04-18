@@ -1,0 +1,117 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface BreadcrumbItem {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  breadcrumb?: BreadcrumbItem[];
+}
+
+const { title, description, canonical, breadcrumb = [] } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} canonical={canonical}>
+  <Fragment slot="head">
+    {breadcrumb.length > 0 && (
+      <script type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": breadcrumb.map((item, i) => ({
+          "@type": "ListItem",
+          "position": i + 1,
+          "name": item.label,
+          ...(item.href ? { "item": `https://www.mathpracticeonline.com${item.href}` } : {})
+        }))
+      })} />
+    )}
+    <slot name="head" />
+  </Fragment>
+  <!-- Site Header -->
+  <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 group">
+        <span class="w-7 h-7 rounded-lg bg-[#4F46E5] flex items-center justify-center select-none group-hover:bg-[#6366F1] transition-colors"><svg viewBox="0 0 24 24" width="14" height="14" fill="white" aria-hidden="true"><path d="M10 3H14V10H21V14H14V21H10V14H3V10H10Z"/></svg></span>
+        <span class="text-base font-bold text-white tracking-tight">Math Practice Online</span>
+      </a>
+      <nav class="hidden sm:flex items-center gap-1">
+        <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Addition</a>
+        <a href="/subtraction" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Subtraction</a>
+        <a href="/multiplication" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Multiplication</a>
+        <a href="/division" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Division</a>
+        <a href="/arithmetic-speed-drill" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Speed Drill</a>
+        <a href="/math-worksheets" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Worksheets</a>
+        <a href="/progress" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Progress</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Breadcrumb -->
+    {breadcrumb.length > 0 && (
+      <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#6B7280] flex items-center flex-wrap gap-1">
+        {breadcrumb.map((item, i) => (
+          <>
+            {i > 0 && <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>}
+            {item.href ? (
+              <a href={item.href} class="hover:text-[#4F46E5] transition-colors">{item.label}</a>
+            ) : (
+              <span class="text-[#6B7280]">{item.label}</span>
+            )}
+          </>
+        ))}
+      </nav>
+    )}
+
+    <!-- H1 -->
+    <slot name="h1" />
+
+    <!-- Intro text -->
+    <div class="mt-3 mb-6 text-[#374151] text-base leading-relaxed max-w-xl">
+      <slot name="intro" />
+    </div>
+
+    <!-- Practice Widget -->
+    <slot name="widget" />
+
+    <!-- Internal Links -->
+    <slot name="links" />
+
+    <!-- How it works section -->
+    <slot name="how-it-works" />
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="border-t-2 border-[#E0E7FF] bg-[#EEF2FF] mt-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1]">
+        <a href="/" class="hover:text-[#3730A3] transition-colors">Home</a>
+        <a href="/addition" class="hover:text-[#3730A3] transition-colors">Addition</a>
+        <a href="/subtraction" class="hover:text-[#3730A3] transition-colors">Subtraction</a>
+        <a href="/multiplication" class="hover:text-[#3730A3] transition-colors">Multiplication</a>
+        <a href="/division" class="hover:text-[#3730A3] transition-colors">Division</a>
+        <a href="/arithmetic-speed-drill" class="hover:text-[#3730A3] transition-colors">Speed Drill</a>
+        <a href="/math-worksheets" class="hover:text-[#3730A3] transition-colors">Worksheets</a>
+        <a href="/progress" class="hover:text-[#3730A3] transition-colors">My Progress</a>
+      </div>
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1] mt-2">
+        <a href="/1st-grade-math-practice" class="hover:text-[#3730A3] transition-colors">1st Grade</a>
+        <a href="/2nd-grade-math-practice" class="hover:text-[#3730A3] transition-colors">2nd Grade</a>
+        <a href="/3rd-grade-math-practice" class="hover:text-[#3730A3] transition-colors">3rd Grade</a>
+        <a href="/4th-grade-math-practice" class="hover:text-[#3730A3] transition-colors">4th Grade</a>
+        <a href="/5th-grade-math-practice" class="hover:text-[#3730A3] transition-colors">5th Grade</a>
+      </div>
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1] mt-2">
+        <a href="/about" class="hover:text-[#3730A3] transition-colors">About</a>
+        <a href="/privacy" class="hover:text-[#3730A3] transition-colors">Privacy Policy</a>
+        <a href="/terms" class="hover:text-[#3730A3] transition-colors">Terms of Service</a>
+      </div>
+      <p class="text-xs text-[#6B7280] mt-4">© {new Date().getFullYear()} Math Practice Online. Free arithmetic practice for students of all ages.</p>
+    </div>
+  </footer>
+</BaseLayout>

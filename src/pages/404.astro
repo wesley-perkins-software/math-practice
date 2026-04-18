@@ -1,0 +1,74 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const SITE = 'https://www.mathpracticeonline.com';
+---
+
+<BaseLayout
+  title="Page Not Found — Math Practice Online"
+  description="The page you're looking for doesn't exist. Head back to Math Practice Online to keep practicing."
+  canonical={`${SITE}/404`}
+>
+  <!-- Site Header -->
+  <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2 group">
+        <span class="w-7 h-7 rounded-lg bg-[#4F46E5] flex items-center justify-center select-none group-hover:bg-[#6366F1] transition-colors"><svg viewBox="0 0 24 24" width="14" height="14" fill="white" aria-hidden="true"><path d="M10 3H14V10H21V14H14V21H10V14H3V10H10Z"/></svg></span>
+        <span class="text-base font-bold text-white tracking-tight">Math Practice Online</span>
+      </a>
+      <nav class="hidden sm:flex items-center gap-1">
+        <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Addition</a>
+        <a href="/subtraction" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Subtraction</a>
+        <a href="/multiplication" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Multiplication</a>
+        <a href="/division/facts" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Division</a>
+        <a href="/arithmetic-speed-drill" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Speed Drill</a>
+        <a href="/math-worksheets" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Worksheets</a>
+        <a href="/progress" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Progress</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-16 text-center">
+    <div class="mb-6">
+      <span class="text-7xl font-black text-[#E0E7FF] select-none">404</span>
+    </div>
+    <h1 class="text-2xl font-bold text-[#1E1B4B] mb-3">Page not found</h1>
+    <p class="text-[#6B7280] mb-8 max-w-sm mx-auto">
+      That page doesn't exist. Try heading back to the homepage or pick a section below to keep practicing.
+    </p>
+    <a href="/" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#4F46E5] text-white text-sm font-semibold hover:bg-[#4338CA] transition-colors">
+      ← Back to Home
+    </a>
+
+    <div class="mt-12 grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
+      <a href="/addition" class="p-4 rounded-xl bg-white ring-1 ring-[#DBEAFE] text-[#1D4ED8] font-medium hover:ring-[#2563EB] hover:bg-[#EFF6FF] transition-all">Addition</a>
+      <a href="/subtraction" class="p-4 rounded-xl bg-white ring-1 ring-[#EDE9FE] text-[#6D28D9] font-medium hover:ring-[#7C3AED] hover:bg-[#F5F3FF] transition-all">Subtraction</a>
+      <a href="/multiplication" class="p-4 rounded-xl bg-white ring-1 ring-[#D1FAE5] text-[#047857] font-medium hover:ring-[#059669] hover:bg-[#ECFDF5] transition-all">Multiplication</a>
+      <a href="/division/facts" class="p-4 rounded-xl bg-white ring-1 ring-[#FEF3C7] text-[#B45309] font-medium hover:ring-[#D97706] hover:bg-[#FFFBEB] transition-all">Division</a>
+      <a href="/arithmetic-speed-drill" class="p-4 rounded-xl bg-white ring-1 ring-[#E0E7FF] text-[#4338CA] font-medium hover:ring-[#4F46E5] hover:bg-[#EEF2FF] transition-all col-span-2 sm:col-span-2">Speed Drill</a>
+      <a href="/math-worksheets" class="p-4 rounded-xl bg-white ring-1 ring-[#E0E7FF] text-[#4338CA] font-medium hover:ring-[#4F46E5] hover:bg-[#EEF2FF] transition-all col-span-2 sm:col-span-2">Worksheets</a>
+    </div>
+  </main>
+
+  <!-- Site Footer -->
+  <footer class="border-t-2 border-[#E0E7FF] bg-[#EEF2FF] mt-16">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1]">
+        <a href="/" class="hover:text-[#3730A3] transition-colors">Home</a>
+        <a href="/addition" class="hover:text-[#3730A3] transition-colors">Addition</a>
+        <a href="/subtraction" class="hover:text-[#3730A3] transition-colors">Subtraction</a>
+        <a href="/multiplication" class="hover:text-[#3730A3] transition-colors">Multiplication</a>
+        <a href="/division/facts" class="hover:text-[#3730A3] transition-colors">Division</a>
+        <a href="/arithmetic-speed-drill" class="hover:text-[#3730A3] transition-colors">Speed Drill</a>
+        <a href="/math-worksheets" class="hover:text-[#3730A3] transition-colors">Worksheets</a>
+        <a href="/progress" class="hover:text-[#3730A3] transition-colors">My Progress</a>
+      </div>
+      <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#A5B4FC] mt-2">
+        <a href="/about" class="hover:text-[#6366F1] transition-colors">About</a>
+        <a href="/privacy" class="hover:text-[#6366F1] transition-colors">Privacy Policy</a>
+        <a href="/terms" class="hover:text-[#6366F1] transition-colors">Terms of Service</a>
+      </div>
+      <p class="text-xs text-[#A5B4FC] mt-4">© {new Date().getFullYear()} Math Practice Online. Free arithmetic practice for students of all ages.</p>
+    </div>
+  </footer>
+</BaseLayout>

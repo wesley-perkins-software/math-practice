@@ -1,0 +1,91 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+
+const SITE = 'https://www.mathpracticeonline.com';
+const EFFECTIVE_DATE = 'April 15, 2026';
+---
+
+<PracticeLayout
+  title="Terms of Service — Math Practice Online Online"
+  description="Terms of service for Math Practice Online. Free to use for personal and educational purposes."
+  canonical={`${SITE}/terms`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Terms of Service' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Terms of Service</h1>
+  <p slot="intro">
+    Plain-language terms for using Math Practice Online.
+  </p>
+
+  <div slot="links" class="space-y-8 text-sm text-[#374151] leading-relaxed max-w-xl">
+
+    <p class="text-xs text-[#6B7280]">Effective date: {EFFECTIVE_DATE}</p>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Use of the site</h2>
+      <p>
+        Math Practice Online is free to use for personal and educational purposes. Students, parents, and
+        teachers may use the site, its practice tools, and its printable worksheets at no cost.
+        You do not need to create an account.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Acceptable use</h2>
+      <p>
+        You agree to use this site only for its intended educational purpose. You may not attempt to
+        disrupt, reverse-engineer, scrape at scale, or otherwise interfere with the site or its hosting
+        infrastructure.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Content accuracy</h2>
+      <p>
+        We make every effort to ensure the math problems and answers on this site are correct.
+        However, no warranty is made regarding the accuracy of any content.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">No warranties</h2>
+      <p>
+        This site is provided "as is" without warranties of any kind, express or implied. We do not
+        guarantee uninterrupted availability of the site.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Intellectual property</h2>
+      <p>
+        The content, design, and code of Math Practice Online are owned by Math Practice Online. You may print
+        worksheets and practice materials for personal or classroom use. You may not republish,
+        sell, or redistribute the content of this site without permission.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Limitation of liability</h2>
+      <p>
+        To the fullest extent permitted by law, Math Practice Online shall not be liable for any indirect,
+        incidental, or consequential damages arising from use of this site.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Changes to these terms</h2>
+      <p>
+        We may update these terms from time to time. The effective date at the top of this page will
+        reflect any changes. Continued use of the site after changes constitutes acceptance of the
+        updated terms.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Privacy</h2>
+      <p>
+        For information on how we handle data, see our <a href="/privacy" class="text-[#4F46E5] hover:underline">Privacy Policy</a>.
+      </p>
+    </section>
+
+  </div>
+</PracticeLayout>

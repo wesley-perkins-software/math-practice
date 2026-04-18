@@ -1,0 +1,150 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/subtraction', label: 'All Subtraction Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Review without regrouping first' },
+  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Reinforce subtraction fact fluency' },
+  { href: '/addition/2-digit-with-carrying', label: '2-Digit Addition with Carrying', description: 'Related regrouping skill in addition' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style borrowing practice' },
+];
+
+const faqItems = [
+  {
+    q: 'What is borrowing in subtraction?',
+    a: 'Borrowing (also called regrouping) happens when the ones digit of the top number (minuend) is smaller than the ones digit of the bottom number (subtrahend). You borrow 1 ten from the tens column — reducing the tens digit by 1 — and add 10 to the ones digit, making it possible to subtract. For example, 72 − 38: ones 2 < 8, so borrow → 12 − 8 = 4; tens: 7 − 1 − 3 = 3 → answer 34.'
+  },
+  {
+    q: 'What grade is 2-digit subtraction with borrowing?',
+    a: 'Two-digit subtraction with regrouping is typically taught in Grade 2 and reinforced in Grade 3. Students should have solid single-digit subtraction fluency and experience with 2-digit subtraction without borrowing before starting regrouping.'
+  },
+  {
+    q: 'Why is it called "borrowing"?',
+    a: 'The term comes from the idea that the ones column "borrows" a ten from the tens column to make subtraction possible. Modern curricula often say "regrouping" instead — which more precisely describes exchanging 1 ten for 10 ones. Both terms describe the same step in written subtraction.'
+  },
+  {
+    q: 'What is the difference between borrowing and regrouping?',
+    a: 'They are the same process. "Borrowing" is the traditional term used in written arithmetic. "Regrouping" is the modern curriculum term that emphasizes the underlying concept: exchanging 1 ten for 10 ones so that the ones column can be subtracted. Both describe the same step.'
+  },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Subtraction with Borrowing Practice | Math Practice Online"
+  description="Practice 2-digit subtraction with borrowing and regrouping online. Every problem requires borrowing to build advanced subtraction accuracy. Instant feedback and streak tracking."
+  canonical={`${SITE}/subtraction/2-digit-with-borrowing`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '2-Digit Subtraction with Borrowing' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "2-Digit Subtraction with Borrowing Practice",
+      "description": "Interactive online practice for two-digit subtraction with regrouping. Every problem requires borrowing at least once, building the core multi-digit subtraction skill.",
+      "url": `${SITE}/subtraction/2-digit-with-borrowing`,
+      "educationalLevel": ["Grade 2", "Grade 3"],
+      "teaches": "Two-digit subtraction with regrouping (borrowing)",
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Do 2-Digit Subtraction with Borrowing",
+      "description": "Step-by-step guide to solving two-digit subtraction problems that require borrowing (regrouping).",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Write the numbers in columns",
+          "text": "Align the two numbers so the ones digits are in the same column and the tens digits are in the same column."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Check the ones column and borrow if needed",
+          "text": "If the top ones digit is smaller than the bottom ones digit, borrow 1 ten from the tens column. Reduce the tens digit by 1 and add 10 to the ones digit. Example: top ones is 2, bottom is 8 — borrow to make top ones 12, and reduce the tens digit by 1."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Subtract both columns",
+          "text": "Subtract the ones column using the new (borrowed) ones digit. Then subtract the tens column using the reduced tens digit. Write both results for your final answer."
+        }
+      ]
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction with Borrowing Practice</h1>
+  <p slot="intro">Practice regrouping in two-digit subtraction by borrowing from the tens column — a key skill for mastering more advanced subtraction problems.</p>
+  <SubtractionPracticeHub slot="widget" active="2-digit-with-borrowing" client:load />
+  <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Grade 2 – Grade 3</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit subtraction problems where the ones column always requires borrowing</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Borrowing (regrouping) 1 ten from the tens column to make subtraction possible</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems range from 20–99 − 11–49 to ensure every problem requires a borrow</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak and score tracking</li>
+      </ul>
+    </section>
+
+    <!-- How to borrow -->
+    <section aria-labelledby="howto-heading">
+      <h2 id="howto-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Do Subtraction with Borrowing</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align the Columns</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Borrow from the Tens</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">If the top ones digit is smaller than the bottom, borrow 1 ten. Reduce the tens digit by 1 and add 10 to the ones digit. Example: 72 − 38 → top ones 2 &lt; 8 → borrow → ones become 12, tens become 6.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Subtract Both Columns</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Subtract the ones: 12 − 8 = 4. Then subtract the tens using the reduced digit: 6 − 3 = 3. Write both for the final answer: 34.</p>
+        </div>
+      </div>
+      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-[#4B5563]">
+        <span class="font-semibold text-[#1E293B]">Example:</span> 72 − 38 → ones: borrow → 12 − 8 = 4 → tens: 6 − 3 = 3 → <span class="font-semibold text-[#4F46E5]">Answer: 34</span>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

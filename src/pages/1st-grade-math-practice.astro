@@ -1,0 +1,114 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Add numbers 1–9 with instant feedback' },
+  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Subtract numbers 1–9' },
+  { href: '/addition-practice', label: 'Addition Practice Hub', description: 'All addition difficulty levels' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Print or practice addition problems' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Print or practice subtraction problems' },
+  { href: '/2nd-grade-math-practice', label: '2nd Grade Math Practice Online', description: 'Next level: 2-digit addition and subtraction' },
+];
+
+const faqItems = [
+  {
+    q: 'What math do 1st graders learn?',
+    a: 'First graders focus on addition and subtraction within 20. Key skills include mastering all single-digit addition and subtraction facts, understanding place value for two-digit numbers up to 120, and beginning to add and subtract multiples of 10. By the end of 1st grade, students should be able to quickly recall sums up to 10.',
+  },
+  {
+    q: 'How many addition facts should a 1st grader know?',
+    a: 'By end of 1st grade, most curricula expect fluency with all addition facts within 10 (e.g., 3 + 4 = 7) and the ability to add within 20 using strategies. True memorized recall of all 81 single-digit facts is typically expected by end of 2nd grade.',
+  },
+  {
+    q: 'What strategies help 1st graders with addition?',
+    a: 'The three most effective strategies at this level are: Count On (start from the larger number and count up), Make Ten (break a number to reach 10, then add the rest), and Use Doubles (knowing 6+6=12 helps quickly solve 6+7=13). Short daily practice of 5–10 minutes builds fluency faster than weekly long sessions.',
+  },
+  {
+    q: 'How can I help my 1st grader practice math at home?',
+    a: 'Use this site for 5–10 minutes of daily fact practice. Focus on 1-digit addition first until they can answer confidently, then move to subtraction. Real-world practice also helps: counting change, measuring with a ruler, or adding points during games reinforces classroom learning.',
+  },
+];
+---
+
+<PracticeLayout
+  title="1st Grade Math Practice Online — Addition & Subtraction Facts"
+  description="Free 1st grade math practice for addition and subtraction facts. Build fluency with single-digit problems, instant feedback, and no login required."
+  canonical={`${SITE}/1st-grade-math-practice`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '1st Grade Math Practice Online' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "1st Grade Math Practice Online",
+      "description": "Free online math practice for 1st grade students. Covers single-digit addition and subtraction facts with instant feedback.",
+      "url": `${SITE}/1st-grade-math-practice`,
+      "educationalLevel": ["Grade 1", "Kindergarten"],
+      "teaches": ["Addition", "Subtraction"],
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1st Grade Math Practice Online</h1>
+  <p slot="intro">Build the foundational math skills every 1st grader needs. Practice single-digit addition and subtraction facts with instant feedback — no login required, completely free.</p>
+
+  <InternalLinks slot="links" title="1st Grade Practice Activities" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Grade Level: Kindergarten – Grade 1</span>
+    </div>
+
+    <section aria-labelledby="skills-heading">
+      <h2 id="skills-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Key Skills for 1st Grade</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Addition facts within 20 (all sums 1+1 through 9+9)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Subtraction facts within 20 (inverse of addition facts)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Sums greater than 9 (e.g., 7 + 8 = 15)</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Understanding that addition and subtraction are related</li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="strategies-heading">
+      <h2 id="strategies-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Learning Strategies</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Count On</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Start from the larger number and count up. For 3 + 7: start at 7 and count three more → 8, 9, 10.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Make Ten</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">For 8 + 5: take 2 from 5 to make 8 + 2 = 10, then add the remaining 3 → 13.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Doubles</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Memorize doubles (6+6=12), then use them to solve near-doubles (6+7=13 is just one more).</p>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

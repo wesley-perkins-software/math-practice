@@ -1,0 +1,206 @@
+---
+import HubLayout from '@/layouts/HubLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const difficulties = [
+  {
+    href: '/addition/1-digit',
+    label: '1-Digit Addition',
+    grade: 'Kindergarten – Grade 1',
+    description: 'Practice single-digit facts (1–9). Build speed and accuracy with the foundation of all arithmetic.',
+    symbol: '4 + 7',
+  },
+  {
+    href: '/addition/2-digit-no-carrying',
+    label: '2-Digit Addition (No Carrying)',
+    grade: 'Grade 1 – Grade 2',
+    description: 'Two-digit addition without regrouping. Master place-value alignment and column addition before introducing carrying.',
+    symbol: '23 + 45',
+  },
+  {
+    href: '/addition/2-digit-with-carrying',
+    label: '2-Digit Addition with Carrying',
+    grade: 'Grade 2 – Grade 3',
+    description: 'Two-digit addition with regrouping. Practice carrying from the ones column to build advanced multi-digit fluency.',
+    symbol: '47 + 38',
+  },
+];
+
+const relatedLinks = [
+  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Practice opposite facts (like 7+2 and 9−2)' },
+  { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'The matching subtraction skill for carrying practice' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Print extra addition pages for home or class' },
+  { href: '/multiplication', label: 'Multiplication Practice', description: 'When addition feels easy, try beginner times tables' },
+];
+
+const faqItems = [
+  {
+    q: 'What grade level is 1-digit addition?',
+    a: '1-digit addition (sums within 18) is typically a Kindergarten and Grade 1 skill. Students learn to add single digits fluently before moving to multi-digit addition.'
+  },
+  {
+    q: 'What is carrying in addition?',
+    a: 'Carrying (also called regrouping) happens when the digits in a column add up to 10 or more. The ones digit is written in the answer, and the tens digit is "carried" to the next column. For example, 47 + 38: the ones column is 7 + 8 = 15, so you write 5 and carry 1 to the tens column.'
+  },
+  {
+    q: 'What is the difference between addition with and without carrying?',
+    a: 'In addition without carrying, no column adds up to 10 or more, so every digit stays in its own column (e.g., 23 + 45 = 68). In addition with carrying, at least one column totals 10 or more, requiring a digit to be moved to the next column (e.g., 47 + 38 = 85).'
+  },
+  {
+    q: 'How do I teach carrying to a child?',
+    a: 'Start with 1-digit addition to build fact fluency. Then introduce 2-digit addition without carrying so students understand column alignment. Once that is solid, introduce carrying: show that when a column sums to 10 or more, you write the ones digit and place the tens digit above the next column. Use physical manipulatives (base-ten blocks) alongside the practice problems for the best results.'
+  },
+  {
+    q: 'How does this addition practice work?',
+    a: 'Practice runs continuously with instant right/wrong feedback after every answer. Your streak and best scores are saved automatically in your browser.'
+  },
+];
+---
+
+<HubLayout
+  title="Addition Practice — Free Online Addition Drills | Math Practice Online"
+  description="Free online addition practice for grades K–3. Choose 1-digit addition, 2-digit addition without carrying, or 2-digit addition with carrying. Instant feedback and streak tracking."
+  canonical={`${SITE}/addition`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://www.mathpracticeonline.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Addition Practice" }
+      ]
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Addition Practice",
+      "description": "Free online addition practice for grades K–3 covering 1-digit, 2-digit without carrying, and 2-digit with carrying. Instant feedback and progress tracking.",
+      "url": "https://www.mathpracticeonline.com/addition",
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
+      "teaches": "Addition",
+      "provider": {
+        "@type": "Organization",
+        "name": "Math Practice Online",
+        "url": "https://www.mathpracticeonline.com"
+      }
+    })} />
+  </Fragment>
+
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#A5B4FC] flex items-center flex-wrap gap-1">
+      <a href="/" class="hover:text-[#4F46E5] transition-colors">Home</a>
+      <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>
+      <span class="text-[#6B7280]">Addition Practice</span>
+    </nav>
+
+    <!-- H1 + intro -->
+    <h1 class="text-3xl font-bold text-[#1E293B]">Addition Practice</h1>
+    <p class="mt-3 mb-8 text-[#6B7280] text-base leading-relaxed max-w-xl">
+      Free online addition practice for grades K–3. Choose a difficulty level below — each opens an interactive drill with instant feedback and streak tracking.
+    </p>
+
+    <!-- Difficulty cards -->
+    <section aria-labelledby="levels-heading">
+      <h2 id="levels-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Choose a Difficulty Level</h2>
+      <div class="flex flex-col gap-4">
+        {difficulties.map((d) => (
+          <a
+            href={d.href}
+            class="flex items-start gap-4 bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#4F46E5] hover:shadow-md transition-all group"
+          >
+            <div class="w-16 h-14 rounded-xl bg-[#EEF2FF] flex items-center justify-center font-mono text-sm font-bold text-[#4F46E5] shrink-0 leading-tight text-center">
+              {d.symbol}
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-baseline gap-2 flex-wrap">
+                <span class="font-semibold text-[#1E293B] group-hover:text-[#4F46E5] transition-colors">{d.label}</span>
+                <span class="text-xs font-medium text-[#6366F1] bg-[#EEF2FF] px-2 py-0.5 rounded-full">{d.grade}</span>
+              </div>
+              <p class="text-sm text-[#6B7280] mt-1 leading-relaxed">{d.description}</p>
+            </div>
+            <span class="text-[#A5B4FC] group-hover:text-[#4F46E5] transition-colors text-lg leading-none mt-1" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Grade progression -->
+    <section class="mt-12" aria-labelledby="progression-heading">
+      <h2 id="progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">K – Grade 1</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">1-Digit Addition</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Learn to add numbers 1–9. Build fluency with all 81 single-digit addition facts. This is the core foundation before any multi-digit work.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 1 – 2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition (No Carrying)</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Extend single-digit fluency to two-digit numbers. Learn to align columns by place value and add tens and ones independently.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2 – 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition with Carrying</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Master regrouping. When a column's digits sum to 10 or more, carry the tens digit into the next column. This skill extends directly to 3-digit and larger addition.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tips section -->
+    <section class="mt-12" aria-labelledby="tips-heading">
+      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Start with <a href="/addition/1-digit" class="text-[#4F46E5] font-medium hover:underline">1-digit addition</a> and practice daily until students can answer any single-digit fact quickly and without counting. Fluency here (typically by end of Grade 1) makes every later skill easier.
+        </p>
+        <p>
+          When moving to 2-digit addition, begin with <a href="/addition/2-digit-no-carrying" class="text-[#4F46E5] font-medium hover:underline">no-carrying problems</a> first. This isolates place-value alignment from the complexity of regrouping, giving students a chance to practice the column-addition process cleanly.
+        </p>
+        <p>
+          Introduce <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] font-medium hover:underline">carrying</a> only after no-carrying problems feel easy. Use base-ten blocks alongside the screen practice to make the concept concrete before it becomes abstract.
+        </p>
+      </div>
+    </section>
+
+    <!-- Related links -->
+    <section class="mt-12" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="text-base font-semibold text-[#1E293B] mb-3">Related Practice</h2>
+      <InternalLinks client:load links={relatedLinks} />
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-12" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </main>
+
+</HubLayout>

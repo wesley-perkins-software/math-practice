@@ -1,0 +1,50 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import ProgressDashboard from '@/components/ProgressDashboard';
+
+const SITE = 'https://www.mathpracticeonline.com';
+---
+
+<PracticeLayout
+  title="My Progress — Math Practice Online"
+  description="Track your math practice history — total problems solved, longest answer streaks, best timed scores, accuracy trends, and achievements across addition, subtraction, multiplication, and division."
+  canonical={`${SITE}/progress`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'My Progress' }]}
+>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">My Progress</h1>
+  <p slot="intro">
+    Your practice history across all math drills, pulled directly from your browser. No account needed.
+  </p>
+  <div slot="widget">
+    <ProgressDashboard client:load />
+  </div>
+  <div slot="links" class="mt-12 space-y-6 text-sm text-[#6B7280] leading-relaxed max-w-xl">
+    <h2 class="text-base font-semibold text-[#1E293B]">Why track your math progress?</h2>
+    <p>
+      Seeing your improvement over time is one of the most powerful motivators for continued practice.
+      When you can look back and see that your accuracy improved from 70% to 90%, or that your answer
+      streak doubled, it makes the next session feel worthwhile. Research in education consistently
+      shows that self-monitoring and feedback loops accelerate skill development.
+    </p>
+    <p>
+      This progress tracker records your stats automatically every time you finish a practice session —
+      no sign-up required. Your data stays in your browser, so it's always private and always available.
+    </p>
+    <h2 class="text-base font-semibold text-[#1E293B] pt-2">What gets tracked</h2>
+    <ul class="list-disc list-inside space-y-1 text-[#64748B]">
+      <li><strong class="text-[#475569]">Problems solved</strong> — cumulative count across every session</li>
+      <li><strong class="text-[#475569]">Accuracy</strong> — percent correct from your most recent session per practice type</li>
+      <li><strong class="text-[#475569]">Longest streak</strong> — your all-time best consecutive correct answers in a single session</li>
+      <li><strong class="text-[#475569]">Best score</strong> — highest problems-per-minute on timed drills (Math Drills and Arithmetic Speed Drill)</li>
+      <li><strong class="text-[#475569]">Days active</strong> — how many different days you've practiced</li>
+      <li><strong class="text-[#475569]">Recent sessions</strong> — a history of your last few sessions with scores</li>
+    </ul>
+    <h2 class="text-base font-semibold text-[#1E293B] pt-2">Start a practice session</h2>
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 not-prose">
+      <a href="/addition" class="block border border-emerald-200 bg-emerald-50 text-emerald-700 rounded-xl p-3 text-center text-xs font-semibold hover:shadow-sm transition-all">Addition</a>
+      <a href="/subtraction" class="block border border-sky-200 bg-sky-50 text-sky-700 rounded-xl p-3 text-center text-xs font-semibold hover:shadow-sm transition-all">Subtraction</a>
+      <a href="/multiplication" class="block border border-violet-200 bg-violet-50 text-violet-700 rounded-xl p-3 text-center text-xs font-semibold hover:shadow-sm transition-all">Multiplication</a>
+      <a href="/division/facts" class="block border border-orange-200 bg-orange-50 text-orange-700 rounded-xl p-3 text-center text-xs font-semibold hover:shadow-sm transition-all">Division</a>
+    </div>
+  </div>
+</PracticeLayout>

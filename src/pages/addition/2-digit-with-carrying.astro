@@ -1,0 +1,150 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/addition', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Review before tackling regrouping' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Reinforce the addition facts behind carrying' },
+  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'The inverse skill: regrouping in subtraction' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style carrying practice with instant feedback' },
+];
+
+const faqItems = [
+  {
+    q: 'What is carrying in addition?',
+    a: 'Carrying (also called regrouping) occurs when the digits in a column add up to 10 or more. You write the ones digit of the sum below that column and "carry" the tens digit to the top of the next column to the left. For example, in 47 + 38: the ones column is 7 + 8 = 15, so write 5 in the ones place and carry 1 to the tens column. Then 1 + 4 + 3 = 8 in the tens place, giving 85.'
+  },
+  {
+    q: 'What grade is 2-digit addition with carrying?',
+    a: 'Two-digit addition with regrouping is typically taught in Grade 2 and reinforced in Grade 3. Students should have solid fluency with single-digit addition and basic two-digit addition without carrying before starting regrouping.'
+  },
+  {
+    q: 'Why is it called "carrying" in addition?',
+    a: 'The term "carrying" comes from the physical action in written arithmetic: when a column\'s sum exceeds 9, you write the ones digit and "carry" the tens digit to the next column by writing it above that column. The modern math curriculum often uses "regrouping" instead, which describes the concept more precisely (exchanging 10 ones for 1 ten).'
+  },
+  {
+    q: 'What is the difference between carrying and regrouping?',
+    a: 'Carrying and regrouping refer to the same process in addition. "Carrying" is the traditional term for the written shorthand used in column addition. "Regrouping" is the conceptual term used in modern curricula, emphasizing that 10 ones are exchanged for 1 ten. Both describe the same step.'
+  },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Addition with Carrying Practice | Math Practice Online"
+  description="Practice 2-digit addition with carrying and regrouping. These problems build advanced multi-digit addition accuracy with instant feedback and streak tracking."
+  canonical={`${SITE}/addition/2-digit-with-carrying`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition with Carrying' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "2-Digit Addition with Carrying Practice",
+      "description": "Interactive online practice for two-digit addition with regrouping. Every problem requires carrying at least once, building the core multi-digit addition skill.",
+      "url": `${SITE}/addition/2-digit-with-carrying`,
+      "educationalLevel": ["Grade 2", "Grade 3"],
+      "teaches": "Two-digit addition with regrouping (carrying)",
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Do 2-Digit Addition with Carrying",
+      "description": "Step-by-step guide to solving two-digit addition problems that require carrying (regrouping).",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Write the numbers in columns",
+          "text": "Align the two numbers so the ones digits are in the same column and the tens digits are in the same column."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Add the ones column",
+          "text": "Add the two ones digits. If the sum is 9 or less, write it below the ones column. If the sum is 10 or more, write only the ones digit below the column and write the tens digit (which will always be 1) above the tens column — this is the 'carry'."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Add the tens column",
+          "text": "Add the two tens digits plus any carried digit from the ones column. Write the result below the tens column. This gives you the final answer."
+        }
+      ]
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition with Carrying Practice</h1>
+  <p slot="intro">Practice regrouping when ones digits add to 10 or more, then carry to the tens column to build confidence with advanced two-digit addition.</p>
+  <AdditionPracticeHub slot="widget" active="2-digit-with-carrying" client:load />
+  <InternalLinks slot="links" links={links} />
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Grade 2 – Grade 3</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit addition problems where the ones column always sums to 10 or more</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Carrying (regrouping) 1 from the ones column to the tens column</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems range from 15–99 + 15–99 to ensure every problem requires a carry</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak and score tracking</li>
+      </ul>
+    </section>
+
+    <!-- How to carry -->
+    <section aria-labelledby="howto-heading">
+      <h2 id="howto-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Do Addition with Carrying</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align the Columns</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Ones — and Carry</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Add the ones column. If the sum is 10 or more, write the ones digit below and place a small "1" above the tens column. Example: 7 + 8 = 15 → write 5, carry 1.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Tens + Carry</h3>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Add the tens column digits plus the carried 1. Write the result. Example: carried 1 + 4 + 3 = 8 in the tens place → final answer: 85.</p>
+        </div>
+      </div>
+      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-[#4B5563]">
+        <span class="font-semibold text-[#1E293B]">Example:</span> 47 + 38 → ones: 7 + 8 = 15 (write 5, carry 1) → tens: 1 + 4 + 3 = 8 → <span class="font-semibold text-[#4F46E5]">Answer: 85</span>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</PracticeLayout>

@@ -1,0 +1,115 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const links = [
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: '1-digit, 2-digit, and carrying problems' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: '1-digit, 2-digit, and borrowing problems' },
+  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Times tables ×1–×12 and harder facts' },
+  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Division facts and long division with remainders' },
+];
+
+const faqItems = [
+  {
+    q: 'How do these math worksheets work?',
+    a: 'Choose an operation and a difficulty level, then click Generate to create a fresh set of randomized problems. Click Print Worksheet to print a blank copy for pencil-and-paper practice. Click Print Answer Key to print the same worksheet with all answers filled in. For best results, print from a desktop or laptop.',
+  },
+  {
+    q: 'Can I print these worksheets?',
+    a: 'Yes. Every worksheet includes Print Worksheet and Print Answer Key buttons. Printed pages include just the problems plus a Name and Date line at the top, just like a classroom handout.',
+  },
+  {
+    q: 'What grades are these worksheets for?',
+    a: 'The worksheets span Kindergarten through Grade 5. Addition and subtraction worksheets cover grades K–3, while multiplication and division worksheets are designed for grades 3–5. Each worksheet page offers multiple difficulty options so you can match the right level to each student.',
+  },
+  {
+    q: 'How many problems are on each worksheet?',
+    a: 'Each worksheet has 12 problems, sized to fit on one printed page. Problems are randomly generated each time, so every worksheet is unique.',
+  },
+  {
+    q: 'Are these worksheets free?',
+    a: 'Yes, all worksheets are completely free. There is no signup, no account required, and no limit on how many worksheets you can generate or print.',
+  },
+];
+---
+
+<PracticeLayout
+  title="Math Worksheets — Free Online & Printable Arithmetic Practice"
+  description="Free math worksheets for addition, subtraction, multiplication, and division. 12 randomized problems per worksheet, practice online with instant feedback, or print with an answer key."
+  canonical={`${SITE}/math-worksheets`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Math Worksheets",
+      "description": "Free printable math worksheets for addition, subtraction, multiplication, and division. Generate randomized problems for grades K–5 instantly.",
+      "url": `${SITE}/math-worksheets`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+      "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Math Worksheets</h1>
+  <div slot="intro">
+    <p>Free printable math worksheets for addition, subtraction, multiplication, and division. Choose a topic below, pick a difficulty level, and click Generate — each click creates a brand-new set of 12 randomized problems. Print the worksheet for pencil-and-paper practice, or print the answer key to check your work.</p>
+    <p class="mt-2">Each worksheet fits on one printed page, just like a classroom handout. For best results, print from a desktop or laptop.</p>
+  </div>
+  <InternalLinks slot="links" title="Choose a Worksheet Topic" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12" aria-labelledby="grade-guide-heading">
+      <h2 id="grade-guide-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Worksheet Guide by Grade Level</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-24 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">K – Grade 2</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Addition & Subtraction Worksheets</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Start with 1-digit facts, then progress to 2-digit addition and subtraction with and without regrouping. Builds the arithmetic foundation for all later math.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-24 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Multiplication & Division Facts</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Students build core multiplication and division fact fluency. Single-digit multiplication (1-12) and division (1-12) are the core Grade 3 focus.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-24 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4–5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Multiplication Fluency & Long Division</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Students continue building fluency with multiplication and division facts while beginning long division with remainders. This supports confidence with fractions and multi-step word problems.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12" aria-labelledby="worksheets-faq-heading">
+      <h2 id="worksheets-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
+</PracticeLayout>

@@ -1,0 +1,135 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import WorksheetGenerator from '@/components/WorksheetGenerator';
+import InternalLinks from '@/components/InternalLinks';
+import {
+  MULTIPLICATION_FACTS,
+} from '@/engine/presets';
+
+const SITE = 'https://www.mathpracticeonline.com';
+
+const configs = [
+  { label: 'Multiplication Facts', config: MULTIPLICATION_FACTS },
+];
+
+const links = [
+  { href: '/multiplication/facts', label: 'Multiplication Facts Practice', description: 'Interactive drill — full 1–12 range' },
+  { href: '/multiplication', label: 'Times Tables Hub', description: 'Practice one times table at a time' },
+  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Practice division' },
+  { href: '/math-worksheets', label: 'All Math Worksheets', description: 'Back to worksheets hub' },
+];
+
+const faqItems = [
+  {
+    q: 'What grade levels are these multiplication worksheets for?',
+    a: 'Multiplication worksheets are best suited for Grade 3 through Grade 5. Students typically begin multiplication in Grade 3 and work toward automatic recall of all facts through ×12 by Grade 4–5.',
+  },
+  {
+    q: 'How many problems are on each worksheet?',
+    a: 'Each worksheet has 12 problems, sized to fit on one printed page. Problems are randomly selected each time you click Generate, so you get a fresh set every time.',
+  },
+  {
+    q: 'How often should a child practice multiplication worksheets?',
+    a: 'Short daily sessions of 5–10 minutes are more effective than occasional longer sessions. Consistent practice builds the automatic recall students need for more advanced math.',
+  },
+  {
+    q: 'Can I print an answer key?',
+    a: 'Yes. Click "Print Answer Key" to print the worksheet with all answers shown. Use "Print Worksheet" to print a blank version for students. On-screen controls are hidden during printing so only the problems and Name/Date line appear.',
+  },
+];
+---
+
+<PracticeLayout
+  title="Multiplication Worksheets — Free Printable Times Table Practice"
+  description="Generate free multiplication worksheets with 12 randomly mixed problems from ×1–×12. Print with or without the answer key — no signup required."
+  canonical={`${SITE}/math-worksheets/multiplication-worksheets`}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Worksheets', href: '/math-worksheets' }, { label: 'Multiplication Worksheets' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Multiplication Worksheets",
+      "description": "Free printable multiplication worksheets with 12 randomly mixed problems from ×1–×12. Generate a new worksheet instantly.",
+      "url": `${SITE}/math-worksheets/multiplication-worksheets`,
+      "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
+      "teaches": "Multiplication",
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B] no-print">Multiplication Worksheets</h1>
+  <div slot="intro" class="no-print">
+    <p>Click Generate to get 12 multiplication problems drawn from all the times tables, 1 through 12. Every click creates a new set — print the worksheet to practice on paper, or print the answer key when you're ready to check your work. For best results, print from a desktop or laptop.</p>
+  </div>
+
+  <WorksheetGenerator slot="widget" configs={configs} title="Multiplication Worksheet" client:load />
+  <InternalLinks slot="links" links={links} />
+
+  <Fragment slot="how-it-works">
+    <section class="mt-12 no-print" aria-labelledby="mult-progression-heading">
+      <h2 id="mult-progression-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Grade-by-Grade Multiplication Progression</h2>
+      <div class="bg-white border border-[#E2E8F0] rounded-2xl overflow-hidden">
+        <div class="divide-y divide-[#E2E8F0]">
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 3</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Introduction to Multiplication</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Begin multiplication as repeated addition and equal groups. Build familiarity with the facts and connect them to division fact families.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 4</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Building Fluency Through ×12</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Work toward automatic recall of all facts through ×12. Apply multiplication facts to multi-digit multiplication and division problems.</p>
+            </div>
+          </div>
+          <div class="flex items-start gap-4 px-5 py-4">
+            <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 5</span>
+            <div>
+              <p class="text-sm font-medium text-[#1E293B]">Fluency for Multi-Step Problems</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Automatic fact recall supports long multiplication, long division, fractions, and ratio work. Mixed practice keeps all facts sharp.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="mult-tips-heading">
+      <h2 id="mult-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
+      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+        <p>
+          Use <a href="/multiplication" class="text-[#4F46E5] font-medium hover:underline">one-times-table practice</a> to isolate any fact families that still feel shaky. A single session on the ×7 table, for example, can close specific gaps faster than mixed practice.
+        </p>
+        <p>
+          Once individual tables feel solid, mixed worksheets are the best way to build automatic recall across all facts. Regular timed practice helps students answer any problem quickly without counting.
+        </p>
+        <p>
+          Strong multiplication fluency is the foundation for division, fractions, and multi-digit arithmetic — the earlier students reach automaticity, the easier everything that follows becomes.
+        </p>
+      </div>
+    </section>
+
+    <section class="mt-12 no-print" aria-labelledby="mult-faq-heading">
+      <h2 id="mult-faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
+</PracticeLayout>
