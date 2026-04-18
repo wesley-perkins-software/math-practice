@@ -1,8 +1,6 @@
 {
-  "name": "Math Practice Online",
-  "short_name": "Math Practice",
-  "description": "Free online arithmetic practice for students of all ages.",
-  "start_url": "/",
+  "name": "MyWebSite",
+  "short_name": "MySite",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -17,7 +15,7 @@
       "purpose": "maskable"
     }
   ],
-  "theme_color": "#1E1B4B",
-  "background_color": "#F5F3FF",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone"
 }
