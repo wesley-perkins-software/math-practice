@@ -3,7 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 export function getStaticPaths() {
   return Array.from({ length: 12 }, (_, i) => ({
@@ -110,7 +110,7 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
         ? ["Grade 2", "Grade 3"]
         : ["Grade 3", "Grade 4"],
       "teaches": `${tableNumber} times table multiplication facts`,
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

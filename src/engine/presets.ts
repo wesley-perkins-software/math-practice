@@ -258,7 +258,7 @@ export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
 
 export const MATH_PRACTICE_GENERAL: PracticeConfig = {
   storageKey: 'math-practice',
-  label: 'Math Practice',
+  label: 'Math Practice Online',
   path: '/math-practice',
   operation: 'mixed',
   mode: 'untimed',

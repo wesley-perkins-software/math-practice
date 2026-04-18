@@ -2,14 +2,14 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
-  { href: '/1st-grade-math-practice', label: '1st Grade Math Practice', description: 'Addition & subtraction facts for K–Grade 1' },
-  { href: '/2nd-grade-math-practice', label: '2nd Grade Math Practice', description: '2-digit arithmetic with regrouping' },
-  { href: '/3rd-grade-math-practice', label: '3rd Grade Math Practice', description: 'Multiplication facts & times tables' },
-  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice', description: 'All-operations fluency & division' },
-  { href: '/5th-grade-math-practice', label: '5th Grade Math Practice', description: 'Speed, accuracy & division with remainders' },
+  { href: '/1st-grade-math-practice', label: '1st Grade Math Practice Online', description: 'Addition & subtraction facts for K–Grade 1' },
+  { href: '/2nd-grade-math-practice', label: '2nd Grade Math Practice Online', description: '2-digit arithmetic with regrouping' },
+  { href: '/3rd-grade-math-practice', label: '3rd Grade Math Practice Online', description: 'Multiplication facts & times tables' },
+  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice Online', description: 'All-operations fluency & division' },
+  { href: '/5th-grade-math-practice', label: '5th Grade Math Practice Online', description: 'Speed, accuracy & division with remainders' },
   { href: '/math-worksheets', label: 'Printable Worksheets', description: 'Print practice pages for pencil-and-paper work' },
 ];
 
@@ -46,7 +46,7 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="Free Math Practice for Kids at Home — Help Your Child Learn Math Facts"
+  title="Free Math Practice Online for Kids at Home — Help Your Child Learn Math Facts"
   description="Free math practice for parents helping K–5 kids at home. No login, no setup. Grade-level guides, arithmetic drills, and printable worksheets to build math fact fluency."
   canonical={`${SITE}/for-parents`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'For Parents' }]}
@@ -55,13 +55,13 @@ const faqItems = [
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "Free Math Practice for Kids at Home",
+      "name": "Free Math Practice Online for Kids at Home",
       "description": "Free math practice for parents helping K–5 children at home. Grade-level arithmetic drills and printable worksheets. No login or setup required.",
       "url": `${SITE}/for-parents`,
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
       "teaches": ["Addition", "Subtraction", "Multiplication", "Division", "Arithmetic"],
       "audience": { "@type": "EducationalAudience", "educationalRole": "parent" },
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -74,7 +74,7 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Free Math Practice for Kids at Home</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Free Math Practice Online for Kids at Home</h1>
   <div slot="intro">
     <p>Help your child build math fact fluency with free practice that matches exactly where they are in school. No account to create, no app to download — just open the right page for your child's grade and they're practicing in seconds.</p>
   </div>

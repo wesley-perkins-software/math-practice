@@ -2,13 +2,13 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: '60-second all-operations challenge' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient and remainder problems' },
   { href: '/math-worksheets', label: 'Math Worksheets', description: 'Printable practice for all operations' },
-  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice', description: 'Review prior grade skills' },
+  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice Online', description: 'Review prior grade skills' },
 ];
 
 const faqItems = [
@@ -32,21 +32,21 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="5th Grade Math Practice — All-Operations Fluency & Speed Drills"
+  title="5th Grade Math Practice Online — All-Operations Fluency & Speed Drills"
   description="Free 5th grade math practice for all four operations. Mixed drills, division with remainders, and timed speed challenges. No login required."
   canonical={`${SITE}/5th-grade-math-practice`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: '5th Grade Math Practice' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '5th Grade Math Practice Online' }]}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "5th Grade Math Practice",
+      "name": "5th Grade Math Practice Online",
       "description": "Free online math practice for 5th grade students. Mixed operations, division with remainders, and timed speed drills for all four arithmetic operations.",
       "url": `${SITE}/5th-grade-math-practice`,
       "educationalLevel": ["Grade 5"],
       "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -59,7 +59,7 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">5th Grade Math Practice</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">5th Grade Math Practice Online</h1>
   <p slot="intro">Fifth grade is about mastering all four operations. Speed drills, mixed practice, and division with remainders build the fluency needed for fractions, decimals, and middle school math.</p>
 
   <InternalLinks slot="links" title="5th Grade Practice Activities" links={links} />

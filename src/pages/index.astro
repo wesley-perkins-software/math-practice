@@ -2,7 +2,7 @@
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import '@/styles/global.css';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const operations = [
   {
@@ -49,7 +49,7 @@ const operations = [
 ---
 
 <BaseLayout
-  title="Math Practice — Free Arithmetic Drills for Students, Parents & Teachers"
+  title="Math Practice Online — Free Arithmetic Drills for Students, Parents & Teachers"
   description="Free math practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback. No account or login needed — perfect for students, parents, and teachers."
   canonical={`${SITE}/`}
 >
@@ -57,22 +57,22 @@ const operations = [
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Math Practice",
-      "url": "https://www.mathpractice.com",
+      "name": "Math Practice Online",
+      "url": "https://www.mathpracticeonline.com",
       "description": "Free arithmetic practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback.",
-      "logo": "https://www.mathpractice.com/favicon.svg"
+      "logo": "https://www.mathpracticeonline.com/favicon.svg"
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "WebSite",
-      "name": "Math Practice",
-      "url": "https://www.mathpractice.com"
+      "name": "Math Practice Online",
+      "url": "https://www.mathpracticeonline.com"
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "EducationalApplication",
-      "name": "Math Practice",
-      "url": "https://www.mathpractice.com/",
+      "name": "Math Practice Online",
+      "url": "https://www.mathpracticeonline.com/",
       "description": "Free online arithmetic practice for grades K–5. Practice addition, subtraction, multiplication, and division with instant feedback and progress tracking.",
       "applicationCategory": "EducationalApplication",
       "operatingSystem": "Web",
@@ -90,7 +90,7 @@ const operations = [
       "mainEntity": [
         {
           "@type": "Question",
-          "name": "Is Math Practice free to use?",
+          "name": "Is Math Practice Online free to use?",
           "acceptedAnswer": {
             "@type": "Answer",
             "text": "Yes, completely free. No account and no subscription required. Every practice mode on the site is available to anyone."
@@ -160,7 +160,7 @@ const operations = [
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-3.5 flex items-center justify-between">
       <a href="/" class="flex items-center gap-2 group">
         <span class="w-7 h-7 rounded-lg bg-[#4F46E5] flex items-center justify-center select-none group-hover:bg-[#6366F1] transition-colors"><svg viewBox="0 0 24 24" width="14" height="14" fill="white" aria-hidden="true"><path d="M10 3H14V10H21V14H14V21H10V14H3V10H10Z"/></svg></span>
-        <span class="text-base font-bold text-white tracking-tight">Math Practice</span>
+        <span class="text-base font-bold text-white tracking-tight">Math Practice Online</span>
       </a>
       <nav class="hidden sm:flex items-center gap-1">
         <a href="/addition" class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">Addition</a>
@@ -560,11 +560,11 @@ const operations = [
       </div>
     </section>
 
-    <!-- Complete Math Practice Index -->
+    <!-- Complete Math Practice Online Index -->
     <section>
       <div class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
         <div class="text-center mb-10">
-          <h2 class="text-3xl font-bold text-[#1E1B4B]">Complete Math Practice Index</h2>
+          <h2 class="text-3xl font-bold text-[#1E1B4B]">Complete Math Practice Online Index</h2>
           <p class="text-[#374151] mt-2 text-base max-w-xl mx-auto">
             Every practice page on the site, organized by topic. Students, parents, and teachers can jump directly to any skill level or drill type.
           </p>
@@ -698,7 +698,7 @@ const operations = [
         <a href="/privacy" class="hover:text-[#3730A3] transition-colors">Privacy Policy</a>
         <a href="/terms" class="hover:text-[#3730A3] transition-colors">Terms of Service</a>
       </div>
-      <p class="text-xs text-[#6B7280] mt-4">© {new Date().getFullYear()} Math Practice. Free arithmetic practice for students, parents &amp; teachers.</p>
+      <p class="text-xs text-[#6B7280] mt-4">© {new Date().getFullYear()} Math Practice Online. Free arithmetic practice for students, parents &amp; teachers.</p>
     </div>
   </footer>
 </BaseLayout>

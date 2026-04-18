@@ -2,14 +2,14 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/multiplication/facts', label: 'Multiplication Facts (×1–×12)', description: 'Build fluency across all times tables' },
   { href: '/division/facts', label: 'Division Facts', description: 'Division facts with divisors 1–12' },
   { href: '/division-practice', label: 'Division Practice Hub', description: 'All division difficulty levels' },
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print multiplication fact sheets' },
-  { href: '/5th-grade-math-practice', label: '5th Grade Math Practice', description: 'Next level: all-operations fluency' },
+  { href: '/5th-grade-math-practice', label: '5th Grade Math Practice Online', description: 'Next level: all-operations fluency' },
 ];
 
 const faqItems = [
@@ -33,21 +33,21 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="4th Grade Math Practice — Multiplication & Division Facts Fluency"
+  title="4th Grade Math Practice Online — Multiplication & Division Facts Fluency"
   description="Free 4th grade math practice for multiplication facts ×1–×12 and division facts. Build fluency for all times tables with instant feedback. No login required."
   canonical={`${SITE}/4th-grade-math-practice`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: '4th Grade Math Practice' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '4th Grade Math Practice Online' }]}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "4th Grade Math Practice",
+      "name": "4th Grade Math Practice Online",
       "description": "Free online math practice for 4th grade students. Covers multiplication facts ×1–×12, division facts, and mixed operations.",
       "url": `${SITE}/4th-grade-math-practice`,
       "educationalLevel": ["Grade 4"],
       "teaches": ["Multiplication", "Division"],
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -60,7 +60,7 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">4th Grade Math Practice</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">4th Grade Math Practice Online</h1>
   <p slot="intro">Fourth grade is about multiplication and division fluency. Build automatic recall of all times tables through ×12 and master division facts — the skills that make every future math topic easier.</p>
 
   <InternalLinks slot="links" title="4th Grade Practice Activities" links={links} />

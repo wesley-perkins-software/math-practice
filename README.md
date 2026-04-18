@@ -1,8 +1,8 @@
-# Math Practice
+# Math Practice Online
 
 A scalable, front-end-only arithmetic practice platform. The goal is both SEO acquisition (many unique pages for long-tail queries) and a habit-forming interactive practice tool.
 
-**Live site:** https://www.mathpractice.com
+**Live site:** https://www.mathpracticeonline.com
 **Deploy target:** Netlify (static)
 
 ---

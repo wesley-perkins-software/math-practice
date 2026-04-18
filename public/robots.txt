@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://www.mathpractice.com/sitemap-index.xml
+Sitemap: https://www.mathpracticeonline.com/sitemap-index.xml

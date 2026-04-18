@@ -2,7 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Add numbers 1–9 with instant feedback' },
@@ -10,7 +10,7 @@ const links = [
   { href: '/addition-practice', label: 'Addition Practice Hub', description: 'All addition difficulty levels' },
   { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Print or practice addition problems' },
   { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Print or practice subtraction problems' },
-  { href: '/2nd-grade-math-practice', label: '2nd Grade Math Practice', description: 'Next level: 2-digit addition and subtraction' },
+  { href: '/2nd-grade-math-practice', label: '2nd Grade Math Practice Online', description: 'Next level: 2-digit addition and subtraction' },
 ];
 
 const faqItems = [
@@ -34,21 +34,21 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="1st Grade Math Practice — Addition & Subtraction Facts"
+  title="1st Grade Math Practice Online — Addition & Subtraction Facts"
   description="Free 1st grade math practice for addition and subtraction facts. Build fluency with single-digit problems, instant feedback, and no login required."
   canonical={`${SITE}/1st-grade-math-practice`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: '1st Grade Math Practice' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '1st Grade Math Practice Online' }]}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "1st Grade Math Practice",
+      "name": "1st Grade Math Practice Online",
       "description": "Free online math practice for 1st grade students. Covers single-digit addition and subtraction facts with instant feedback.",
       "url": `${SITE}/1st-grade-math-practice`,
       "educationalLevel": ["Grade 1", "Kindergarten"],
       "teaches": ["Addition", "Subtraction"],
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -61,7 +61,7 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1st Grade Math Practice</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1st Grade Math Practice Online</h1>
   <p slot="intro">Build the foundational math skills every 1st grader needs. Practice single-digit addition and subtraction facts with instant feedback — no login required, completely free.</p>
 
   <InternalLinks slot="links" title="1st Grade Practice Activities" links={links} />

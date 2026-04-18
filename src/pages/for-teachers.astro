@@ -2,7 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: '60-second whole-class warm-up drill' },
@@ -46,7 +46,7 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="Free Math Practice for Teachers — Classroom Drills & Printable Worksheets"
+  title="Free Math Practice Online for Teachers — Classroom Drills & Printable Worksheets"
   description="Free math practice for elementary teachers. No login, no setup — share any practice page with your class instantly. Arithmetic drills, times tables, and printable worksheets for grades K–5."
   canonical={`${SITE}/for-teachers`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'For Teachers' }]}
@@ -55,13 +55,13 @@ const faqItems = [
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "Free Math Practice for Teachers",
+      "name": "Free Math Practice Online for Teachers",
       "description": "Free classroom arithmetic practice for elementary teachers. No login or setup required. Arithmetic drills, times tables, printable worksheets, and speed drills for grades K–5.",
       "url": `${SITE}/for-teachers`,
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
       "teaches": ["Addition", "Subtraction", "Multiplication", "Division", "Arithmetic"],
       "audience": { "@type": "EducationalAudience", "educationalRole": "teacher" },
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -74,7 +74,7 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Free Math Practice for Teachers</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Free Math Practice Online for Teachers</h1>
   <div slot="intro">
     <p>Everything on this site is free, requires no student accounts, and works in any browser on any device. Share a link to any practice page and students are practicing in seconds — no IT setup, no app downloads, no permission forms.</p>
   </div>

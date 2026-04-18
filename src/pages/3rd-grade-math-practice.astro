@@ -2,7 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 
-const SITE = 'https://www.mathpractice.com';
+const SITE = 'https://www.mathpracticeonline.com';
 
 const links = [
   { href: '/multiplication/facts', label: 'Multiplication Facts', description: 'Learn all times tables 1–12' },
@@ -10,7 +10,7 @@ const links = [
   { href: '/addition/2-digit-with-carrying', label: 'Addition with Carrying', description: 'Reinforce regrouping skills' },
   { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'Reinforce regrouping in subtraction' },
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print times table practice sheets' },
-  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice', description: 'Next level: division facts and fluency' },
+  { href: '/4th-grade-math-practice', label: '4th Grade Math Practice Online', description: 'Next level: division facts and fluency' },
 ];
 
 const faqItems = [
@@ -34,21 +34,21 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="3rd Grade Math Practice — Multiplication Facts & Times Tables"
+  title="3rd Grade Math Practice Online — Multiplication Facts & Times Tables"
   description="Free 3rd grade math practice covering multiplication facts, times tables 1–12, and two-digit arithmetic. Instant feedback, no login required."
   canonical={`${SITE}/3rd-grade-math-practice`}
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: '3rd Grade Math Practice' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: '3rd Grade Math Practice Online' }]}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "3rd Grade Math Practice",
+      "name": "3rd Grade Math Practice Online",
       "description": "Free online math practice for 3rd grade students. Covers multiplication facts, times tables 1–12, and two-digit addition and subtraction.",
       "url": `${SITE}/3rd-grade-math-practice`,
       "educationalLevel": ["Grade 3"],
       "teaches": ["Multiplication", "Addition", "Subtraction"],
-      "provider": { "@type": "Organization", "name": "Math Practice", "url": SITE }
+      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -61,7 +61,7 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">3rd Grade Math Practice</h1>
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">3rd Grade Math Practice Online</h1>
   <p slot="intro">Third grade is where multiplication begins. Build times table fluency and reinforce two-digit addition and subtraction with instant feedback — the foundation for all upper-elementary math.</p>
 
   <InternalLinks slot="links" title="3rd Grade Practice Activities" links={links} />
