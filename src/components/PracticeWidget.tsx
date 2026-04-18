@@ -5,6 +5,7 @@ import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
 import { loadStats, saveStats, updateStatsAfterSession, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
+import { trackEvent } from '@/lib/analytics';
 
 import WrittenProblemInput from './WrittenProblemInput';
 import RemainderProblemInput from './RemainderProblemInput';
@@ -151,6 +152,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
     setCorrect(0);
     setFeedbackState('hidden');
     setPhase('active');
+    trackEvent('practice_session_start', {
+      operation: config.operation,
+      practice_label: config.label ?? config.storageKey,
+      mode: config.mode,
+      timer_duration: config.timerDuration ?? 0,
+    });
   }
 
   function endSession() {
@@ -185,10 +192,12 @@ export default function PracticeWidget({ config, topContent }: Props) {
     if (phase === 'complete' && result) {
       const current = loadStats(config.storageKey);
       const prevLongestStreak = current.longestStreak;
+      const prevPersonalBest = current.personalBestScore;
       const updated = updateStatsAfterSession(current, result, isTimed);
       saveStats(config.storageKey, updated);
       setStats(updated);
-      setIsNewStreakRecord(!isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0);
+      const newStreakRecord = !isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0;
+      setIsNewStreakRecord(newStreakRecord);
       appendSessionLog({
         storageKey: config.storageKey,
         label: config.label ?? config.storageKey,
@@ -198,6 +207,17 @@ export default function PracticeWidget({ config, topContent }: Props) {
         durationSeconds: result.durationSeconds,
         isTimed,
         timestamp: result.timestamp,
+      });
+      trackEvent('practice_session_complete', {
+        operation: config.operation,
+        practice_label: config.label ?? config.storageKey,
+        mode: config.mode,
+        correct: result.correct,
+        total_answered: result.total,
+        accuracy_pct: result.score,
+        duration_seconds: result.durationSeconds,
+        is_personal_best: isTimed && updated.personalBestScore > prevPersonalBest,
+        is_new_streak_record: newStreakRecord,
       });
     }
   }, [phase, result, config.storageKey, config.label, isTimed]);
@@ -223,6 +243,13 @@ export default function PracticeWidget({ config, topContent }: Props) {
     totalAnsweredRef.current += 1;
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
+    trackEvent('answer_submit', {
+      operation: config.operation,
+      practice_label: config.label ?? config.storageKey,
+      is_correct: isCorrect,
+      problem_index: totalAnsweredRef.current,
+    });
+
     if (!isTimed) {
       // Update streak and problem count per answer for untimed mode.
       // Sessions never end via timer, so tracking totalProblemsAttempted here ensures
@@ -239,6 +266,14 @@ export default function PracticeWidget({ config, topContent }: Props) {
       };
       saveStats(config.storageKey, updatedStats);
       setStats(updatedStats);
+      const STREAK_MILESTONES = [5, 10, 25, 50];
+      if (isCorrect && STREAK_MILESTONES.includes(newCurrentStreak)) {
+        trackEvent('streak_milestone', {
+          operation: config.operation,
+          practice_label: config.label ?? config.storageKey,
+          streak_count: newCurrentStreak,
+        });
+      }
     }
 
     if (isCorrect) {
@@ -265,6 +300,10 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }
 
   function handleRestart() {
+    trackEvent('play_again', {
+      operation: config.operation,
+      practice_label: config.label ?? config.storageKey,
+    });
     setResult(null);
     setFeedbackState('hidden');
     setStats(loadStats(config.storageKey));
@@ -272,12 +311,20 @@ export default function PracticeWidget({ config, topContent }: Props) {
   }
 
   function handleResetCurrentStreak() {
+    trackEvent('reset_streak', {
+      operation: config.operation,
+      practice_label: config.label ?? config.storageKey,
+    });
     resetCurrentStreak(config.storageKey);
     setStats(loadStats(config.storageKey));
     setResetPending(false);
   }
 
   function handleResetPersonalBest() {
+    trackEvent('reset_personal_best', {
+      operation: config.operation,
+      practice_label: config.label ?? config.storageKey,
+    });
     resetPersonalBestScore(config.storageKey);
     setStats(loadStats(config.storageKey));
     setPersonalBestResetPending(false);
