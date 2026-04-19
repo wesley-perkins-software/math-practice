@@ -4,7 +4,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://www.mathpracticeonline.com',
+  site: 'https://mathpracticeonline.com',
   output: 'static',
   redirects: {
     '/addition-practice': '/addition',
