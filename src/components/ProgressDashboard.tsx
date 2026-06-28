@@ -74,6 +74,7 @@ interface AchievementDef {
 interface AchievementData {
   totalProblems: number;
   totalSessions: number;
+  timedSessionsCompleted: number;
   longestStreak: number;
   operationsPracticed: Set<Operation>;
 }
@@ -91,7 +92,7 @@ const ACHIEVEMENTS: AchievementDef[] = [
     id: 'speed-racer',
     label: 'Speed Racer',
     description: 'Complete a timed drill',
-    check: ({ totalSessions }) => totalSessions >= 1,
+    check: ({ timedSessionsCompleted }) => timedSessionsCompleted >= 1,
   },
   {
     id: 'problem-solver',
@@ -306,7 +307,8 @@ export default function ProgressDashboard() {
   const currentStreakToday = practiced.reduce((m, r) => Math.max(m, r.stats.currentStreak), 0);
 
   // ── Achievements ────────────────────────────────────────────────────────────
-  const achievementData: AchievementData = { totalProblems, totalSessions, longestStreak, operationsPracticed };
+  const timedSessionsCompleted = sessionLog.filter((e) => e.isTimed).length;
+  const achievementData: AchievementData = { totalProblems, totalSessions, timedSessionsCompleted, longestStreak, operationsPracticed };
   const earnedIds = new Set(ACHIEVEMENTS.filter((a) => a.check(achievementData)).map((a) => a.id));
 
   // Next achievements: unearned with progress >= 10%, sorted by closest to completion

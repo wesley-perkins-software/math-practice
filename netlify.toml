@@ -3,6 +3,12 @@
   publish = "dist"
 
 [[redirects]]
+  from = "https://www.mathpracticeonline.com/*"
+  to = "https://mathpracticeonline.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
   from = "/*"
   to = "/404"
   status = 404

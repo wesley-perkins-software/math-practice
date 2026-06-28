@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { title, description, canonical, ogType = 'website' } = Astro.props;
+const canonicalUrl = canonical.endsWith('/') ? canonical : `${canonical}/`;
 ---
 
 <!doctype html>
@@ -34,12 +35,12 @@ const { title, description, canonical, ogType = 'website' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonical} />
+    <link rel="canonical" href={canonicalUrl} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:url" content={canonical} />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content="Math Practice Online" />
     <meta property="og:image" content="https://mathpracticeonline.com/og-default.png" />
