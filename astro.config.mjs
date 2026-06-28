@@ -15,12 +15,24 @@ export default defineConfig({
   integrations: [
     react(),
     sitemap({
-      filter: (page) => ![
-        'https://mathpracticeonline.com/addition-practice/',
-        'https://mathpracticeonline.com/timed-drills/',
-        'https://mathpracticeonline.com/math-drills/',
-        'https://mathpracticeonline.com/speed-drill/',
-      ].includes(page),
+      filter: (page) => {
+        const redirectPaths = [
+          '/addition-practice/',
+          '/timed-drills/',
+          '/math-drills/',
+          '/speed-drill/',
+          '/division-practice/',
+          '/division-practice/facts/',
+          '/division-practice/divide-by/',
+          '/division-practice/remainders/',
+          '/multiplication-practice/',
+          '/multiplication-practice/1-12/',
+          '/multiplication-practice/facts/',
+          '/multiplication-practice/mixed/',
+          '/multiplication-practice/times-tables/',
+        ];
+        return !redirectPaths.some((path) => page.endsWith(path));
+      },
     }),
   ],
   vite: {
