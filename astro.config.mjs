@@ -14,7 +14,26 @@ export default defineConfig({
   },
   integrations: [
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        const redirectPaths = [
+          '/addition-practice/',
+          '/timed-drills/',
+          '/math-drills/',
+          '/speed-drill/',
+          '/division-practice/',
+          '/division-practice/facts/',
+          '/division-practice/divide-by/',
+          '/division-practice/remainders/',
+          '/multiplication-practice/',
+          '/multiplication-practice/1-12/',
+          '/multiplication-practice/facts/',
+          '/multiplication-practice/mixed/',
+          '/multiplication-practice/times-tables/',
+        ];
+        return !redirectPaths.some((path) => page.endsWith(path));
+      },
+    }),
   ],
   vite: {
     plugins: [tailwindcss()],
