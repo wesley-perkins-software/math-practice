@@ -14,7 +14,14 @@ export default defineConfig({
   },
   integrations: [
     react(),
-    sitemap(),
+    sitemap({
+      filter: (page) => ![
+        'https://mathpracticeonline.com/addition-practice/',
+        'https://mathpracticeonline.com/timed-drills/',
+        'https://mathpracticeonline.com/math-drills/',
+        'https://mathpracticeonline.com/speed-drill/',
+      ].includes(page),
+    }),
   ],
   vite: {
     plugins: [tailwindcss()],
