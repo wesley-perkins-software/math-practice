@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import { getTimesTableFact } from '@/data/generated-practice/timesTables';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -44,7 +45,28 @@ const GRADE_BADGE: Partial<Record<number, string>> = {
 };
 const gradeBadge = GRADE_BADGE[tableNumber] ?? 'Grade 3 – Grade 4';
 
-const strategy = TABLE_STRATEGIES[tableNumber];
+// Phase 2 pilot (docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md): tables 2, 7, 9
+// read their Strategy/Quick Answer/Parent-Teacher/FAQ content from the fact bank
+// instead of the legacy objects above. The other 9 tables are unaffected —
+// `fact` is undefined for them and every conditional below falls back to the
+// pre-existing content.
+const PILOT_TABLES = new Set([2, 7, 9]);
+const fact = PILOT_TABLES.has(tableNumber) ? getTimesTableFact(tableNumber) : undefined;
+
+const strategy = fact
+  ? { name: fact.strategyTitle, tip: fact.strategyExplanation }
+  : TABLE_STRATEGIES[tableNumber];
+
+// Hand-composed expanded intro paragraph for pilot tables only, woven around
+// each fact bank's `introClause` per docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md's
+// 40-70 word intro target. Not mechanically generated from a shared template
+// string — kept short and specific to each table's clause so it doesn't just
+// restate the Quick Answer sentence built from `quickAnswerFact` below.
+const EXPANDED_INTRO: Partial<Record<number, string>> = {
+  2: `Because doubling is a skill many students build before formal multiplication instruction, the 2s table is one of the fastest to connect to something already known. This page drills 2×1 through 2×12 in random order until that connection becomes instant recall, not just a doubling skill in general.`,
+  7: `Being honest that some tables require direct memorization helps set realistic expectations, rather than searching for a trick that doesn't exist. This page drills 7×1 through 7×12 in random order, building real recall through repeated practice instead of a shortcut this table doesn't have.`,
+  9: `The widely known finger trick for the 9s works because of this same 10-minus-n relationship, not as an unrelated shortcut. This page drills 9×1 through 9×12 in random order so students build fast recall alongside — not instead of — that underlying number sense.`,
+};
 
 // Build the full times table list for the FAQ answer
 const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}×${i + 1}=${tableNumber * (i + 1)}`).join(', ');
@@ -68,6 +90,7 @@ const faqItems = [
     q: `How does this times table practice work?`,
     a: `This page drills ${tableNumber}×1 through ${tableNumber}×12 in random order with instant right/wrong feedback after every answer. Scores and streaks are saved in your browser automatically.`,
   },
+  ...(fact ? [{ q: fact.faqDifferentiator.question, a: fact.faqDifferentiator.answer }] : []),
 ];
 
 const links = [
@@ -126,8 +149,19 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{h1}</h1>
   <div slot="intro">
-    <p>{introLead}</p>
-    <p class="mt-2">{introSupport}</p>
+    {fact ? (
+      <>
+        <p class="font-semibold text-[#1E293B]">
+          The {tableNumber} times table means multiplying {tableNumber} by each whole number from 1 to 12. {fact.quickAnswerFact}
+        </p>
+        <p class="mt-3">{EXPANDED_INTRO[tableNumber]}</p>
+      </>
+    ) : (
+      <>
+        <p>{introLead}</p>
+        <p class="mt-2">{introSupport}</p>
+      </>
+    )}
   </div>
 
   <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
@@ -164,6 +198,17 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
         </div>
       </div>
     </section>
+
+    {fact && (
+      <section aria-labelledby="parent-teacher-heading">
+        <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent & Teacher Guidance</h2>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <p class="text-sm text-[#6B7280] leading-relaxed">
+            Parents and teachers helping a student with the {tableNumber} times table: {fact.parentTeacherNote}
+          </p>
+        </div>
+      </section>
+    )}
 
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
