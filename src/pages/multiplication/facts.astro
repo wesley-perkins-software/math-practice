@@ -63,12 +63,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Facts Practice</h1>
-  <div slot="intro">
-    <p>Practice mixed multiplication facts from 1 through 12 in random order. This broad mode helps students strengthen overall multiplication fluency across the entire fact family.</p>
-    <p class="mt-2">Practice consistently to build speed and automatic recall across all fact families.</p>
-  </div>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Multiplication facts are the products of two numbers from 1 to 12, such as 6 × 7 = 42. There are 144 total facts in the 1–12 grid, and fluent recall of all of them is the foundation for division, fractions, and multi-digit multiplication.</p>
+    </div>
+    <p>This page is for third and fourth graders working toward full multiplication fact fluency, as well as parents and teachers who want a broad recall check rather than one table at a time. Problems are pulled from all 144 facts in random order, so success here means genuine recall of the whole 1–12 grid, not memorization of a fixed sequence.</p>
+  </Fragment>
+
   <MultiplicationPracticeHub slot="widget" client:load active="facts" />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -106,6 +109,12 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-[#6B7280] leading-relaxed">Random-order practice is intentionally harder than practicing one times table at a time — it tests recall, not sequence memory, and a child can look fluent on a single table while still guessing here. Watch for a child who is fast on some facts (like the 2s, 5s, and 10s) but consistently pauses on others (commonly 6s, 7s, 8s, and 9s); that pattern points to which specific tables need focused practice on the individual times-tables pages rather than more mixed drills. If a child is accurate but slow across the board, they're likely still calculating rather than recalling — short, frequent sessions build recall speed faster than long occasional ones. Mixed practice like this page is best used as a checkpoint after focused single-table practice, not as the first place a new table is learned.</p>
+    </section>
+
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
@@ -118,5 +127,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-[#4B5563]">Want to focus on one table at a time? Try the <a href="/multiplication/times-tables/1" class="text-[#4F46E5] font-semibold hover:underline">times tables practice pages</a> →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>

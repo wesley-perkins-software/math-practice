@@ -89,9 +89,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction with Borrowing Practice</h1>
-  <p slot="intro">Practice regrouping in two-digit subtraction by borrowing from the tens column — a key skill for mastering more advanced subtraction problems.</p>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Two-digit subtraction with borrowing happens when a column's top digit is smaller than the bottom digit, so a ten must be regrouped from the next column, such as 63 − 27 = 36. Every problem on this page requires at least one borrow, building the regrouping skill that comes right after column subtraction without borrowing.</p>
+    </div>
+    <p>This page is for second and third graders who've already mastered two-digit subtraction without borrowing and single-digit subtraction facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one borrow, so there's no way through it without regrouping a ten from the tens column into the ones column.</p>
+  </Fragment>
+
   <SubtractionPracticeHub slot="widget" active="2-digit-with-borrowing" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -135,6 +141,12 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-[#6B7280] leading-relaxed">Borrowing trips up students who were doing fine with subtraction facts, because there's now an extra step to track before subtracting. Watch for a child who tries to subtract the smaller digit from the larger one regardless of position (turning 72 − 38 into an ones-column answer of 8 − 2 = 6 instead of borrowing); that's the single most common borrowing error, and it means the child hasn't yet internalized why borrowing is necessary, not just how to do it. If a child borrows correctly but forgets to reduce the tens digit by 1 afterward, they're applying half the procedure — worth re-explaining with a concrete example like 72 − 38 rather than assigning more timed problems. Once a child can explain out loud why they're borrowing (not just where to cross out and rewrite), they're ready to move quickly through this level.</p>
+    </section>
+
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
@@ -147,5 +159,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-[#4B5563]">Comfortable with borrowing? Try <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] font-semibold hover:underline">2-digit addition with carrying</a>, the inverse regrouping skill →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>

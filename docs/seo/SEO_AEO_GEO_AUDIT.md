@@ -4,11 +4,11 @@
 
 - **Site:** MathPracticeOnline.com
 - **Created:** 2026-08-02
-- **Last updated:** 2026-08-02 (Canonical Leaf-Page Standard pilot)
+- **Last updated:** 2026-08-02 (Canonical Leaf-Page Standard rolled out to all non-generated leaf pages)
 - **Purpose:** Give any future human contributor, Claude session, or Codex session a single source of truth for what was audited on this site, what's already fixed, what remains, why each item matters, what order to work in, and which decisions still need explicit human approval.
 - **Scope:** Technical SEO, semantic SEO, GEO (Generative Engine Optimization), AEO (Answer Engine Optimization), AI discoverability, topical authority, internal linking, crawl efficiency, page quality, page experience, Core Web Vitals, structured data, metadata, accessibility, engagement, trust signals, and rich-result eligibility. Excludes backlink acquisition, content marketing, and publishing net-new pages — this is entirely about improving what already exists in the codebase.
 - **Completed implementation reference:** [PR #116](https://github.com/wesley-perkins-software/math-practice/pull/116) (merged into `development`), [PR #117](https://github.com/wesley-perkins-software/math-practice/pull/117) (merged into `development`)
-- **Current phase:** Canonical Leaf-Page Standard piloted on the 3 Addition leaf pages (`/addition/1-digit`, `/addition/2-digit-no-carrying`, `/addition/2-digit-with-carrying`) — Quick Answer block, expanded intro, mandatory Parent/Teacher guidance, refined FAQ, and a next-step CTA sentence. See `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md` for the full standard and pilot evaluation. **Sitewide rollout to the remaining ~30 leaf pages is not yet approved** — three targeted revisions to the pattern were identified during the pilot and should be applied before extending further; see that document's Pilot Evaluation section.
+- **Current phase:** Canonical Leaf-Page Standard rolled out to all 9 non-generated leaf pages — the 3 Addition leaf pages (piloted first), the 3 Subtraction leaf pages, Multiplication Facts, Division Facts, and Division with Remainders — each gaining a Quick Answer block, expanded intro, mandatory Parent/Teacher guidance, refined FAQ, and a next-step CTA sentence. See `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md` for the full standard, the original pilot evaluation, and the rollout record. **The 24 generated Times Tables / Divide By pages remain out of scope**, pending the structured per-number fact bank noted in that document. The three pattern revisions identified during the pilot (Quick Answer/intro visual differentiation, Parent/Teacher scannable layout, CTA de-duplication) were deliberately **not** applied in this rollout — they're deferred to a dedicated future UI refresh, per instruction.
 
 ---
 
@@ -151,11 +151,13 @@ The `logo` field was preserved from the homepage's pre-existing (legitimate, alr
 
 ---
 
-## 4c. Canonical Leaf-Page Standard — pilot implemented on 3 Addition pages
+## 4c. Canonical Leaf-Page Standard — rolled out to all non-generated leaf pages
 
 - [x] Design the Canonical Leaf-Page Standard — **completed**, see `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`.
-- [x] Pilot the standard on 3 Addition leaf pages — **completed** in this update.
-- [ ] Apply the pilot's recommended revisions to the pattern, then roll out to the remaining ~30 leaf pages — **not started, blocked on approval.**
+- [x] Pilot the standard on 3 Addition leaf pages — **completed.**
+- [x] Roll the approved standard out to the remaining 6 non-generated leaf pages (Subtraction ×3, Multiplication Facts, Division Facts, Division with Remainders) — **completed in this update**, shipped exactly as piloted, with the pilot's recommended revisions deliberately deferred rather than applied (see below).
+- [ ] Apply the 3 pattern revisions identified in the pilot evaluation (Quick Answer/intro visual differentiation, Parent/Teacher scannable layout, CTA de-duplication) — **not started**, explicitly deferred to a future UI refresh.
+- [ ] Extend the standard to the 24 generated Times Tables / Divide By pages — **not started**, blocked on designing the per-number fact bank described in `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`.
 
 **Why it mattered:** the content-quality audit (which produced this document's companion content-quality findings) identified that leaf practice pages — the pages with the most specific, high-intent search traffic — had the thinnest content on the site: ~25-word intros, no parent/teacher explanation (present only on hub pages), no AI-extractable "quick answer," and only implicit calls to action. This is the single largest content-quality gap on the site by both traffic relevance and page count.
 
@@ -177,6 +179,20 @@ The `logo` field was preserved from the homepage's pre-existing (legitimate, alr
 **Risk:** Low — scoped to 3 files, no shared-layout or shared-component changes, no metadata/URL/schema-type changes, additive content only.
 
 **Explicitly not done in this pilot (per instruction):** no other leaf pages modified, no generated (times-table/divide-by) pages touched, no per-number fact bank introduced, no template unification (`HubLayout`/`PracticeLayout`) started, no layout redesign, no new schema types, no metadata/navigation/URL changes.
+
+*(The pilot record above is retained as historical documentation. The rollout below shipped the pilot's pattern unrevised — see `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`'s "Rollout" section for the full record, including why the pilot's recommended revisions were deliberately not applied here.)*
+
+### Rollout to the remaining 6 non-generated leaf pages — ✅ Implemented
+
+- [x] Apply the standard, exactly as piloted, to the 6 remaining non-generated leaf pages — **completed** in this update.
+
+**What changed:** `src/pages/subtraction/1-digit.astro`, `src/pages/subtraction/2-digit-no-borrowing.astro`, `src/pages/subtraction/2-digit-with-borrowing.astro`, `src/pages/multiplication/facts.astro`, `src/pages/division/facts.astro`, and `src/pages/division/remainders.astro` each gained the same 5 additions as the pilot pages: a Quick Answer block, an expanded 40–70 word intro, mandatory Parent & Teacher Guidance (skipped only where an equivalent — and more thorough — "Tips for Parents and Teachers" section already existed, on the two division pages, which were left untouched), FAQ reinforcement (first question now echoes the Quick Answer without duplicating it, question counts unchanged), and a next-step CTA sentence, with `InternalLinks` repositioned to the end of the page in each file individually. No revisions from the pilot evaluation were applied — the pattern shipped exactly as approved, per instruction, with the three recommended refinements explicitly deferred to a future UI pass.
+
+**Verification performed:** `npm run build` — 68 pages, no errors, same page count as before. Inspected generated `dist/` HTML for all 9 non-generated leaf pages (3 pilot + 6 rollout): all JSON-LD valid; FAQ schema/visible counts match on every page (4/4 on 7 pages, 5/5 on the two division pages, which already had 5 questions pre-rollout); heading hierarchy clean on all 9; titles and canonicals unchanged; `InternalLinks` renders once per page. `git diff --stat` confirms exactly the 6 intended files changed — no generated Times Tables/Divide By pages, layouts, or other site files touched.
+
+**Risk:** Low — identical, already-validated pattern applied to 6 more files; no shared-component or shared-layout changes.
+
+**Explicitly not done in this rollout (per instruction):** the 24 generated Times Tables/Divide By pages were not touched; the pilot's 3 recommended pattern revisions were not applied; the practice widget was not moved on any page; no layout, color, styling, metadata, URL, navigation, or schema-type changes were made anywhere.
 
 ---
 
@@ -290,7 +306,7 @@ Ordered by effort vs. how directly each item moves organic/AI-referral traffic �
 | 9 | Resolve `/addition-practice` + `/subtraction-practice` | Quick Win | **Blocked — needs explicit approval** | Fix is scoped and low-risk; waiting on the content decision. |
 | 10 | Consolidate header/footer + `<article>` wrapping + `<label>` upgrade | Medium | Not started | Maintainability and semantic-clarity investments. |
 | 11 | Manual accessibility test of the custom number pad | Large | Not started | Needs real-device testing before scope is even known. |
-| 12 | Canonical Leaf-Page Standard — pilot on 3 Addition pages | Medium | ✅ Piloted (this update) — sitewide rollout blocked | Closes the largest content-quality gap identified (thin leaf-page intros, no parent/teacher guidance on leaf pages); see Section 4c and `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`. Three pattern revisions recommended before rolling out to the remaining ~30 leaf pages. |
+| 12 | Canonical Leaf-Page Standard — rollout to all 9 non-generated leaf pages | Medium | ✅ Done (this update) — generated pages and pattern revisions remain out of scope | Closes the largest content-quality gap identified (thin leaf-page intros, no parent/teacher guidance on leaf pages); see Section 4c and `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`. The 24 generated Times Tables/Divide By pages need a per-number fact bank before extending further; the pilot's 3 recommended pattern revisions are deferred to a future UI refresh. |
 
 ---
 
@@ -303,6 +319,7 @@ Ordered by effort vs. how directly each item moves organic/AI-referral traffic �
 | 2026-08-02 | Pending | Rewrote homepage FAQ from one shared `faqItems` source (visible + JSON-LD); fixed the "Math Drills" factual error on `index.astro`, `progress.astro`, and a stale `README.md` reference; normalized the About-page Organization `url` to the canonical trailing-slash form via `SITE_URL`; removed unverified `foundingDate: "2024"` from the About-page Organization node (kept `areaServed`/`serviceType`, both reviewed as accurate) | This update |
 | 2026-08-02 | Pending | Linked the multiplication hub to the times-tables index; added footer links to `/math-facts`, `/for-parents`, `/for-teachers` (`HubLayout.astro`, `PracticeLayout.astro`, `index.astro`, `404.astro`); fixed "Progress" vs "My Progress" header/footer nav-label inconsistency in the same 4 files plus `about.astro`'s "Progress Tracking" link text; repointed stale `/multiplication-practice` and `/division-practice` links on the 3rd/4th-grade pages to the canonical `/multiplication`/`/division` hubs | Navigation & internal-linking focused PR; division hub verified already complete (Divide By/Facts/Remainders all linked) and left unchanged; division divisor-grid item remains deferred/out of scope |
 | 2026-08-02 | Pending | Added `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md` defining the target leaf-page content shape; piloted it on the 3 Addition leaf pages (Quick Answer block, expanded intro, mandatory Parent/Teacher guidance, refined FAQ, next-step CTA, `InternalLinks` repositioned to the end of the page within those 3 files only) | Pilot only — sitewide rollout to remaining ~30 leaf pages and the 24 generated pages explicitly not done, blocked on applying 3 recommended pattern revisions from the pilot evaluation first |
+| 2026-08-02 | Pending | Rolled out the approved Canonical Leaf-Page Standard, unrevised, to the 6 remaining non-generated leaf pages: `subtraction/1-digit.astro`, `subtraction/2-digit-no-borrowing.astro`, `subtraction/2-digit-with-borrowing.astro`, `multiplication/facts.astro`, `division/facts.astro`, `division/remainders.astro` | Completes rollout to all 9 non-generated leaf pages (pilot + this update). The 24 generated Times Tables/Divide By pages and the pilot's 3 recommended pattern revisions remain explicitly out of scope, per instruction |
 
 ---
 

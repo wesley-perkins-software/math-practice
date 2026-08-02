@@ -67,11 +67,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division with Remainders Practice</h1>
-  <div slot="intro">
-    <p>Work on division problems that do not divide evenly. Enter the quotient and remainder for each problem to develop conceptual understanding, accuracy, and readiness for long division and multi-step problem solving.</p>
-  </div>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Division with remainders happens when a number doesn't divide evenly, leaving an amount smaller than the divisor left over, such as 23 ÷ 4 = 5 remainder 3. This page builds the same quotient-plus-remainder skill used in long division.</p>
+    </div>
+    <p>This page is for third and fourth graders who've mastered exact division facts and are ready to handle numbers that don't divide evenly, as well as parents and teachers checking whether a child understands what a remainder represents, not just how to compute it. Enter both the quotient and remainder for each problem to build the accuracy and conceptual grounding needed for long division and multi-step word problems.</p>
+  </Fragment>
+
   <DivisionPracticeHub slot="widget" active="remainders" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <Fragment slot="how-it-works">
     <section class="mt-12" aria-labelledby="remainders-progression-heading">
@@ -129,5 +133,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="mt-12 text-sm text-[#4B5563]">Ready to put it all together? Try the <a href="/arithmetic-speed-drill" class="text-[#4F46E5] font-semibold hover:underline">Arithmetic Speed Drill</a> for mixed, timed practice across every operation →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </Fragment>
 </PracticeLayout>

@@ -16,12 +16,12 @@ const links = [
 
 const faqItems = [
   {
-    q: 'What grade is 2-digit subtraction without borrowing?',
-    a: 'Two-digit subtraction without borrowing is typically a Grade 1–Grade 2 skill. Students practice column subtraction before borrowing is introduced, building confidence with place-value alignment first.'
-  },
-  {
     q: 'What does "no borrowing" mean in subtraction?',
     a: 'A problem has no borrowing when every digit in the top number (minuend) is greater than or equal to the corresponding digit in the bottom number (subtrahend). Each column can be subtracted directly without regrouping. For example, 57 − 23: ones column 7 ≥ 3, tens column 5 ≥ 2 — no borrowing needed.'
+  },
+  {
+    q: 'What grade is 2-digit subtraction without borrowing?',
+    a: 'Two-digit subtraction without borrowing is typically a Grade 1–Grade 2 skill. Students practice column subtraction before borrowing is introduced, building confidence with place-value alignment first.'
   },
   {
     q: "What's the best way to check a subtraction answer?",
@@ -63,9 +63,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction Practice (No Borrowing)</h1>
-  <p slot="intro">Work on two-digit subtraction without regrouping to strengthen place-value alignment and written subtraction steps before introducing borrowing.</p>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Two-digit subtraction without borrowing subtracts two numbers from 10–99 where every top digit is greater than or equal to the matching bottom digit, such as 48 − 26 = 22. Because no digit ever needs to be borrowed, this is the step where students first apply column subtraction before regrouping is introduced.</p>
+    </div>
+    <p>This page is for first and second graders who've mastered single-digit subtraction and are learning multi-digit subtraction for the first time, plus parents and teachers checking whether a child can subtract each column independently. Every problem here is built so the top digit is always at least as large as the bottom digit in each column, isolating column subtraction from the separate skill of borrowing.</p>
+  </Fragment>
+
   <SubtractionPracticeHub slot="widget" active="2-digit-no-borrowing" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -109,6 +115,12 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-[#6B7280] leading-relaxed">The skill being checked here isn't subtraction facts — it's whether a child subtracts the correct column pair without crossing columns. Watch for a child who solves 48 − 26 by subtracting 2 from 8 instead of 6 from 8; that's a column-alignment slip, not a subtraction-facts error, and lined paper or extra column spacing fixes it faster than more problems. A child who's accurate but slow is probably still solving each column by counting back instead of retrieving the fact instantly — that will speed up with more single-digit subtraction practice, not more two-digit problems. Because no problem here ever requires borrowing, a child ready to advance should be solving these quickly and correctly before starting the borrowing page.</p>
+    </section>
+
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
@@ -121,5 +133,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-[#4B5563]">Ready for regrouping? Try <a href="/subtraction/2-digit-with-borrowing" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction with borrowing</a> next →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>
