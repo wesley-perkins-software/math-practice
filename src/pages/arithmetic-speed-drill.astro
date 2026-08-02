@@ -2,6 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import SpeedDrillSetup from '@/components/SpeedDrillSetup';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -58,11 +59,7 @@ const faqItems = [
       "description": "60-second arithmetic speed drill. Choose addition, subtraction, multiplication, and division facts 1–12. Free with personal best tracking.",
       "url": "https://mathpracticeonline.com/arithmetic-speed-drill",
       "teaches": "Arithmetic Fluency",
-      "provider": {
-        "@type": "Organization",
-        "name": "Math Practice Online",
-        "url": "https://mathpracticeonline.com"
-      }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
   </Fragment>
 

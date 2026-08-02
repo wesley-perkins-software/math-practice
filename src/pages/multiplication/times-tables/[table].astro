@@ -2,6 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -110,7 +111,7 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
         ? ["Grade 2", "Grade 3"]
         : ["Grade 3", "Grade 4"],
       "teaches": `${tableNumber} times table multiplication facts`,
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

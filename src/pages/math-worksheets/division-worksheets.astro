@@ -2,6 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import WorksheetGenerator from '@/components/WorksheetGenerator';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 import {
   DIVISION_FACTS,
   DIVISION_REMAINDERS,
@@ -60,7 +61,7 @@ const faqItems = [
       "url": `${SITE}/math-worksheets/division-worksheets`,
       "educationalLevel": ["Grade 3", "Grade 4", "Grade 5"],
       "teaches": "Division",
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

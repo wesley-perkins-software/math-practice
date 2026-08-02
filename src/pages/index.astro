@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import '@/styles/global.css';
+import { ORGANIZATION_ID, WEBSITE_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -54,20 +55,7 @@ const operations = [
   canonical={`${SITE}/`}
 >
   <Fragment slot="head">
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Math Practice Online",
-      "url": "https://mathpracticeonline.com",
-      "description": "Free arithmetic practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback.",
-      "logo": "https://mathpracticeonline.com/favicon.svg"
-    })} />
-    <script type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "Math Practice Online",
-      "url": "https://mathpracticeonline.com"
-    })} />
+    <!-- Organization + WebSite identity now declared sitewide by BaseLayout (@id references: ORGANIZATION_ID, WEBSITE_ID) -->
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "EducationalApplication",
@@ -82,7 +70,9 @@ const operations = [
         "priceCurrency": "USD"
       },
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
-      "teaches": ["Addition", "Subtraction", "Multiplication", "Division", "Arithmetic"]
+      "teaches": ["Addition", "Subtraction", "Multiplication", "Division", "Arithmetic"],
+      "isPartOf": { "@id": WEBSITE_ID },
+      "publisher": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

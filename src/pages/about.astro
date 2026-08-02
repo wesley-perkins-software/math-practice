@@ -1,5 +1,6 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import { ORGANIZATION_ID, WEBSITE_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 ---
@@ -17,8 +18,10 @@ const SITE = 'https://mathpracticeonline.com';
       "name": "About Math Practice Online",
       "url": `${SITE}/about`,
       "description": "Math Practice Online is a free, no-account arithmetic practice site for K–5 students, parents, and teachers.",
+      "isPartOf": { "@id": WEBSITE_ID },
       "mainEntity": {
         "@type": "Organization",
+        "@id": ORGANIZATION_ID,
         "name": "Math Practice Online",
         "url": SITE,
         "description": "Free arithmetic practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback. No account or login required.",
