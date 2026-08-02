@@ -1,14 +1,12 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import { ORGANIZATION_ID, WEBSITE_ID } from '@/config/site';
-
-const SITE = 'https://mathpracticeonline.com';
+import { SITE_URL, ORGANIZATION_ID, WEBSITE_ID } from '@/config/site';
 ---
 
 <PracticeLayout
   title="About Math Practice Online — Free K–5 Arithmetic Drills"
   description="Math Practice Online is a free, no-account arithmetic site for K–5 students. Learn about our mission, what we offer, and how we protect student privacy."
-  canonical={`${SITE}/about`}
+  canonical={`${SITE_URL}/about`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'About' }]}
 >
   <Fragment slot="head">
@@ -16,16 +14,15 @@ const SITE = 'https://mathpracticeonline.com';
       "@context": "https://schema.org",
       "@type": "AboutPage",
       "name": "About Math Practice Online",
-      "url": `${SITE}/about`,
+      "url": `${SITE_URL}/about`,
       "description": "Math Practice Online is a free, no-account arithmetic practice site for K–5 students, parents, and teachers.",
       "isPartOf": { "@id": WEBSITE_ID },
       "mainEntity": {
         "@type": "Organization",
         "@id": ORGANIZATION_ID,
         "name": "Math Practice Online",
-        "url": SITE,
+        "url": `${SITE_URL}/`,
         "description": "Free arithmetic practice for grades K–5. Addition, subtraction, multiplication, and division with instant feedback. No account or login required.",
-        "foundingDate": "2024",
         "areaServed": "Worldwide",
         "serviceType": "Educational Technology"
       }
