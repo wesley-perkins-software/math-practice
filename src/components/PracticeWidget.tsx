@@ -19,10 +19,9 @@ type FeedbackState = 'correct' | 'incorrect' | 'hidden';
 
 interface Props {
   config: PracticeConfig;
-  topContent?: React.ReactNode;
 }
 
-export default function PracticeWidget({ config, topContent }: Props) {
+export default function PracticeWidget({ config }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -356,138 +355,134 @@ export default function PracticeWidget({ config, topContent }: Props) {
       {/* ── GRADIENT ACCENT BAR ─────────────────────── */}
       <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
 
-      <div className="p-4 md:p-5">
-        {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
-        {topContent && (
-          <div className="mb-4 pb-4 border-b border-[#E0E7FF]">
-            {topContent}
+      <div className="px-5 py-6 md:px-7 md:py-7">
+        {/* ── ACTIVE ──────────────────────────────────── */}
+        {phase === 'active' && problem && (
+          <div className="flex flex-col items-center gap-5">
+            {/* Timer bar — only for timed mode */}
+            {isTimed && (
+              <div className="w-full flex items-center justify-between">
+                {timerStarted
+                  ? <TimerDisplay secondsRemaining={secondsRemaining} />
+                  : <TimerDisplay secondsRemaining={duration} />
+                }
+                {/* Duration picker only available before timer starts */}
+                {!timerStarted && !isTimerDurationFixed && (
+                  <DurationPicker value={duration} onChange={handleDurationChange} />
+                )}
+              </div>
+            )}
+
+            {/* Written arithmetic block + input + number pad */}
+            {config.withRemainder ? (
+              <RemainderProblemInput
+                problem={problem}
+                onSubmit={(q, r) => handleAnswer(q, r)}
+                disabled={feedbackState !== 'hidden'}
+                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                feedbackContent={(
+                  <div className="min-h-[2.25rem] flex items-center justify-center w-full">
+                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
+                  </div>
+                )}
+              />
+            ) : (
+              <WrittenProblemInput
+                problem={problem}
+                onSubmit={handleAnswer}
+                disabled={feedbackState !== 'hidden'}
+                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                feedbackContent={(
+                  <div className="min-h-[2.25rem] flex items-center justify-center w-full">
+                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
+                  </div>
+                )}
+              />
+            )}
+
+            {!isTimed && (
+              <div className="flex items-center justify-between w-full">
+                {/* Streak label — always visible so Reset has context */}
+                <span
+                  key={stats.currentStreak}
+                  className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}
+                >
+                  {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
+                </span>
+
+                {/* Reset / inline confirm */}
+                {!resetPending ? (
+                  <button
+                    onClick={() => setResetPending(true)}
+                    className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
+                  >
+                    Reset
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-[#6B7280] mr-1">Reset streak?</span>
+                    <button
+                      onClick={handleResetCurrentStreak}
+                      className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => setResetPending(false)}
+                      className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {isTimed && (
+              <div className="flex items-center justify-between w-full">
+                <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
+                  Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+                </span>
+                {!personalBestResetPending ? (
+                  <button
+                    onClick={() => setPersonalBestResetPending(true)}
+                    className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
+                  >
+                    Reset
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    <span className="text-xs text-[#6B7280] mr-1">Reset personal best?</span>
+                    <button
+                      onClick={handleResetPersonalBest}
+                      className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => setPersonalBestResetPending(false)}
+                      className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
-      {/* ── ACTIVE ──────────────────────────────────── */}
-      {phase === 'active' && problem && (
-        <div className="flex flex-col items-center gap-4 md:gap-5">
-          {/* Timer bar — only for timed mode */}
-          {isTimed && (
-            <div className="w-full flex items-center justify-between border-b border-[#E0E7FF] pb-3">
-              {timerStarted
-                ? <TimerDisplay secondsRemaining={secondsRemaining} />
-                : <TimerDisplay secondsRemaining={duration} />
-              }
-              {/* Duration picker only available before timer starts */}
-              {!timerStarted && !isTimerDurationFixed && (
-                <DurationPicker value={duration} onChange={handleDurationChange} />
-              )}
-            </div>
-          )}
-
-          {/* Written arithmetic block + input + number pad */}
-          {config.withRemainder ? (
-            <RemainderProblemInput
-              problem={problem}
-              onSubmit={(q, r) => handleAnswer(q, r)}
-              disabled={feedbackState !== 'hidden'}
-              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-              feedbackContent={(
-                <div className="h-8 flex items-center justify-center w-full">
-                  <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
-                </div>
-              )}
-            />
-          ) : (
-            <WrittenProblemInput
-              problem={problem}
-              onSubmit={handleAnswer}
-              disabled={feedbackState !== 'hidden'}
-              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-              feedbackContent={(
-                <div className="h-8 flex items-center justify-center w-full">
-                  <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
-                </div>
-              )}
-            />
-          )}
-
-          {!isTimed && (
-            <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
-              {/* Streak label — always visible so Reset has context */}
-              <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}>
-                {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
-              </span>
-
-              {/* Reset / inline confirm */}
-              {!resetPending ? (
-                <button
-                  onClick={() => setResetPending(true)}
-                  className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
-                >
-                  Reset
-                </button>
-              ) : (
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-[#6B7280] mr-1">Reset streak?</span>
-                  <button
-                    onClick={handleResetCurrentStreak}
-                    className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
-                  >
-                    Yes
-                  </button>
-                  <button
-                    onClick={() => setResetPending(false)}
-                    className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {isTimed && (
-            <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
-              <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
-                Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
-              </span>
-              {!personalBestResetPending ? (
-                <button
-                  onClick={() => setPersonalBestResetPending(true)}
-                  className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
-                >
-                  Reset
-                </button>
-              ) : (
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-[#6B7280] mr-1">Reset personal best?</span>
-                  <button
-                    onClick={handleResetPersonalBest}
-                    className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
-                  >
-                    Yes
-                  </button>
-                  <button
-                    onClick={() => setPersonalBestResetPending(false)}
-                    className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ── COMPLETE ────────────────────────────────── */}
-      {phase === 'complete' && result && (
-        <ScoreCard
-          result={result}
-          stats={stats}
-          isTimed={isTimed}
-          preSessionScore={preSessionScore}
-          isNewStreakRecord={isNewStreakRecord}
-          onRestart={handleRestart}
-        />
-      )}
+        {/* ── COMPLETE ────────────────────────────────── */}
+        {phase === 'complete' && result && (
+          <ScoreCard
+            result={result}
+            stats={stats}
+            isTimed={isTimed}
+            preSessionScore={preSessionScore}
+            isNewStreakRecord={isNewStreakRecord}
+            onRestart={handleRestart}
+          />
+        )}
       </div>
     </div>
   );

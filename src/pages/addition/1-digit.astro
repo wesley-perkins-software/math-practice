@@ -38,6 +38,7 @@ const faqItems = [
   title="1-Digit Addition Practice | Math Practice Online"
   description="Practice 1-digit addition problems online with instant feedback and streak tracking. Build fast, accurate single-digit addition fluency."
   canonical={`${SITE}/addition/1-digit`}
+  pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '1-Digit Addition' }]}
 >
   <Fragment slot="head">
@@ -64,14 +65,15 @@ const faqItems = [
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Addition Practice</h1>
 
-  <Fragment slot="intro">
-    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
-      <p>1-digit addition combines two numbers from 0–9 into a single sum, such as 6 + 7 = 13. Mastering all 81 addition facts from 1+1 to 9+9 is the foundation for every later arithmetic skill, including carrying, multiplication, and mental math.</p>
-    </div>
-    <p>This page is built for kindergartners and first graders working toward fluent single-digit addition, as well as parents and teachers looking for a quick way to check a child's recall speed. Problems are drawn from all 81 addition facts, with extra repetition on sums greater than 9, the facts most students find hardest to recall instantly.</p>
+  <Fragment slot="quick-answer">
+    <p>1-digit addition combines two numbers from 0–9 into a single sum, such as 6 + 7 = 13. Mastering all 81 addition facts from 1+1 to 9+9 is the foundation for every later arithmetic skill, including carrying, multiplication, and mental math.</p>
   </Fragment>
 
   <AdditionPracticeHub slot="widget" active="1-digit" client:load />
+
+  <Fragment slot="intro">
+    <p>This page is built for kindergartners and first graders working toward fluent single-digit addition, as well as parents and teachers looking for a quick way to check a child's recall speed. Problems are drawn from all 81 addition facts, with extra repetition on sums greater than 9, the facts most students find hardest to recall instantly.</p>
+  </Fragment>
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->

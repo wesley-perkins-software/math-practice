@@ -53,6 +53,11 @@ const gradeBadge = GRADE_BADGE[tableNumber] ?? 'Grade 3 â€“ Grade 4';
 const PILOT_TABLES = new Set([2, 7, 9]);
 const fact = PILOT_TABLES.has(tableNumber) ? getTimesTableFact(tableNumber) : undefined;
 
+// Practice-experience-redesign pilot (this project) is scoped to table 7 only â€”
+// the other 11 tables, including 2 and 9 from the SEO content pilot above, keep
+// the legacy widget-below-intro order until this pilot is validated.
+const isPilot = tableNumber === 7;
+
 const strategy = fact
   ? { name: fact.strategyTitle, tip: fact.strategyExplanation }
   : TABLE_STRATEGIES[tableNumber];
@@ -116,6 +121,7 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
   title={pageTitle}
   description={pageDescription}
   canonical={`${SITE}/multiplication/times-tables/${tableNumber}`}
+  pilotLayout={isPilot}
   breadcrumb={[
     { label: 'Home', href: '/' },
     { label: 'Multiplication', href: '/multiplication' },
@@ -148,8 +154,22 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{h1}</h1>
+
+  {isPilot ? (
+    <div slot="quick-answer">
+      <p>
+        The {tableNumber} times table means multiplying {tableNumber} by each whole number from 1 to 12. {fact!.quickAnswerFact}
+      </p>
+    </div>
+  ) : null}
+
+  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
+  {!isPilot && <InternalLinks slot="links" links={links} />}
+
   <div slot="intro">
-    {fact ? (
+    {isPilot ? (
+      <p>{EXPANDED_INTRO[tableNumber]}</p>
+    ) : fact ? (
       <>
         <p class="font-semibold text-[#1E293B]">
           The {tableNumber} times table means multiplying {tableNumber} by each whole number from 1 to 12. {fact.quickAnswerFact}
@@ -163,9 +183,6 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
       </>
     )}
   </div>
-
-  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -222,5 +239,12 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
         ))}
       </div>
     </section>
+
+    {isPilot && (
+      <>
+        <!-- Internal Links (pilot: moved to the end, matching Related Practice's canonical last position) -->
+        <InternalLinks links={links} />
+      </>
+    )}
   </div>
 </PracticeLayout>

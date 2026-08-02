@@ -11,9 +11,16 @@ interface Props {
   description: string;
   canonical: string;
   breadcrumb?: BreadcrumbItem[];
+  /**
+   * Pilot-only: puts a short "quick-answer" slot above the widget and moves the
+   * expanded "intro" slot below it (practice-first order). Defaults to false so
+   * the 27 non-pilot pages keep today's order (intro above widget) unchanged
+   * until the pilot is validated — see docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md.
+   */
+  pilotLayout?: boolean;
 }
 
-const { title, description, canonical, breadcrumb = [] } = Astro.props;
+const { title, description, canonical, breadcrumb = [], pilotLayout = false } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
@@ -51,40 +58,74 @@ const { title, description, canonical, breadcrumb = [] } = Astro.props;
     </div>
   </header>
 
-  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-    <!-- Breadcrumb -->
-    {breadcrumb.length > 0 && (
-      <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#6B7280] flex items-center flex-wrap gap-1">
-        {breadcrumb.map((item, i) => (
-          <>
-            {i > 0 && <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>}
-            {item.href ? (
-              <a href={item.href} class="hover:text-[#4F46E5] transition-colors">{item.label}</a>
-            ) : (
-              <span class="text-[#6B7280]">{item.label}</span>
-            )}
-          </>
-        ))}
-      </nav>
-    )}
+  <!--
+    Page-level ad-rail shell: inert at ordinary widths (laptop/tablet/mobile all
+    collapse to a single centered column). Only at genuine surplus width does the
+    grid have side columns to give — no ad code or placeholders live here, this is
+    structure only, sized so a future rail child can be added without reflowing
+    the central column. Wraps the whole content column, not just the widget.
+  -->
+  <div class="w-full 2xl:grid 2xl:grid-cols-[1fr_minmax(0,56rem)_1fr] 2xl:items-start">
+    <aside class="hidden 2xl:block" aria-hidden="true"></aside>
 
-    <!-- H1 -->
-    <slot name="h1" />
+    <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8 w-full">
+      <!-- Breadcrumb -->
+      {breadcrumb.length > 0 && (
+        <nav aria-label="Breadcrumb" class="mb-4 text-sm text-[#6B7280] flex items-center flex-wrap gap-1">
+          {breadcrumb.map((item, i) => (
+            <>
+              {i > 0 && <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>}
+              {item.href ? (
+                <a href={item.href} class="hover:text-[#4F46E5] transition-colors">{item.label}</a>
+              ) : (
+                <span class="text-[#6B7280]">{item.label}</span>
+              )}
+            </>
+          ))}
+        </nav>
+      )}
 
-    <!-- Intro text -->
-    <div class="mt-3 mb-6 text-[#374151] text-base leading-relaxed max-w-xl">
-      <slot name="intro" />
-    </div>
+      <!-- H1 -->
+      <slot name="h1" />
 
-    <!-- Practice Widget -->
-    <slot name="widget" />
+      {pilotLayout ? (
+        <>
+          <!-- Quick Answer: one concise, self-contained sentence — bold lead, no box -->
+          <div class="mt-3 mb-5 text-[#1E1B4B] text-base sm:text-lg font-semibold leading-snug max-w-xl">
+            <slot name="quick-answer" />
+          </div>
 
-    <!-- Internal Links -->
-    <slot name="links" />
+          <!-- Practice Widget (mode nav, if any, renders as part of this slot's content) -->
+          <slot name="widget" />
 
-    <!-- How it works section -->
-    <slot name="how-it-works" />
-  </main>
+          <!-- Internal Links (optional, page-specific position) -->
+          <slot name="links" />
+
+          <!-- Expanded intro + deeper educational content, below the practice experience -->
+          <div class="mt-10 mb-6 text-[#4B5563] text-base leading-relaxed max-w-xl">
+            <slot name="intro" />
+          </div>
+        </>
+      ) : (
+        <>
+          <!-- Intro text (legacy order: above the widget, unchanged pending pilot results) -->
+          <div class="mt-3 mb-6 text-[#374151] text-base leading-relaxed max-w-xl">
+            <slot name="intro" />
+          </div>
+
+          <!-- Practice Widget -->
+          <slot name="widget" />
+
+          <!-- Internal Links -->
+          <slot name="links" />
+        </>
+      )}
+
+      <slot name="how-it-works" />
+    </main>
+
+    <aside class="hidden 2xl:block" aria-hidden="true"></aside>
+  </div>
 
   <!-- Site Footer -->
   <footer class="border-t-2 border-[#E0E7FF] bg-[#EEF2FF] mt-16">
