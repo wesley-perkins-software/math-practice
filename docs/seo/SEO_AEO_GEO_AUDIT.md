@@ -8,7 +8,7 @@
 - **Purpose:** Give any future human contributor, Claude session, or Codex session a single source of truth for what was audited on this site, what's already fixed, what remains, why each item matters, what order to work in, and which decisions still need explicit human approval.
 - **Scope:** Technical SEO, semantic SEO, GEO (Generative Engine Optimization), AEO (Answer Engine Optimization), AI discoverability, topical authority, internal linking, crawl efficiency, page quality, page experience, Core Web Vitals, structured data, metadata, accessibility, engagement, trust signals, and rich-result eligibility. Excludes backlink acquisition, content marketing, and publishing net-new pages — this is entirely about improving what already exists in the codebase.
 - **Completed implementation reference:** [PR #116](https://github.com/wesley-perkins-software/math-practice/pull/116) (merged into `development`)
-- **Current phase:** Structured-data consolidation (Organization/WebSite identity graph) — see [Implementation Log](#implementation-log).
+- **Current phase:** Structured-data consolidation (Organization/WebSite identity graph) — implemented in [PR #117](https://github.com/wesley-perkins-software/math-practice/pull/117), see [Implementation Log](#implementation-log).
 
 ---
 
@@ -65,7 +65,7 @@ This was traced to two compounding causes:
 
 ## 4. Consolidate Organization/WebSite JSON-LD sitewide — ✅ Implemented
 
-- [x] Consolidate Organization/WebSite JSON-LD sitewide — **completed** (this update). See [Implementation Log](#implementation-log) for the PR reference.
+- [x] Consolidate Organization/WebSite JSON-LD sitewide — **completed** in [PR #117](https://github.com/wesley-perkins-software/math-practice/pull/117).
 
 **Why it mattered:** Google's SERP site-name feature reads `WebSite`/`Organization` schema, weighted by consistency. Having three different shapes of "Organization" declared independently across the site diluted that signal and risked drifting out of sync (different names, different URLs, different claims) as pages were added.
 
@@ -213,7 +213,7 @@ Ordered by effort vs. how directly each item moves organic/AI-referral traffic �
 
 | # | Item | Effort | Status | Why it's ranked here |
 |---|------|--------|--------|----------------------|
-| 1 | Consolidate Organization/WebSite JSON-LD sitewide | Medium | ✅ Done | Completes the SERP-name fix; the title-tag half shipped in PR #116. |
+| 1 | Consolidate Organization/WebSite JSON-LD sitewide | Medium | ✅ Done ([#117](https://github.com/wesley-perkins-software/math-practice/pull/117)) | Completes the SERP-name fix; the title-tag half shipped in PR #116. |
 | 2 | Rewrite homepage FAQ to match its own JSON-LD + fix the "Math Drills" factual error | Quick Win | Deferred (approval gate) | Highest-authority page currently ships a factual inconsistency an AI engine could repeat. |
 | 3 | Division divisor grid | Quick Win | Deferred (approval gate) | Closes the site's one 4-click-deep page; mirrors a pattern that already exists for multiplication. |
 | 4 | Extend HowTo schema to no-carrying/no-borrowing pages | Medium | Not started | Doubles HowTo rich-result eligibility for near-zero new content — visible steps already exist. |
@@ -232,7 +232,7 @@ Ordered by effort vs. how directly each item moves organic/AI-referral traffic �
 | Date | PR | Work completed | Notes |
 |------|----|----------------|-------|
 | 2026-08-02 | [#116](https://github.com/wesley-perkins-software/math-practice/pull/116) | Title consistency, 404 noindex, Progress route fixes, dead asset cleanup | Initial direct-fix audit PR |
-| 2026-08-02 | Pending | Added `docs/seo/SEO_AEO_GEO_AUDIT.md`; consolidated Organization/WebSite JSON-LD into one sitewide identity graph (`src/config/site.ts`, `BaseLayout.astro`, homepage, About page, and 30 `LearningResource.provider` references) | This update |
+| 2026-08-02 | [#117](https://github.com/wesley-perkins-software/math-practice/pull/117) | Added `docs/seo/SEO_AEO_GEO_AUDIT.md`; consolidated Organization/WebSite JSON-LD into one sitewide identity graph (`src/config/site.ts`, `BaseLayout.astro`, homepage, About page, and 30 `LearningResource.provider` references) | This update |
 
 ---
 
