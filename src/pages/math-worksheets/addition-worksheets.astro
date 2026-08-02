@@ -2,6 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import WorksheetGenerator from '@/components/WorksheetGenerator';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 import {
   ADDITION_1_DIGIT,
   ADDITION_2_DIGIT,
@@ -64,7 +65,7 @@ const faqItems = [
       "url": `${SITE}/math-worksheets/addition-worksheets`,
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
       "teaches": "Addition",
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

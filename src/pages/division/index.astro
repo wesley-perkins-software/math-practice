@@ -1,6 +1,7 @@
 ---
 import HubLayout from '@/layouts/HubLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -89,11 +90,7 @@ const faqItems = [
       "url": "https://mathpracticeonline.com/division",
       "educationalLevel": ["Grade 3", "Grade 4"],
       "teaches": "Division",
-      "provider": {
-        "@type": "Organization",
-        "name": "Math Practice Online",
-        "url": "https://mathpracticeonline.com"
-      }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
   </Fragment>
 

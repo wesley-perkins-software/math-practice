@@ -2,6 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import DivisionPracticeHub from '@/components/DivisionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -79,7 +80,7 @@ const links = [
       "url": `${SITE}/division/divide-by/${divisor}`,
       "educationalLevel": ["Grade 3", "Grade 4"],
       "teaches": "Division",
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

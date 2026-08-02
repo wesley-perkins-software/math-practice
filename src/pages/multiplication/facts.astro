@@ -2,6 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -48,7 +49,7 @@ const faqItems = [
       "url": `${SITE}/multiplication/facts`,
       "educationalLevel": ["Grade 3", "Grade 4"],
       "teaches": "Multiplication facts 1×1 through 12×12",
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

@@ -2,6 +2,7 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -48,7 +49,7 @@ const faqItems = [
       "url": `${SITE}/addition/2-digit-with-carrying`,
       "educationalLevel": ["Grade 2", "Grade 3"],
       "teaches": "Two-digit addition with regrouping (carrying)",
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
