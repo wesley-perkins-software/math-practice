@@ -243,7 +243,7 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
     // conventionally introduced slightly later) — not present in the
     // pre-existing GRADE_BADGE map, added here as a defensible, hedged claim.
     gradeOverride:
-      'Often reinforced once the 1–10 tables are secure, since recognizing the two-digit exceptions draws on place-value understanding typically solidified slightly later.',
+      'Often reinforced after the 1–10 tables are secure, since the larger 11s facts require students to move beyond the familiar repeated-digit pattern and apply place-value understanding.',
   },
   {
     n: 12,
@@ -255,14 +255,14 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
     strategyExplanation:
       '12×n = 10×n + 2×n. For 12×9: 10×9=90, 2×9=18, and 90+18=108. This reuses two already-mastered strategies (append a zero, then double) instead of introducing a new one.',
     parentTeacherNote:
-      "If a student can do 10×n and 2×n separately but gets 12×n wrong, the error is almost always in the final addition step, not the multiplication — check the addition specifically before reteaching the multiplication strategy.",
+      "If a student can do 10×n and 2×n separately but gets 12×n wrong, the error is almost always in the final addition step, not the multiplication — check the addition specifically before reteaching the multiplication strategy. Getting 12×n right consistently is also a good sign the student can combine two previously separate strategies (the ×10 table and the ×2 table) into one calculation, which is worth naming explicitly as a milestone.",
     faqDifferentiator: {
       question: 'What is the fastest way to calculate a 12 times table fact by hand?',
       answer:
         'Split it into a ×10 fact and a ×2 fact, then add them. For 12×11: 10×11=110, 2×11=22, and 110+22=132. This is exact, not an estimate, because 12=10+2, so 12×n is the sum of those two parts for any n.',
     },
-    gradeOverride:
-      'Often reinforced once the 1–10 tables are secure, since combining two strategies at once draws on place-value understanding typically solidified slightly later.',
+    // No gradeOverride: insufficient justification for table-12-specific curriculum
+    // timing guidance beyond the family-level default (see TIMES_TABLE_GRADE_DEFAULT).
   },
 ];
 
