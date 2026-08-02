@@ -1,6 +1,13 @@
 # Canonical Generated-Page Standard
 
-**Status:** Architecture approved. **Phase 1A (multiplication times-table fact bank) is complete** — see [Phase 1A: Times-table fact bank](#phase-1a-times-table-fact-bank-complete) below. The generated-page template (`[table].astro`, `[divisor].astro`) has **not** been migrated to use it, and the divide-by fact bank has not been authored — both remain future work. Nothing in this document has caused any `.astro` page, layout, or preset change; the fact bank exists only as data, not yet wired into any live page.
+**Status:**
+- Generated-page architecture standard: **complete**
+- Phase 1A times-table fact-bank data layer: **complete** — see [Phase 1A: Times-table fact bank](#phase-1a-times-table-fact-bank-complete) below
+- Live generated-page integration (`[table].astro`, `[divisor].astro`, `PracticeLayout.astro`, `presets.ts`): **not started**
+- Divide-by fact bank (Phase 1B): **not started**
+- Generated-page rollout (Phase 2+): **not started**
+
+This document and the Phase 1A fact bank together are architecture-plus-authored-data. The fact bank is real, authored, validated data — not a placeholder or a design sketch — but it is not yet read by any live page.
 
 - **Created:** 2026-08-02
 - **Purpose:** Define the canonical architecture — sections, generation sources, and uniqueness mechanism — for all generated practice pages, so a future rollout converges on one design instead of improvising per family. This is the generated-page counterpart to `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`, which explicitly scoped the 24 generated pages out and named the missing piece as "a structured per-number fact bank."
