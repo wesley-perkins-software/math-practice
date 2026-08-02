@@ -16,20 +16,20 @@ const links = [
 
 const faqItems = [
   {
+    q: 'What is 1-digit subtraction?',
+    a: '1-digit subtraction means finding the difference between two numbers from 0–9, such as 9 − 4 = 5 or 8 − 3 = 5. There are 72 core subtraction facts (2−1 through 9−9, excluding subtracting 0), or 81 if you include differences of zero, and most curricula focus on the facts with differences from 0 to 8.'
+  },
+  {
     q: 'What grade is 1-digit subtraction?',
-    a: '1-digit subtraction is a core Kindergarten and Grade 1 skill. Students work toward fluency with all single-digit subtraction facts before moving on to two-digit subtraction.'
+    a: '1-digit subtraction is a core Kindergarten and Grade 1 skill. Students work toward fluency with these facts before moving on to two-digit subtraction.'
   },
   {
     q: 'What does "difference" mean in subtraction?',
-    a: 'The difference is the result of a subtraction problem. For 9 − 4 = 5, the difference is 5. It represents how much larger one number is than another, or how much is left after taking away.'
+    a: 'The difference is the result of a subtraction problem. For 7 − 2 = 5, the difference is 5. It represents how much larger one number is than another, or how much is left after taking away.'
   },
   {
     q: 'How do I get faster at single-digit subtraction?',
     a: 'The most effective strategies are: count back from the larger number (for 9 − 3, start at 9 and count back 3), use the "think addition" strategy (for 8 − 5, ask "5 + ? = 8"), and learn fact families (knowing 6 + 4 = 10 means you also know 10 − 4 = 6). Daily short practice sessions build speed faster than occasional long sessions.'
-  },
-  {
-    q: 'How many subtraction facts are there?',
-    a: 'There are 72 single-digit subtraction facts (from 2 − 1 through 9 − 9, excluding subtraction by 0). If you include differences equal to zero, there are 81. Most curricula focus on the core facts with differences from 0 to 8.'
   },
 ];
 ---
@@ -63,9 +63,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Subtraction Practice</h1>
-  <p slot="intro">Practice basic single-digit subtraction facts to build subtraction fluency, number sense, and confidence for early elementary learners.</p>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>1-digit subtraction finds the difference between two numbers from 0–9, such as 6 − 2 = 4. Mastering all single-digit subtraction facts is the foundation for two-digit subtraction, borrowing, and quick mental math.</p>
+    </div>
+    <p>This page is for kindergartners and first graders building single-digit subtraction fluency, as well as parents and teachers checking recall speed. Problems are drawn from single-digit facts with differences from 0 to 8, including take-away and comparison-style subtraction, so students see both meanings of subtraction rather than only counting down.</p>
+  </Fragment>
+
   <SubtractionPracticeHub slot="widget" active="1-digit" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -103,6 +109,12 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-[#6B7280] leading-relaxed">Subtraction is where "counting" strategies show their limits — a child who's fast at addition often slows down here because counting backward is harder to track than counting forward. Watch for a child who consistently gets an answer one off (like answering 9 − 4 = 4 instead of 5); that's usually a counting error, not a fact-recall error, and it means they're still counting on fingers rather than retrieving the fact. The "think addition" strategy (asking "5 + ? = 9" instead of counting back from 9) is often the fastest fix for a child stuck on counting, since it reuses addition facts they may already know solidly. If a child knows their addition facts well but still struggles here, the gap is usually the connection between the two operations, not weak number sense.</p>
+    </section>
+
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
@@ -115,5 +127,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-[#4B5563]">Once these facts feel automatic, move on to <a href="/subtraction/2-digit-no-borrowing" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction without borrowing</a> →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>

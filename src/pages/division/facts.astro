@@ -67,11 +67,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division Facts Practice</h1>
-  <div slot="intro">
-    <p>Practice mixed exact division problems across all facts 1÷1 through 144÷12. Every problem divides evenly so you can reinforce core division facts, improve recall speed, and build a strong foundation for more advanced division and long division work.</p>
-  </div>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Division facts are the exact division problems from 1÷1 through 144÷12, such as 42 ÷ 6 = 7. Every division fact is the inverse of a multiplication fact, so fluency here depends directly on multiplication fact recall.</p>
+    </div>
+    <p>This page is for third and fourth graders who already know their multiplication facts and are building matching division fluency, as well as parents and teachers checking recall speed rather than conceptual understanding. Practice mixed exact division problems across all facts 1÷1 through 144÷12 — every problem divides evenly, reinforcing core facts and recall speed as a foundation for long division.</p>
+  </Fragment>
+
   <DivisionPracticeHub slot="widget" active="facts" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <Fragment slot="how-it-works">
     <section class="mt-12" aria-labelledby="facts-progression-heading">
@@ -129,5 +133,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="mt-12 text-sm text-[#4B5563]">Comfortable with exact division? Try <a href="/division/remainders" class="text-[#4F46E5] font-semibold hover:underline">division with remainders</a> next →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </Fragment>
 </PracticeLayout>
