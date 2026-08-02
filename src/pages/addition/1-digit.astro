@@ -16,8 +16,12 @@ const links = [
 
 const faqItems = [
   {
+    q: 'What is 1-digit addition?',
+    a: '1-digit addition means combining two numbers between 0 and 9 into a single sum, such as 4 + 5 = 9 or 8 + 7 = 15. There are 81 distinct facts in this category (1+1 through 9+9), or 100 if you include 0 as an addend, and most curricula treat fluency with all 81 as the baseline goal before moving to multi-digit addition.'
+  },
+  {
     q: 'What grade is 1-digit addition?',
-    a: '1-digit addition is a core Kindergarten and Grade 1 skill. Students work toward fluency with all 81 single-digit addition facts (1+1 through 9+9) before moving on to two-digit addition.'
+    a: '1-digit addition is a core Kindergarten and Grade 1 skill. Most students reach fluency with these facts by the end of Grade 1, right before starting two-digit addition.'
   },
   {
     q: 'What does "sums greater than 9" mean in addition?',
@@ -26,10 +30,6 @@ const faqItems = [
   {
     q: 'How do I get faster at single-digit addition?',
     a: 'The most effective strategies are: counting on from the larger number (for 3 + 7, start at 7 and count up 3), making 10 (for 8 + 6, split 6 into 2 + 4, then add 8 + 2 = 10, then + 4 = 14), and using doubles (knowing 6 + 6 = 12 helps quickly solve 6 + 7 = 13). Daily short practice sessions build speed faster than occasional long sessions.'
-  },
-  {
-    q: 'How many addition facts are there?',
-    a: 'There are 81 single-digit addition facts (1+1 through 9+9). If you include 0 as an addend, there are 100 (0+0 through 9+9). Most curricula focus on the 81 non-zero facts for fluency practice.'
   },
 ];
 ---
@@ -63,9 +63,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">1-Digit Addition Practice</h1>
-  <p slot="intro">Practice basic single-digit addition facts, including sums greater than 9, to build speed and confidence with everyday mental math.</p>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>1-digit addition combines two numbers from 0–9 into a single sum, such as 6 + 7 = 13. Mastering all 81 addition facts from 1+1 to 9+9 is the foundation for every later arithmetic skill, including carrying, multiplication, and mental math.</p>
+    </div>
+    <p>This page is built for kindergartners and first graders working toward fluent single-digit addition, as well as parents and teachers looking for a quick way to check a child's recall speed. Problems are drawn from all 81 addition facts, with extra repetition on sums greater than 9, the facts most students find hardest to recall instantly.</p>
+  </Fragment>
+
   <AdditionPracticeHub slot="widget" active="1-digit" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -103,6 +109,12 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-[#6B7280] leading-relaxed">Most students can add small numbers using their fingers long before they can recall facts instantly — instant recall, not calculation, is the actual goal of this stage. Watch for kids who consistently pause on facts where the sum is 10 or higher (like 8 + 6 or 7 + 9); these are the facts most likely to still rely on counting rather than memory. A quick, low-pressure way to help is timing a short set of facts every few days and tracking whether the pause gets shorter, rather than only checking whether the answer is right. If a child consistently misses by one, they're likely still counting on their fingers instead of retrieving the fact — that's a sign to slow down and rebuild the fact from a known one (like 6 + 6 = 12) rather than repeat more timed drills.</p>
+    </section>
+
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
@@ -115,5 +127,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-[#4B5563]">Once these facts feel automatic, move on to <a href="/addition/2-digit-no-carrying" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition without carrying</a> →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>
