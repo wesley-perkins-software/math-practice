@@ -90,20 +90,22 @@ const { title, description, canonical, breadcrumb = [], pilotLayout = false } = 
 
       {pilotLayout ? (
         <>
-          <!-- Quick Answer: one concise, self-contained sentence — bold lead, no box -->
-          <div class="mt-1.5 mb-3 text-[#1E1B4B] text-sm sm:text-base font-semibold leading-snug max-w-xl">
-            <slot name="quick-answer" />
+          <!-- Practice Widget: immediately after the H1, nothing competing above it -->
+          <div class="mt-3">
+            <slot name="widget" />
           </div>
-
-          <!-- Practice Widget (mode nav, if any, renders as part of this slot's content) -->
-          <slot name="widget" />
 
           <!-- Internal Links (optional, page-specific position) -->
           <slot name="links" />
 
-          <!-- Expanded intro + deeper educational content, below the practice experience -->
-          <div class="mt-10 mb-6 text-[#4B5563] text-base leading-relaxed max-w-xl">
-            <slot name="intro" />
+          <!-- Quick Answer + expanded intro, below the practice experience -->
+          <div class="mt-10 mb-6 max-w-xl">
+            <div class="mb-3 text-[#1E1B4B] text-sm sm:text-base font-semibold leading-snug">
+              <slot name="quick-answer" />
+            </div>
+            <div class="text-[#4B5563] text-base leading-relaxed">
+              <slot name="intro" />
+            </div>
           </div>
         </>
       ) : (
