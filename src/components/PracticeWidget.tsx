@@ -355,10 +355,10 @@ export default function PracticeWidget({ config }: Props) {
       {/* ── GRADIENT ACCENT BAR ─────────────────────── */}
       <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
 
-      <div className="px-5 py-6 md:px-7 md:py-7">
+      <div className="px-4 py-4 md:px-6 md:py-5">
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
-          <div className="flex flex-col items-center gap-5">
+          <div className="flex flex-col items-center gap-3 md:gap-4">
             {/* Timer bar — only for timed mode */}
             {isTimed && (
               <div className="w-full flex items-center justify-between">
@@ -381,7 +381,7 @@ export default function PracticeWidget({ config }: Props) {
                 disabled={feedbackState !== 'hidden'}
                 feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
                 feedbackContent={(
-                  <div className="min-h-[2.25rem] flex items-center justify-center w-full">
+                  <div className="min-h-[1.75rem] flex items-center justify-center w-full">
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
                   </div>
                 )}
@@ -393,7 +393,7 @@ export default function PracticeWidget({ config }: Props) {
                 disabled={feedbackState !== 'hidden'}
                 feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
                 feedbackContent={(
-                  <div className="min-h-[2.25rem] flex items-center justify-center w-full">
+                  <div className="min-h-[1.75rem] flex items-center justify-center w-full">
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
                   </div>
                 )}

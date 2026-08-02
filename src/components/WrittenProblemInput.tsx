@@ -128,7 +128,7 @@ export default function WrittenProblemInput({
         </div>
 
         {/* Horizontal rule */}
-        <div className="border-t-[3px] border-[#1E1B4B] mt-2" />
+        <div className="border-t-[3px] border-[#1E1B4B] mt-1.5" />
 
         {/* Row 3: answer, right-aligned under the rule */}
         <div className="text-right mt-1 min-h-[3rem] md:min-h-[3.75rem] flex items-center justify-end">

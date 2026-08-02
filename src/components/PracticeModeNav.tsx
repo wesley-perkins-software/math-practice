@@ -20,7 +20,7 @@ interface Props {
  */
 export default function PracticeModeNav({ items, activeId, ariaLabel, onItemClick, extra }: Props) {
   return (
-    <div className="w-full max-w-lg mx-auto mb-3">
+    <div className="w-full max-w-lg mx-auto mb-2">
       <nav aria-label={ariaLabel} className="flex gap-1 p-1 bg-[#EEF2FF] border border-[#E0E7FF] rounded-xl">
         {items.map(({ id, label, href }) => {
           const isActive = id === activeId;
@@ -30,7 +30,7 @@ export default function PracticeModeNav({ items, activeId, ariaLabel, onItemClic
               href={href}
               aria-current={isActive ? 'page' : undefined}
               onClick={() => onItemClick?.(id)}
-              className={`flex-1 py-2.5 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 leading-snug ${
+              className={`flex-1 py-1.5 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 leading-tight ${
                 isActive
                   ? 'bg-white text-[#4F46E5] shadow-sm border-b-2 border-[#4F46E5]'
                   : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-white/60'

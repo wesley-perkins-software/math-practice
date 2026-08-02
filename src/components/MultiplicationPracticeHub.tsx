@@ -44,7 +44,7 @@ export default function MultiplicationPracticeHub({ active, selectedTable = 1 }:
   const picker = normalizedActive === 'times-tables' && (
     <button
       onClick={() => setShowPicker(true)}
-      className="w-full max-w-lg mx-auto mt-2 py-1.5 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E0E7FF] text-[#1E1B4B] hover:border-[#4F46E5] transition-colors duration-150"
+      className="w-full max-w-lg mx-auto mt-1.5 py-1 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E0E7FF] text-[#1E1B4B] hover:border-[#4F46E5] transition-colors duration-150"
     >
       <span>{selectedTable} Times Table</span>
       <svg className="w-3.5 h-3.5 text-[#6B7280] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>

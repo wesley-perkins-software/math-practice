@@ -6,7 +6,7 @@ import { DIVISION_FACTS, DIVISION_REMAINDERS, divideByConfig } from '@/engine/pr
 type Mode = 'facts' | 'divide-by' | 'remainders';
 
 const TABS: { id: Mode; label: string; href: string }[] = [
-  { id: 'divide-by', label: 'Divide by 1–12', href: '/division/divide-by/1' },
+  { id: 'divide-by', label: 'Divide By', href: '/division/divide-by/1' },
   { id: 'facts', label: 'Division Facts', href: '/division/facts' },
   { id: 'remainders', label: 'With Remainders', href: '/division/remainders' },
 ];
@@ -29,7 +29,7 @@ export default function DivisionPracticeHub({ active, selectedDivisor = 1 }: Pro
   const picker = active === 'divide-by' && (
     <button
       onClick={() => setShowPicker(true)}
-      className="w-full max-w-lg mx-auto mt-2 py-1.5 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E0E7FF] text-[#1E1B4B] hover:border-[#4F46E5] transition-colors duration-150"
+      className="w-full max-w-lg mx-auto mt-1.5 py-1 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E0E7FF] text-[#1E1B4B] hover:border-[#4F46E5] transition-colors duration-150"
     >
       <span>Dividing by {selectedDivisor}</span>
       <svg

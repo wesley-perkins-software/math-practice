@@ -149,7 +149,7 @@ export default function RemainderProblemInput({
         </div>
 
         {/* Horizontal rule */}
-        <div className="border-t-[3px] border-[#1E1B4B] mt-2" />
+        <div className="border-t-[3px] border-[#1E1B4B] mt-1.5" />
 
         {/* Quotient slot — tappable */}
         <div
@@ -176,7 +176,7 @@ export default function RemainderProblemInput({
 
         {/* Remainder label + slot — tappable */}
         <div
-          className="mt-4 mb-2 cursor-pointer"
+          className="mt-2.5 mb-1 cursor-pointer"
           onClick={() => switchSlot('remainder')}
         >
           <div className="text-xs font-medium text-[#A5B4FC] uppercase tracking-wide text-right mb-1">

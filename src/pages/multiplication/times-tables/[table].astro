@@ -153,7 +153,7 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{h1}</h1>
+  <h1 slot="h1" class:list={["font-bold text-[#1E293B]", isPilot ? "text-xl sm:text-2xl leading-tight" : "text-3xl"]}>{h1}</h1>
 
   {isPilot ? (
     <div slot="quick-answer">
