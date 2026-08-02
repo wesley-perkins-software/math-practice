@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import type { SessionResult, PageStats } from '@/engine/types';
 
 interface Props {
@@ -23,9 +24,16 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, isN
   const scoreDelta = !isTimed && preSessionScore > 0 ? accuracy - preSessionScore : null;
   const showComparison = scoreDelta !== null && Math.abs(scoreDelta) >= 5;
 
+  const headingRef = useRef<HTMLDivElement>(null);
+
+  // Move focus to the results heading so keyboard/AT users land on the outcome, not lost focus
+  useEffect(() => {
+    headingRef.current?.focus();
+  }, []);
+
   return (
-    <div className="flex flex-col items-center gap-5 py-4 w-full">
-      <div className="text-center">
+    <div className="flex flex-col items-center gap-5 py-4 w-full animate-[fadeIn_0.25s_ease-out]">
+      <div ref={headingRef} tabIndex={-1} className="text-center outline-none">
         {isNewStreakRecord ? (
           <div className="text-xs font-bold uppercase tracking-widest text-amber-700 bg-amber-50 px-4 py-1.5 rounded-full mb-4 inline-block border border-amber-200 shadow-sm">
             New Streak Record!

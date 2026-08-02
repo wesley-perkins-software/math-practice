@@ -91,9 +91,9 @@ export default function WrittenProblemInput({
     <div className="flex flex-col items-center gap-2 w-full">
       {/* Written arithmetic block */}
       <div
-        className={`select-none w-fit mx-auto min-w-[8rem] transition-opacity duration-200 ease-out ${
+        className={`select-none w-fit mx-auto min-w-[9rem] rounded-2xl px-2 py-1 -mx-2 -my-1 transition-[opacity,box-shadow] duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        } ${isFocused ? 'ring-2 ring-[#4F46E5]/40 ring-offset-4 ring-offset-white' : ''}`}
         aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
         onClick={() => inputRef.current?.focus()}
       >
@@ -114,31 +114,31 @@ export default function WrittenProblemInput({
 
         {/* Row 1: operandA, right-aligned */}
         <div className="text-right">
-          <span className="text-4xl md:text-5xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
+          <span className="text-5xl md:text-6xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
             {problem.operandA}
           </span>
         </div>
 
         {/* Row 2: operator (left) + operandB (right) */}
         <div className="flex items-center justify-end gap-3">
-          <span className="text-3xl md:text-4xl font-semibold text-[#4F46E5]">{symbol}</span>
-          <span className="text-4xl md:text-5xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
+          <span className="text-4xl md:text-5xl font-semibold text-[#4F46E5]">{symbol}</span>
+          <span className="text-5xl md:text-6xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
             {problem.operandB}
           </span>
         </div>
 
         {/* Horizontal rule */}
-        <div className="border-t-[3px] border-[#1E1B4B] mt-2" />
+        <div className="border-t-[3px] border-[#1E1B4B] mt-1.5" />
 
         {/* Row 3: answer, right-aligned under the rule */}
-        <div className="text-right mt-1 min-h-[2.5rem] md:min-h-[3rem] flex items-center justify-end">
+        <div className="text-right mt-1 min-h-[3rem] md:min-h-[3.75rem] flex items-center justify-end">
           {isPlaceholder ? (
-            <span className="text-4xl md:text-5xl font-bold tabular-nums text-[#C7D2FE] inline-flex items-center font-['JetBrains_Mono']">
+            <span className="text-5xl md:text-6xl font-bold tabular-nums text-[#C7D2FE] inline-flex items-center font-['JetBrains_Mono']">
               <span aria-hidden="true" className="opacity-0 select-none">?</span>
               {isFocused && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
             </span>
           ) : (
-            <span className={`text-4xl md:text-5xl font-bold tabular-nums transition-colors duration-150 font-['JetBrains_Mono'] ${answerColor}`}>
+            <span className={`text-5xl md:text-6xl font-bold tabular-nums transition-colors duration-150 font-['JetBrains_Mono'] ${answerColor}`}>
               {value}
             </span>
           )}

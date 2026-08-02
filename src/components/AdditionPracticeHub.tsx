@@ -1,4 +1,5 @@
 import PracticeWidget from './PracticeWidget';
+import PracticeModeNav from './PracticeModeNav';
 import { useEffect } from 'react';
 import {
   ADDITION_1_DIGIT,
@@ -62,26 +63,15 @@ export default function AdditionPracticeHub({ active }: Props) {
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
-  const tabs = (
-    <div className="flex gap-1 p-1 bg-[#EEF2FF] border border-[#E0E7FF] rounded-xl">
-      {DIFFICULTIES.map(({ id, label, href }) => (
-        <a
-          key={id}
-          href={href}
-          onClick={handleTabClick}
-          className={`flex-1 py-2.5 flex flex-col items-center justify-center text-sm font-semibold rounded-lg transition-colors duration-150 leading-snug ${
-            active === id
-              ? 'bg-white text-[#4F46E5] shadow-sm border-b-2 border-[#4F46E5]'
-              : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-white/60'
-          }`}
-        >
-          {label}
-        </a>
-      ))}
-    </div>
-  );
-
   return (
-    <PracticeWidget config={selected.config} topContent={tabs} />
+    <>
+      <PracticeModeNav
+        items={DIFFICULTIES.map(({ id, label, href }) => ({ id, label, href }))}
+        activeId={active}
+        ariaLabel="Addition difficulty"
+        onItemClick={handleTabClick}
+      />
+      <PracticeWidget config={selected.config} />
+    </>
   );
 }
