@@ -4,11 +4,11 @@
 
 - **Site:** MathPracticeOnline.com
 - **Created:** 2026-08-02
-- **Last updated:** 2026-08-02
+- **Last updated:** 2026-08-02 (Canonical Leaf-Page Standard pilot)
 - **Purpose:** Give any future human contributor, Claude session, or Codex session a single source of truth for what was audited on this site, what's already fixed, what remains, why each item matters, what order to work in, and which decisions still need explicit human approval.
 - **Scope:** Technical SEO, semantic SEO, GEO (Generative Engine Optimization), AEO (Answer Engine Optimization), AI discoverability, topical authority, internal linking, crawl efficiency, page quality, page experience, Core Web Vitals, structured data, metadata, accessibility, engagement, trust signals, and rich-result eligibility. Excludes backlink acquisition, content marketing, and publishing net-new pages — this is entirely about improving what already exists in the codebase.
 - **Completed implementation reference:** [PR #116](https://github.com/wesley-perkins-software/math-practice/pull/116) (merged into `development`), [PR #117](https://github.com/wesley-perkins-software/math-practice/pull/117) (merged into `development`)
-- **Current phase:** Navigation and internal-linking cleanup — multiplication hub → times-tables index link, footer reach for `/math-facts`/`/for-parents`/`/for-teachers`, "Progress" vs "My Progress" nav-label consistency, and two stale grade-page links repointed to canonical hub URLs — implemented in this update (PR pending), see [Section 5](#5-remaining-roadmap) and [Implementation Log](#implementation-log).
+- **Current phase:** Canonical Leaf-Page Standard piloted on the 3 Addition leaf pages (`/addition/1-digit`, `/addition/2-digit-no-carrying`, `/addition/2-digit-with-carrying`) — Quick Answer block, expanded intro, mandatory Parent/Teacher guidance, refined FAQ, and a next-step CTA sentence. See `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md` for the full standard and pilot evaluation. **Sitewide rollout to the remaining ~30 leaf pages is not yet approved** — three targeted revisions to the pattern were identified during the pilot and should be applied before extending further; see that document's Pilot Evaluation section.
 
 ---
 
@@ -151,6 +151,35 @@ The `logo` field was preserved from the homepage's pre-existing (legitimate, alr
 
 ---
 
+## 4c. Canonical Leaf-Page Standard — pilot implemented on 3 Addition pages
+
+- [x] Design the Canonical Leaf-Page Standard — **completed**, see `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`.
+- [x] Pilot the standard on 3 Addition leaf pages — **completed** in this update.
+- [ ] Apply the pilot's recommended revisions to the pattern, then roll out to the remaining ~30 leaf pages — **not started, blocked on approval.**
+
+**Why it mattered:** the content-quality audit (which produced this document's companion content-quality findings) identified that leaf practice pages — the pages with the most specific, high-intent search traffic — had the thinnest content on the site: ~25-word intros, no parent/teacher explanation (present only on hub pages), no AI-extractable "quick answer," and only implicit calls to action. This is the single largest content-quality gap on the site by both traffic relevance and page count.
+
+**What changed (pilot only — 3 files):**
+
+- `src/pages/addition/1-digit.astro`, `src/pages/addition/2-digit-no-carrying.astro`, `src/pages/addition/2-digit-with-carrying.astro` — each page gained: a 1–2 sentence Quick Answer block directly under the H1 (self-contained, AI-extractable, no marketing language), an expanded 40–70 word intro, a mandatory 3–5 sentence Parent & Teacher Guidance section with specific diagnostic advice (not generic tips), a lightly revised FAQ (first question now reinforces the Quick Answer without duplicating it; question/answer count unchanged at 4 per page), and a one-sentence next-step CTA linking to the logical next skill using each page's existing `relatedLinks` data.
+- The practice widget's position relative to other content was preserved (still the second element on the page, right after the Quick Answer + intro, before all deeper explanatory content) — validated as correct in the pilot evaluation, not changed.
+- The `InternalLinks` "Related Practice" grid was repositioned from immediately after the widget to the very end of the page (after the FAQ and next-step CTA), matching the standard's canonical order. This was done **only inside the three pilot page files** — `PracticeLayout.astro` itself was not modified, so no other page using that layout is affected. See `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`'s Implementation Notes for the mechanism (nesting `InternalLinks` inside the existing `how-it-works` slot instead of using the separate `links` slot).
+- No metadata changes: titles, descriptions, canonicals, and URLs are all unchanged on all three pages. No new schema types were introduced; existing `LearningResource`, `FAQPage`, and (on the carrying page) `HowTo` JSON-LD were preserved as-is, with only the FAQ array's content lightly revised (still 4 items per page, schema stays in sync with visible content via the existing shared-array pattern).
+
+**Lessons learned from the pilot (full detail in `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`):** the core structure held up well and should not be redesigned, but three targeted revisions are recommended before sitewide rollout — (1) the Quick Answer block and the intro paragraph need clearer visual differentiation, since both are similar-length prose and can currently read as repetitive at a glance; (2) Parent/Teacher guidance should be allowed to be either one paragraph or a short lead + bullets, not forced into one dense paragraph every time; (3) the next-step CTA sentence sometimes duplicates the Related Practice grid's first entry and should either be dropped in that case or the grid should visually flag its "next step" entry instead. Additionally, the pilot confirmed that the 24 generated times-table/divide-by pages will need a structured per-number fact bank (not ad hoc coordination) to hit the same Quick-Answer/FAQ uniqueness bar — tracked as a separate follow-up decision, out of scope for this pilot.
+
+**Verification performed:**
+- `npm run build` — succeeded, 68 pages, no errors.
+- Inspected generated `dist/` HTML for all 3 pilot pages: all JSON-LD blocks (4 on the two non-carrying pages, 5 on the carrying page including `HowTo`) parse as valid JSON; canonical URLs, `<title>`, and `<h1>` text unchanged from before the pilot; heading hierarchy is clean on all three (`h1` → `h2` → `h3`, no skipped levels); the `InternalLinks`/"Related Practice" section renders exactly once per page (verified via its `aria-label` + `<h2>` pair, not duplicated); FAQ schema entry count matches the visible FAQ count (4) on the pages checked; the next-step CTA link and all `relatedLinks` hrefs render correctly.
+- No automated test suite or `npm run check` exists in this repository beyond `npm run build` (same situation as prior updates); none was skipped.
+- No accessibility regression found: no new `<img>` without alt text, no interactive elements added, heading order preserved, no ARIA changes to existing widget/form elements (none of the new content touches `AnswerInput`/`NumberPad`/form controls).
+
+**Risk:** Low — scoped to 3 files, no shared-layout or shared-component changes, no metadata/URL/schema-type changes, additive content only.
+
+**Explicitly not done in this pilot (per instruction):** no other leaf pages modified, no generated (times-table/divide-by) pages touched, no per-number fact bank introduced, no template unification (`HubLayout`/`PracticeLayout`) started, no layout redesign, no new schema types, no metadata/navigation/URL changes.
+
+---
+
 ## 5. Remaining roadmap
 
 Everything below is **not yet implemented**. Items are grouped the way the original audit grouped them; effort classification and full rationale are preserved in full (not summarized) so a future contributor can act on any item without re-deriving context.
@@ -261,6 +290,7 @@ Ordered by effort vs. how directly each item moves organic/AI-referral traffic �
 | 9 | Resolve `/addition-practice` + `/subtraction-practice` | Quick Win | **Blocked — needs explicit approval** | Fix is scoped and low-risk; waiting on the content decision. |
 | 10 | Consolidate header/footer + `<article>` wrapping + `<label>` upgrade | Medium | Not started | Maintainability and semantic-clarity investments. |
 | 11 | Manual accessibility test of the custom number pad | Large | Not started | Needs real-device testing before scope is even known. |
+| 12 | Canonical Leaf-Page Standard — pilot on 3 Addition pages | Medium | ✅ Piloted (this update) — sitewide rollout blocked | Closes the largest content-quality gap identified (thin leaf-page intros, no parent/teacher guidance on leaf pages); see Section 4c and `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`. Three pattern revisions recommended before rolling out to the remaining ~30 leaf pages. |
 
 ---
 
@@ -272,6 +302,7 @@ Ordered by effort vs. how directly each item moves organic/AI-referral traffic �
 | 2026-08-02 | [#117](https://github.com/wesley-perkins-software/math-practice/pull/117) | Added `docs/seo/SEO_AEO_GEO_AUDIT.md`; consolidated Organization/WebSite JSON-LD into one sitewide identity graph (`src/config/site.ts`, `BaseLayout.astro`, homepage, About page, and 30 `LearningResource.provider` references) | |
 | 2026-08-02 | Pending | Rewrote homepage FAQ from one shared `faqItems` source (visible + JSON-LD); fixed the "Math Drills" factual error on `index.astro`, `progress.astro`, and a stale `README.md` reference; normalized the About-page Organization `url` to the canonical trailing-slash form via `SITE_URL`; removed unverified `foundingDate: "2024"` from the About-page Organization node (kept `areaServed`/`serviceType`, both reviewed as accurate) | This update |
 | 2026-08-02 | Pending | Linked the multiplication hub to the times-tables index; added footer links to `/math-facts`, `/for-parents`, `/for-teachers` (`HubLayout.astro`, `PracticeLayout.astro`, `index.astro`, `404.astro`); fixed "Progress" vs "My Progress" header/footer nav-label inconsistency in the same 4 files plus `about.astro`'s "Progress Tracking" link text; repointed stale `/multiplication-practice` and `/division-practice` links on the 3rd/4th-grade pages to the canonical `/multiplication`/`/division` hubs | Navigation & internal-linking focused PR; division hub verified already complete (Divide By/Facts/Remainders all linked) and left unchanged; division divisor-grid item remains deferred/out of scope |
+| 2026-08-02 | Pending | Added `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md` defining the target leaf-page content shape; piloted it on the 3 Addition leaf pages (Quick Answer block, expanded intro, mandatory Parent/Teacher guidance, refined FAQ, next-step CTA, `InternalLinks` repositioned to the end of the page within those 3 files only) | Pilot only — sitewide rollout to remaining ~30 leaf pages and the 24 generated pages explicitly not done, blocked on applying 3 recommended pattern revisions from the pilot evaluation first |
 
 ---
 

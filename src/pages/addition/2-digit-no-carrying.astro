@@ -63,9 +63,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition Practice (No Carrying)</h1>
-  <p slot="intro">Work on two-digit addition without regrouping to strengthen place-value alignment and written addition steps before introducing carrying.</p>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Two-digit addition without carrying combines two numbers from 10–99 where every column sum stays at 9 or less, such as 31 + 46 = 77. Because no digit ever needs to be carried, this is the step where students first practice place-value column addition before regrouping is introduced.</p>
+    </div>
+    <p>This page is for first and second graders who already know their single-digit addition facts and are learning to add multi-digit numbers for the first time, plus parents and teachers checking whether a child can align columns correctly. Every problem here is built so no column ever sums to 10 or more, isolating place-value alignment from the separate skill of carrying.</p>
+  </Fragment>
+
   <AdditionPracticeHub slot="widget" active="2-digit-no-carrying" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -106,6 +112,12 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-[#6B7280] leading-relaxed">The skill being tested here isn't addition itself — it's whether a child lines up the ones and tens columns correctly before adding. Watch for a child who solves 23 + 5 by adding 2 + 5 instead of 3 + 5; that's a column-alignment error, not an addition-facts error, and it needs a different fix (grid paper or wider spacing helps more than more practice problems). If a child solves every problem correctly but slowly, they're likely still adding each column one number at a time instead of retrieving facts instantly — that's normal at this stage and will speed up with the single-digit fact practice on the 1-digit page. Because no problem here ever requires carrying, a child who's ready to move on should be getting these right quickly and consistently before starting the carrying page.</p>
+    </section>
+
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
@@ -118,5 +130,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-[#4B5563]">Ready for regrouping? Try <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition with carrying</a> next →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>

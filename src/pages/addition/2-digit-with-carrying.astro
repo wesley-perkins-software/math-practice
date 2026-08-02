@@ -89,9 +89,15 @@ const faqItems = [
   </Fragment>
 
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition with Carrying Practice</h1>
-  <p slot="intro">Practice regrouping when ones digits add to 10 or more, then carry to the tens column to build confidence with advanced two-digit addition.</p>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Two-digit addition with carrying happens when a column's sum reaches 10 or more, so a digit must be regrouped into the next column, such as 56 + 27 = 83. Every problem on this page requires at least one carry, building the regrouping skill that comes right after place-value column addition.</p>
+    </div>
+    <p>This page is for second and third graders who've already mastered two-digit addition without carrying and single-digit facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one carry, so there's no way to get through it without regrouping the ones column into the tens column.</p>
+  </Fragment>
+
   <AdditionPracticeHub slot="widget" active="2-digit-with-carrying" client:load />
-  <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -135,6 +141,12 @@ const faqItems = [
       </div>
     </section>
 
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-[#6B7280] leading-relaxed">Carrying is where a lot of students who were doing fine start making mistakes — not because addition got harder, but because there's now an extra step to remember. Watch for a child who gets the ones column right but forgets to add the carried 1 into the tens column; that's the single most common carrying error, and it means the carry needs to be written down (not done mentally) until it's automatic. If a child carries correctly but consistently writes the wrong digit — putting the tens digit below instead of carrying it — they've mixed up which digit stays and which moves, which is worth re-explaining with a concrete example like 47 + 38 rather than assigning more timed problems. Once a child can explain out loud why they're carrying a 1 (not just where to write it), they're ready to move quickly through this level.</p>
+    </section>
+
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
@@ -147,5 +159,11 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-[#4B5563]">Comfortable with carrying? Try <a href="/subtraction/2-digit-with-borrowing" class="text-[#4F46E5] font-semibold hover:underline">2-digit subtraction with borrowing</a>, the inverse skill →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>
