@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -69,7 +70,7 @@ const faqItems = [
     <p>1-digit addition combines two numbers from 0–9 into a single sum, such as 6 + 7 = 13. Mastering all 81 addition facts from 1+1 to 9+9 is the foundation for every later arithmetic skill, including carrying, multiplication, and mental math.</p>
   </Fragment>
 
-  <AdditionPracticeHub slot="widget" active="1-digit" client:load />
+  <AdditionPracticeHub slot="widget" active="1-digit" variant="prototype" client:load />
 
   <Fragment slot="intro">
     <p>This page is built for kindergartners and first graders working toward fluent single-digit addition, as well as parents and teachers looking for a quick way to check a child's recall speed. Problems are drawn from all 81 addition facts, with extra repetition on sums greater than 9, the facts most students find hardest to recall instantly.</p>

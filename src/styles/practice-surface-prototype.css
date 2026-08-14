@@ -1,0 +1,20 @@
+/*
+ * Prototype-only typography for the redesigned practice surface
+ * (/addition/1-digit). Self-hosted, single variable-font family covering
+ * both interface and numeral roles inside the practice surface — see the
+ * frontend-design typography evaluation in the design plan for why.
+ * Not wired into BaseLayout/global.css: this file is imported only by the
+ * one prototype page so nothing else on the site is affected yet.
+ */
+@font-face {
+  font-family: 'Atkinson Hyperlegible Next Variable';
+  src: url('/fonts/atkinson-hyperlegible-next-variable.woff2') format('woff2-variations');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-practice {
+  font-family: 'Atkinson Hyperlegible Next Variable', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-variant-numeric: tabular-nums;
+}

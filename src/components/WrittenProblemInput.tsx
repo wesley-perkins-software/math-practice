@@ -15,6 +15,8 @@ interface Props {
   disabled?: boolean;
   feedbackState?: 'correct' | 'incorrect' | 'idle';
   feedbackContent?: React.ReactNode;
+  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  variant?: 'classic' | 'prototype';
 }
 
 export default function WrittenProblemInput({
@@ -23,6 +25,7 @@ export default function WrittenProblemInput({
   disabled = false,
   feedbackState = 'idle',
   feedbackContent,
+  variant = 'classic',
 }: Props) {
   const symbol = OP_SYMBOL[problem.operation];
   const [value, setValue] = useState('');
@@ -86,6 +89,72 @@ export default function WrittenProblemInput({
       : 'text-[#1E1B4B]';
 
   const isPlaceholder = value.length === 0;
+
+  if (variant === 'prototype') {
+    const answerColorProto =
+      feedbackState === 'correct'
+        ? 'text-[#059669]'
+        : feedbackState === 'incorrect'
+        ? 'text-[#DC2626]'
+        : 'text-[#211D4F]';
+    return (
+      <div className="flex flex-col items-center gap-3 w-full">
+        {/* Written arithmetic block — spans the same column width as the keypad
+            below it (no separate narrower box), fixing the dead-space/floating-box
+            composition issue from the classic surface. */}
+        <div
+          className={`font-practice select-none w-full max-w-[22rem] mx-auto rounded-xl px-2 py-1 transition-opacity duration-200 ease-out ${
+            isVisible ? 'opacity-100' : 'opacity-0'
+          } ${isFocused ? 'ring-2 ring-[#4F46E5]/45 ring-offset-4 ring-offset-white' : ''}`}
+          aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
+          onClick={() => inputRef.current?.focus()}
+        >
+          <input
+            ref={inputRef}
+            type="text"
+            inputMode="none"
+            value={value}
+            onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 3))}
+            onKeyDown={handleKeyDown}
+            disabled={disabled}
+            aria-label="Your answer"
+            className="sr-only"
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setIsFocused(false)}
+          />
+
+          <div className="text-right">
+            <span className="text-6xl font-bold text-[#211D4F]">{problem.operandA}</span>
+          </div>
+          <div className="flex items-center justify-end gap-4">
+            <span className="text-5xl font-bold text-[#4F46E5]">{symbol}</span>
+            <span className="text-6xl font-bold text-[#211D4F]">{problem.operandB}</span>
+          </div>
+          <div className="border-t-[3px] border-[#211D4F] mt-2" />
+          <div className="text-right mt-1.5 min-h-[4rem] flex items-center justify-end">
+            {isPlaceholder ? (
+              <span className="text-6xl font-bold text-[#C9C5E8] inline-flex items-center">
+                <span aria-hidden="true" className="opacity-0 select-none">0</span>
+                {isFocused && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
+              </span>
+            ) : (
+              <span className={`text-6xl font-bold transition-colors duration-150 ${answerColorProto}`}>{value}</span>
+            )}
+          </div>
+        </div>
+
+        {feedbackContent}
+
+        <NumberPad
+          onDigit={handleDigit}
+          onBackspace={handleBackspace}
+          onSubmit={handleSubmit}
+          disabled={disabled}
+          variant="prototype"
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center gap-2 w-full">

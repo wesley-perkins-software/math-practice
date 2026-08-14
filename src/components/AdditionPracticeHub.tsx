@@ -38,11 +38,13 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
 
 interface Props {
   active: Difficulty;
+  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  variant?: 'classic' | 'prototype';
 }
 
 const TAB_SCROLL_KEY = 'addition-practice:scroll-y';
 
-export default function AdditionPracticeHub({ active }: Props) {
+export default function AdditionPracticeHub({ active, variant = 'classic' }: Props) {
   useEffect(() => {
     const saved = sessionStorage.getItem(TAB_SCROLL_KEY);
     if (!saved) return;
@@ -70,8 +72,9 @@ export default function AdditionPracticeHub({ active }: Props) {
         activeId={active}
         ariaLabel="Addition difficulty"
         onItemClick={handleTabClick}
+        variant={variant}
       />
-      <PracticeWidget config={selected.config} />
+      <PracticeWidget config={selected.config} variant={variant} />
     </>
   );
 }
