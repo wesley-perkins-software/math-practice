@@ -79,10 +79,27 @@ const faqItems = [
     -->
     <div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
       <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">1-Digit Addition Practice</h1>
-      <nav aria-label="Change practice level" class="font-practice">
+      {/*
+        Round 6: "Change level" → "Change type". Naming recommendation for
+        this switcher pattern going forward (not propagated elsewhere yet):
+        the label should name what's actually varying between the linked
+        pages, not default to one generic verb everywhere —
+          - "Change type"      — same operation, varying digit-count/
+                                  complexity (this page: 1-digit / 2-digit
+                                  no-carry / 2-digit carrying addition)
+          - "Change table"     — times-table selection (6s / 7s / …)
+          - "Change operation" — the linked pages actually switch operation
+                                  (e.g. a future addition/subtraction/
+                                  multiplication/division switcher, or
+                                  Speed Drill's operation picker)
+        This is a per-page copy choice on the same markup/script, not a
+        shared component prop — each future page just picks the noun that
+        matches what its own links vary.
+      */}
+      <nav aria-label="Change practice type" class="font-practice">
         <details class="relative" data-dismissable-menu>
           <summary class="list-none flex items-center gap-1 text-sm font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
-            Change level
+            Change type
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </summary>
           <div class="absolute right-0 top-full mt-1.5 z-20 w-56 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
@@ -96,22 +113,34 @@ const faqItems = [
     <script>
       // Progressive enhancement over the native <details>/<summary> disclosure
       // above: closes on Escape (returning focus to the summary that opened
-      // it, per standard focus-management practice) and on an outside click.
-      // Framework-agnostic on purpose — this is meant to be copy-pasteable
-      // for any future page using the same H1-row switcher pattern.
+      // it, per standard focus-management practice), on an outside click,
+      // and — round 6 — the moment the user resumes practice (focuses the
+      // answer, types, or taps the on-screen keypad), so the switcher gets
+      // out of the way instead of hovering open over the problem. That last
+      // case is detected via a `[data-practice-instrument]` marker the
+      // practice widget renders itself (see PracticeWidget.tsx) rather than
+      // hardcoding selectors for its internals here, so this script stays
+      // framework-agnostic and copy-pasteable. None of these close paths
+      // move focus except Escape, which explicitly returns it to the
+      // summary — the others leave focus exactly where the user put it.
       document.querySelectorAll<HTMLDetailsElement>('details[data-dismissable-menu]').forEach((details) => {
         const summary = details.querySelector('summary');
+        const close = () => { details.open = false; };
         document.addEventListener('click', (e) => {
           if (details.open && e.target instanceof Node && !details.contains(e.target)) {
-            details.open = false;
+            close();
           }
         });
         details.addEventListener('keydown', (e) => {
           if (e.key === 'Escape' && details.open) {
             e.preventDefault();
-            details.open = false;
+            close();
             summary?.focus();
           }
+        });
+        document.querySelectorAll<HTMLElement>('[data-practice-instrument]').forEach((instrument) => {
+          instrument.addEventListener('pointerdown', () => { if (details.open) close(); });
+          instrument.addEventListener('focusin', () => { if (details.open) close(); });
         });
       });
     </script>

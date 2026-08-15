@@ -45,17 +45,26 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
     // the submit key keeps most of its brand-color fill so the whole
     // instrument still reads as "the same instrument," just momentarily
     // not accepting input, instead of "half the UI turned off."
+    // Round 6: keys sized down ~6% (56px → 52px, gap 8px → 6px) after
+    // rendering both side by side — this alone recovers ~22px of vertical
+    // footprint (4 rows × 4px + 3 gaps × 2px) toward the 1366×768 fold with
+    // no perceptible loss of tap comfort: 52px keys are still well past
+    // both the 24×24px WCAG minimum and the ~44px touch-target convention.
+    // Chosen over leaving the keypad untouched because the arithmetic
+    // above it is still clearly the largest, most substantial element on
+    // the surface either way — this wasn't a "shrink until it fits"
+    // compression, just recovering slack that was there.
     const keyBaseClasses =
-      'font-practice h-14 rounded-2xl text-2xl font-bold transition-all duration-100 ease-out disabled:cursor-not-allowed disabled:shadow-none disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4F46E5]';
+      'font-practice h-[3.25rem] rounded-[0.875rem] text-[1.375rem] font-bold transition-all duration-100 ease-out disabled:cursor-not-allowed disabled:shadow-none disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4F46E5]';
     const digitKeyClasses =
       `${keyBaseClasses} bg-white border border-[#E4E1F5] text-[#211D4F] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px] disabled:bg-[#FBFAFE] disabled:border-[#EEECF7] disabled:text-[#4A4570]`;
     return (
       // Ergonomic keypad width is independent of the surface's own width —
       // capped here so a wider desktop surface gives the composition more
       // presence/whitespace without stretching buttons past a comfortable size.
-      <div className="w-full max-w-[18rem] mx-auto select-none">
+      <div className="w-full max-w-[17rem] mx-auto select-none">
         {ROWS_ASCENDING.map((row) => (
-          <div key={row[0]} className="grid grid-cols-3 gap-2 mb-2">
+          <div key={row[0]} className="grid grid-cols-3 gap-1.5 mb-1.5">
             {row.map((digit) => (
               <button
                 key={digit}
@@ -70,7 +79,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
             ))}
           </div>
         ))}
-        <div className="grid grid-cols-3 gap-2">
+        <div className="grid grid-cols-3 gap-1.5">
           <button
             type="button"
             onMouseDown={prevent}

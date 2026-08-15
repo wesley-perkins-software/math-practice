@@ -24,8 +24,13 @@ export default function FeedbackBanner({ state, correctAnswer, correctRemainder,
     // lane) but reads with much more conviction — dark-on-light-tint text
     // was tried first and discarded because it still felt like a status
     // chip; a confident solid fill is what actually reads as "the app has
-    // an opinion about your answer" to a 6-year-old. Redundant non-color
-    // cue (check / cross glyph) is kept so this never relies on color alone.
+    // an opinion about your answer" to a 6-year-old. Success keeps a
+    // redundant non-color cue (a checkmark) so it never relies on color
+    // alone. Round 6: dropped the incorrect state's X glyph — the answer
+    // box is already red and this banner is already a solid red surface,
+    // so a third red "wrong" signal was redundant; what a child actually
+    // needs there is the right answer, stated plainly ("The answer was
+    // 16"), not another failure icon.
     return (
       <div
         aria-live="polite"
@@ -40,14 +45,11 @@ export default function FeedbackBanner({ state, correctAnswer, correctRemainder,
             <span>Correct!</span>
           </>
         ) : (
-          <>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12" /></svg>
-            <span>
-              {correctRemainder !== undefined
-                ? <>It was <span className="tabular-nums">{correctAnswer} r{correctRemainder}</span></>
-                : <>It was <span className="tabular-nums">{correctAnswer}</span></>}
-            </span>
-          </>
+          <span>
+            {correctRemainder !== undefined
+              ? <>The answer was <span className="tabular-nums">{correctAnswer} r{correctRemainder}</span></>
+              : <>The answer was <span className="tabular-nums">{correctAnswer}</span></>}
+          </span>
         )}
       </div>
     );

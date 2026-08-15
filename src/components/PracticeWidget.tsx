@@ -366,7 +366,12 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   const innerPaddingClasses = isPrototype ? 'px-6 pt-4 pb-3' : 'px-4 py-4 md:px-6 md:py-5';
 
   return (
-    <div className={wrapperClasses}>
+    // data-practice-instrument: lets the H1-row switcher's vanilla script
+    // (addition/1-digit.astro) detect "the user resumed practice" and close
+    // itself — see the switcher's own comment for why this can't just be a
+    // React prop (the switcher is deliberately framework-agnostic markup
+    // living outside this island).
+    <div className={wrapperClasses} {...(isPrototype ? { 'data-practice-instrument': true } : {})}>
       {/* Gradient accent bar — classic only; the prototype surface relies on its
           bordered surface + the brand-colored submit key instead of a decorative
           top bar, per the audit's note that gradients should solve something. */}
@@ -427,7 +432,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   // step obvious. Genuinely empty read calmer and more
                   // worksheet-like, so that's what ships: this lane only ever
                   // shows something once there's real feedback to give.
-                  <div className={`${isPrototype ? 'h-10 max-w-[18rem] mx-auto' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
+                  <div className={`${isPrototype ? 'h-10 max-w-[17rem] mx-auto' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} variant={variant} />
                   </div>
                 )}
@@ -452,9 +457,20 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   // (not a single fused string) specifically so a future
                   // "Best 12" stat can sit beside it later via the same
                   // pattern without restructuring this block.
+                  //
+                  // Round 6: the label was too faint (#6B6690 lavender-gray)
+                  // to read as a real word rather than disabled chrome —
+                  // moved to the same dark navy family as body/interface
+                  // text (#43405C) and bumped a step in size/weight so
+                  // "Streak" reads as a caption, not metadata. Numeral color
+                  // was A/B'd against a navy numeral with the flame as the
+                  // only accent: amber won on a squint test — size alone
+                  // (navy) still reads as "just bigger UI text," while the
+                  // color pairs with size to make the number unmistakably
+                  // the rewarding value, not a data point.
                   <div key={stats.currentStreak} className="flex items-end gap-4 animate-[pop_0.25s_ease-out]">
                     <div className="flex flex-col gap-0.5 leading-none">
-                      <span className="text-[11px] font-semibold text-[#6B6690]">Streak</span>
+                      <span className="text-[13px] font-bold text-[#43405C]">Streak</span>
                       <span className="flex items-baseline gap-1">
                         <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#8983B8]'}`}>
                           {stats.currentStreak}
@@ -474,17 +490,21 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   </span>
                 )}
 
-                {/* Reset / inline confirm */}
+                {/* Reset / inline confirm. Round 6: same navy-family ink as
+                    Streak's label (not the old lavender-gray, which read as
+                    disabled) — kept visually secondary by weight/size
+                    (regular text-xs vs. the streak label's bold text-[13px])
+                    rather than by low contrast. */}
                 {!resetPending ? (
                   <button
                     onClick={() => setResetPending(true)}
-                    className={`text-xs transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#6B6690] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
+                    className={`text-xs transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#43405C] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
                 ) : (
                   <div className="flex items-center gap-1">
-                    <span className={`text-xs mr-1 ${isPrototype ? 'text-[#6B6690]' : 'text-[#6B7280]'}`}>Reset streak?</span>
+                    <span className={`text-xs mr-1 ${isPrototype ? 'text-[#43405C]' : 'text-[#6B7280]'}`}>Reset streak?</span>
                     <button
                       onClick={handleResetCurrentStreak}
                       className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
@@ -493,7 +513,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     </button>
                     <button
                       onClick={() => setResetPending(false)}
-                      className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${isPrototype ? 'text-[#6B6690] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
+                      className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${isPrototype ? 'text-[#43405C] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
                     >
                       Cancel
                     </button>
