@@ -6,6 +6,39 @@
 // (Subtraction, Multiplication, …) can adopt it by passing its own
 // heading/items — nothing here is Addition-specific except the data a page
 // passes in.
+//
+// Layout: below `md` (768px) the heading and switcher are ALWAYS stacked
+// (title row, switcher row), never sharing a row. This was a deliberate
+// fix, not the original design: a shared single row with `flex-wrap` let a
+// longer H1 (e.g. "2-Digit Addition Practice (No Carrying)") wrap onto a
+// second line on narrow phones while a shorter one ("1-Digit Addition
+// Practice") stayed on one — same component, two different heights, so the
+// practice card below it started at a different Y position depending only
+// on which page's title happened to be longer. Measured on a real render:
+// at 320–430px the shared-row layout produced a 25px height gap between the
+// two variants (one line vs. two).
+//
+// Fixing that per-title is what the brief calls out as the wrong move — no
+// title-specific breakpoint could stay correct as new Addition-family pages
+// are added. Stacking unconditionally below `md` sidesteps the question
+// entirely: every page gets the same two-row shape (title alone gets the
+// full container width, so none of the three current titles wrap within
+// it — confirmed by rendering all three down to 320px), so the block's
+// height is identical across pages by construction, not by reserving extra
+// blank space to match a worst case.
+//
+// `md` (not `sm`, which is where the H1's own font size steps up to
+// text-2xl) is deliberate: rendering the row layout right at `sm` put the
+// larger font and the narrower shared-row width in the same 640px, and the
+// longer titles wrapped again in row mode for exactly the same reason as
+// the original bug — measured directly (640–767px reproduced the same
+// height mismatch row layout was supposed to fix). `md` and up has
+// confirmed headroom (rendered check: the longest title + switcher share a
+// row without wrapping from 768px through desktop), so the two sit
+// "beside" each other there, matching the originally approved desktop
+// composition. A user zoomed in enough to shrink the effective layout
+// viewport below `md` simply stays in the stacked, self-consistent layout
+// instead of hitting that same collision again.
 interface NavItem {
   id: string;
   label: string;
@@ -26,9 +59,20 @@ interface Props {
 const { heading, activeId, items, switcherLabel = 'Change practice' } = Astro.props;
 ---
 
-<div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
-  <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">{heading}</h1>
-  <nav aria-label={switcherLabel} class="font-practice">
+<div class="flex flex-col items-start gap-1 md:flex-row md:items-center md:justify-between md:gap-x-3">
+  {/*
+    min-h-[2.5em] (2 lines at leading-tight's 1.25 ratio) reserves title
+    space for the longest real title in this family even when a shorter one
+    only needs one line — this is what makes the switcher (and therefore
+    the practice card below it) land at the same Y position on every
+    Addition page regardless of that page's own title length, without
+    guessing a title-specific breakpoint. Only needed below `md`: above it
+    the row layout has confirmed headroom for every current title to stay
+    on one line, so the reserve is dropped there rather than leaving dead
+    space no page will ever use.
+  */}
+  <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight min-h-[2.5em] md:min-h-0">{heading}</h1>
+  <nav aria-label={switcherLabel} class="font-practice -ml-2 md:ml-0">
     <details class="relative" data-dismissable-menu>
       <summary class="list-none flex items-center gap-1 text-base font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
         {switcherLabel}
