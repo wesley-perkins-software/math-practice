@@ -33,6 +33,16 @@ export default function WrittenProblemInput({
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
+  // Prototype only (round 4): classic pages keep their existing mount-focus
+  // behavior unchanged (see the two effects further below, gated on
+  // variant !== 'prototype'). The prototype previously auto-focused this
+  // hidden input on mount too, which silently relocated a keyboard user's
+  // focus away from the natural tab order (past the H1/mode-switcher)
+  // before they'd pressed a single key — an unsolicited-focus-move
+  // anti-pattern. This guard skips that very first auto-focus so initial
+  // tab order is untouched there, while keeping the refocus that happens
+  // once a session is already under way, i.e. after each problem transition.
+  const hasMountedRef = useRef(false);
 
   // Fade-in animation on problem change
   useEffect(() => {
@@ -41,18 +51,33 @@ export default function WrittenProblemInput({
     return () => cancelAnimationFrame(id);
   }, [problem.operandA, problem.operandB, problem.operation]);
 
-  // Focus hidden input when enabled
+  // Classic: focus hidden input whenever enabled (unchanged behavior, incl. on mount).
   useEffect(() => {
+    if (variant === 'prototype') return;
     if (!disabled) inputRef.current?.focus();
-  }, [disabled]);
+  }, [disabled, variant]);
 
-  // Clear and refocus when feedback resets to idle (next problem)
+  // Classic: clear and refocus when feedback resets to idle (next problem), always including mount.
   useEffect(() => {
+    if (variant === 'prototype') return;
     if (feedbackState === 'idle') {
       setValue('');
       inputRef.current?.focus();
     }
-  }, [feedbackState]);
+  }, [feedbackState, variant]);
+
+  // Prototype: same "clear + refocus on new problem" behavior, but skips
+  // the very first (mount) occurrence — see hasMountedRef above.
+  useEffect(() => {
+    if (variant !== 'prototype') return;
+    if (feedbackState === 'idle') {
+      setValue('');
+      if (hasMountedRef.current) {
+        inputRef.current?.focus();
+      }
+      hasMountedRef.current = true;
+    }
+  }, [feedbackState, variant]);
 
   function handleSubmit() {
     if (disabled) return;
@@ -102,19 +127,23 @@ export default function WrittenProblemInput({
       <div className="flex flex-col items-center gap-2.5 w-full">
         {/* Written arithmetic: no bordering card — the rule, spacing, and
             right-alignment already read as "an equation" without another
-            container-inside-a-container. The column is intrinsic-width and
-            centered as a whole; digits stay right-aligned WITHIN it for
-            place-value convention. The focus ring lives on the answer row
-            only (where the cursor already is), not around the whole
-            equation — wrapping the entire block in a ring reconstructed the
-            exact "box around the arithmetic" this pass removes, especially
-            since the input auto-focuses on mount and the ring would then be
-            visible essentially all the time. Sized at 76px after the first
-            pass (96px) proved too tall to keep the full instrument above the
-            fold at 1366×768 — this is the balance of "dominates the surface"
-            against "everything fits without scrolling on a normal laptop." */}
+            container-inside-a-container. The focus ring lives on the answer
+            row only (where the cursor already is), not around the whole
+            equation. Sized at 76px after the first pass (96px) proved too
+            tall to keep the full instrument above the fold at 1366×768.
+
+            Round 4: the column is now a FIXED width (not intrinsic/w-fit),
+            centered as a whole. This is what keeps the ones column's right
+            edge perfectly stationary as the answer grows from 1 to 3 digits
+            (this component is shared logic for 2-digit modes too, where
+            99+99=198 is a real answer) — every row inside is still
+            right-aligned, but the box itself no longer resizes to its
+            content, so growing the answer only eats into the box's own left
+            margin instead of shifting the whole column outward. Width
+            verified by rendering "198" and confirming the ones-digit stays
+            pixel-aligned with the operand rows, not derived from a formula. */}
         <div
-          className={`font-practice select-none w-fit mx-auto transition-opacity duration-200 ease-out ${
+          className={`font-practice select-none w-[11.5rem] mx-auto transition-opacity duration-200 ease-out ${
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}
           aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}

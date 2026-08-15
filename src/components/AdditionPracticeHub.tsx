@@ -10,8 +10,8 @@ import type { PracticeConfig } from '@/engine/types';
 
 type Difficulty = '1-digit' | '2-digit-no-carrying' | '2-digit-with-carrying';
 
-const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; menuLabel: string; config: PracticeConfig; href: string }[] = [
-  { id: '1-digit',  label: '1-Digit',  menuLabel: '1-Digit Addition',  config: ADDITION_1_DIGIT, href: '/addition/1-digit' },
+const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig; href: string }[] = [
+  { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT, href: '/addition/1-digit' },
   {
     id: '2-digit-no-carrying',
     label: (
@@ -20,7 +20,6 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; menuLabel: string;
         <span className="block text-[10px] font-normal opacity-60 leading-tight">No Carry</span>
       </>
     ),
-    menuLabel: '2-Digit Addition (No Carry)',
     config: ADDITION_2_DIGIT,
     href: '/addition/2-digit-no-carrying',
   },
@@ -32,7 +31,6 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; menuLabel: string;
         <span className="block text-[10px] font-normal opacity-60 leading-tight">Carrying</span>
       </>
     ),
-    menuLabel: '2-Digit Addition (Carrying)',
     config: ADDITION_2_DIGIT_CARRYING,
     href: '/addition/2-digit-with-carrying',
   },
@@ -67,27 +65,14 @@ export default function AdditionPracticeHub({ active, variant = 'classic' }: Pro
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
-  // Prototype (round 3): mode switching is no longer a standalone row above
-  // or beside the H1 — it's passed into PracticeWidget as its header slot,
-  // becoming the practice surface's own first internal row ("1-Digit
-  // Addition · Change"). Sibling modes stay hidden behind the popover so
-  // they never visually compete with the arithmetic.
+  // Prototype (round 4): mode switching lives on the H1 row instead, as
+  // static markup in addition/1-digit.astro — not as a React-rendered row
+  // here. That's the point of the pattern being tested: "H1 + contextual
+  // switcher" should work as a plain per-page Astro construct so a future
+  // page (e.g. times-tables) can reuse it without needing a component like
+  // this one at all. Nothing to render here for mode-switching anymore.
   if (variant === 'prototype') {
-    return (
-      <PracticeWidget
-        config={selected.config}
-        variant={variant}
-        headerSlot={
-          <PracticeModeNav
-            items={DIFFICULTIES.map(({ id, label, href, menuLabel }) => ({ id, label, href, menuLabel }))}
-            activeId={active}
-            ariaLabel="Addition difficulty"
-            onItemClick={handleTabClick}
-            variant={variant}
-          />
-        }
-      />
-    );
+    return <PracticeWidget config={selected.config} variant={variant} />;
   }
 
   return (
@@ -97,7 +82,6 @@ export default function AdditionPracticeHub({ active, variant = 'classic' }: Pro
         activeId={active}
         ariaLabel="Addition difficulty"
         onItemClick={handleTabClick}
-        variant={variant}
       />
       <PracticeWidget config={selected.config} variant={variant} />
     </>

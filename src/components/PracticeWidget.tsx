@@ -21,11 +21,9 @@ interface Props {
   config: PracticeConfig;
   /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
   variant?: 'classic' | 'prototype';
-  /** Rendered as the practice surface's own first row (round 3: mode switching lives here, not as a separate page-level element). Prototype only. */
-  headerSlot?: React.ReactNode;
 }
 
-export default function PracticeWidget({ config, variant = 'classic', headerSlot }: Props) {
+export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -377,11 +375,6 @@ export default function PracticeWidget({ config, variant = 'classic', headerSlot
       )}
 
       <div className={innerPaddingClasses}>
-        {/* Practice-surface header: what you're practicing + how to change it.
-            Rendered outside the phase branches so it stays visible whether the
-            surface is active, idle, or showing session-complete results. */}
-        {headerSlot && <div className="mb-2">{headerSlot}</div>}
-
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
           <div className={`flex flex-col items-center ${isPrototype ? 'gap-1.5' : 'gap-3 md:gap-4'}`}>
@@ -425,6 +418,15 @@ export default function PracticeWidget({ config, variant = 'classic', headerSlot
                   // keypad/streak/reset never shift between idle/correct/incorrect;
                   // the old min-h-[1.75rem] was smaller than the banner's real
                   // height, which is what caused the layout jump.
+                  // Idle-state content was rendered both ways and compared: a
+                  // small "Enter your answer" caption here read as an orphan,
+                  // disconnected from the actual point of attention (the
+                  // cursor sits up in the equation, not down in this lane) —
+                  // it added visual noise without earning it, since the
+                  // equation's own placeholder + keypad already make the next
+                  // step obvious. Genuinely empty read calmer and more
+                  // worksheet-like, so that's what ships: this lane only ever
+                  // shows something once there's real feedback to give.
                   <div className={`${isPrototype ? 'h-11' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
                   </div>
@@ -434,13 +436,32 @@ export default function PracticeWidget({ config, variant = 'classic', headerSlot
 
             {!isTimed && (
               <div className={`flex items-center justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
-                {/* Streak label — always visible so Reset has context */}
-                <span
-                  key={stats.currentStreak}
-                  className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : (isPrototype ? 'text-[#6B6690]' : 'text-[#A5B4FC]')}`}
-                >
-                  {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
-                </span>
+                {/* Streak: motivational session info, not footer metadata — a
+                    genuinely larger number carries this, not decoration. The
+                    stat is its own self-contained block (icon/number/label)
+                    specifically so a future "Best: N" stat can sit beside it
+                    later (`flex items-center gap-4`) without restructuring
+                    this row; not built now, just not architected against. */}
+                {isPrototype ? (
+                  <div className="flex items-center gap-4">
+                    <div key={stats.currentStreak} className="flex items-baseline gap-1.5 animate-[pop_0.25s_ease-out]">
+                      {stats.currentStreak > 0 && (
+                        <span aria-hidden="true" className="text-lg leading-none">🔥</span>
+                      )}
+                      <span className={`text-2xl font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#8983B8]'}`}>
+                        {stats.currentStreak}
+                      </span>
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B6690]">Streak</span>
+                    </div>
+                  </div>
+                ) : (
+                  <span
+                    key={stats.currentStreak}
+                    className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}
+                  >
+                    {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
+                  </span>
+                )}
 
                 {/* Reset / inline confirm */}
                 {!resetPending ? (
