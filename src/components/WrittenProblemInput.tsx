@@ -33,16 +33,6 @@ export default function WrittenProblemInput({
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
-  // Prototype only (round 4): classic pages keep their existing mount-focus
-  // behavior unchanged (see the two effects further below, gated on
-  // variant !== 'prototype'). The prototype previously auto-focused this
-  // hidden input on mount too, which silently relocated a keyboard user's
-  // focus away from the natural tab order (past the H1/mode-switcher)
-  // before they'd pressed a single key — an unsolicited-focus-move
-  // anti-pattern. This guard skips that very first auto-focus so initial
-  // tab order is untouched there, while keeping the refocus that happens
-  // once a session is already under way, i.e. after each problem transition.
-  const hasMountedRef = useRef(false);
 
   // Fade-in animation on problem change
   useEffect(() => {
@@ -66,16 +56,16 @@ export default function WrittenProblemInput({
     }
   }, [feedbackState, variant]);
 
-  // Prototype: same "clear + refocus on new problem" behavior, but skips
-  // the very first (mount) occurrence — see hasMountedRef above.
+  // Prototype: clear + refocus whenever idle, including on mount. This is a
+  // dedicated single-purpose practice surface — a student should be able to
+  // load/refresh the page and start typing immediately — so immediate
+  // keyboard readiness on load outweighs the earlier concern about
+  // relocating tab order away from the H1/switcher.
   useEffect(() => {
     if (variant !== 'prototype') return;
     if (feedbackState === 'idle') {
       setValue('');
-      if (hasMountedRef.current) {
-        inputRef.current?.focus();
-      }
-      hasMountedRef.current = true;
+      inputRef.current?.focus();
     }
   }, [feedbackState, variant]);
 
@@ -180,7 +170,7 @@ export default function WrittenProblemInput({
             <span className="text-[4.75rem] font-bold text-[#211D4F] leading-none">{problem.operandA}</span>
           </div>
           <div className="flex items-center justify-end gap-3 mt-1">
-            <span className="text-[3rem] font-bold text-[#4F46E5] leading-none">{symbol}</span>
+            <span className="text-[3rem] font-bold text-[#211D4F] leading-none">{symbol}</span>
             <span className="text-[4.75rem] font-bold text-[#211D4F] leading-none">{problem.operandB}</span>
           </div>
           <div className="border-t-4 border-[#211D4F] mt-2" />
@@ -211,7 +201,12 @@ export default function WrittenProblemInput({
             {isPlaceholder ? (
               <span className="text-[4.75rem] font-bold text-[#D7D3EE] inline-flex items-center leading-none">
                 <span aria-hidden="true" className="opacity-0 select-none">0</span>
-                {isFocused && <span className="ml-1 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
+                {isFocused && (
+                  <span
+                    aria-hidden="true"
+                    className="ml-1.5 w-[3px] h-[2.75rem] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite]"
+                  />
+                )}
               </span>
             ) : (
               <span className={`text-[4.75rem] font-bold transition-colors duration-150 leading-none ${answerColorProto}`}>{value}</span>
