@@ -106,32 +106,36 @@ const faqItems = [
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </summary>
           {/*
-            Round 8: below ~480px the H1 row's `flex-wrap` drops this <nav>
-            onto its own line at the row's left margin (the H1 no longer
-            shares the row to anchor against). The menu's `right-0` is
-            relative to <details> (the nearest positioned ancestor, sized to
-            the "Change practice" trigger's own intrinsic width, ~148px) —
-            once <nav> sits alone near the left edge, right-anchoring a
-            224px-wide (w-56) menu from that narrow box pushes its left edge
-            ~60px past the viewport's left edge, clipping the "1-Digit "/
-            "2-Digit " prefix off every option — exactly the text that
-            distinguishes them. Confirmed empirically: wrapped at 440px,
-            not wrapped at 480px, constant ~60px overflow across the entire
-            wrapped range regardless of viewport width (the trigger's own
-            width/position don't change with viewport once stacked). Below
-            480px the menu instead anchors from the LEFT of <details> (left
-            edge = 16px page margin, right edge = 16+224 = 240px, safely
-            inside even a 320px viewport) instead of the right. At 480px+
-            the row never wraps for this H1's length, so `right-0` (flush
-            with the row's true right edge, matching the practice surface
-            below it) is unaffected. The exact 480px cutoff is specific to
-            this page's H1 text length — a future page with a longer H1 (or
-            a shared component) needs to re-derive its own wrap threshold,
-            or better, replace this viewport-width breakpoint with a
-            container query / JS-measured wrap check so it isn't tied to
-            one page's copy.
+            Round 8 (first attempt): below ~480px the H1 row wraps and this
+            <nav> lands alone at the row's left margin, so a static
+            `right-0` (anchored to <details>, sized to the trigger's own
+            ~148px width) pushed the menu off the left edge. A
+            `max-[479px]:left-0` viewport-width override "fixed" that in
+            simulated testing, but a real iPhone exposed the actual flaw:
+            that breakpoint assumes wrap state correlates with viewport
+            width, but flex-wrap is driven by real rendered content width
+            (system font metrics differ from the simulator's), so at some
+            real widths the row was STILL unwrapped (nav flush right, as on
+            desktop) while the viewport was already under 480px — forcing
+            `left-0` there anchored the menu to a trigger sitting near the
+            row's right edge, pushing the menu's right edge far past the
+            viewport and widening the whole document.
+
+            Round 8 (actual fix): stopped guessing wrap state from viewport
+            width entirely. The menu keeps its natural `right-0` (identical
+            to the original desktop-approved position, unaffected here),
+            and a small script below measures the menu's real
+            getBoundingClientRect() against document.documentElement.
+            clientWidth every time it opens (and on resize while open),
+            nudging it via an inline `left`/`right` override only if it
+            would actually overflow either edge. This works regardless of
+            wrap state, font metrics, device, or H1 length — no breakpoint
+            to keep in sync with this page's copy. `max-w-[calc(100vw-2rem)]`
+            below is a static CSS safety net only (keeps the menu narrower
+            than the viewport even before the script runs); the script does
+            the actual positioning.
           */}
-          <div class="absolute right-0 max-[479px]:right-auto max-[479px]:left-0 top-full mt-1.5 z-20 w-56 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
+          <div class="absolute right-0 top-full mt-1.5 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
             <a href="/addition/1-digit" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">1-Digit Addition</a>
             <a href="/addition/2-digit-no-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (No Carry)</a>
             <a href="/addition/2-digit-with-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (Carrying)</a>
@@ -154,7 +158,51 @@ const faqItems = [
       // summary — the others leave focus exactly where the user put it.
       document.querySelectorAll<HTMLDetailsElement>('details[data-dismissable-menu]').forEach((details) => {
         const summary = details.querySelector('summary');
+        const menu = details.querySelector<HTMLElement>(':scope > div');
         const close = () => { details.open = false; };
+
+        // Keep the menu's default CSS position (right-0, flush with the
+        // trigger — same spot it's always occupied) unless that would
+        // actually overflow the viewport, in which case nudge it back in
+        // by exactly the overflow amount. Measures real geometry instead
+        // of assuming a viewport-width breakpoint predicts wrap state —
+        // see the comment above the menu markup for why that assumption
+        // broke on a real device. A fixed page-edge margin (16px) matches
+        // the page's own `px-4` content padding, so the menu never sits
+        // closer to the viewport edge than the content column already does.
+        const EDGE_MARGIN = 16;
+        function clampMenuPosition() {
+          if (!menu) return;
+          // Reset to the CSS default (right-0) before measuring, so every
+          // call starts from the same known position rather than
+          // compounding a previous run's adjustment.
+          menu.style.left = '';
+          menu.style.right = '';
+          const rect = menu.getBoundingClientRect();
+          const viewportWidth = document.documentElement.clientWidth;
+          if (rect.right > viewportWidth - EDGE_MARGIN) {
+            // `right` is a relative offset from the containing block's own
+            // right edge, so adding the overflow amount to it shifts the
+            // menu left by exactly that many px in viewport space —
+            // no containing-block math needed for this direction.
+            menu.style.right = `${Math.max(0, rect.right - (viewportWidth - EDGE_MARGIN))}px`;
+          } else if (rect.left < EDGE_MARGIN) {
+            // `left` IS relative to the containing block (<details>), not
+            // the viewport, so converting a target viewport position back
+            // to a `left` offset requires the containing block's own
+            // viewport position.
+            const detailsRect = details.getBoundingClientRect();
+            menu.style.right = 'auto';
+            menu.style.left = `${EDGE_MARGIN - detailsRect.left}px`;
+          }
+        }
+        details.addEventListener('toggle', () => {
+          if (details.open) clampMenuPosition();
+        });
+        window.addEventListener('resize', () => {
+          if (details.open) clampMenuPosition();
+        });
+
         document.addEventListener('click', (e) => {
           if (details.open && e.target instanceof Node && !details.contains(e.target)) {
             close();
