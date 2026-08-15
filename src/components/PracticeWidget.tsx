@@ -502,8 +502,14 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     rather than by low contrast. Round 8: idle "Reset" label
                     bumped one step (text-xs -> text-sm) for slightly better
                     legibility — still regular weight and the same ink, so
-                    it stays secondary to Streak. The inline confirm state
-                    ("Reset streak?"/Yes/Cancel) is unchanged. */}
+                    it stays secondary to Streak. Round 9 (tablet pass):
+                    the inline confirm ("Reset streak?"/Yes/Cancel) was
+                    still text-xs, a visible step down from the idle
+                    "Reset" label it replaces — bumped to match (text-sm,
+                    px-2.5 touch target) so the idle→confirm transition
+                    doesn't shrink the row's text. Kept regular/semibold
+                    weights and the destructive-red "Yes" as-is; still
+                    compact, not the row's most prominent element. */}
                 {!resetPending ? (
                   <button
                     onClick={() => setResetPending(true)}
@@ -512,17 +518,17 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     Reset
                   </button>
                 ) : (
-                  <div className="flex items-center gap-1">
-                    <span className={`text-xs mr-1 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset streak?</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm mr-0.5 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset streak?</span>
                     <button
                       onClick={handleResetCurrentStreak}
-                      className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                      className="text-sm font-semibold text-white bg-red-500 hover:bg-red-600 px-2.5 py-1 rounded transition-colors"
                     >
                       Yes
                     </button>
                     <button
                       onClick={() => setResetPending(false)}
-                      className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
+                      className={`text-sm font-semibold px-2.5 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
                     >
                       Cancel
                     </button>

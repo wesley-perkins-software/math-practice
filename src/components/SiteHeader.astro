@@ -1,0 +1,91 @@
+---
+/**
+ * Shared site header (brand + primary nav), used by PracticeLayout and
+ * HubLayout. Previously duplicated verbatim in both files with a
+ * `hidden sm:flex` nav that only had two states: no nav (<640px) or the
+ * full 7-link row (>=640px). That row only actually fits without wrapping
+ * starting around 1000-1024px — from 640px up to there, "Math Practice
+ * Online" wrapped onto 2-3 lines and "Speed Drill"/"My Progress" wrapped
+ * mid-label, and the header still overflowed horizontally at some widths
+ * in that range (measured: real horizontal overflow up to ~800px, awkward
+ * multi-line brand/labels up to ~1000px).
+ *
+ * Fix: the full nav row now only renders at `lg` (1024px+) — measured as
+ * the width it first renders on one line with no label wrapping. Below
+ * that, down to `sm` (640px), a menu trigger replaces it, opening a
+ * dropdown with the same links at a comfortable touch size. Below `sm`
+ * nothing changes — mobile's brand-only header (nav reachable via the
+ * footer) is the already-approved design and isn't part of this bug.
+ *
+ * This split happens to land tablet portrait (fits under 1024px wide) on
+ * the menu trigger and tablet landscape (1024px+) on the full row, which
+ * matches actual available width rather than an assumption about the
+ * device category.
+ */
+interface Props {
+  /** Vertical header padding — the two call sites historically differed slightly (py-2.5 vs py-3.5). */
+  paddingY?: string;
+}
+
+const { paddingY = 'py-2.5' } = Astro.props;
+
+const navLinks = [
+  { href: '/addition', label: 'Addition' },
+  { href: '/subtraction', label: 'Subtraction' },
+  { href: '/multiplication', label: 'Multiplication' },
+  { href: '/division', label: 'Division' },
+  { href: '/arithmetic-speed-drill', label: 'Speed Drill' },
+  { href: '/math-worksheets', label: 'Worksheets' },
+  { href: '/progress', label: 'My Progress' },
+];
+---
+
+<header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
+  <div class={`max-w-5xl mx-auto px-4 sm:px-6 ${paddingY} flex items-center justify-between`}>
+    <a href="/" class="flex items-center gap-2 group shrink-0">
+      <span class="w-7 h-7 rounded-lg bg-[#4F46E5] flex items-center justify-center select-none group-hover:bg-[#6366F1] transition-colors shrink-0"><svg viewBox="0 0 24 24" width="14" height="14" fill="white" aria-hidden="true"><path d="M10 3H14V10H21V14H14V21H10V14H3V10H10Z"/></svg></span>
+      <span class="text-base font-bold text-white tracking-tight whitespace-nowrap">Math Practice Online</span>
+    </a>
+
+    <!-- Full nav: only at widths measured to fit all 7 links on one line without wrapping (lg / 1024px+). -->
+    <nav aria-label="Primary" class="hidden lg:flex items-center gap-1">
+      {navLinks.map((link) => (
+        <a href={link.href} class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">{link.label}</a>
+      ))}
+    </nav>
+
+    <!-- Tablet-portrait / narrow menu trigger: fills the gap between "no nav" (<640px, unchanged) and "full row fits" (>=1024px). -->
+    <details class="relative hidden sm:block lg:hidden" data-site-nav-menu>
+      <summary class="list-none flex items-center justify-center w-10 h-10 rounded-lg text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
+        <span class="sr-only">Menu</span>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" width="22" height="22" aria-hidden="true">
+          <path d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </summary>
+      <div class="absolute right-0 top-full mt-2 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] py-1.5">
+        {navLinks.map((link) => (
+          <a href={link.href} class="block px-3.5 py-2.5 text-[15px] text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{link.label}</a>
+        ))}
+      </div>
+    </details>
+  </div>
+</header>
+
+<script>
+  document.querySelectorAll<HTMLDetailsElement>('details[data-site-nav-menu]').forEach((details) => {
+    const summary = details.querySelector('summary');
+    const close = () => { details.open = false; };
+    document.addEventListener('click', (e) => {
+      if (details.open && e.target instanceof Node && !details.contains(e.target)) {
+        close();
+      }
+    });
+    details.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && details.open) {
+        e.preventDefault();
+        close();
+        summary?.focus();
+      }
+    });
+  });
+</script>
