@@ -10,8 +10,8 @@ import type { PracticeConfig } from '@/engine/types';
 
 type Difficulty = '1-digit' | '2-digit-no-carrying' | '2-digit-with-carrying';
 
-const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig; href: string }[] = [
-  { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT, href: '/addition/1-digit' },
+const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; menuLabel: string; config: PracticeConfig; href: string }[] = [
+  { id: '1-digit',  label: '1-Digit',  menuLabel: '1-Digit Addition',  config: ADDITION_1_DIGIT, href: '/addition/1-digit' },
   {
     id: '2-digit-no-carrying',
     label: (
@@ -20,6 +20,7 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
         <span className="block text-[10px] font-normal opacity-60 leading-tight">No Carry</span>
       </>
     ),
+    menuLabel: '2-Digit Addition (No Carry)',
     config: ADDITION_2_DIGIT,
     href: '/addition/2-digit-no-carrying',
   },
@@ -31,6 +32,7 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
         <span className="block text-[10px] font-normal opacity-60 leading-tight">Carrying</span>
       </>
     ),
+    menuLabel: '2-Digit Addition (Carrying)',
     config: ADDITION_2_DIGIT_CARRYING,
     href: '/addition/2-digit-with-carrying',
   },
@@ -65,12 +67,27 @@ export default function AdditionPracticeHub({ active, variant = 'classic' }: Pro
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
-  // Prototype: mode switching moved to a quiet nav next to the H1 (rendered
-  // statically in the .astro page itself — see addition/1-digit.astro) rather
-  // than a prominent tray above the practice card. Round 2 of the redesign
-  // exploration; see the design plan for the evaluation.
+  // Prototype (round 3): mode switching is no longer a standalone row above
+  // or beside the H1 — it's passed into PracticeWidget as its header slot,
+  // becoming the practice surface's own first internal row ("1-Digit
+  // Addition · Change"). Sibling modes stay hidden behind the popover so
+  // they never visually compete with the arithmetic.
   if (variant === 'prototype') {
-    return <PracticeWidget config={selected.config} variant={variant} />;
+    return (
+      <PracticeWidget
+        config={selected.config}
+        variant={variant}
+        headerSlot={
+          <PracticeModeNav
+            items={DIFFICULTIES.map(({ id, label, href, menuLabel }) => ({ id, label, href, menuLabel }))}
+            activeId={active}
+            ariaLabel="Addition difficulty"
+            onItemClick={handleTabClick}
+            variant={variant}
+          />
+        }
+      />
+    );
   }
 
   return (

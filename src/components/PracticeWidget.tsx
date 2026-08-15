@@ -21,9 +21,11 @@ interface Props {
   config: PracticeConfig;
   /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
   variant?: 'classic' | 'prototype';
+  /** Rendered as the practice surface's own first row (round 3: mode switching lives here, not as a separate page-level element). Prototype only. */
+  headerSlot?: React.ReactNode;
 }
 
-export default function PracticeWidget({ config, variant = 'classic' }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', headerSlot }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -363,7 +365,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
     ? 'bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[30rem] mx-auto overflow-hidden'
     : 'bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden';
 
-  const innerPaddingClasses = isPrototype ? 'px-6 py-5' : 'px-4 py-4 md:px-6 md:py-5';
+  const innerPaddingClasses = isPrototype ? 'px-6 pt-4 pb-3' : 'px-4 py-4 md:px-6 md:py-5';
 
   return (
     <div className={wrapperClasses}>
@@ -375,9 +377,14 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
       )}
 
       <div className={innerPaddingClasses}>
+        {/* Practice-surface header: what you're practicing + how to change it.
+            Rendered outside the phase branches so it stays visible whether the
+            surface is active, idle, or showing session-complete results. */}
+        {headerSlot && <div className="mb-2">{headerSlot}</div>}
+
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
-          <div className={`flex flex-col items-center ${isPrototype ? 'gap-3' : 'gap-3 md:gap-4'}`}>
+          <div className={`flex flex-col items-center ${isPrototype ? 'gap-1.5' : 'gap-3 md:gap-4'}`}>
             {/* Timer bar — only for timed mode */}
             {isTimed && (
               <div className="w-full flex items-center justify-between">
@@ -413,7 +420,12 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
                 variant={variant}
                 feedbackContent={(
-                  <div className="min-h-[1.75rem] flex items-center justify-center w-full">
+                  // Fixed height (not min-height) reserved from the start, sized to
+                  // the banner's actual rendered size — this is what makes the
+                  // keypad/streak/reset never shift between idle/correct/incorrect;
+                  // the old min-h-[1.75rem] was smaller than the banner's real
+                  // height, which is what caused the layout jump.
+                  <div className={`${isPrototype ? 'h-11' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
                   </div>
                 )}

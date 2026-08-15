@@ -18,9 +18,18 @@ interface Props {
    * until the pilot is validated — see docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md.
    */
   pilotLayout?: boolean;
+  /**
+   * Defaults to true so every existing page's visible breadcrumb is unchanged.
+   * When false, the breadcrumb `<nav>` is not rendered — but the BreadcrumbList
+   * JSON-LD above is unconditional on `breadcrumb.length`, not on this flag, so
+   * structured data/SEO is unaffected either way. Currently only set false by
+   * the /addition/1-digit practice-surface prototype, which found the visible
+   * breadcrumb redundant with the H1 + global nav on a repeated-use utility page.
+   */
+  breadcrumbVisual?: boolean;
 }
 
-const { title, description, canonical, breadcrumb = [], pilotLayout = false } = Astro.props;
+const { title, description, canonical, breadcrumb = [], pilotLayout = false, breadcrumbVisual = true } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
@@ -70,7 +79,7 @@ const { title, description, canonical, breadcrumb = [], pilotLayout = false } = 
 
     <main class={`max-w-3xl mx-auto px-4 sm:px-6 w-full ${pilotLayout ? 'pt-3 sm:pt-4 pb-10' : 'py-8'}`}>
       <!-- Breadcrumb -->
-      {breadcrumb.length > 0 && (
+      {breadcrumb.length > 0 && breadcrumbVisual && (
         <nav aria-label="Breadcrumb" class={`text-sm text-[#6B7280] flex items-center flex-wrap gap-1 ${pilotLayout ? 'mb-2' : 'mb-4'}`}>
           {breadcrumb.map((item, i) => (
             <>
