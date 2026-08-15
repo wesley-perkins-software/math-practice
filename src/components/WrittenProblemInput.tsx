@@ -143,7 +143,13 @@ export default function WrittenProblemInput({
             verified by rendering "198" and confirming the ones-digit stays
             pixel-aligned with the operand rows, not derived from a formula. */}
         <div
-          className={`font-practice select-none w-[11.5rem] mx-auto transition-opacity duration-200 ease-out ${
+          // Round 5: a static pr-3 lives on the whole column, not just the
+          // answer row — that's what keeps the ones-column right edge
+          // identically aligned across operandA/operandB/answer while also
+          // giving the answer's own focus box room to breathe on its right
+          // side (see below). Padding is the same in every state, so it
+          // does not itself introduce any geometry movement.
+          className={`font-practice select-none w-[11.5rem] pr-3 mx-auto transition-opacity duration-200 ease-out ${
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}
           aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
@@ -171,9 +177,23 @@ export default function WrittenProblemInput({
             <span className="text-[4.75rem] font-bold text-[#211D4F] leading-none">{problem.operandB}</span>
           </div>
           <div className="border-t-4 border-[#211D4F] mt-2" />
+          {/*
+            Round 5: this box is now visible at rest too (a quiet 1.5px
+            border a few steps off the card's own white background) instead
+            of appearing only once focused — it reads as "this is where you
+            type" the moment the problem loads, not just after the first
+            click/tab. Focus swaps it for a much stronger indigo border plus
+            a soft tinted fill, rather than only adding a ring on top of an
+            invisible box. Internal padding (pl-2.5 pr-3.5) is what fixes
+            the caret/edge collision: the answer digits sit inset from the
+            box's own border on every side, so a 3-digit answer's caret
+            never touches the border the way it did with zero inset.
+          */}
           <div
-            className={`text-right mt-1 min-h-[3.75rem] flex items-center justify-end rounded-lg transition-shadow ${
-              isFocused ? 'ring-2 ring-[#4F46E5]/45 ring-offset-2 ring-offset-white' : ''
+            className={`text-right mt-1.5 min-h-[3.75rem] flex items-center justify-end rounded-xl border-[1.5px] pl-2.5 pr-3.5 transition-colors duration-150 ${
+              isFocused
+                ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
+                : 'border-[#8983B8] bg-transparent'
             }`}
           >
             {isPlaceholder ? (

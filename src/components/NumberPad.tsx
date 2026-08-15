@@ -33,8 +33,22 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
     // Considered, constant size across breakpoints rather than the classic
     // variant's mobile-larger/desktop-smaller inversion: sized for comfortable
     // touch AND easy pointer use, not derived mechanically from viewport width.
+    //
+    // Round 5: disabled no longer drops opacity-40 across the board — at
+    // 40% every key faded to near-illegible gray fog right as the feedback
+    // banner appeared, undermining the very moment a child most wants to
+    // glance down and see the number they just entered. Interactivity is
+    // now suppressed by flattening the key (no 3D "lift" shadow, no hover
+    // background swap, cursor-not-allowed) while digit contrast stays
+    // strong — the numerals are only fractionally softened
+    // (disabled:text-[#4A4570], a small step off full-strength ink), and
+    // the submit key keeps most of its brand-color fill so the whole
+    // instrument still reads as "the same instrument," just momentarily
+    // not accepting input, instead of "half the UI turned off."
     const keyBaseClasses =
-      'font-practice h-14 rounded-2xl text-2xl font-bold transition-all duration-100 ease-out disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4F46E5]';
+      'font-practice h-14 rounded-2xl text-2xl font-bold transition-all duration-100 ease-out disabled:cursor-not-allowed disabled:shadow-none disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4F46E5]';
+    const digitKeyClasses =
+      `${keyBaseClasses} bg-white border border-[#E4E1F5] text-[#211D4F] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px] disabled:bg-[#FBFAFE] disabled:border-[#EEECF7] disabled:text-[#4A4570]`;
     return (
       // Ergonomic keypad width is independent of the surface's own width —
       // capped here so a wider desktop surface gives the composition more
@@ -49,7 +63,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
                 onMouseDown={prevent}
                 onClick={() => !disabled && onDigit(digit)}
                 disabled={disabled}
-                className={`${keyBaseClasses} bg-white border border-[#E4E1F5] text-[#211D4F] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px]`}
+                className={digitKeyClasses}
               >
                 {digit}
               </button>
@@ -63,7 +77,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
             onClick={() => !disabled && onBackspace()}
             disabled={disabled}
             aria-label="Backspace"
-            className={`${keyBaseClasses} bg-[#FAF9FE] border border-[#E4E1F5] text-[#6B6690] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px] flex items-center justify-center`}
+            className={`${keyBaseClasses} bg-[#FAF9FE] border border-[#E4E1F5] text-[#6B6690] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px] flex items-center justify-center disabled:bg-[#FBFAFE] disabled:border-[#EEECF7] disabled:text-[#8983B8]`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true">
               <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
@@ -76,7 +90,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
             onMouseDown={prevent}
             onClick={() => !disabled && onDigit('0')}
             disabled={disabled}
-            className={`${keyBaseClasses} bg-white border border-[#E4E1F5] text-[#211D4F] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px]`}
+            className={digitKeyClasses}
           >
             0
           </button>
@@ -86,7 +100,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
             onClick={() => !disabled && onSubmit()}
             disabled={disabled}
             aria-label="Submit answer"
-            className={`${keyBaseClasses} bg-[#4F46E5] hover:bg-[#3E35C7] text-white shadow-[0_3px_0_0_#3730A3,0_4px_12px_rgba(79,70,229,0.30)] hover:shadow-[0_3px_0_0_#312E81,0_6px_16px_rgba(79,70,229,0.40)] active:shadow-[0_1px_0_0_#3730A3] active:translate-y-[2px]`}
+            className={`${keyBaseClasses} bg-[#4F46E5] hover:bg-[#3E35C7] text-white shadow-[0_3px_0_0_#3730A3,0_4px_12px_rgba(79,70,229,0.30)] hover:shadow-[0_3px_0_0_#312E81,0_6px_16px_rgba(79,70,229,0.40)] active:shadow-[0_1px_0_0_#3730A3] active:translate-y-[2px] disabled:bg-[#8983D6] disabled:shadow-none`}
           >
             ✓
           </button>

@@ -6,24 +6,47 @@
  * Not wired into BaseLayout/global.css: this file is imported only by the
  * one prototype page so nothing else on the site is affected yet.
  *
- * Round 2: replaced Atkinson Hyperlegible Next with Lexend. Atkinson's
- * accessibility-first construction produced a narrow, technical-looking
- * zero that read as "data entry" rather than a conventional textbook
- * numeral; Lexend is a reading-research typeface (validated for student
- * legibility) with a plain unslashed 0, a clearly-flagged 1, and
- * conventional 2-9 shapes that don't skew playful/juvenile across the
- * full K-5 age range. See the design-plan writeup for the Nunito
- * alternative that was also evaluated and rejected only by a narrow margin.
+ * Round 2: replaced Atkinson Hyperlegible Next with Lexend (accessibility-
+ * first construction produced a narrow, technical-looking zero).
+ *
+ * Round 5: replaced Lexend with Figtree after a real bake-off rendered in
+ * this component (operands/operator/rule/answer at the actual 76px display
+ * size, plus the keypad at its 20px key size — never judged from a
+ * specimen page). Candidates tested: Lexend (control), Atkinson
+ * Hyperlegible Next, Nunito, Figtree, Manrope, rendered against 1+4, 6+6,
+ * 9+8, 0+7, 11/17/99, 100/198, and an operator/disambiguation string
+ * (0 O 1 I l 6 9 3 8 5, +, −, ×, ÷). Lexend's own complaint held up under
+ * test: its digits are unusually WIDE for their height, so even at reduced
+ * weight (600–650) they still read as bulky/blobby at 76px — an inherent
+ * proportion of the face, not just a weight problem (confirmed by
+ * re-rendering Lexend at 600/650 alongside the finalists: still the
+ * heaviest-looking of the set at equal weight). Nunito's fully rounded
+ * terminals read a step too far toward preschool/cartoon at this display
+ * size for a K-5-through-parent audience. Atkinson Hyperlegible Next was a
+ * close second — genuinely excellent 6/9 and 3/8 disambiguation from its
+ * accessibility-first construction — but reads slightly more "clinical/
+ * data-entry" than "textbook" at large display size, echoing the same
+ * quality that got it dropped in round 2. Figtree wins: materially
+ * narrower, calmer digit proportions than Lexend at the same weight (so it
+ * doesn't need to be lightened to stop looking heavy), fully conventional
+ * unambiguous 0/1/6/9/3/8/5 shapes, a true multiplication/division/minus
+ * set with correct optical weight against the digits, and it ships as a
+ * genuine variable font (400–800 in one file) so no extra static cuts are
+ * needed. One family still covers both the arithmetic display and the
+ * surface's interface text (streak, "Change level", feedback), per the
+ * typography reference's guidance not to introduce a second family unless
+ * a role genuinely can't be served by the first.
  */
 @font-face {
-  font-family: 'Lexend Variable';
-  src: url('/fonts/lexend-variable.woff2') format('woff2-variations');
+  font-family: 'Figtree Variable';
+  src: url('/fonts/figtree-variable.woff2') format('woff2-variations');
   font-weight: 400 800;
   font-style: normal;
   font-display: swap;
 }
 
 .font-practice {
-  font-family: 'Lexend Variable', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-family: 'Figtree Variable', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-optical-sizing: auto;
   font-variant-numeric: tabular-nums;
 }
