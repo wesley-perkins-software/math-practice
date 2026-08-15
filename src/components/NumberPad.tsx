@@ -55,16 +55,19 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
     // the surface either way — this wasn't a "shrink until it fits"
     // compression, just recovering slack that was there.
     const keyBaseClasses =
-      'font-practice h-[3.25rem] rounded-[0.875rem] text-[1.375rem] font-bold transition-all duration-100 ease-out disabled:cursor-not-allowed disabled:shadow-none disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4F46E5]';
+      'font-practice h-[length:var(--practice-key-h)] rounded-[length:var(--practice-key-radius)] text-[length:var(--practice-key-font)] font-bold transition-all duration-100 ease-out disabled:cursor-not-allowed disabled:shadow-none disabled:pointer-events-none focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4F46E5]';
     const digitKeyClasses =
       `${keyBaseClasses} bg-white border border-[#E4E1F5] text-[#211D4F] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px] disabled:bg-[#FBFAFE] disabled:border-[#EEECF7] disabled:text-[#4A4570]`;
     return (
       // Ergonomic keypad width is independent of the surface's own width —
       // capped here so a wider desktop surface gives the composition more
       // presence/whitespace without stretching buttons past a comfortable size.
-      <div className="w-full max-w-[17rem] mx-auto select-none">
+      // Round 9: reads from --practice-keypad-max-w, which is itself larger
+      // on touch tablets (see practice-surface-prototype.css) — real keys,
+      // not a shrunken desktop keypad with room to spare around it.
+      <div className="w-full max-w-[length:var(--practice-keypad-max-w)] mx-auto select-none">
         {ROWS_ASCENDING.map((row) => (
-          <div key={row[0]} className="grid grid-cols-3 gap-1.5 mb-1.5">
+          <div key={row[0]} className="grid grid-cols-3 gap-[length:var(--practice-key-gap)] mb-[length:var(--practice-key-gap)]">
             {row.map((digit) => (
               <button
                 key={digit}
@@ -79,7 +82,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
             ))}
           </div>
         ))}
-        <div className="grid grid-cols-3 gap-1.5">
+        <div className="grid grid-cols-3 gap-[length:var(--practice-key-gap)]">
           <button
             type="button"
             onMouseDown={prevent}
@@ -88,7 +91,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
             aria-label="Backspace"
             className={`${keyBaseClasses} bg-[#FAF9FE] border border-[#E4E1F5] text-[#6B6690] shadow-[0_2px_0_0_#D7D3EE] hover:bg-[#F7F6FD] active:shadow-none active:translate-y-[2px] flex items-center justify-center disabled:bg-[#FBFAFE] disabled:border-[#EEECF7] disabled:text-[#8983B8]`}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-6 h-6" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-[length:var(--practice-key-icon)] h-[length:var(--practice-key-icon)]" aria-hidden="true">
               <path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z" />
               <line x1="18" y1="9" x2="12" y2="15" />
               <line x1="12" y1="9" x2="18" y2="15" />

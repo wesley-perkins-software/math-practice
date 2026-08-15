@@ -146,7 +146,7 @@ export default function WrittenProblemInput({
           // border still needs room past that axis for the caret; that's
           // solved on the box itself below (pr-3.5 cancelled by a matching
           // -mr-3.5), not by moving this shared axis.
-          className={`font-practice select-none w-[11.5rem] mx-auto transition-opacity duration-200 ease-out ${
+          className={`font-practice select-none w-[length:var(--practice-column-w)] mx-auto transition-opacity duration-200 ease-out ${
             isVisible ? 'opacity-100' : 'opacity-0'
           }`}
           aria-label={`What is ${problem.operandA} ${symbol} ${problem.operandB}?`}
@@ -167,11 +167,11 @@ export default function WrittenProblemInput({
           />
 
           <div className="text-right">
-            <span className="text-[4.75rem] font-bold text-[#211D4F] leading-none">{problem.operandA}</span>
+            <span className="text-[length:var(--practice-operand-size)] font-bold text-[#211D4F] leading-none">{problem.operandA}</span>
           </div>
           <div className="flex items-center justify-end gap-3 mt-1">
-            <span className="text-[3rem] font-bold text-[#211D4F] leading-none">{symbol}</span>
-            <span className="text-[4.75rem] font-bold text-[#211D4F] leading-none">{problem.operandB}</span>
+            <span className="text-[length:var(--practice-operator-size)] font-bold text-[#211D4F] leading-none">{symbol}</span>
+            <span className="text-[length:var(--practice-operand-size)] font-bold text-[#211D4F] leading-none">{problem.operandB}</span>
           </div>
           <div className="border-t-4 border-[#211D4F] mt-2" />
           {/*
@@ -192,24 +192,24 @@ export default function WrittenProblemInput({
             digit alignment is untouched, caret containment is real.
           */}
           <div
-            className={`text-right mt-1.5 min-h-[3.75rem] flex items-center justify-end rounded-xl border-[1.5px] pl-2.5 pr-3.5 -mr-3.5 transition-colors duration-150 ${
+            className={`text-right mt-1.5 min-h-[length:var(--practice-answer-min-h)] flex items-center justify-end rounded-xl border-[1.5px] pl-2.5 pr-3.5 -mr-3.5 transition-colors duration-150 ${
               isFocused
                 ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
                 : 'border-[#8983B8] bg-transparent'
             }`}
           >
             {isPlaceholder ? (
-              <span className="text-[4.75rem] font-bold text-[#D7D3EE] inline-flex items-center leading-none">
+              <span className="text-[length:var(--practice-operand-size)] font-bold text-[#D7D3EE] inline-flex items-center leading-none">
                 <span aria-hidden="true" className="opacity-0 select-none">0</span>
                 {isFocused && (
                   <span
                     aria-hidden="true"
-                    className="ml-1.5 w-[3px] h-[2.75rem] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite]"
+                    className="ml-1.5 w-[3px] h-[length:var(--practice-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite]"
                   />
                 )}
               </span>
             ) : (
-              <span className={`text-[4.75rem] font-bold transition-colors duration-150 leading-none ${answerColorProto}`}>{value}</span>
+              <span className={`text-[length:var(--practice-operand-size)] font-bold transition-colors duration-150 leading-none ${answerColorProto}`}>{value}</span>
             )}
           </div>
         </div>

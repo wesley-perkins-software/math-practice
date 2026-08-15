@@ -35,7 +35,7 @@ export default function FeedbackBanner({ state, correctAnswer, correctRemainder,
       <div
         aria-live="polite"
         aria-atomic="true"
-        className={`font-practice w-full flex items-center justify-center gap-2 text-base font-bold px-4 py-2.5 rounded-xl animate-[fadeIn_0.15s_ease-out] ${
+        className={`font-practice w-full flex items-center justify-center gap-2 text-[length:var(--practice-feedback-text)] font-bold px-4 py-[length:var(--practice-feedback-py)] rounded-xl animate-[fadeIn_0.15s_ease-out] ${
           isCorrect ? 'bg-[#047857] text-white' : 'bg-[#DC2626] text-white'
         }`}
       >
