@@ -38,11 +38,13 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
 
 interface Props {
   active: Difficulty;
+  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  variant?: 'classic' | 'prototype';
 }
 
 const TAB_SCROLL_KEY = 'addition-practice:scroll-y';
 
-export default function AdditionPracticeHub({ active }: Props) {
+export default function AdditionPracticeHub({ active, variant = 'classic' }: Props) {
   useEffect(() => {
     const saved = sessionStorage.getItem(TAB_SCROLL_KEY);
     if (!saved) return;
@@ -63,6 +65,16 @@ export default function AdditionPracticeHub({ active }: Props) {
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
+  // Prototype (round 4): mode switching lives on the H1 row instead, as
+  // static markup in addition/1-digit.astro — not as a React-rendered row
+  // here. That's the point of the pattern being tested: "H1 + contextual
+  // switcher" should work as a plain per-page Astro construct so a future
+  // page (e.g. times-tables) can reuse it without needing a component like
+  // this one at all. Nothing to render here for mode-switching anymore.
+  if (variant === 'prototype') {
+    return <PracticeWidget config={selected.config} variant={variant} />;
+  }
+
   return (
     <>
       <PracticeModeNav
@@ -71,7 +83,7 @@ export default function AdditionPracticeHub({ active }: Props) {
         ariaLabel="Addition difficulty"
         onItemClick={handleTabClick}
       />
-      <PracticeWidget config={selected.config} />
+      <PracticeWidget config={selected.config} variant={variant} />
     </>
   );
 }

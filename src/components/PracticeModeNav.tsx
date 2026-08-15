@@ -17,11 +17,17 @@ interface Props {
  * (distinct URL), so this is a labeled nav with aria-current="page" —
  * not a tablist, which implies a same-page panel-switching contract this
  * component doesn't implement.
+ *
+ * The /addition/1-digit prototype no longer uses this component — its mode
+ * switcher moved to a plain static H1-row pattern in the .astro page itself
+ * (see addition/1-digit.astro), since the goal there is a per-page pattern
+ * other pages can copy without needing a React component at all. This stays
+ * as the classic tab tray used by every other practice page.
  */
 export default function PracticeModeNav({ items, activeId, ariaLabel, onItemClick, extra }: Props) {
   return (
-    <div className="w-full max-w-lg mx-auto mb-2">
-      <nav aria-label={ariaLabel} className="flex gap-1 p-1 bg-[#EEF2FF] border border-[#E0E7FF] rounded-xl">
+    <div className="w-full mx-auto mb-3 max-w-lg">
+      <nav aria-label={ariaLabel} className="flex gap-1 p-1 rounded-xl bg-[#EEF2FF] border border-[#E0E7FF]">
         {items.map(({ id, label, href }) => {
           const isActive = id === activeId;
           return (

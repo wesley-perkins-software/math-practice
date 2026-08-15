@@ -19,9 +19,11 @@ type FeedbackState = 'correct' | 'incorrect' | 'hidden';
 
 interface Props {
   config: PracticeConfig;
+  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  variant?: 'classic' | 'prototype';
 }
 
-export default function PracticeWidget({ config }: Props) {
+export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -350,15 +352,32 @@ export default function PracticeWidget({ config }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className="bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden">
-      {/* ── GRADIENT ACCENT BAR ─────────────────────── */}
-      <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
+  const isPrototype = variant === 'prototype';
 
-      <div className="px-4 py-4 md:px-6 md:py-5">
+  // Surface width, arithmetic width, and keypad width are three independent
+  // decisions (round 2 of the exploration): the surface itself is widened to
+  // ~30rem to give it real presence on desktop, while the equation column
+  // stays intrinsic and the keypad is separately capped at 18rem — neither
+  // inner control stretches just because the surface has more room.
+  const wrapperClasses = isPrototype
+    ? 'bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[30rem] mx-auto overflow-hidden'
+    : 'bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden';
+
+  const innerPaddingClasses = isPrototype ? 'px-6 pt-4 pb-3' : 'px-4 py-4 md:px-6 md:py-5';
+
+  return (
+    <div className={wrapperClasses}>
+      {/* Gradient accent bar — classic only; the prototype surface relies on its
+          bordered surface + the brand-colored submit key instead of a decorative
+          top bar, per the audit's note that gradients should solve something. */}
+      {!isPrototype && (
+        <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
+      )}
+
+      <div className={innerPaddingClasses}>
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
-          <div className="flex flex-col items-center gap-3 md:gap-4">
+          <div className={`flex flex-col items-center ${isPrototype ? 'gap-1.5' : 'gap-3 md:gap-4'}`}>
             {/* Timer bar — only for timed mode */}
             {isTimed && (
               <div className="w-full flex items-center justify-between">
@@ -392,8 +411,23 @@ export default function PracticeWidget({ config }: Props) {
                 onSubmit={handleAnswer}
                 disabled={feedbackState !== 'hidden'}
                 feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                variant={variant}
                 feedbackContent={(
-                  <div className="min-h-[1.75rem] flex items-center justify-center w-full">
+                  // Fixed height (not min-height) reserved from the start, sized to
+                  // the banner's actual rendered size — this is what makes the
+                  // keypad/streak/reset never shift between idle/correct/incorrect;
+                  // the old min-h-[1.75rem] was smaller than the banner's real
+                  // height, which is what caused the layout jump.
+                  // Idle-state content was rendered both ways and compared: a
+                  // small "Enter your answer" caption here read as an orphan,
+                  // disconnected from the actual point of attention (the
+                  // cursor sits up in the equation, not down in this lane) —
+                  // it added visual noise without earning it, since the
+                  // equation's own placeholder + keypad already make the next
+                  // step obvious. Genuinely empty read calmer and more
+                  // worksheet-like, so that's what ships: this lane only ever
+                  // shows something once there's real feedback to give.
+                  <div className={`${isPrototype ? 'h-11' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
                   </div>
                 )}
@@ -401,26 +435,45 @@ export default function PracticeWidget({ config }: Props) {
             )}
 
             {!isTimed && (
-              <div className="flex items-center justify-between w-full">
-                {/* Streak label — always visible so Reset has context */}
-                <span
-                  key={stats.currentStreak}
-                  className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}
-                >
-                  {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
-                </span>
+              <div className={`flex items-center justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
+                {/* Streak: motivational session info, not footer metadata — a
+                    genuinely larger number carries this, not decoration. The
+                    stat is its own self-contained block (icon/number/label)
+                    specifically so a future "Best: N" stat can sit beside it
+                    later (`flex items-center gap-4`) without restructuring
+                    this row; not built now, just not architected against. */}
+                {isPrototype ? (
+                  <div className="flex items-center gap-4">
+                    <div key={stats.currentStreak} className="flex items-baseline gap-1.5 animate-[pop_0.25s_ease-out]">
+                      {stats.currentStreak > 0 && (
+                        <span aria-hidden="true" className="text-lg leading-none">🔥</span>
+                      )}
+                      <span className={`text-2xl font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#8983B8]'}`}>
+                        {stats.currentStreak}
+                      </span>
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#6B6690]">Streak</span>
+                    </div>
+                  </div>
+                ) : (
+                  <span
+                    key={stats.currentStreak}
+                    className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}
+                  >
+                    {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
+                  </span>
+                )}
 
                 {/* Reset / inline confirm */}
                 {!resetPending ? (
                   <button
                     onClick={() => setResetPending(true)}
-                    className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
+                    className={`text-xs transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#6B6690] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
                 ) : (
                   <div className="flex items-center gap-1">
-                    <span className="text-xs text-[#6B7280] mr-1">Reset streak?</span>
+                    <span className={`text-xs mr-1 ${isPrototype ? 'text-[#6B6690]' : 'text-[#6B7280]'}`}>Reset streak?</span>
                     <button
                       onClick={handleResetCurrentStreak}
                       className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
@@ -429,7 +482,7 @@ export default function PracticeWidget({ config }: Props) {
                     </button>
                     <button
                       onClick={() => setResetPending(false)}
-                      className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
+                      className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${isPrototype ? 'text-[#6B6690] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
                     >
                       Cancel
                     </button>

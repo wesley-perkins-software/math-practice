@@ -1,0 +1,29 @@
+/*
+ * Prototype-only typography for the redesigned practice surface
+ * (/addition/1-digit). Self-hosted, single variable-font family covering
+ * both interface and numeral roles inside the practice surface — see the
+ * frontend-design typography evaluation in the design plan for why.
+ * Not wired into BaseLayout/global.css: this file is imported only by the
+ * one prototype page so nothing else on the site is affected yet.
+ *
+ * Round 2: replaced Atkinson Hyperlegible Next with Lexend. Atkinson's
+ * accessibility-first construction produced a narrow, technical-looking
+ * zero that read as "data entry" rather than a conventional textbook
+ * numeral; Lexend is a reading-research typeface (validated for student
+ * legibility) with a plain unslashed 0, a clearly-flagged 1, and
+ * conventional 2-9 shapes that don't skew playful/juvenile across the
+ * full K-5 age range. See the design-plan writeup for the Nunito
+ * alternative that was also evaluated and rejected only by a narrow margin.
+ */
+@font-face {
+  font-family: 'Lexend Variable';
+  src: url('/fonts/lexend-variable.woff2') format('woff2-variations');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-practice {
+  font-family: 'Lexend Variable', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-variant-numeric: tabular-nums;
+}

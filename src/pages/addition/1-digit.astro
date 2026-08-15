@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import AdditionPracticeHub from '@/components/AdditionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -40,6 +41,7 @@ const faqItems = [
   canonical={`${SITE}/addition/1-digit`}
   pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '1-Digit Addition' }]}
+  breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -63,13 +65,63 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">1-Digit Addition Practice</h1>
+  <Fragment slot="h1">
+    <!--
+      Round 4: no visible breadcrumb (breadcrumbVisual={false} above — JSON-LD
+      breadcrumb structured data is unaffected). Mode switching moved again —
+      out of the practice surface (round 3) and onto the H1 row itself, as
+      the reusable "H1 + contextual switcher" pattern: plain static Astro
+      markup (no React, no shared component), so a future page like a
+      times-table practice page can copy this block and swap in its own
+      label/links without needing anything from this file. The practice
+      surface no longer repeats "1-Digit Addition" internally — the H1 (and
+      this switcher) is the single place that states it.
+    -->
+    <div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
+      <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">1-Digit Addition Practice</h1>
+      <nav aria-label="Change practice level" class="font-practice">
+        <details class="relative" data-dismissable-menu>
+          <summary class="list-none flex items-center gap-1 text-sm font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
+            Change level
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          </summary>
+          <div class="absolute right-0 top-full mt-1.5 z-20 w-56 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
+            <a href="/addition/1-digit" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">1-Digit Addition</a>
+            <a href="/addition/2-digit-no-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (No Carry)</a>
+            <a href="/addition/2-digit-with-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (Carrying)</a>
+          </div>
+        </details>
+      </nav>
+    </div>
+    <script>
+      // Progressive enhancement over the native <details>/<summary> disclosure
+      // above: closes on Escape (returning focus to the summary that opened
+      // it, per standard focus-management practice) and on an outside click.
+      // Framework-agnostic on purpose — this is meant to be copy-pasteable
+      // for any future page using the same H1-row switcher pattern.
+      document.querySelectorAll<HTMLDetailsElement>('details[data-dismissable-menu]').forEach((details) => {
+        const summary = details.querySelector('summary');
+        document.addEventListener('click', (e) => {
+          if (details.open && e.target instanceof Node && !details.contains(e.target)) {
+            details.open = false;
+          }
+        });
+        details.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && details.open) {
+            e.preventDefault();
+            details.open = false;
+            summary?.focus();
+          }
+        });
+      });
+    </script>
+  </Fragment>
 
   <Fragment slot="quick-answer">
     <p>1-digit addition combines two numbers from 0–9 into a single sum, such as 6 + 7 = 13. Mastering all 81 addition facts from 1+1 to 9+9 is the foundation for every later arithmetic skill, including carrying, multiplication, and mental math.</p>
   </Fragment>
 
-  <AdditionPracticeHub slot="widget" active="1-digit" client:load />
+  <AdditionPracticeHub slot="widget" active="1-digit" variant="prototype" client:load />
 
   <Fragment slot="intro">
     <p>This page is built for kindergartners and first graders working toward fluent single-digit addition, as well as parents and teachers looking for a quick way to check a child's recall speed. Problems are drawn from all 81 addition facts, with extra repetition on sums greater than 9, the facts most students find hardest to recall instantly.</p>
