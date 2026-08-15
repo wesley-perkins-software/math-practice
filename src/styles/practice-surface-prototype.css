@@ -50,3 +50,99 @@
   font-optical-sizing: auto;
   font-variant-numeric: tabular-nums;
 }
+
+/*
+ * Tablet scale tokens (round 9 — tablet design pass).
+ *
+ * Problem: the prototype surface used one constant size at every viewport
+ * (round 6's deliberate choice — see NumberPad.tsx). That's correct for
+ * "mobile vs. desktop shouldn't invert sizing," but on a real iPad it read
+ * as the desktop-sized card simply floating in more canvas: the card,
+ * arithmetic, answer field, and keypad were pixel-identical to desktop, at
+ * a screen that's held closer and driven entirely by touch.
+ *
+ * Fix: every dimension the instrument uses is a custom property, scoped to
+ * [data-practice-instrument] (the surface's own root) with a single default
+ * set (unchanged from before this round) and one override set for the
+ * touch-tablet range. Tuning is now one place, not scattered arbitrary
+ * values through three components.
+ *
+ * The override is gated on BOTH a coarse pointer AND a width range, not
+ * width alone — this is the fix for a real ambiguity, not defensive
+ * boilerplate: 1024-1366px is simultaneously "iPad landscape" (should get
+ * the larger touch-oriented sizing) and "a resized desktop browser window
+ * or a small laptop" (should not — a mouse-driven user at that width isn't
+ * touching the screen from arm's length, they're the same desktop context
+ * as 1440px, just narrower). `pointer: coarse` is true on essentially every
+ * tablet's primary input and false on mouse/trackpad desktops regardless of
+ * window width, so it's the one signal that actually distinguishes the two
+ * without guessing from width alone. The width range on top of it keeps a
+ * touchscreen kiosk/TV at 1920px+ from also picking up tablet-scale sizing
+ * meant for a device held in the hands.
+ */
+[data-practice-instrument] {
+  --practice-card-max-w: 30rem;
+  --practice-card-px: 1.5rem;
+  --practice-card-pt: 1rem;
+  --practice-card-pb: 0.75rem;
+  --practice-stack-gap: 0.375rem;
+  --practice-column-w: 11.5rem;
+  --practice-operand-size: 4.75rem;
+  --practice-operator-size: 3rem;
+  --practice-answer-min-h: 3.75rem;
+  --practice-caret-h: 2.75rem;
+  --practice-feedback-h: 2.5rem;
+  --practice-feedback-max-w: 17rem;
+  --practice-feedback-text: 1rem;
+  --practice-feedback-py: 0.625rem;
+  --practice-keypad-max-w: 17rem;
+  --practice-key-h: 3.25rem;
+  --practice-key-font: 1.375rem;
+  --practice-key-gap: 0.375rem;
+  --practice-key-radius: 0.875rem;
+  --practice-key-icon: 1.5rem;
+}
+
+@media (pointer: coarse) and (min-width: 640px) and (max-width: 1366px) {
+  [data-practice-instrument] {
+    --practice-card-max-w: 34rem;
+    --practice-card-px: 2rem;
+    --practice-card-pt: 1.5rem;
+    --practice-card-pb: 1.25rem;
+    --practice-stack-gap: 0.625rem;
+    --practice-column-w: 13rem;
+    --practice-operand-size: 5.25rem;
+    --practice-operator-size: 3.375rem;
+    --practice-answer-min-h: 4.25rem;
+    --practice-caret-h: 3.125rem;
+    --practice-feedback-h: 2.75rem;
+    --practice-feedback-max-w: 19.25rem;
+    --practice-feedback-text: 1.0625rem;
+    --practice-feedback-py: 0.75rem;
+    --practice-keypad-max-w: 19.25rem;
+    --practice-key-h: 3.625rem;
+    --practice-key-font: 1.5rem;
+    --practice-key-gap: 0.5rem;
+    --practice-key-radius: 1rem;
+    --practice-key-icon: 1.625rem;
+  }
+}
+
+/*
+ * Short-landscape recovery: on the shortest realistic tablet-landscape
+ * height (1024x768 is the older/smaller iPad's exact landscape
+ * resolution), the enlarged card above pushes the Streak/Reset row a
+ * little below the fold. Per the brief, that's an acceptable trade-off in
+ * landscape rather than something to fix by shrinking touch controls — but
+ * spacing can still adapt modestly first. This trims only the card's own
+ * padding and inter-element gap (never arithmetic/answer/keypad sizing)
+ * back toward the default-density values, clawing back real space without
+ * touching anything a finger has to hit.
+ */
+@media (pointer: coarse) and (min-width: 640px) and (max-width: 1366px) and (max-height: 850px) {
+  [data-practice-instrument] {
+    --practice-card-pt: 1rem;
+    --practice-card-pb: 0.75rem;
+    --practice-stack-gap: 0.375rem;
+  }
+}

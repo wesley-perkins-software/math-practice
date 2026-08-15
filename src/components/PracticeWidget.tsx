@@ -359,11 +359,20 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   // ~30rem to give it real presence on desktop, while the equation column
   // stays intrinsic and the keypad is separately capped at 18rem — neither
   // inner control stretches just because the surface has more room.
+  //
+  // Round 9: max-width now reads from --practice-card-max-w (defined on
+  // [data-practice-instrument] in practice-surface-prototype.css) instead of
+  // a fixed 30rem — that variable is itself larger on touch tablets, so the
+  // card genuinely widens there instead of floating, desktop-sized, in more
+  // canvas. See that file's comment for why the override is scoped to a
+  // coarse pointer, not just a wide viewport.
   const wrapperClasses = isPrototype
-    ? 'bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[30rem] mx-auto overflow-hidden'
+    ? 'bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[length:var(--practice-card-max-w)] mx-auto overflow-hidden'
     : 'bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden';
 
-  const innerPaddingClasses = isPrototype ? 'px-6 pt-4 pb-3' : 'px-4 py-4 md:px-6 md:py-5';
+  const innerPaddingClasses = isPrototype
+    ? 'px-[length:var(--practice-card-px)] pt-[length:var(--practice-card-pt)] pb-[length:var(--practice-card-pb)]'
+    : 'px-4 py-4 md:px-6 md:py-5';
 
   return (
     // data-practice-instrument: lets the H1-row switcher's vanilla script
@@ -382,7 +391,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
       <div className={innerPaddingClasses}>
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
-          <div className={`flex flex-col items-center ${isPrototype ? 'gap-1.5' : 'gap-3 md:gap-4'}`}>
+          <div className={`flex flex-col items-center ${isPrototype ? 'gap-[length:var(--practice-stack-gap)]' : 'gap-3 md:gap-4'}`}>
             {/* Timer bar — only for timed mode */}
             {isTimed && (
               <div className="w-full flex items-center justify-between">
@@ -432,7 +441,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   // step obvious. Genuinely empty read calmer and more
                   // worksheet-like, so that's what ships: this lane only ever
                   // shows something once there's real feedback to give.
-                  <div className={`${isPrototype ? 'h-10 max-w-[17rem] mx-auto' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
+                  <div className={`${isPrototype ? 'h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} variant={variant} />
                   </div>
                 )}
@@ -502,8 +511,14 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     rather than by low contrast. Round 8: idle "Reset" label
                     bumped one step (text-xs -> text-sm) for slightly better
                     legibility — still regular weight and the same ink, so
-                    it stays secondary to Streak. The inline confirm state
-                    ("Reset streak?"/Yes/Cancel) is unchanged. */}
+                    it stays secondary to Streak. Round 9 (tablet pass):
+                    the inline confirm ("Reset streak?"/Yes/Cancel) was
+                    still text-xs, a visible step down from the idle
+                    "Reset" label it replaces — bumped to match (text-sm,
+                    px-2.5 touch target) so the idle→confirm transition
+                    doesn't shrink the row's text. Kept regular/semibold
+                    weights and the destructive-red "Yes" as-is; still
+                    compact, not the row's most prominent element. */}
                 {!resetPending ? (
                   <button
                     onClick={() => setResetPending(true)}
@@ -512,17 +527,17 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     Reset
                   </button>
                 ) : (
-                  <div className="flex items-center gap-1">
-                    <span className={`text-xs mr-1 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset streak?</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm mr-0.5 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset streak?</span>
                     <button
                       onClick={handleResetCurrentStreak}
-                      className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                      className="text-sm font-semibold text-white bg-red-500 hover:bg-red-600 px-2.5 py-1 rounded transition-colors"
                     >
                       Yes
                     </button>
                     <button
                       onClick={() => setResetPending(false)}
-                      className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
+                      className={`text-sm font-semibold px-2.5 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
                     >
                       Cancel
                     </button>
