@@ -498,12 +498,16 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 {/* Reset / inline confirm. Round 6: same navy-family ink as
                     Streak's label (not the old lavender-gray, which read as
                     disabled) — kept visually secondary by weight/size
-                    (regular text-xs vs. the streak label's bold text-[13px])
-                    rather than by low contrast. */}
+                    (regular vs. the streak label's bold text-[13px])
+                    rather than by low contrast. Round 8: idle "Reset" label
+                    bumped one step (text-xs -> text-sm) for slightly better
+                    legibility — still regular weight and the same ink, so
+                    it stays secondary to Streak. The inline confirm state
+                    ("Reset streak?"/Yes/Cancel) is unchanged. */}
                 {!resetPending ? (
                   <button
                     onClick={() => setResetPending(true)}
-                    className={`text-xs transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
+                    className={`text-sm transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
