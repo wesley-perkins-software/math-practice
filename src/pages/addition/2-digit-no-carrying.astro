@@ -1,8 +1,11 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import PracticeSwitcher from '@/components/PracticeSwitcher.astro';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import { ADDITION_NAV_ITEMS } from '@/config/addition-nav';
+import '@/styles/practice-surface.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -38,7 +41,9 @@ const faqItems = [
   title="2-Digit Addition Practice (No Carrying) | Math Practice Online"
   description="Practice 2-digit addition without carrying. Every problem avoids regrouping so students can master place value and multi-digit setup first."
   canonical={`${SITE}/addition/2-digit-no-carrying`}
+  pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition (No Carrying)' }]}
+  breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -62,16 +67,19 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Addition Practice (No Carrying)</h1>
-
-  <Fragment slot="intro">
-    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
-      <p>Two-digit addition without carrying combines two numbers from 10–99 where every column sum stays at 9 or less, such as 31 + 46 = 77. Because no digit ever needs to be carried, this is the step where students first practice place-value column addition before regrouping is introduced.</p>
-    </div>
-    <p>This page is for first and second graders who already know their single-digit addition facts and are learning to add multi-digit numbers for the first time, plus parents and teachers checking whether a child can align columns correctly. Every problem here is built so no column ever sums to 10 or more, isolating place-value alignment from the separate skill of carrying.</p>
+  <Fragment slot="h1">
+    <PracticeSwitcher heading="2-Digit Addition Practice (No Carrying)" activeId="2-digit-no-carrying" items={ADDITION_NAV_ITEMS} />
   </Fragment>
 
-  <AdditionPracticeHub slot="widget" active="2-digit-no-carrying" client:load />
+  <Fragment slot="quick-answer">
+    <p>Two-digit addition without carrying combines two numbers from 10–99 where every column sum stays at 9 or less, such as 31 + 46 = 77. Because no digit ever needs to be carried, this is the step where students first practice place-value column addition before regrouping is introduced.</p>
+  </Fragment>
+
+  <AdditionPracticeHub slot="widget" active="2-digit-no-carrying" variant="prototype" client:load />
+
+  <Fragment slot="intro">
+    <p>This page is for first and second graders who already know their single-digit addition facts and are learning to add multi-digit numbers for the first time, plus parents and teachers checking whether a child can align columns correctly. Every problem here is built so no column ever sums to 10 or more, isolating place-value alignment from the separate skill of carrying.</p>
+  </Fragment>
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->

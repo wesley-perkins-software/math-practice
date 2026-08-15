@@ -2,7 +2,7 @@ interface Props {
   state: 'correct' | 'incorrect' | 'hidden';
   correctAnswer: number;
   correctRemainder?: number;
-  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  /** 'prototype' opts into the shared Addition-family practice surface (all three /addition pages); other operation families still use 'classic'. */
   variant?: 'classic' | 'prototype';
 }
 

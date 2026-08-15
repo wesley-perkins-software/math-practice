@@ -1,8 +1,11 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import PracticeSwitcher from '@/components/PracticeSwitcher.astro';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import { ADDITION_NAV_ITEMS } from '@/config/addition-nav';
+import '@/styles/practice-surface.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -40,6 +43,7 @@ const faqItems = [
   canonical={`${SITE}/addition/2-digit-with-carrying`}
   pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition with Carrying' }]}
+  breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -89,13 +93,15 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">2-Digit Addition with Carrying Practice</h1>
+  <Fragment slot="h1">
+    <PracticeSwitcher heading="2-Digit Addition with Carrying Practice" activeId="2-digit-with-carrying" items={ADDITION_NAV_ITEMS} />
+  </Fragment>
 
   <Fragment slot="quick-answer">
     <p>Two-digit addition with carrying happens when a column's sum reaches 10 or more, so a digit must be regrouped into the next column, such as 56 + 27 = 83. Every problem on this page requires at least one carry, building the regrouping skill that comes right after place-value column addition.</p>
   </Fragment>
 
-  <AdditionPracticeHub slot="widget" active="2-digit-with-carrying" client:load />
+  <AdditionPracticeHub slot="widget" active="2-digit-with-carrying" variant="prototype" client:load />
 
   <Fragment slot="intro">
     <p>This page is for second and third graders who've already mastered two-digit addition without carrying and single-digit facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one carry, so there's no way to get through it without regrouping the ones column into the tens column.</p>

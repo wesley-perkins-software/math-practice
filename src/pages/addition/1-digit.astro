@@ -1,9 +1,11 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import PracticeSwitcher from '@/components/PracticeSwitcher.astro';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
-import '@/styles/practice-surface-prototype.css';
+import { ADDITION_NAV_ITEMS } from '@/config/addition-nav';
+import '@/styles/practice-surface.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -66,161 +68,7 @@ const faqItems = [
   </Fragment>
 
   <Fragment slot="h1">
-    <!--
-      Round 4: no visible breadcrumb (breadcrumbVisual={false} above — JSON-LD
-      breadcrumb structured data is unaffected). Mode switching moved again —
-      out of the practice surface (round 3) and onto the H1 row itself, as
-      the reusable "H1 + contextual switcher" pattern: plain static Astro
-      markup (no React, no shared component), so a future page like a
-      times-table practice page can copy this block and swap in its own
-      label/links without needing anything from this file. The practice
-      surface no longer repeats "1-Digit Addition" internally — the H1 (and
-      this switcher) is the single place that states it.
-    -->
-    <div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
-      <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">1-Digit Addition Practice</h1>
-      {/*
-        Round 6: "Change level" → "Change type". Round 7: "Change type" →
-        "Change practice" — this switcher may eventually cover more than
-        digit-count/complexity variants of the same operation (e.g.
-        no-carrying → carrying, or a times-table selector), so the label now
-        names the user's action ("change what you're practicing") instead of
-        forcing every future relationship into the "type" category. Naming
-        recommendation for this switcher pattern going forward (not
-        propagated elsewhere yet): pick whichever noun/verb actually matches
-        what the linked pages vary —
-          - "Change practice"  — general-purpose default (this page)
-          - "Change table"     — times-table selection (6s / 7s / …)
-          - "Change operation" — the linked pages actually switch operation
-                                  (e.g. a future addition/subtraction/
-                                  multiplication/division switcher, or
-                                  Speed Drill's operation picker)
-        This is a per-page copy choice on the same markup/script, not a
-        shared component prop — each future page just picks the noun that
-        matches what its own links vary.
-      */}
-      <nav aria-label="Change practice" class="font-practice">
-        <details class="relative" data-dismissable-menu>
-          <summary class="list-none flex items-center gap-1 text-base font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
-            Change practice
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
-          </summary>
-          {/*
-            Round 8 (first attempt): below ~480px the H1 row wraps and this
-            <nav> lands alone at the row's left margin, so a static
-            `right-0` (anchored to <details>, sized to the trigger's own
-            ~148px width) pushed the menu off the left edge. A
-            `max-[479px]:left-0` viewport-width override "fixed" that in
-            simulated testing, but a real iPhone exposed the actual flaw:
-            that breakpoint assumes wrap state correlates with viewport
-            width, but flex-wrap is driven by real rendered content width
-            (system font metrics differ from the simulator's), so at some
-            real widths the row was STILL unwrapped (nav flush right, as on
-            desktop) while the viewport was already under 480px — forcing
-            `left-0` there anchored the menu to a trigger sitting near the
-            row's right edge, pushing the menu's right edge far past the
-            viewport and widening the whole document.
-
-            Round 8 (actual fix): stopped guessing wrap state from viewport
-            width entirely. The menu keeps its natural `right-0` (identical
-            to the original desktop-approved position, unaffected here),
-            and a small script below measures the menu's real
-            getBoundingClientRect() against document.documentElement.
-            clientWidth every time it opens (and on resize while open),
-            nudging it via an inline `left`/`right` override only if it
-            would actually overflow either edge. This works regardless of
-            wrap state, font metrics, device, or H1 length — no breakpoint
-            to keep in sync with this page's copy. `max-w-[calc(100vw-2rem)]`
-            below is a static CSS safety net only (keeps the menu narrower
-            than the viewport even before the script runs); the script does
-            the actual positioning.
-          */}
-          <div class="absolute right-0 top-full mt-1.5 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
-            <a href="/addition/1-digit" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">1-Digit Addition</a>
-            <a href="/addition/2-digit-no-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (No Carry)</a>
-            <a href="/addition/2-digit-with-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (Carrying)</a>
-          </div>
-        </details>
-      </nav>
-    </div>
-    <script>
-      // Progressive enhancement over the native <details>/<summary> disclosure
-      // above: closes on Escape (returning focus to the summary that opened
-      // it, per standard focus-management practice), on an outside click,
-      // and — round 6 — the moment the user resumes practice (focuses the
-      // answer, types, or taps the on-screen keypad), so the switcher gets
-      // out of the way instead of hovering open over the problem. That last
-      // case is detected via a `[data-practice-instrument]` marker the
-      // practice widget renders itself (see PracticeWidget.tsx) rather than
-      // hardcoding selectors for its internals here, so this script stays
-      // framework-agnostic and copy-pasteable. None of these close paths
-      // move focus except Escape, which explicitly returns it to the
-      // summary — the others leave focus exactly where the user put it.
-      document.querySelectorAll<HTMLDetailsElement>('details[data-dismissable-menu]').forEach((details) => {
-        const summary = details.querySelector('summary');
-        const menu = details.querySelector<HTMLElement>(':scope > div');
-        const close = () => { details.open = false; };
-
-        // Keep the menu's default CSS position (right-0, flush with the
-        // trigger — same spot it's always occupied) unless that would
-        // actually overflow the viewport, in which case nudge it back in
-        // by exactly the overflow amount. Measures real geometry instead
-        // of assuming a viewport-width breakpoint predicts wrap state —
-        // see the comment above the menu markup for why that assumption
-        // broke on a real device. A fixed page-edge margin (16px) matches
-        // the page's own `px-4` content padding, so the menu never sits
-        // closer to the viewport edge than the content column already does.
-        const EDGE_MARGIN = 16;
-        function clampMenuPosition() {
-          if (!menu) return;
-          // Reset to the CSS default (right-0) before measuring, so every
-          // call starts from the same known position rather than
-          // compounding a previous run's adjustment.
-          menu.style.left = '';
-          menu.style.right = '';
-          const rect = menu.getBoundingClientRect();
-          const viewportWidth = document.documentElement.clientWidth;
-          if (rect.right > viewportWidth - EDGE_MARGIN) {
-            // `right` is a relative offset from the containing block's own
-            // right edge, so adding the overflow amount to it shifts the
-            // menu left by exactly that many px in viewport space —
-            // no containing-block math needed for this direction.
-            menu.style.right = `${Math.max(0, rect.right - (viewportWidth - EDGE_MARGIN))}px`;
-          } else if (rect.left < EDGE_MARGIN) {
-            // `left` IS relative to the containing block (<details>), not
-            // the viewport, so converting a target viewport position back
-            // to a `left` offset requires the containing block's own
-            // viewport position.
-            const detailsRect = details.getBoundingClientRect();
-            menu.style.right = 'auto';
-            menu.style.left = `${EDGE_MARGIN - detailsRect.left}px`;
-          }
-        }
-        details.addEventListener('toggle', () => {
-          if (details.open) clampMenuPosition();
-        });
-        window.addEventListener('resize', () => {
-          if (details.open) clampMenuPosition();
-        });
-
-        document.addEventListener('click', (e) => {
-          if (details.open && e.target instanceof Node && !details.contains(e.target)) {
-            close();
-          }
-        });
-        details.addEventListener('keydown', (e) => {
-          if (e.key === 'Escape' && details.open) {
-            e.preventDefault();
-            close();
-            summary?.focus();
-          }
-        });
-        document.querySelectorAll<HTMLElement>('[data-practice-instrument]').forEach((instrument) => {
-          instrument.addEventListener('pointerdown', () => { if (details.open) close(); });
-          instrument.addEventListener('focusin', () => { if (details.open) close(); });
-        });
-      });
-    </script>
+    <PracticeSwitcher heading="1-Digit Addition Practice" activeId="1-digit" items={ADDITION_NAV_ITEMS} />
   </Fragment>
 
   <Fragment slot="quick-answer">

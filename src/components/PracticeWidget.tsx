@@ -19,7 +19,7 @@ type FeedbackState = 'correct' | 'incorrect' | 'hidden';
 
 interface Props {
   config: PracticeConfig;
-  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  /** 'prototype' opts into the shared Addition-family practice surface (all three /addition pages); other operation families still use 'classic'. */
   variant?: 'classic' | 'prototype';
 }
 
@@ -361,7 +361,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   // inner control stretches just because the surface has more room.
   //
   // Round 9: max-width now reads from --practice-card-max-w (defined on
-  // [data-practice-instrument] in practice-surface-prototype.css) instead of
+  // [data-practice-instrument] in practice-surface.css) instead of
   // a fixed 30rem — that variable is itself larger on touch tablets, so the
   // card genuinely widens there instead of floating, desktop-sized, in more
   // canvas. See that file's comment for why the override is scoped to a
