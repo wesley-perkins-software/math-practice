@@ -105,7 +105,33 @@ const faqItems = [
             Change practice
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </summary>
-          <div class="absolute right-0 top-full mt-1.5 z-20 w-56 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
+          {/*
+            Round 8: below ~480px the H1 row's `flex-wrap` drops this <nav>
+            onto its own line at the row's left margin (the H1 no longer
+            shares the row to anchor against). The menu's `right-0` is
+            relative to <details> (the nearest positioned ancestor, sized to
+            the "Change practice" trigger's own intrinsic width, ~148px) —
+            once <nav> sits alone near the left edge, right-anchoring a
+            224px-wide (w-56) menu from that narrow box pushes its left edge
+            ~60px past the viewport's left edge, clipping the "1-Digit "/
+            "2-Digit " prefix off every option — exactly the text that
+            distinguishes them. Confirmed empirically: wrapped at 440px,
+            not wrapped at 480px, constant ~60px overflow across the entire
+            wrapped range regardless of viewport width (the trigger's own
+            width/position don't change with viewport once stacked). Below
+            480px the menu instead anchors from the LEFT of <details> (left
+            edge = 16px page margin, right edge = 16+224 = 240px, safely
+            inside even a 320px viewport) instead of the right. At 480px+
+            the row never wraps for this H1's length, so `right-0` (flush
+            with the row's true right edge, matching the practice surface
+            below it) is unaffected. The exact 480px cutoff is specific to
+            this page's H1 text length — a future page with a longer H1 (or
+            a shared component) needs to re-derive its own wrap threshold,
+            or better, replace this viewport-width breakpoint with a
+            container query / JS-measured wrap check so it isn't tied to
+            one page's copy.
+          */}
+          <div class="absolute right-0 max-[479px]:right-auto max-[479px]:left-0 top-full mt-1.5 z-20 w-56 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
             <a href="/addition/1-digit" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">1-Digit Addition</a>
             <a href="/addition/2-digit-no-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (No Carry)</a>
             <a href="/addition/2-digit-with-carrying" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Addition (Carrying)</a>
