@@ -80,13 +80,16 @@ const faqItems = [
     <div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
       <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">1-Digit Addition Practice</h1>
       {/*
-        Round 6: "Change level" → "Change type". Naming recommendation for
-        this switcher pattern going forward (not propagated elsewhere yet):
-        the label should name what's actually varying between the linked
-        pages, not default to one generic verb everywhere —
-          - "Change type"      — same operation, varying digit-count/
-                                  complexity (this page: 1-digit / 2-digit
-                                  no-carry / 2-digit carrying addition)
+        Round 6: "Change level" → "Change type". Round 7: "Change type" →
+        "Change practice" — this switcher may eventually cover more than
+        digit-count/complexity variants of the same operation (e.g.
+        no-carrying → carrying, or a times-table selector), so the label now
+        names the user's action ("change what you're practicing") instead of
+        forcing every future relationship into the "type" category. Naming
+        recommendation for this switcher pattern going forward (not
+        propagated elsewhere yet): pick whichever noun/verb actually matches
+        what the linked pages vary —
+          - "Change practice"  — general-purpose default (this page)
           - "Change table"     — times-table selection (6s / 7s / …)
           - "Change operation" — the linked pages actually switch operation
                                   (e.g. a future addition/subtraction/
@@ -96,11 +99,11 @@ const faqItems = [
         shared component prop — each future page just picks the noun that
         matches what its own links vary.
       */}
-      <nav aria-label="Change practice type" class="font-practice">
+      <nav aria-label="Change practice" class="font-practice">
         <details class="relative" data-dismissable-menu>
-          <summary class="list-none flex items-center gap-1 text-sm font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
-            Change type
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          <summary class="list-none flex items-center gap-1 text-base font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
+            Change practice
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
           </summary>
           <div class="absolute right-0 top-full mt-1.5 z-20 w-56 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
             <a href="/addition/1-digit" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">1-Digit Addition</a>

@@ -461,8 +461,13 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   // Round 6: the label was too faint (#6B6690 lavender-gray)
                   // to read as a real word rather than disabled chrome —
                   // moved to the same dark navy family as body/interface
-                  // text (#43405C) and bumped a step in size/weight so
-                  // "Streak" reads as a caption, not metadata. Numeral color
+                  // text and bumped a step in size/weight so "Streak" reads
+                  // as a caption, not metadata. Round 7: #43405C still read
+                  // as gray in the actual rendered page, so both Streak and
+                  // Reset were standardized on #211D4F — the same ink
+                  // already used for the arithmetic operands/answer digits
+                  // on this page — for a genuinely dark, single ink family.
+                  // Numeral color
                   // was A/B'd against a navy numeral with the flame as the
                   // only accent: amber won on a squint test — size alone
                   // (navy) still reads as "just bigger UI text," while the
@@ -470,7 +475,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   // the rewarding value, not a data point.
                   <div key={stats.currentStreak} className="flex items-end gap-4 animate-[pop_0.25s_ease-out]">
                     <div className="flex flex-col gap-0.5 leading-none">
-                      <span className="text-[13px] font-bold text-[#43405C]">Streak</span>
+                      <span className="text-[13px] font-bold text-[#211D4F]">Streak</span>
                       <span className="flex items-baseline gap-1">
                         <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#8983B8]'}`}>
                           {stats.currentStreak}
@@ -498,13 +503,13 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 {!resetPending ? (
                   <button
                     onClick={() => setResetPending(true)}
-                    className={`text-xs transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#43405C] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
+                    className={`text-xs transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
                 ) : (
                   <div className="flex items-center gap-1">
-                    <span className={`text-xs mr-1 ${isPrototype ? 'text-[#43405C]' : 'text-[#6B7280]'}`}>Reset streak?</span>
+                    <span className={`text-xs mr-1 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset streak?</span>
                     <button
                       onClick={handleResetCurrentStreak}
                       className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
@@ -513,7 +518,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     </button>
                     <button
                       onClick={() => setResetPending(false)}
-                      className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${isPrototype ? 'text-[#43405C] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
+                      className={`text-xs font-semibold px-2 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
                     >
                       Cancel
                     </button>
