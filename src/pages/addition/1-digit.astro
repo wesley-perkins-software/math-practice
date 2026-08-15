@@ -64,7 +64,40 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">1-Digit Addition Practice</h1>
+  <Fragment slot="h1">
+    <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">1-Digit Addition Practice</h1>
+
+    <!--
+      Quiet mode nav, round 2 of the redesign exploration: replaces the
+      prominent tabbed tray that used to sit above the practice card. The H1
+      already states the current level, so this is demoted to a small
+      link row (desktop/tablet) or a disclosure (mobile) associated with the
+      heading rather than competing with the practice surface for hierarchy.
+      Hardcoded to this page's 3 addition levels for the prototype; would be
+      generalized from presets.ts if this direction is propagated.
+    -->
+    <nav aria-label="Change difficulty" class="font-practice mt-1.5">
+      <div class="hidden sm:flex items-center gap-2.5 text-sm">
+        <span class="text-[#6B6690]">Level:</span>
+        <a href="/addition/1-digit" aria-current="page" class="font-semibold text-[#4F46E5] underline decoration-2 underline-offset-4">1-Digit</a>
+        <span class="text-[#D8D5EE]" aria-hidden="true">·</span>
+        <a href="/addition/2-digit-no-carrying" class="text-[#6B6690] hover:text-[#4338CA] transition-colors">2-Digit (No Carry)</a>
+        <span class="text-[#D8D5EE]" aria-hidden="true">·</span>
+        <a href="/addition/2-digit-with-carrying" class="text-[#6B6690] hover:text-[#4338CA] transition-colors">2-Digit (Carrying)</a>
+      </div>
+      <details class="sm:hidden group">
+        <summary class="list-none flex items-center gap-1.5 text-sm cursor-pointer select-none">
+          <span class="text-[#6B6690]">Level: 1-Digit</span>
+          <span class="text-[#4F46E5] font-semibold underline decoration-2 underline-offset-4">Change</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#6B6690] transition-transform group-open:rotate-180" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+        </summary>
+        <div class="mt-2 flex flex-col gap-2 text-sm pl-0.5">
+          <a href="/addition/2-digit-no-carrying" class="text-[#6B6690]">2-Digit Addition — No Carry</a>
+          <a href="/addition/2-digit-with-carrying" class="text-[#6B6690]">2-Digit Addition — Carrying</a>
+        </div>
+      </details>
+    </nav>
+  </Fragment>
 
   <Fragment slot="quick-answer">
     <p>1-digit addition combines two numbers from 0–9 into a single sum, such as 6 + 7 = 13. Mastering all 81 addition facts from 1+1 to 9+9 is the foundation for every later arithmetic skill, including carrying, multiplication, and mental math.</p>

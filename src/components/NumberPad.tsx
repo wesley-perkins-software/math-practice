@@ -13,6 +13,17 @@ const ROWS = [
   ['1', '2', '3'],
 ];
 
+// Ascending (counting/number-line/phone-keypad) order — see the keypad-order
+// evaluation in the design plan: calculator order (7-8-9 top) is a learned
+// adult convention K-5 students don't yet carry; ascending order matches
+// number lines, hundred-charts, touchscreen PIN entry, and the physical
+// keyboard's own top-row digit order.
+const ROWS_ASCENDING = [
+  ['1', '2', '3'],
+  ['4', '5', '6'],
+  ['7', '8', '9'],
+];
+
 export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = false, variant = 'classic' }: Props) {
   function prevent(e: React.MouseEvent) {
     e.preventDefault();
@@ -25,8 +36,11 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
     const keyBaseClasses =
       'font-practice h-14 rounded-2xl text-2xl font-bold transition-all duration-100 ease-out disabled:opacity-40 disabled:cursor-not-allowed focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#4F46E5]';
     return (
-      <div className="w-full select-none">
-        {ROWS.map((row) => (
+      // Ergonomic keypad width is independent of the surface's own width —
+      // capped here so a wider desktop surface gives the composition more
+      // presence/whitespace without stretching buttons past a comfortable size.
+      <div className="w-full max-w-[18rem] mx-auto select-none">
+        {ROWS_ASCENDING.map((row) => (
           <div key={row[0]} className="grid grid-cols-3 gap-2 mb-2">
             {row.map((digit) => (
               <button

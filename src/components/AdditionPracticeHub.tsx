@@ -65,6 +65,14 @@ export default function AdditionPracticeHub({ active, variant = 'classic' }: Pro
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
+  // Prototype: mode switching moved to a quiet nav next to the H1 (rendered
+  // statically in the .astro page itself — see addition/1-digit.astro) rather
+  // than a prominent tray above the practice card. Round 2 of the redesign
+  // exploration; see the design plan for the evaluation.
+  if (variant === 'prototype') {
+    return <PracticeWidget config={selected.config} variant={variant} />;
+  }
+
   return (
     <>
       <PracticeModeNav
