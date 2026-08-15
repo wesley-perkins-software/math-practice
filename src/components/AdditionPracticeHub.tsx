@@ -1,6 +1,6 @@
+import { useEffect } from 'react';
 import PracticeWidget from './PracticeWidget';
 import PracticeModeNav from './PracticeModeNav';
-import { useEffect } from 'react';
 import {
   ADDITION_1_DIGIT,
   ADDITION_2_DIGIT,
@@ -38,13 +38,24 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
 
 interface Props {
   active: Difficulty;
-  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  /**
+   * 'prototype' opts into the shared Addition-family practice surface used
+   * by all three /addition pages. Defaults to 'classic' (tab tray + classic
+   * widget styling) because /addition-practice — an older, unrelated hub
+   * page outside this rollout — still renders this component without
+   * requesting the new surface.
+   */
   variant?: 'classic' | 'prototype';
 }
 
 const TAB_SCROLL_KEY = 'addition-practice:scroll-y';
 
 export default function AdditionPracticeHub({ active, variant = 'classic' }: Props) {
+  // Classic tab tray only: restores scroll position after a tab click
+  // navigates to a new page. The Addition-family surface (variant
+  // 'prototype') doesn't render this tab tray, so the saved key is simply
+  // never written there — this effect is a no-op for that variant, kept
+  // unconditional only because hooks can't follow the variant branch below.
   useEffect(() => {
     const saved = sessionStorage.getItem(TAB_SCROLL_KEY);
     if (!saved) return;
@@ -59,21 +70,19 @@ export default function AdditionPracticeHub({ active, variant = 'classic' }: Pro
     sessionStorage.removeItem(TAB_SCROLL_KEY);
   }, []);
 
-  const handleTabClick = () => {
-    sessionStorage.setItem(TAB_SCROLL_KEY, String(window.scrollY));
-  };
-
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
-  // Prototype (round 4): mode switching lives on the H1 row instead, as
-  // static markup in addition/1-digit.astro — not as a React-rendered row
-  // here. That's the point of the pattern being tested: "H1 + contextual
-  // switcher" should work as a plain per-page Astro construct so a future
-  // page (e.g. times-tables) can reuse it without needing a component like
-  // this one at all. Nothing to render here for mode-switching anymore.
+  // The Addition-family surface (all three /addition pages) puts mode
+  // switching in the H1 row instead (see PracticeSwitcher.astro), not as a
+  // React-rendered tab tray here — nothing to render for mode-switching in
+  // this branch.
   if (variant === 'prototype') {
     return <PracticeWidget config={selected.config} variant={variant} />;
   }
+
+  const handleTabClick = () => {
+    sessionStorage.setItem(TAB_SCROLL_KEY, String(window.scrollY));
+  };
 
   return (
     <>

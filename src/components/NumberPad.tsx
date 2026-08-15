@@ -3,7 +3,7 @@ interface Props {
   onBackspace: () => void;
   onSubmit: () => void;
   disabled?: boolean;
-  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  /** 'prototype' opts into the shared Addition-family practice surface (all three /addition pages); other operation families still use 'classic'. */
   variant?: 'classic' | 'prototype';
 }
 
@@ -63,7 +63,7 @@ export default function NumberPad({ onDigit, onBackspace, onSubmit, disabled = f
       // capped here so a wider desktop surface gives the composition more
       // presence/whitespace without stretching buttons past a comfortable size.
       // Round 9: reads from --practice-keypad-max-w, which is itself larger
-      // on touch tablets (see practice-surface-prototype.css) — real keys,
+      // on touch tablets (see practice-surface.css) — real keys,
       // not a shrunken desktop keypad with room to spare around it.
       <div className="w-full max-w-[length:var(--practice-keypad-max-w)] mx-auto select-none">
         {ROWS_ASCENDING.map((row) => (

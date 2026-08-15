@@ -1,10 +1,15 @@
 /*
- * Prototype-only typography for the redesigned practice surface
- * (/addition/1-digit). Self-hosted, single variable-font family covering
- * both interface and numeral roles inside the practice surface — see the
- * frontend-design typography evaluation in the design plan for why.
+ * Practice-surface typography and sizing tokens — the standard design for
+ * the Addition family (/addition/1-digit, /addition/2-digit-no-carrying,
+ * /addition/2-digit-with-carrying), originally developed as a prototype on
+ * /addition/1-digit alone and now the shared system for all three pages.
+ * Self-hosted, single variable-font family covering both interface and
+ * numeral roles inside the practice surface — see the frontend-design
+ * typography evaluation in the design plan for why.
  * Not wired into BaseLayout/global.css: this file is imported only by the
- * one prototype page so nothing else on the site is affected yet.
+ * Addition practice pages, so other practice families (Subtraction,
+ * Multiplication, Division, Speed Drill) are unaffected until they migrate
+ * to this same system.
  *
  * Round 2: replaced Atkinson Hyperlegible Next with Lexend (accessibility-
  * first construction produced a narrow, technical-looking zero).

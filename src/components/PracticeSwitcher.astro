@@ -1,0 +1,138 @@
+---
+// Shared "H1 + contextual switcher" pattern, proven out on the
+// /addition/1-digit prototype and now the standard header for every
+// Addition practice page. Deliberately framework-agnostic (plain Astro
+// markup + a vanilla <script>, no React) so any future practice family
+// (Subtraction, Multiplication, …) can adopt it by passing its own
+// heading/items — nothing here is Addition-specific except the data a page
+// passes in.
+interface NavItem {
+  id: string;
+  label: string;
+  href: string;
+}
+
+interface Props {
+  /** The page's H1 text. */
+  heading: string;
+  /** The current page's id within `items`. */
+  activeId: string;
+  /** The full set of pages this switcher can jump to. */
+  items: NavItem[];
+  /** Accessible name / visible label for the switcher control. Defaults to "Change practice". */
+  switcherLabel?: string;
+}
+
+const { heading, activeId, items, switcherLabel = 'Change practice' } = Astro.props;
+---
+
+<div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
+  <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">{heading}</h1>
+  <nav aria-label={switcherLabel} class="font-practice">
+    <details class="relative" data-dismissable-menu>
+      <summary class="list-none flex items-center gap-1 text-base font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
+        {switcherLabel}
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+      </summary>
+      {/*
+        The menu keeps a static `right-0` default (flush with the trigger)
+        and a small script below nudges it via an inline left/right override
+        only if it would actually overflow the viewport — measured from real
+        getBoundingClientRect() geometry every time it opens (and on resize
+        while open), not guessed from a viewport-width breakpoint. That
+        guess broke on a real device: flex-wrap in the row above is driven
+        by real rendered content width (which varies with each page's own
+        H1 length and system font metrics), so a fixed width breakpoint
+        doesn't reliably predict whether the row above has wrapped.
+        `max-w-[calc(100vw-2rem)]` below is a static CSS safety net only
+        (keeps the menu narrower than the viewport even before the script
+        runs); the script does the actual positioning.
+      */}
+      <div class="absolute right-0 top-full mt-1.5 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
+        {items.map((item) => (
+          item.id === activeId ? (
+            <a href={item.href} aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">{item.label}</a>
+          ) : (
+            <a href={item.href} class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">{item.label}</a>
+          )
+        ))}
+      </div>
+    </details>
+  </nav>
+</div>
+<script>
+  // Progressive enhancement over the native <details>/<summary> disclosure
+  // above: closes on Escape (returning focus to the summary that opened
+  // it, per standard focus-management practice), on an outside click, and
+  // the moment the user resumes practice (focuses the answer, types, or
+  // taps the on-screen keypad), so the switcher gets out of the way instead
+  // of hovering open over the problem. That last case is detected via a
+  // `[data-practice-instrument]` marker the practice widget renders itself
+  // (see PracticeWidget.tsx) rather than hardcoding selectors for its
+  // internals here, so this script stays framework-agnostic and
+  // copy-pasteable. None of these close paths move focus except Escape,
+  // which explicitly returns it to the summary — the others leave focus
+  // exactly where the user put it.
+  document.querySelectorAll<HTMLDetailsElement>('details[data-dismissable-menu]').forEach((details) => {
+    const summary = details.querySelector('summary');
+    const menu = details.querySelector<HTMLElement>(':scope > div');
+    const close = () => { details.open = false; };
+
+    // Keep the menu's default CSS position (right-0, flush with the
+    // trigger) unless that would actually overflow the viewport, in which
+    // case nudge it back in by exactly the overflow amount. Measures real
+    // geometry instead of assuming a viewport-width breakpoint predicts
+    // wrap state. A fixed page-edge margin (16px) matches the page's own
+    // `px-4` content padding, so the menu never sits closer to the
+    // viewport edge than the content column already does.
+    const EDGE_MARGIN = 16;
+    function clampMenuPosition() {
+      if (!menu) return;
+      // Reset to the CSS default (right-0) before measuring, so every call
+      // starts from the same known position rather than compounding a
+      // previous run's adjustment.
+      menu.style.left = '';
+      menu.style.right = '';
+      const rect = menu.getBoundingClientRect();
+      const viewportWidth = document.documentElement.clientWidth;
+      if (rect.right > viewportWidth - EDGE_MARGIN) {
+        // `right` is a relative offset from the containing block's own
+        // right edge, so adding the overflow amount to it shifts the menu
+        // left by exactly that many px in viewport space — no containing-
+        // block math needed for this direction.
+        menu.style.right = `${Math.max(0, rect.right - (viewportWidth - EDGE_MARGIN))}px`;
+      } else if (rect.left < EDGE_MARGIN) {
+        // `left` IS relative to the containing block (<details>), not the
+        // viewport, so converting a target viewport position back to a
+        // `left` offset requires the containing block's own viewport
+        // position.
+        const detailsRect = details.getBoundingClientRect();
+        menu.style.right = 'auto';
+        menu.style.left = `${EDGE_MARGIN - detailsRect.left}px`;
+      }
+    }
+    details.addEventListener('toggle', () => {
+      if (details.open) clampMenuPosition();
+    });
+    window.addEventListener('resize', () => {
+      if (details.open) clampMenuPosition();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (details.open && e.target instanceof Node && !details.contains(e.target)) {
+        close();
+      }
+    });
+    details.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && details.open) {
+        e.preventDefault();
+        close();
+        summary?.focus();
+      }
+    });
+    document.querySelectorAll<HTMLElement>('[data-practice-instrument]').forEach((instrument) => {
+      instrument.addEventListener('pointerdown', () => { if (details.open) close(); });
+      instrument.addEventListener('focusin', () => { if (details.open) close(); });
+    });
+  });
+</script>
