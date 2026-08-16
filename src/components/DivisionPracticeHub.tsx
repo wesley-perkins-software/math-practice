@@ -26,6 +26,15 @@ export default function DivisionPracticeHub({ active, selectedDivisor = 1 }: Pro
         ? DIVISION_REMAINDERS
         : divideByConfig(selectedDivisor);
 
+  // Prototype: /division/remainders tests the same "H1 + contextual switcher"
+  // pattern as /addition/1-digit (see that page's h1 slot) — mode switching
+  // lives there as static markup instead of this segmented tab row, and the
+  // widget renders with the long-division notation. Scoped to `remainders`
+  // only; facts/divide-by keep today's tab tray unchanged.
+  if (active === 'remainders') {
+    return <PracticeWidget config={config} variant="prototype" />;
+  }
+
   const picker = active === 'divide-by' && (
     <button
       onClick={() => setShowPicker(true)}

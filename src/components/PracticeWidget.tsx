@@ -9,6 +9,7 @@ import { trackEvent } from '@/lib/analytics';
 
 import WrittenProblemInput from './WrittenProblemInput';
 import RemainderProblemInput from './RemainderProblemInput';
+import LongDivisionProblemInput from './LongDivisionProblemInput';
 import FeedbackBanner from './FeedbackBanner';
 import ScoreCard from './ScoreCard';
 import TimerDisplay from './TimerDisplay';
@@ -408,17 +409,31 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
 
             {/* Written arithmetic block + input + number pad */}
             {config.withRemainder ? (
-              <RemainderProblemInput
-                problem={problem}
-                onSubmit={(q, r) => handleAnswer(q, r)}
-                disabled={feedbackState !== 'hidden'}
-                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-                feedbackContent={(
-                  <div className="min-h-[1.75rem] flex items-center justify-center w-full">
-                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
-                  </div>
-                )}
-              />
+              isPrototype ? (
+                <LongDivisionProblemInput
+                  problem={problem}
+                  onSubmit={(q, r) => handleAnswer(q, r)}
+                  disabled={feedbackState !== 'hidden'}
+                  feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                  feedbackContent={(
+                    <div className="h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto flex items-center justify-center w-full">
+                      <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} variant={variant} />
+                    </div>
+                  )}
+                />
+              ) : (
+                <RemainderProblemInput
+                  problem={problem}
+                  onSubmit={(q, r) => handleAnswer(q, r)}
+                  disabled={feedbackState !== 'hidden'}
+                  feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                  feedbackContent={(
+                    <div className="min-h-[1.75rem] flex items-center justify-center w-full">
+                      <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
+                    </div>
+                  )}
+                />
+              )
             ) : (
               <WrittenProblemInput
                 problem={problem}

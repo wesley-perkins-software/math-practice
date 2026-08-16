@@ -101,6 +101,19 @@
   --practice-key-gap: 0.375rem;
   --practice-key-radius: 0.875rem;
   --practice-key-icon: 1.5rem;
+
+  /* Long-division notation (/division/remainders prototype). Sized smaller
+     than --practice-operand-size since the dividend here can run to 3
+     digits (divisor 2–12 × quotient 1–12 + remainder), where addition's
+     operand size was tuned for at most 2. */
+  --ld-digit-size: 2.75rem;
+  --ld-box-min-h: 3.25rem;
+  --ld-caret-h: 2rem;
+  --ld-bracket-border-w: 3px;
+  --ld-remainder-label-size: 0.9375rem;
+  --ld-remainder-size: 1.5rem;
+  --ld-remainder-box-min-h: 2.5rem;
+  --ld-remainder-caret-h: 1.25rem;
 }
 
 @media (pointer: coarse) and (min-width: 640px) and (max-width: 1366px) {
@@ -125,6 +138,15 @@
     --practice-key-gap: 0.5rem;
     --practice-key-radius: 1rem;
     --practice-key-icon: 1.625rem;
+
+    --ld-digit-size: 3.25rem;
+    --ld-box-min-h: 3.75rem;
+    --ld-caret-h: 2.375rem;
+    --ld-bracket-border-w: 4px;
+    --ld-remainder-label-size: 1.0625rem;
+    --ld-remainder-size: 1.75rem;
+    --ld-remainder-box-min-h: 2.875rem;
+    --ld-remainder-caret-h: 1.5rem;
   }
 }
 
