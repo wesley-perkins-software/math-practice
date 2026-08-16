@@ -38,11 +38,13 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
 
 interface Props {
   active: Difficulty;
+  /** 'prototype' opts into the redesigned surface (shared with /addition/1-digit and Division). */
+  variant?: 'classic' | 'prototype';
 }
 
 const TAB_SCROLL_KEY = 'subtraction-practice:scroll-y';
 
-export default function SubtractionPracticeHub({ active }: Props) {
+export default function SubtractionPracticeHub({ active, variant = 'classic' }: Props) {
   useEffect(() => {
     const saved = sessionStorage.getItem(TAB_SCROLL_KEY);
     if (!saved) return;
@@ -62,6 +64,14 @@ export default function SubtractionPracticeHub({ active }: Props) {
   };
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
+
+  // Prototype: mode switching lives on the H1 row instead (static markup in
+  // each subtraction page), matching the "H1 + contextual switcher" pattern
+  // used by /addition/1-digit and the redesigned Division pages — see
+  // AdditionPracticeHub for the full rationale.
+  if (variant === 'prototype') {
+    return <PracticeWidget config={selected.config} variant={variant} />;
+  }
 
   return (
     <>
