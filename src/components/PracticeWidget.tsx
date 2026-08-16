@@ -22,9 +22,16 @@ interface Props {
   config: PracticeConfig;
   /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
   variant?: 'classic' | 'prototype';
+  /**
+   * Candidate-B placement experiment (see PracticeChooser): renders content
+   * absolutely positioned in the card's own top-right corner, prototype
+   * variant only. Kept generic (not "changePracticeTrigger") so the hook
+   * isn't tied to one caller if it's reused.
+   */
+  cornerAction?: React.ReactNode;
 }
 
-export default function PracticeWidget({ config, variant = 'classic' }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', cornerAction }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -381,7 +388,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   // canvas. See that file's comment for why the override is scoped to a
   // coarse pointer, not just a wide viewport.
   const wrapperClasses = isPrototype
-    ? 'bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[length:var(--practice-card-max-w)] mx-auto overflow-hidden'
+    ? 'relative bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[length:var(--practice-card-max-w)] mx-auto overflow-hidden'
     : 'bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden';
 
   const innerPaddingClasses = isPrototype
@@ -428,6 +435,10 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
           top bar, per the audit's note that gradients should solve something. */}
       {!isPrototype && (
         <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
+      )}
+
+      {isPrototype && cornerAction && (
+        <div className="absolute top-2 right-2 z-10">{cornerAction}</div>
       )}
 
       <div className={innerPaddingClasses}>

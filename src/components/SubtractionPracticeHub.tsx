@@ -1,11 +1,13 @@
 import PracticeWidget from './PracticeWidget';
 import PracticeModeNav from './PracticeModeNav';
+import PracticeChooser from './PracticeChooser';
 import { useEffect } from 'react';
 import {
   SUBTRACTION_1_DIGIT,
   SUBTRACTION_2_DIGIT,
   SUBTRACTION_2_DIGIT_BORROWING,
 } from '@/engine/presets';
+import { SUBTRACTION_CHOOSER_ITEMS } from '@/config/practiceChoosers';
 import type { PracticeConfig } from '@/engine/types';
 
 type Difficulty = '1-digit' | '2-digit-without-regrouping' | '2-digit-with-regrouping';
@@ -65,12 +67,18 @@ export default function SubtractionPracticeHub({ active, variant = 'classic' }: 
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
-  // Prototype: mode switching lives on the H1 row instead (static markup in
-  // each subtraction page), matching the "H1 + contextual switcher" pattern
-  // used by /addition/1-digit and the redesigned Division pages — see
-  // AdditionPracticeHub for the full rationale.
+  // Prototype: mode switching lives in the shared PracticeChooser, opened
+  // from the practice card's own top-right corner (see PracticeWidget's
+  // cornerAction and PracticeChooser.tsx for why — H1-adjacent placement
+  // let long titles push the card down inconsistently page to page).
   if (variant === 'prototype') {
-    return <PracticeWidget config={selected.config} variant={variant} />;
+    return (
+      <PracticeWidget
+        config={selected.config}
+        variant={variant}
+        cornerAction={<PracticeChooser items={SUBTRACTION_CHOOSER_ITEMS} currentId={active} />}
+      />
+    );
   }
 
   return (
