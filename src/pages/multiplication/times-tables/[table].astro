@@ -52,7 +52,7 @@ const gradeBadge = GRADE_BADGE[tableNumber] ?? 'Grade 3 – Grade 4';
 // instead of the legacy objects above. The other 9 tables are unaffected —
 // `fact` is undefined for them and every conditional below falls back to the
 // pre-existing content.
-const PILOT_TABLES = new Set([2, 7, 9]);
+const PILOT_TABLES = new Set([2, 6, 7, 9]);
 const fact = PILOT_TABLES.has(tableNumber) ? getTimesTableFact(tableNumber) : undefined;
 
 const strategy = fact
@@ -67,8 +67,17 @@ const strategy = fact
 const EXPANDED_INTRO: Partial<Record<number, string>> = {
   2: `Because doubling is a skill many students build before formal multiplication instruction, the 2s table is one of the fastest to connect to something already known. This page drills 2×1 through 2×12 in random order until that connection becomes instant recall, not just a doubling skill in general.`,
   7: `Being honest that some tables require direct memorization helps set realistic expectations, rather than searching for a trick that doesn't exist. This page drills 7×1 through 7×12 in random order, building real recall through repeated practice instead of a shortcut this table doesn't have.`,
+  6: `The 6 times table is often the first one a student meets without an obvious standalone trick, which makes connecting it back to the already-familiar 5s table especially useful. This page drills 6×1 through 6×12 in random order so that connection turns into fast, independent recall.`,
   9: `The widely known finger trick for the 9s works because of this same 10-minus-n relationship, not as an unrelated shortcut. This page drills 9×1 through 9×12 in random order so students build fast recall alongside — not instead of — that underlying number sense.`,
 };
+
+// Reference number for the static "Use Commutativity" card below. Using a
+// literal 7 there produces a tautology on the 7 times table page itself
+// ("If you know 7×7, you already know 7×7") — swap the reference for tables
+// where it would equal tableNumber, leaving every other table's copy
+// unchanged (see docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md Phase 2
+// finding 5).
+const commutativityRef = tableNumber === 7 ? 8 : 7;
 
 // Build the full times table list for the FAQ answer
 const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}×${i + 1}=${tableNumber * (i + 1)}`).join(', ');
@@ -104,6 +113,9 @@ const links = [
     description: 'Continue table-by-table practice',
   },
   { href: '/division/facts', label: 'Division Facts', description: 'The inverse operation of multiplication' },
+  ...(tableNumber === 6
+    ? [{ href: '/division/divide-by/6', label: 'Practice the Inverse Skill: Divide by 6', description: 'Use the same 12 facts in reverse — division instead of multiplication' }]
+    : []),
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Worksheet-style timed practice' },
 ];
 
@@ -211,7 +223,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Every fact in the {tableNumber}s table appears in another table too. If you know 7×{tableNumber}, you already know {tableNumber}×7. Flip any difficult fact to find a familiar one.</p>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Every fact in the {tableNumber}s table appears in another table too. If you know {commutativityRef}×{tableNumber}, you already know {tableNumber}×{commutativityRef}. Flip any difficult fact to find a familiar one.</p>
         </div>
       </div>
     </section>
