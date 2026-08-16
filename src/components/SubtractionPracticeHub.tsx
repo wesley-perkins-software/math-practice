@@ -8,31 +8,31 @@ import {
 } from '@/engine/presets';
 import type { PracticeConfig } from '@/engine/types';
 
-type Difficulty = '1-digit' | '2-digit-no-borrowing' | '2-digit-with-borrowing';
+type Difficulty = '1-digit' | '2-digit-without-regrouping' | '2-digit-with-regrouping';
 
 const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig; href: string }[] = [
   { id: '1-digit', label: '1-Digit', config: SUBTRACTION_1_DIGIT, href: '/subtraction/1-digit' },
   {
-    id: '2-digit-no-borrowing',
+    id: '2-digit-without-regrouping',
     label: (
       <>
         <span className="block">2-Digit</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Borrowing</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Regrouping</span>
       </>
     ),
     config: SUBTRACTION_2_DIGIT,
-    href: '/subtraction/2-digit-no-borrowing',
+    href: '/subtraction/2-digit-without-regrouping',
   },
   {
-    id: '2-digit-with-borrowing',
+    id: '2-digit-with-regrouping',
     label: (
       <>
         <span className="block">2-Digit</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">Borrowing</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">Regrouping</span>
       </>
     ),
     config: SUBTRACTION_2_DIGIT_BORROWING,
-    href: '/subtraction/2-digit-with-borrowing',
+    href: '/subtraction/2-digit-with-regrouping',
   },
 ];
 

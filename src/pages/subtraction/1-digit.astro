@@ -9,8 +9,8 @@ const SITE = 'https://mathpracticeonline.com';
 
 const links = [
   { href: '/subtraction', label: 'All Subtraction Levels', description: 'Choose a difficulty or compare all levels' },
-  { href: '/subtraction/2-digit-no-borrowing', label: '2-Digit Subtraction (No Borrowing)', description: 'Next step: two-digit problems without regrouping' },
-  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Practice regrouping and borrowing' },
+  { href: '/subtraction/2-digit-without-regrouping', label: '2-Digit Subtraction (Without Regrouping)', description: 'Next step: two-digit problems without regrouping' },
+  { href: '/subtraction/2-digit-with-regrouping', label: '2-Digit Subtraction With Regrouping', description: 'Practice regrouping (borrowing)' },
   { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Build inverse-operation fluency' },
   { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style practice with instant feedback' },
 ];
@@ -76,8 +76,8 @@ const faqItems = [
           </summary>
           <div class="absolute right-0 top-full mt-1.5 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
             <a href="/subtraction/1-digit" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">1-Digit Subtraction</a>
-            <a href="/subtraction/2-digit-no-borrowing" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Subtraction (No Borrowing)</a>
-            <a href="/subtraction/2-digit-with-borrowing" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Subtraction (Borrowing)</a>
+            <a href="/subtraction/2-digit-without-regrouping" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Subtraction (Without Regrouping)</a>
+            <a href="/subtraction/2-digit-with-regrouping" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Subtraction (With Regrouping)</a>
           </div>
         </details>
       </nav>
@@ -137,7 +137,7 @@ const faqItems = [
   </Fragment>
 
   <Fragment slot="quick-answer">
-    <p>1-digit subtraction finds the difference between two numbers from 0–9, such as 6 − 2 = 4. Mastering all single-digit subtraction facts is the foundation for two-digit subtraction, borrowing, and quick mental math.</p>
+    <p>1-digit subtraction finds the difference between two numbers from 0–9, such as 6 − 2 = 4. Mastering all single-digit subtraction facts is the foundation for two-digit subtraction, regrouping, and quick mental math.</p>
   </Fragment>
 
   <SubtractionPracticeHub slot="widget" active="1-digit" variant="prototype" client:load />
@@ -202,7 +202,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Once these facts feel automatic, move on to <a href="/subtraction/2-digit-no-borrowing" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction without borrowing</a> →</p>
+    <p class="text-sm text-[#4B5563]">Once these facts feel automatic, move on to <a href="/subtraction/2-digit-without-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction without regrouping</a> →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

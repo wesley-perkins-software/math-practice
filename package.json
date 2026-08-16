@@ -8,7 +8,9 @@
     "preview": "astro preview",
     "check": "astro check",
     "validate:times-tables": "node --experimental-strip-types src/data/generated-practice/timesTables.ts",
-    "test:generator-regrouping": "node --experimental-strip-types src/engine/generator.regrouping.test.ts"
+    "test:generator-regrouping": "node --experimental-strip-types src/engine/generator.regrouping.test.ts",
+    "test:generator-regrouping-subtraction": "node --experimental-strip-types src/engine/generator.regrouping-subtraction.test.ts",
+    "test:regrouping-migration": "node --experimental-strip-types scripts/test-regrouping-migration.ts"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",

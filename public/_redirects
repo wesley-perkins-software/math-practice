@@ -1,1 +1,5 @@
 /sitemap.xml /sitemap-index.xml 301
+/addition/2-digit-no-carrying/ /addition/2-digit-without-regrouping/ 301
+/addition/2-digit-with-carrying/ /addition/2-digit-with-regrouping/ 301
+/subtraction/2-digit-no-borrowing/ /subtraction/2-digit-without-regrouping/ 301
+/subtraction/2-digit-with-borrowing/ /subtraction/2-digit-with-regrouping/ 301
