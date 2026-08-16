@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -38,7 +39,9 @@ const faqItems = [
   title="2-Digit Subtraction with Borrowing Practice | Math Practice Online"
   description="Practice 2-digit subtraction with borrowing and regrouping online. Every problem requires borrowing to build advanced subtraction accuracy. Instant feedback and streak tracking."
   canonical={`${SITE}/subtraction/2-digit-with-borrowing`}
+  pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '2-Digit Subtraction with Borrowing' }]}
+  breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -88,16 +91,86 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">2-Digit Subtraction with Borrowing Practice</h1>
-
-  <Fragment slot="intro">
-    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
-      <p>Two-digit subtraction with borrowing happens when a column's top digit is smaller than the bottom digit, so a ten must be regrouped from the next column, such as 63 − 27 = 36. Every problem on this page requires at least one borrow, building the regrouping skill that comes right after column subtraction without borrowing.</p>
+  <Fragment slot="h1">
+    <div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
+      <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">2-Digit Subtraction with Borrowing Practice</h1>
+      <nav aria-label="Change practice" class="font-practice">
+        <details class="relative" data-dismissable-menu>
+          <summary class="list-none flex items-center gap-1 text-base font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
+            Change practice
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          </summary>
+          <div class="absolute right-0 top-full mt-1.5 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
+            <a href="/subtraction/1-digit" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">1-Digit Subtraction</a>
+            <a href="/subtraction/2-digit-no-borrowing" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Subtraction (No Borrowing)</a>
+            <a href="/subtraction/2-digit-with-borrowing" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">2-Digit Subtraction (Borrowing)</a>
+          </div>
+        </details>
+      </nav>
     </div>
-    <p>This page is for second and third graders who've already mastered two-digit subtraction without borrowing and single-digit subtraction facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one borrow, so there's no way through it without regrouping a ten from the tens column into the ones column.</p>
+    <script>
+      // Same dismissable-menu behavior as the /addition/1-digit prototype's
+      // H1-row switcher: closes on Escape (returning focus to the summary),
+      // on an outside click, and the moment the user resumes practice
+      // (focuses the answer, types, or taps the on-screen keypad) via the
+      // `[data-practice-instrument]` marker the practice widget renders
+      // itself. See addition/1-digit.astro for the full rationale.
+      document.querySelectorAll<HTMLDetailsElement>('details[data-dismissable-menu]').forEach((details) => {
+        const summary = details.querySelector('summary');
+        const menu = details.querySelector<HTMLElement>(':scope > div');
+        const close = () => { details.open = false; };
+
+        const EDGE_MARGIN = 16;
+        function clampMenuPosition() {
+          if (!menu) return;
+          menu.style.left = '';
+          menu.style.right = '';
+          const rect = menu.getBoundingClientRect();
+          const viewportWidth = document.documentElement.clientWidth;
+          if (rect.right > viewportWidth - EDGE_MARGIN) {
+            menu.style.right = `${Math.max(0, rect.right - (viewportWidth - EDGE_MARGIN))}px`;
+          } else if (rect.left < EDGE_MARGIN) {
+            const detailsRect = details.getBoundingClientRect();
+            menu.style.right = 'auto';
+            menu.style.left = `${EDGE_MARGIN - detailsRect.left}px`;
+          }
+        }
+        details.addEventListener('toggle', () => {
+          if (details.open) clampMenuPosition();
+        });
+        window.addEventListener('resize', () => {
+          if (details.open) clampMenuPosition();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (details.open && e.target instanceof Node && !details.contains(e.target)) {
+            close();
+          }
+        });
+        details.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && details.open) {
+            e.preventDefault();
+            close();
+            summary?.focus();
+          }
+        });
+        document.querySelectorAll<HTMLElement>('[data-practice-instrument]').forEach((instrument) => {
+          instrument.addEventListener('pointerdown', () => { if (details.open) close(); });
+          instrument.addEventListener('focusin', () => { if (details.open) close(); });
+        });
+      });
+    </script>
   </Fragment>
 
-  <SubtractionPracticeHub slot="widget" active="2-digit-with-borrowing" client:load />
+  <Fragment slot="quick-answer">
+    <p>Two-digit subtraction with borrowing happens when a column's top digit is smaller than the bottom digit, so a ten must be regrouped from the next column, such as 63 − 27 = 36. Every problem on this page requires at least one borrow, building the regrouping skill that comes right after column subtraction without borrowing.</p>
+  </Fragment>
+
+  <SubtractionPracticeHub slot="widget" active="2-digit-with-borrowing" variant="prototype" client:load />
+
+  <Fragment slot="intro">
+    <p>This page is for second and third graders who've already mastered two-digit subtraction without borrowing and single-digit subtraction facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one borrow, so there's no way through it without regrouping a ten from the tens column into the ones column.</p>
+  </Fragment>
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
