@@ -256,13 +256,13 @@ export default function LongDivisionProblemInput({
           R:
         </span>
         <span
-          className={`inline-flex items-center justify-center min-h-[length:var(--ld-remainder-box-min-h)] rounded-xl border-[1.5px] px-4 transition-colors duration-150 ${
+          className={`inline-flex items-center justify-center min-h-[length:var(--ld-remainder-box-min-h)] rounded-xl border-[1.5px] px-5 transition-colors duration-150 ${
             activeSlot === 'remainder' && isFocused
               ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
               : 'border-[#8983B8] bg-transparent'
           }`}
         >
-          <span className="inline-block min-w-[2ch] text-center leading-none">
+          <span className="inline-block min-w-[2.5ch] text-center leading-none">
             {remainderValue.length === 0 ? (
               <span className="inline-flex items-center justify-center w-full leading-none">
                 <span aria-hidden="true" className="text-[length:var(--ld-remainder-size)] font-bold opacity-0 select-none">0</span>
