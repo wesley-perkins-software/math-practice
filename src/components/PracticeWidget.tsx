@@ -375,13 +375,31 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
     ? 'px-[length:var(--practice-card-px)] pt-[length:var(--practice-card-pt)] pb-[length:var(--practice-card-pb)]'
     : 'px-4 py-4 md:px-6 md:py-5';
 
+  // Timed + prototype (currently just the Speed Drill) carries a corner-stat
+  // row the untimed prototype pages don't have. Rather than shrinking the
+  // shared --practice-card-pt/pb/--practice-stack-gap tokens in
+  // practice-surface-prototype.css — which would quietly resize every
+  // approved practice card, not just this one — these are local inline
+  // overrides of the same custom properties, scoped to this element only.
+  // Descendants still read var(--practice-card-pt) etc. unchanged; only a
+  // timed+prototype instance (i.e. only the Speed Drill today) sees the
+  // tighter values.
+  const timedPrototypeStyle: React.CSSProperties | undefined =
+    isTimed && isPrototype
+      ? ({
+          '--practice-card-pt': '0.75rem',
+          '--practice-card-pb': '0.625rem',
+          '--practice-stack-gap': '0.25rem',
+        } as React.CSSProperties)
+      : undefined;
+
   return (
     // data-practice-instrument: lets the H1-row switcher's vanilla script
     // (addition/1-digit.astro) detect "the user resumed practice" and close
     // itself — see the switcher's own comment for why this can't just be a
     // React prop (the switcher is deliberately framework-agnostic markup
     // living outside this island).
-    <div className={wrapperClasses} {...(isPrototype ? { 'data-practice-instrument': true } : {})}>
+    <div className={wrapperClasses} style={timedPrototypeStyle} {...(isPrototype ? { 'data-practice-instrument': true } : {})}>
       {/* Gradient accent bar — classic only; the prototype surface relies on its
           bordered surface + the brand-colored submit key instead of a decorative
           top bar, per the audit's note that gradients should solve something. */}
@@ -393,16 +411,41 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
           <div className={`flex flex-col items-center ${isPrototype ? 'gap-[length:var(--practice-stack-gap)]' : 'gap-3 md:gap-4'}`}>
-            {/* Timer bar — only for timed mode */}
+            {/* Timer/Correct bar — only for timed mode. Time sits upper-left,
+                Correct sits upper-right (prototype only — Correct is a
+                Speed-Drill-specific addition, not part of the shared classic
+                timed row). This is a standalone row, entirely separate from
+                the arithmetic block rendered below it: the equation's own
+                centering (a fixed-width column, mx-auto, in its own flex
+                item) never reads this row's contents, so unequal left/right
+                stat widths here cannot pull the arithmetic off-center —
+                verified by measuring the arithmetic column's midpoint
+                against the card's midpoint, not by eye. */}
             {isTimed && (
               <div className="w-full flex items-center justify-between">
                 {timerStarted
-                  ? <TimerDisplay secondsRemaining={secondsRemaining} />
-                  : <TimerDisplay secondsRemaining={duration} />
+                  ? <TimerDisplay secondsRemaining={secondsRemaining} variant={variant} />
+                  : <TimerDisplay secondsRemaining={duration} variant={variant} />
                 }
-                {/* Duration picker only available before timer starts */}
-                {!timerStarted && !isTimerDurationFixed && (
-                  <DurationPicker value={duration} onChange={handleDurationChange} />
+                {isPrototype ? (
+                  // Correct: live count of correct answers this session —
+                  // reuses the same `correct` state ScoreCard already reads
+                  // at session end, so this is purely a display of existing
+                  // state, not a new scoring path. Same compact
+                  // caption+numeral shape as Time (see TimerDisplay) so the
+                  // two corner stats carry matching visual weight; brand
+                  // indigo ties it to Personal Best below rather than to
+                  // Time's neutral ink, since both are "how well am I
+                  // doing" stats.
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-[11px] font-bold text-[#8983B8] uppercase tracking-wide">Correct</span>
+                    <span className="text-xl font-extrabold leading-none tabular-nums text-[#4F46E5]">{correct}</span>
+                  </div>
+                ) : (
+                  /* Duration picker only available before timer starts (classic) */
+                  !timerStarted && !isTimerDurationFixed && (
+                    <DurationPicker value={duration} onChange={handleDurationChange} />
+                  )
                 )}
               </div>
             )}
@@ -413,7 +456,11 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 share it with Division with Remainders) — showRemainder
                 toggles just the remainder field, since facts/divide-by never
                 have one. */}
-            {config.operation === 'division' && isPrototype ? (
+            {/* Checked per-problem (not per-config) so a mixed config like the
+                Arithmetic Speed Drill renders authentic long-division
+                notation whenever the CURRENT problem happens to be division,
+                even though config.operation is 'mixed' overall. */}
+            {problem.operation === 'division' && isPrototype ? (
               <LongDivisionProblemInput
                 problem={problem}
                 onSubmit={(q, r) => handleAnswer(q, r)}
@@ -566,29 +613,44 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
             )}
 
             {isTimed && (
-              <div className="flex items-center justify-between w-full">
-                <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
-                  Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
-                </span>
+              <div className={`flex items-end justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
+                {/* Personal Best: the timed counterpart to the untimed
+                    Streak stat above — same label-above-value shape, compact
+                    lower-left placement, motivating but not decorated. Live
+                    score during play is never shown (Speed Drill only ever
+                    reveals the count on the results screen), so there's no
+                    ambiguity between this and a "current score" stat. */}
+                {isPrototype ? (
+                  <div className="flex flex-col gap-0.5 leading-none">
+                    <span className="text-[13px] font-bold text-[#211D4F]">Personal Best</span>
+                    <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#8983B8]'}`}>
+                      {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+                    </span>
+                  </div>
+                ) : (
+                  <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
+                    Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+                  </span>
+                )}
                 {!personalBestResetPending ? (
                   <button
                     onClick={() => setPersonalBestResetPending(true)}
-                    className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
+                    className={`text-sm transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
                 ) : (
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs text-[#6B7280] mr-1">Reset personal best?</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm mr-0.5 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset best?</span>
                     <button
                       onClick={handleResetPersonalBest}
-                      className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                      className="text-sm font-semibold text-white bg-red-500 hover:bg-red-600 px-2.5 py-1 rounded transition-colors"
                     >
                       Yes
                     </button>
                     <button
                       onClick={() => setPersonalBestResetPending(false)}
-                      className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
+                      className={`text-sm font-semibold px-2.5 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
                     >
                       Cancel
                     </button>
@@ -608,6 +670,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
             preSessionScore={preSessionScore}
             isNewStreakRecord={isNewStreakRecord}
             onRestart={handleRestart}
+            variant={variant}
           />
         )}
       </div>
