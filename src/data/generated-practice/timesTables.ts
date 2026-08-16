@@ -138,18 +138,18 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
   {
     n: 6,
     quickAnswerFact:
-      "6×n equals the 5×n fact plus one more group of n, so the 6 times table can be derived from the already-learned 5s table rather than memorized separately.",
+      'A quick way to find any 6 times fact is to start with the matching 5 times fact and add one more group — for example, 6×8 is 5×8=40 plus one more 8, which makes 48.',
     introClause:
-      'this is often the first table a student meets without an obvious standalone shortcut, which makes connecting it back to the 5s especially useful',
-    strategyTitle: 'Add One Group to the 5s Fact',
+      'the 6 times table is often the first one without an easy shortcut like doubling or counting by fives, so showing how every 6 times fact grows out of a 5 times fact already known gives a student something solid to build on',
+    strategyTitle: 'Use a 5s Fact, Then Add One More Group',
     strategyExplanation:
-      '6×n = 5×n + n. For 6×8: 5×8=40, plus 8 more is 48. Separately, for even multipliers, the ones digit of 6×n always matches the ones digit of n (6×4=24, 6×6=36, 6×8=48) — a genuine, checkable pattern that only holds when n is even.',
+      'Every 6 times fact is one 5 times fact plus one more group. For 6×8, start with 5×8=40. Add one more group of 8: 40+8=48. As a check: 6×8 = 5×8 + 8.',
     parentTeacherNote:
-      "For even multipliers, 6×n's last digit always matches n's last digit (6×4=24, 6×8=48) — teach this as a self-check, since errors here often carry into the 7s and 8s where mistakes compound.",
+      "If a child does 5 times facts quickly but slows down on 6 times facts, they likely haven't linked the two yet — remind them to start with the 5s fact, then add one more group. Once that click happens, the 6s stop feeling like a whole new table to memorize.",
     faqDifferentiator: {
-      question: 'Is there a pattern in the last digit of 6 times table answers?',
+      question: 'Is there a quick way to check a 6 times answer?',
       answer:
-        "Yes, but only for even multipliers: the ones digit of 6×n matches the ones digit of n. For example, 6×4=24 and 6×8=48 both keep the original digit. This does not hold for odd multipliers (6×5=30, not a digit match), so it's a useful spot-check only for even n.",
+        "Yes, for even numbers: when you multiply 6 by an even number, the last digit of the answer matches that number. For example, 6×4=24, 6×6=36, and 6×8=48 — the 4, 6, and 8 show up again at the end. This doesn't work for odd numbers (6×5=30), so use it only as a check for even ones.",
     },
   },
   {
