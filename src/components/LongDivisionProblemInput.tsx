@@ -22,9 +22,12 @@ const REMAINDER_MAX_DIGITS = 2;
  * where a student would write it on paper. The remainder is a compact
  * "R: [ ]" beneath the whole setup, secondary to the quotient.
  *
- * Quotient and dividend share a fixed `w-[3ch]` box (dividend can reach 3
- * digits: divisor 2–12 × quotient 1–12 + remainder), so typing 1 vs. 2
- * quotient digits never shifts place-value alignment or reflows the card.
+ * Quotient and dividend share a column sized to the CURRENT problem's actual
+ * dividend digit count (not a constant), so a 2-digit dividend sits flush
+ * against the bracket instead of floating in a gutter reserved for 3 digits
+ * — while still staying fixed while the student types (the dividend's digit
+ * count can't change mid-problem, only the quotient's can, and the quotient
+ * can never have more digits than the dividend it divides into).
  */
 export default function LongDivisionProblemInput({
   problem,
@@ -141,6 +144,11 @@ export default function LongDivisionProblemInput({
       ? 'text-[#DC2626]'
       : 'text-[#211D4F]';
 
+  // The dividend's own digit count sets the shared column width for both
+  // itself and the quotient above it — a 2-digit dividend gets a 2-digit-wide
+  // column flush against the bracket, a 3-digit dividend gets a wider one.
+  const columnWidth = `${String(problem.operandA).length}ch`;
+
   return (
     <div className="flex flex-col items-center gap-3 w-full font-practice">
       {/* Hidden input captures keyboard events for whichever slot is active */}
@@ -186,7 +194,8 @@ export default function LongDivisionProblemInput({
           {/* Quotient — the primary answer, occupying the actual quotient position */}
           <div className="cursor-pointer mb-1.5" onClick={() => switchSlot('quotient')}>
             <span
-              className={`inline-flex items-center justify-end w-[3ch] min-h-[length:var(--ld-box-min-h)] rounded-xl border-[1.5px] px-1.5 transition-colors duration-150 ${
+              style={{ width: columnWidth }}
+              className={`inline-flex items-center justify-end min-h-[length:var(--ld-box-min-h)] rounded-xl border-[1.5px] px-1.5 transition-colors duration-150 ${
                 activeSlot === 'quotient' && isFocused
                   ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
                   : 'border-[#8983B8] bg-transparent'
@@ -213,9 +222,12 @@ export default function LongDivisionProblemInput({
           {/* The bracket: border-top is the bar, border-left + rounded
               top-left corner draws the ⟌ hook. The dividend sits inside it. */}
           <div
-            className="border-t-[length:var(--ld-bracket-border-w)] border-l-[length:var(--ld-bracket-border-w)] border-[#211D4F] rounded-tl-2xl pl-3 pr-1.5 pt-1.5"
+            className="border-t-[length:var(--ld-bracket-border-w)] border-l-[length:var(--ld-bracket-border-w)] border-[#211D4F] rounded-tl-2xl pl-2 pr-1 pt-1.5"
           >
-            <span className="inline-block w-[3ch] text-right text-[length:var(--ld-digit-size)] font-bold text-[#211D4F] tabular-nums leading-none">
+            <span
+              style={{ width: columnWidth }}
+              className="inline-block text-right text-[length:var(--ld-digit-size)] font-bold text-[#211D4F] tabular-nums leading-none"
+            >
               {problem.operandA}
             </span>
           </div>
@@ -228,7 +240,7 @@ export default function LongDivisionProblemInput({
           R:
         </span>
         <span
-          className={`inline-flex items-center justify-center w-[2.25ch] min-h-[length:var(--ld-remainder-box-min-h)] rounded-lg border-[1.5px] px-1 transition-colors duration-150 ${
+          className={`inline-flex items-center justify-center w-[4ch] min-h-[length:var(--ld-remainder-box-min-h)] rounded-lg border-[1.5px] px-2 transition-colors duration-150 ${
             activeSlot === 'remainder' && isFocused
               ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
               : 'border-[#8983B8] bg-transparent'
