@@ -34,7 +34,7 @@
  * component that renders above the fold on every page, since `<details>`
  * already gives Enter/Space-to-toggle and native disclosure semantics.
  */
-import { OPERATION_MENUS, type Operation } from '@/data/practiceNav';
+import { OPERATION_MENUS, OPERATION_ORDER, operationMenuEntries } from '@/data/practiceNav';
 import NumberGrid from './NumberGrid.astro';
 
 interface Props {
@@ -43,8 +43,6 @@ interface Props {
 }
 
 const { paddingY = 'py-2.5' } = Astro.props;
-
-const operationOrder: Operation[] = ['addition', 'subtraction', 'multiplication', 'division'];
 
 const staticLinks = [
   { href: '/arithmetic-speed-drill', label: 'Speed Drill' },
@@ -64,20 +62,9 @@ const chevron = 'M6 9l6 6 6-6';
 
     <!-- Desktop nav: only at widths measured to fit all 7 items on one line without wrapping (lg / 1024px+). -->
     <nav aria-label="Primary" class="hidden lg:flex items-center gap-1">
-      {operationOrder.map((op) => {
+      {OPERATION_ORDER.map((op) => {
         const menu = OPERATION_MENUS[op];
         const label = menu.hub.label.replace(' Practice', '');
-        const gridEntry = menu.grid && (
-          <details class="relative" data-dismissable-menu>
-            <summary class="list-none flex items-center justify-between px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5] cursor-pointer select-none">
-              {menu.grid.label}
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 -rotate-90" aria-hidden="true"><path d={chevron} /></svg>
-            </summary>
-            <div class="absolute left-full top-0 ml-1.5 z-30 w-48 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] p-2.5">
-              <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
-            </div>
-          </details>
-        );
         return (
           <details class="relative" data-dismissable-menu data-op-group="desktop">
             <summary class="list-none flex items-center gap-0.5 px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
@@ -86,11 +73,19 @@ const chevron = 'M6 9l6 6 6-6';
             </summary>
             <div class="absolute left-0 top-full mt-2 z-20 w-60 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] py-1.5">
               <a href={menu.hub.href} class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] hover:bg-[#F5F3FF]">{menu.hub.label}</a>
-              {menu.grid?.position === 'before' && gridEntry}
-              {menu.items.map((item) => (
-                <a href={item.href} class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{item.label}</a>
+              {operationMenuEntries(menu).map((entry) => entry.type === 'grid' ? (
+                <details class="relative" data-dismissable-menu>
+                  <summary class="list-none flex items-center justify-between px-3.5 py-2 text-sm text-black hover:bg-[#FAF9FE] hover:text-[#4F46E5] cursor-pointer select-none">
+                    {entry.label}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 -rotate-90" aria-hidden="true"><path d={chevron} /></svg>
+                  </summary>
+                  <div class="absolute left-full top-0 ml-1.5 z-30 w-48 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] p-2.5">
+                    <NumberGrid mode="menu" basePath={entry.basePath} max={entry.max} />
+                  </div>
+                </details>
+              ) : (
+                <a href={entry.href} class="block px-3.5 py-2 text-sm text-black hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{entry.label}</a>
               ))}
-              {menu.grid?.position !== 'before' && gridEntry}
             </div>
           </details>
         );
@@ -101,7 +96,7 @@ const chevron = 'M6 9l6 6 6-6';
     </nav>
 
     <!-- Menu trigger: renders below `lg` (1024px), including phones (<640px) -->
-    <details class="relative lg:hidden" data-site-nav-menu>
+    <details class="relative block lg:hidden" data-site-nav-menu>
       <summary class="list-none flex items-center justify-center w-10 h-10 rounded-lg text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
         <span class="sr-only">Menu</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" width="22" height="22" aria-hidden="true">
@@ -109,20 +104,9 @@ const chevron = 'M6 9l6 6 6-6';
         </svg>
       </summary>
       <div class="absolute right-0 top-full mt-2 z-20 w-72 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] py-1.5">
-        {operationOrder.map((op) => {
+        {OPERATION_ORDER.map((op) => {
           const menu = OPERATION_MENUS[op];
           const label = menu.hub.label.replace(' Practice', '');
-          const gridEntry = menu.grid && (
-            <details data-dismissable-menu>
-              <summary class="list-none flex items-center justify-between px-3 py-2 text-sm text-[#43405C] cursor-pointer select-none">
-                {menu.grid.label}
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#8983B8] shrink-0" aria-hidden="true"><path d={chevron} /></svg>
-              </summary>
-              <div class="px-3 py-2">
-                <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
-              </div>
-            </details>
-          );
           return (
             <details class="border-b border-[#F0EEFC] last:border-b-0" data-dismissable-menu data-op-group="mobile">
               <summary class="list-none flex items-center justify-between px-3.5 py-2.5 text-[15px] font-semibold text-[#1E1B4B] cursor-pointer select-none">
@@ -131,18 +115,26 @@ const chevron = 'M6 9l6 6 6-6';
               </summary>
               <div class="pb-2 pl-3.5">
                 <a href={menu.hub.href} class="block px-3 py-2 text-sm font-semibold text-[#4F46E5]">{menu.hub.label}</a>
-                {menu.grid?.position === 'before' && gridEntry}
-                {menu.items.map((item) => (
-                  <a href={item.href} class="block px-3 py-2 text-sm text-[#43405C]">{item.label}</a>
+                {operationMenuEntries(menu).map((entry) => entry.type === 'grid' ? (
+                  <details data-dismissable-menu>
+                    <summary class="list-none flex items-center justify-between px-3 py-2 text-sm text-black cursor-pointer select-none">
+                      {entry.label}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#8983B8] shrink-0" aria-hidden="true"><path d={chevron} /></svg>
+                    </summary>
+                    <div class="px-3 py-2">
+                      <NumberGrid mode="menu" basePath={entry.basePath} max={entry.max} />
+                    </div>
+                  </details>
+                ) : (
+                  <a href={entry.href} class="block px-3 py-2 text-sm text-black">{entry.label}</a>
                 ))}
-                {menu.grid?.position !== 'before' && gridEntry}
               </div>
             </details>
           );
         })}
         <div class="pt-1.5">
           {staticLinks.map((link) => (
-            <a href={link.href} class="block px-3.5 py-2.5 text-[15px] text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{link.label}</a>
+            <a href={link.href} class="block px-3.5 py-2.5 text-[15px] text-black hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{link.label}</a>
           ))}
         </div>
       </div>

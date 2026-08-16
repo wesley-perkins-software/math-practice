@@ -40,7 +40,7 @@ const links = numberGridLinks(basePath, max);
         class={`py-2 rounded-lg text-sm text-center transition-colors duration-150 ${
           isCurrent
             ? 'font-semibold text-[#1E1B4B] ring-1 ring-inset ring-[#4F46E5]/40 bg-[#F5F3FF]'
-            : 'text-[#43405C] bg-[#F5F3FF]/60 hover:bg-[#EEF2FF] hover:text-[#4F46E5]'
+            : `${mode === 'menu' ? 'text-black' : 'text-[#43405C]'} bg-[#F5F3FF]/60 hover:bg-[#EEF2FF] hover:text-[#4F46E5]`
         }`}
       >
         {n}
