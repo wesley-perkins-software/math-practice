@@ -89,6 +89,15 @@ const { title, description, canonical, breadcrumb = [], pilotLayout = false, bre
             <slot name="widget" />
           </div>
 
+          <!--
+            Future ad seam: on mobile/tablet, an ad will eventually be
+            inserted here, between the widget and the local chooser. The
+            local chooser below is already its own section (not nested
+            inside the widget's div above), so that insertion won't require
+            any DOM restructuring later. No ad code or placeholder here now.
+          -->
+          <slot name="local-chooser" />
+
           <!-- Internal Links (optional, page-specific position) -->
           <slot name="links" />
 

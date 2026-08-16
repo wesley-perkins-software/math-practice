@@ -1,0 +1,55 @@
+---
+/**
+ * Local "Choose another ... practice" section rendered immediately below
+ * the practice widget (via PracticeLayout's `local-chooser` slot). Kept
+ * deliberately lightweight — typography, spacing, a subtle divider — not
+ * another bordered card competing with the practice widget above it.
+ *
+ * The operation hub ("View all ... practice") is rendered as a quieter
+ * secondary link, separate from the actual drill choices, since it's a
+ * different kind of destination (an overview page, not a sibling drill).
+ */
+import { OPERATION_MENUS, type Operation } from '@/data/practiceNav';
+import NumberGrid from './NumberGrid.astro';
+
+interface Props {
+  operation: Operation;
+  /** href of the page this chooser is rendered on, so it isn't linked to itself. */
+  current: string;
+  showGrid?: boolean;
+  gridCurrent?: number;
+}
+
+const { operation, current, showGrid = false, gridCurrent } = Astro.props;
+const menu = OPERATION_MENUS[operation];
+const items = menu.items.filter((item) => item.href !== current);
+---
+
+<section aria-labelledby="local-chooser-heading" class="mt-8 pt-6 border-t border-[#E0E7FF]">
+  <h2 id="local-chooser-heading" class="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-2.5">
+    Choose another {operation} practice
+  </h2>
+
+  <ul class="flex flex-wrap gap-x-5 gap-y-1.5 text-sm">
+    {items.map((item) => (
+      <li>
+        <a href={item.href} class="text-[#4F46E5] font-medium hover:underline underline-offset-2">{item.label}</a>
+      </li>
+    ))}
+  </ul>
+
+  {showGrid && menu.grid && (
+    <div class="mt-3 max-w-xs">
+      <p class="text-xs font-medium text-[#6B7280] mb-1.5">{menu.grid.label}</p>
+      <NumberGrid mode="chooser" basePath={menu.grid.basePath} max={menu.grid.max} current={gridCurrent} />
+    </div>
+  )}
+
+  {menu.hub.href !== current && (
+    <p class="mt-3">
+      <a href={menu.hub.href} class="text-xs text-[#6B7280] hover:text-[#4F46E5] transition-colors">
+        View all {operation} practice →
+      </a>
+    </p>
+  )}
+</section>

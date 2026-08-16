@@ -1,27 +1,42 @@
 ---
 /**
  * Shared site header (brand + primary nav), used by PracticeLayout and
- * HubLayout. Previously duplicated verbatim in both files with a
- * `hidden sm:flex` nav that only had two states: no nav (<640px) or the
- * full 7-link row (>=640px). That row only actually fits without wrapping
- * starting around 1000-1024px — from 640px up to there, "Math Practice
- * Online" wrapped onto 2-3 lines and "Speed Drill"/"My Progress" wrapped
- * mid-label, and the header still overflowed horizontally at some widths
- * in that range (measured: real horizontal overflow up to ~800px, awkward
- * multi-line brand/labels up to ~1000px).
+ * HubLayout.
  *
- * Fix: the full nav row now only renders at `lg` (1024px+) — measured as
- * the width it first renders on one line with no label wrapping. Below
- * that, down to `sm` (640px), a menu trigger replaces it, opening a
- * dropdown with the same links at a comfortable touch size. Below `sm`
- * nothing changes — mobile's brand-only header (nav reachable via the
- * footer) is the already-approved design and isn't part of this bug.
+ * History: originally a flat 7-link row with two states — no nav (<640px,
+ * "reachable via the footer") or the full row (>=640px), with a dropdown
+ * trigger filling the 640-1024px gap where the full row didn't fit
+ * (measured: real horizontal overflow up to ~800px, awkward multi-line
+ * labels up to ~1000px). That measurement work is preserved below.
  *
- * This split happens to land tablet portrait (fits under 1024px wide) on
- * the menu trigger and tablet landscape (1024px+) on the full row, which
- * matches actual available width rather than an assumption about the
- * device category.
+ * Redesign: Addition/Subtraction/Multiplication/Division are now
+ * disclosure menus (practice-variant links, plus a nested 1-12 grid for
+ * Times Tables/Divide By) instead of plain links, so the header can carry
+ * all practice-switching navigation that used to live beside the H1 or
+ * inside the practice widget. That nested IA needs to be reachable on a
+ * phone, so the old "<640px: no nav at all" decision is reversed here —
+ * every width now gets a working menu trigger; only the *presentation*
+ * (full inline row vs a dropdown/panel trigger) still depends on width,
+ * using the same three width tiers as before:
+ *   <640px (`sm`)         -> menu trigger, dropdown panel with nested
+ *                            per-operation disclosures (mobile/narrow tablet)
+ *   640-1024px (`sm`-`lg`) -> same trigger/panel treatment (more headroom,
+ *                            same panel works unchanged)
+ *   >=1024px (`lg`)        -> full inline row; each operation is its own
+ *                            dropdown, Times Tables/Divide By nest a second
+ *                            flyout for the 1-12 grid
+ * Tablet landscape can land on either tier depending on the exact device
+ * width (many sit right at/near 1024px) — verified at validation time
+ * rather than adding a dedicated breakpoint.
+ *
+ * All interactivity here is plain `<details>/<summary>` + vanilla script,
+ * matching the file's original convention — no React/hydration cost for a
+ * component that renders above the fold on every page, since `<details>`
+ * already gives Enter/Space-to-toggle and native disclosure semantics.
  */
+import { OPERATION_MENUS, type Operation } from '@/data/practiceNav';
+import NumberGrid from './NumberGrid.astro';
+
 interface Props {
   /** Vertical header padding — the two call sites historically differed slightly (py-2.5 vs py-3.5). */
   paddingY?: string;
@@ -29,15 +44,15 @@ interface Props {
 
 const { paddingY = 'py-2.5' } = Astro.props;
 
-const navLinks = [
-  { href: '/addition', label: 'Addition' },
-  { href: '/subtraction', label: 'Subtraction' },
-  { href: '/multiplication', label: 'Multiplication' },
-  { href: '/division', label: 'Division' },
+const operationOrder: Operation[] = ['addition', 'subtraction', 'multiplication', 'division'];
+
+const staticLinks = [
   { href: '/arithmetic-speed-drill', label: 'Speed Drill' },
   { href: '/math-worksheets', label: 'Worksheets' },
   { href: '/progress', label: 'My Progress' },
 ];
+
+const chevron = 'M6 9l6 6 6-6';
 ---
 
 <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
@@ -47,34 +62,126 @@ const navLinks = [
       <span class="text-base font-bold text-white tracking-tight whitespace-nowrap">Math Practice Online</span>
     </a>
 
-    <!-- Full nav: only at widths measured to fit all 7 links on one line without wrapping (lg / 1024px+). -->
+    <!-- Desktop nav: only at widths measured to fit all 7 items on one line without wrapping (lg / 1024px+). -->
     <nav aria-label="Primary" class="hidden lg:flex items-center gap-1">
-      {navLinks.map((link) => (
+      {operationOrder.map((op) => {
+        const menu = OPERATION_MENUS[op];
+        const label = menu.hub.label.replace(' Practice', '');
+        return (
+          <details class="relative" data-dismissable-menu>
+            <summary class="list-none flex items-center gap-0.5 px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
+              {label}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d={chevron} /></svg>
+            </summary>
+            <div class="absolute left-0 top-full mt-2 z-20 w-60 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] py-1.5">
+              <a href={menu.hub.href} class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] hover:bg-[#F5F3FF]">{menu.hub.label}</a>
+              {menu.items.map((item) => (
+                <a href={item.href} class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{item.label}</a>
+              ))}
+              {menu.grid && (
+                <details class="relative" data-dismissable-menu>
+                  <summary class="list-none flex items-center justify-between px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5] cursor-pointer select-none">
+                    {menu.grid.label}
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 -rotate-90" aria-hidden="true"><path d={chevron} /></svg>
+                  </summary>
+                  <div class="absolute left-full top-0 ml-1.5 z-30 w-48 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] p-2.5">
+                    <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
+                  </div>
+                </details>
+              )}
+            </div>
+          </details>
+        );
+      })}
+      {staticLinks.map((link) => (
         <a href={link.href} class="px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all">{link.label}</a>
       ))}
     </nav>
 
-    <!-- Tablet-portrait / narrow menu trigger: fills the gap between "no nav" (<640px, unchanged) and "full row fits" (>=1024px). -->
-    <details class="relative hidden sm:block lg:hidden" data-site-nav-menu>
+    <!-- Menu trigger: renders below `lg` (1024px), including phones (<640px) -->
+    <details class="relative lg:hidden" data-site-nav-menu>
       <summary class="list-none flex items-center justify-center w-10 h-10 rounded-lg text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
         <span class="sr-only">Menu</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" width="22" height="22" aria-hidden="true">
           <path d="M4 6h16M4 12h16M4 18h16" />
         </svg>
       </summary>
-      <div class="absolute right-0 top-full mt-2 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] py-1.5">
-        {navLinks.map((link) => (
-          <a href={link.href} class="block px-3.5 py-2.5 text-[15px] text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{link.label}</a>
-        ))}
+      <div class="absolute right-0 top-full mt-2 z-20 w-72 max-w-[calc(100vw-2rem)] max-h-[calc(100vh-5rem)] overflow-y-auto bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] py-1.5">
+        {operationOrder.map((op) => {
+          const menu = OPERATION_MENUS[op];
+          const label = menu.hub.label.replace(' Practice', '');
+          return (
+            <details class="border-b border-[#F0EEFC] last:border-b-0">
+              <summary class="list-none flex items-center justify-between px-3.5 py-2.5 text-[15px] font-semibold text-[#1E1B4B] cursor-pointer select-none">
+                {label}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-[#8983B8] shrink-0" aria-hidden="true"><path d={chevron} /></svg>
+              </summary>
+              <div class="pb-2 pl-3.5">
+                <a href={menu.hub.href} class="block px-3 py-2 text-sm font-semibold text-[#4F46E5]">{menu.hub.label}</a>
+                {menu.items.map((item) => (
+                  <a href={item.href} class="block px-3 py-2 text-sm text-[#43405C]">{item.label}</a>
+                ))}
+                {menu.grid && (
+                  <details>
+                    <summary class="list-none flex items-center justify-between px-3 py-2 text-sm text-[#43405C] cursor-pointer select-none">
+                      {menu.grid.label}
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#8983B8] shrink-0" aria-hidden="true"><path d={chevron} /></svg>
+                    </summary>
+                    <div class="px-3 py-2">
+                      <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
+                    </div>
+                  </details>
+                )}
+              </div>
+            </details>
+          );
+        })}
+        <div class="pt-1.5">
+          {staticLinks.map((link) => (
+            <a href={link.href} class="block px-3.5 py-2.5 text-[15px] text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{link.label}</a>
+          ))}
+        </div>
       </div>
     </details>
   </div>
 </header>
 
 <script>
-  document.querySelectorAll<HTMLDetailsElement>('details[data-site-nav-menu]').forEach((details) => {
+  // Shared open/close behavior for every disclosure menu in the header:
+  // the top-level mobile trigger (`data-site-nav-menu`) and every operation
+  // dropdown/nested flyout (`data-dismissable-menu`). Escape closes the
+  // innermost open menu and returns focus to its own trigger (no
+  // stopPropagation, so a second Escape closes a parent menu too — a
+  // second `[data-dismissable-menu]` ancestor, if open, gets its own
+  // Escape keydown next since focus is still inside it).
+  document.querySelectorAll<HTMLDetailsElement>('details[data-site-nav-menu], details[data-dismissable-menu]').forEach((details) => {
     const summary = details.querySelector('summary');
+    const menu = details.querySelector<HTMLElement>(':scope > div');
     const close = () => { details.open = false; };
+
+    const EDGE_MARGIN = 16;
+    function clampMenuPosition() {
+      if (!menu) return;
+      menu.style.left = '';
+      menu.style.right = '';
+      const rect = menu.getBoundingClientRect();
+      const viewportWidth = document.documentElement.clientWidth;
+      if (rect.right > viewportWidth - EDGE_MARGIN) {
+        menu.style.right = '0';
+        menu.style.left = 'auto';
+      }
+      if (rect.left < EDGE_MARGIN) {
+        menu.style.left = '0';
+        menu.style.right = 'auto';
+      }
+    }
+    details.addEventListener('toggle', () => {
+      if (details.open) clampMenuPosition();
+    });
+    window.addEventListener('resize', () => {
+      if (details.open) clampMenuPosition();
+    });
+
     document.addEventListener('click', (e) => {
       if (details.open && e.target instanceof Node && !details.contains(e.target)) {
         close();

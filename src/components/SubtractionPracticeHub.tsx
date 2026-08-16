@@ -65,10 +65,9 @@ export default function SubtractionPracticeHub({ active, variant = 'classic' }: 
 
   const selected = DIFFICULTIES.find(d => d.id === active)!;
 
-  // Prototype: mode switching lives on the H1 row instead (static markup in
-  // each subtraction page), matching the "H1 + contextual switcher" pattern
-  // used by /addition/1-digit and the redesigned Division pages — see
-  // AdditionPracticeHub for the full rationale.
+  // Prototype: mode switching happens through the global header's
+  // Subtraction menu and the page's below-widget local chooser instead of
+  // an in-page tab tray — see LocalChooser.astro.
   if (variant === 'prototype') {
     return <PracticeWidget config={selected.config} variant={variant} />;
   }
