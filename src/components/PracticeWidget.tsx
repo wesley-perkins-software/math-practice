@@ -22,9 +22,11 @@ interface Props {
   config: PracticeConfig;
   /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
   variant?: 'classic' | 'prototype';
+  /** Use black instead of muted grey for inactive statistics on dark-text pages. */
+  darkText?: boolean;
 }
 
-export default function PracticeWidget({ config, variant = 'classic' }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -576,7 +578,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     <div className="flex flex-col gap-0.5 leading-none">
                       <span className="text-[13px] font-bold text-[#211D4F]">Streak</span>
                       <span className="flex items-baseline gap-1">
-                        <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#8983B8]'}`}>
+                        <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : darkText ? 'text-black' : 'text-[#8983B8]'}`}>
                           {stats.currentStreak}
                         </span>
                         {stats.currentStreak > 0 && (
@@ -647,7 +649,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 {isPrototype ? (
                   <div className="flex flex-col gap-0.5 leading-none">
                     <span className="text-[13px] font-bold text-[#211D4F]">Personal Best</span>
-                    <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#8983B8]'}`}>
+                    <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : darkText ? 'text-black' : 'text-[#8983B8]'}`}>
                       {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
                     </span>
                   </div>

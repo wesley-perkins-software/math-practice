@@ -84,12 +84,9 @@ const EXPANDED_INTRO: Partial<Record<number, string>> = {
 // finding 5).
 const commutativityRef = tableNumber === 7 ? 8 : 7;
 
-// Font-color request scoped to the table 6 pilot page only: body/list text
-// switches from the site's default grey to black. Every other table keeps
-// its original grey text-[#6B7280]/[#4B5563] classes unchanged. The same
-// per-page `darkText`/`bodyTextClass`/`listTextClass` pattern is repeated in
-// [divisor].astro, LocalChooser.astro, NumberGrid.astro, and
-// InternalLinks.tsx to cover every grey element on these two pilot pages.
+// Approved content pages use black rather than the site's default muted grey.
+// A single range check covers this rollout and its table 6 exemplar without
+// growing a page-number-specific chain of conditionals.
 //
 // KNOWN LIMITATION, NOT SOLVED HERE: this is a page-by-page conditional
 // stopgap, not a real typography system â€” every other generated/leaf page
@@ -98,9 +95,10 @@ const commutativityRef = tableNumber === 7 ? 8 : 7;
 // (e.g. a CSS variable or Tailwind theme color) applied once, not this
 // per-page branching repeated across every page. Flagged for a later
 // dedicated shared-typography pass; intentionally not addressed in this
-// narrowly-scoped pilot cleanup.
-const bodyTextClass = tableNumber === 6 ? 'text-black' : 'text-[#6B7280]';
-const listTextClass = tableNumber === 6 ? 'text-black' : 'text-[#4B5563]';
+// content rollout.
+const darkText = tableNumber <= 6;
+const bodyTextClass = darkText ? 'text-black' : 'text-[#6B7280]';
+const listTextClass = darkText ? 'text-black' : 'text-[#4B5563]';
 
 // Build the full times table list for the FAQ answer
 const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}Ã—${i + 1}=${tableNumber * (i + 1)}`).join(', ');
@@ -162,6 +160,7 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
   description={pageDescription}
   canonical={`${SITE}/multiplication/times-tables/${tableNumber}`}
   pilotLayout
+  darkText={darkText}
   breadcrumb={[
     { label: 'Home', href: '/' },
     { label: 'Multiplication', href: '/multiplication' },
@@ -206,7 +205,7 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
     </div>
   ) : null}
 
-  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
+  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} darkText={darkText} />
 
   <LocalChooser
     slot="local-chooser"
@@ -214,7 +213,7 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
     current={`/multiplication/times-tables/${tableNumber}`}
     showGrid
     gridCurrent={tableNumber}
-    darkText={tableNumber === 6}
+    darkText={darkText}
   />
 
   <div slot="intro">
@@ -285,6 +284,6 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
     </section>
 
     <!-- Internal Links (matching Related Practice's canonical last position) -->
-    <InternalLinks links={links} darkText={tableNumber === 6} />
+    <InternalLinks links={links} darkText={darkText} />
   </div>
 </PracticeLayout>
