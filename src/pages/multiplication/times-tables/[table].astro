@@ -79,6 +79,12 @@ const EXPANDED_INTRO: Partial<Record<number, string>> = {
 // finding 5).
 const commutativityRef = tableNumber === 7 ? 8 : 7;
 
+// Font-color request scoped to the table 6 pilot page only: body/list text
+// switches from the site's default grey to black. Every other table keeps
+// its original grey text-[#6B7280]/[#4B5563] classes unchanged.
+const bodyTextClass = tableNumber === 6 ? 'text-black' : 'text-[#6B7280]';
+const listTextClass = tableNumber === 6 ? 'text-black' : 'text-[#4B5563]';
+
 // Build the full times table list for the FAQ answer
 const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}×${i + 1}=${tableNumber * (i + 1)}`).join(', ');
 
@@ -107,11 +113,18 @@ const faqItems = [
 const links = [
   { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
   { href: '/multiplication/facts', label: 'Mixed Facts Practice', description: 'All 144 facts from 1–12 in random order' },
-  {
-    href: tableNumber < 12 ? `/multiplication/times-tables/${tableNumber + 1}` : `/multiplication/times-tables/1`,
-    label: tableNumber < 12 ? `Next: ${tableNumber + 1} Times Table` : 'Back to 1 Times Table',
-    description: 'Continue table-by-table practice',
-  },
+  // Table 6 uses neutral navigation wording ("7 Times Table" / "Practice the
+  // 7s") instead of "Next: ... / Continue table-by-table practice" — that
+  // phrasing implies an established required sequence that isn't documented
+  // anywhere on the site. Scoped to table 6 only; every other table keeps its
+  // original wording unchanged.
+  tableNumber === 6
+    ? { href: '/multiplication/times-tables/7', label: '7 Times Table', description: 'Practice the 7s' }
+    : {
+        href: tableNumber < 12 ? `/multiplication/times-tables/${tableNumber + 1}` : `/multiplication/times-tables/1`,
+        label: tableNumber < 12 ? `Next: ${tableNumber + 1} Times Table` : 'Back to 1 Times Table',
+        description: 'Continue table-by-table practice',
+      },
   { href: '/division/facts', label: 'Division Facts', description: 'The inverse operation of multiplication' },
   ...(tableNumber === 6
     ? [{ href: '/division/divide-by/6', label: 'Divide by 6 Practice', description: 'The same 12 facts, practiced as division instead of multiplication' }]
@@ -205,7 +218,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class={`space-y-2 text-sm ${listTextClass} leading-relaxed`}>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 12 facts in the {tableNumber} times table ({tableNumber}×1 through {tableNumber}×12)</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems presented in random order to build genuine recall</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
@@ -219,11 +232,11 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
       <div class="grid gap-3 sm:grid-cols-2">
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">{strategy.name}</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">{strategy.tip}</p>
+          <p class={`text-sm ${bodyTextClass} leading-relaxed`}>{strategy.tip}</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Every fact in the {tableNumber}s table appears in another table too. If you know {commutativityRef}×{tableNumber}, you already know {tableNumber}×{commutativityRef}. Flip any difficult fact to find a familiar one.</p>
+          <p class={`text-sm ${bodyTextClass} leading-relaxed`}>Every fact in the {tableNumber}s table appears in another table too. If you know {commutativityRef}×{tableNumber}, you already know {tableNumber}×{commutativityRef}. Flip any difficult fact to find a familiar one.</p>
         </div>
       </div>
     </section>
@@ -232,7 +245,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
       <section aria-labelledby="parent-teacher-heading">
         <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent & Teacher Guidance</h2>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
-          <p class="text-sm text-[#6B7280] leading-relaxed">
+          <p class={`text-sm ${bodyTextClass} leading-relaxed`}>
             Parents and teachers helping a student with the {tableNumber} times table: {fact.parentTeacherNote}
           </p>
         </div>
@@ -246,7 +259,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class={`text-sm ${bodyTextClass} leading-relaxed`}>{a}</p>
           </div>
         ))}
       </div>

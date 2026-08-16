@@ -32,6 +32,12 @@ const EXPANDED_INTRO: Partial<Record<number, string>> = {
   6: `This page mixes up all twelve divide-by-6 facts in random order, so you get comfortable with them no matter what order they come in. If a fact doesn't come to mind right away, the strategy section below shows two reliable ways to work it out.`,
 };
 
+// Font-color request scoped to the divisor 6 pilot page only: body/list text
+// switches from the site's default grey to black. Every other divisor keeps
+// its original grey text-[#6B7280]/[#4B5563] classes unchanged.
+const bodyTextClass = fact ? 'text-black' : 'text-[#6B7280]';
+const listTextClass = fact ? 'text-black' : 'text-[#4B5563]';
+
 const title = `Divide by ${divisor} Practice | Math Practice Online`;
 const description = `Practice dividing by ${divisor} with exact whole-number answers. Build speed and confidence with focused ÷${divisor} drills — all ${divisor === 1 ? '12' : '12'} facts in one place. No signup required.`;
 
@@ -80,7 +86,13 @@ const faqItems = [
           q: `Does divide by ${divisor} practice include remainders?`,
           a: `No. Every problem here is one of the 12 divide-by-${divisor} facts (${divisor}÷${divisor}=1 through ${divisor * 12}÷${divisor}=12), and every answer is a whole number with nothing left over. Division that doesn't divide evenly — where an answer includes a remainder — is covered separately in Division with Remainders.`,
         },
-        { q: fact.faqDifferentiator.question, a: fact.faqDifferentiator.answer },
+        // The previous composite/prime FAQ (fact.faqDifferentiator: "Why does
+        // splitting into ÷2 and ÷3 work for divide by 6, but not for divide
+        // by 7?") was removed here as academically-motivated scope creep for
+        // a practice page, not a user-facing need. The underlying 6=2×3 idea
+        // still lives concretely in the Strategy section above; the data
+        // field itself is left in divideBy.ts (still required by the shared
+        // interface/validator) but is intentionally not rendered.
       ]
     : []),
 ];
@@ -89,8 +101,12 @@ const links = [
   { href: '/division/facts', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
   ...(fact ? [{ href: '/multiplication/times-tables/6', label: '6 Times Table Practice', description: 'The multiplication facts these division problems come from' }] : []),
-  ...(prevDivisor ? [{ href: `/division/divide-by/${prevDivisor}`, label: `Divide by ${prevDivisor} Practice`, description: `Previous fact family` }] : []),
-  ...(nextDivisor ? [{ href: `/division/divide-by/${nextDivisor}`, label: `Divide by ${nextDivisor} Practice`, description: `Next fact family` }] : []),
+  // Neutral "practice dividing by N" wording for the pilot divisor (6) only —
+  // "Previous/Next fact family" implied a required instructional sequence
+  // that isn't documented anywhere on the site. Every other divisor keeps
+  // its original "Previous/Next fact family" description unchanged.
+  ...(prevDivisor ? [{ href: `/division/divide-by/${prevDivisor}`, label: `Divide by ${prevDivisor} Practice`, description: fact ? `Practice dividing by ${prevDivisor}` : `Previous fact family` }] : []),
+  ...(nextDivisor ? [{ href: `/division/divide-by/${nextDivisor}`, label: `Divide by ${nextDivisor} Practice`, description: fact ? `Practice dividing by ${nextDivisor}` : `Next fact family` }] : []),
 ];
 ---
 
@@ -154,7 +170,7 @@ const links = [
   <Fragment slot="how-it-works">
     <section class="mt-12" aria-labelledby={`div-by-${divisor}-context-heading`}>
       <h2 id={`div-by-${divisor}-context-heading`} class="text-lg font-semibold text-[#1E293B] mb-4">About Divide by {divisor} Facts</h2>
-      <div class="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+      <div class={`bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5 text-sm ${listTextClass} leading-relaxed space-y-3`}>
         {fact ? (
           <p>
             This page includes all 12 divide-by-{divisor} facts, from <span class="font-mono font-semibold text-[#1E1B4B]">{divisor}÷{divisor}=1</span> up to <span class="font-mono font-semibold text-[#1E1B4B]">{divisor * 12}÷{divisor}=12</span>, each with a whole-number answer. Grade context: <span class="font-semibold text-[#4F46E5]">{gradeContext}</span>.
@@ -177,14 +193,14 @@ const links = [
         <h2 id={`div-by-${divisor}-strategy-heading`} class="text-lg font-semibold text-[#1E293B] mb-3">Strategy for Divide by {divisor}</h2>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">{fact.strategyTitle}</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">{fact.strategyExplanation}</p>
+          <p class={`text-sm ${bodyTextClass} leading-relaxed`}>{fact.strategyExplanation}</p>
         </div>
       </section>
     )}
 
     <section class="mt-12" aria-labelledby={`div-by-${divisor}-tips-heading`}>
       <h2 id={`div-by-${divisor}-tips-heading`} class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
-      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
+      <div class={`bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm ${listTextClass} leading-relaxed space-y-3`}>
         <p>
           Use this page to close a specific gap. If a student is slow on the ÷{divisor} facts in mixed practice, come here for a focused session of just those 12 problems before returning to the mixed drill.
         </p>
@@ -209,7 +225,7 @@ const links = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed" set:html={a} />
+            <p class={`text-sm ${bodyTextClass} leading-relaxed`} set:html={a} />
           </div>
         ))}
       </div>
