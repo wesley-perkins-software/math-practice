@@ -53,7 +53,7 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, pre
           </div>
         )}
         <div className={`text-7xl font-bold tabular-nums ${isPrototype ? 'text-[#211D4F]' : "text-[#1E1B4B] font-['JetBrains_Mono']"}`}>{result.correct}</div>
-        <div className={`text-sm mt-1 ${isPrototype ? 'text-[#6B6690]' : 'text-[#6B7280]'}`}>
+        <div className={`text-sm mt-1 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>
           {isTimed
             ? `correct in ${result.durationSeconds} seconds`
             : `correct out of ${result.total}`}
