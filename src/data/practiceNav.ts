@@ -27,6 +27,14 @@ export interface OperationMenu {
     label: string;
     basePath: string;
     max: number;
+    /**
+     * Where the grid entry sits relative to `items` in nav order. Defaults
+     * to 'after'. Mirrors the operation hub's own prioritized order (the
+     * source of truth for practice ordering) — e.g. the Multiplication hub
+     * leads with Times Tables, the Division hub leads with Divide By — so
+     * 'before' is set on both.
+     */
+    position?: 'before' | 'after';
   };
 }
 
@@ -52,7 +60,8 @@ export const OPERATION_MENUS: Record<Operation, OperationMenu> = {
     items: [
       { label: 'Multiplication Facts', href: '/multiplication/facts' },
     ],
-    grid: { label: 'Times Tables', basePath: '/multiplication/times-tables', max: 12 },
+    // Matches the Multiplication hub's own order: Times Tables, then Facts.
+    grid: { label: 'Times Tables', basePath: '/multiplication/times-tables', max: 12, position: 'before' },
   },
   division: {
     hub: { label: 'Division Practice', href: '/division' },
@@ -60,7 +69,8 @@ export const OPERATION_MENUS: Record<Operation, OperationMenu> = {
       { label: 'Division Facts', href: '/division/facts' },
       { label: 'Division With Remainders', href: '/division/remainders' },
     ],
-    grid: { label: 'Divide By', basePath: '/division/divide-by', max: 12 },
+    // Matches the Division hub's own order: Divide By, then Facts, then Remainders.
+    grid: { label: 'Divide By', basePath: '/division/divide-by', max: 12, position: 'before' },
   },
 };
 

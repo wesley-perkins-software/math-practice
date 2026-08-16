@@ -68,7 +68,7 @@ export default function SpeedDrillSetup() {
                 className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 transition-all font-bold text-sm cursor-pointer ${
                   checked
                     ? 'border-[#4F46E5] bg-[#F5F3FF] text-[#4F46E5]'
-                    : 'border-[#E4E1F5] bg-white text-[#8983B8] hover:border-[#C7D2FE] hover:text-[#6B6690]'
+                    : 'border-[#E4E1F5] bg-white text-[#6B6690] hover:border-[#C7D2FE] hover:text-[#4A4570]'
                 }`}
               >
                 <span className="text-xl leading-none">{symbol}</span>
