@@ -407,33 +407,37 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
               </div>
             )}
 
-            {/* Written arithmetic block + input + number pad */}
-            {config.withRemainder ? (
-              isPrototype ? (
-                <LongDivisionProblemInput
-                  problem={problem}
-                  onSubmit={(q, r) => handleAnswer(q, r)}
-                  disabled={feedbackState !== 'hidden'}
-                  feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-                  feedbackContent={(
-                    <div className="h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto flex items-center justify-center w-full">
-                      <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} variant={variant} />
-                    </div>
-                  )}
-                />
-              ) : (
-                <RemainderProblemInput
-                  problem={problem}
-                  onSubmit={(q, r) => handleAnswer(q, r)}
-                  disabled={feedbackState !== 'hidden'}
-                  feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-                  feedbackContent={(
-                    <div className="min-h-[1.75rem] flex items-center justify-center w-full">
-                      <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
-                    </div>
-                  )}
-                />
-              )
+            {/* Written arithmetic block + input + number pad. Any division
+                problem on the prototype surface uses the authentic
+                long-division bracket notation (Division Facts and Divide By
+                share it with Division with Remainders) — showRemainder
+                toggles just the remainder field, since facts/divide-by never
+                have one. */}
+            {config.operation === 'division' && isPrototype ? (
+              <LongDivisionProblemInput
+                problem={problem}
+                onSubmit={(q, r) => handleAnswer(q, r)}
+                disabled={feedbackState !== 'hidden'}
+                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                showRemainder={Boolean(config.withRemainder)}
+                feedbackContent={(
+                  <div className="h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto flex items-center justify-center w-full">
+                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} variant={variant} />
+                  </div>
+                )}
+              />
+            ) : config.withRemainder ? (
+              <RemainderProblemInput
+                problem={problem}
+                onSubmit={(q, r) => handleAnswer(q, r)}
+                disabled={feedbackState !== 'hidden'}
+                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                feedbackContent={(
+                  <div className="min-h-[1.75rem] flex items-center justify-center w-full">
+                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
+                  </div>
+                )}
+              />
             ) : (
               <WrittenProblemInput
                 problem={problem}

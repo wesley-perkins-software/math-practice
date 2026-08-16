@@ -122,6 +122,15 @@
   --ld-remainder-size: 2.5rem;
   --ld-remainder-box-min-h: 3.25rem;
   --ld-remainder-caret-h: 1.75rem;
+
+  /* Division Facts / Divide By have no remainder field, which would
+     otherwise leave their card visibly shorter than Division with
+     Remainders (and Addition). This adds vertical breathing room around
+     the bracket block instead — roughly the remainder row's own height
+     (label/box ~3.25rem + its gap-4 spacing) — so the upper problem area
+     fills the same footprint intentionally rather than the whole card
+     shrinking. */
+  --ld-no-remainder-inset: 1.75rem;
 }
 
 @media (pointer: coarse) and (min-width: 640px) and (max-width: 1366px) {
@@ -155,6 +164,7 @@
     --ld-remainder-size: 2.875rem;
     --ld-remainder-box-min-h: 3.625rem;
     --ld-remainder-caret-h: 2rem;
+    --ld-no-remainder-inset: 2.25rem;
   }
 }
 

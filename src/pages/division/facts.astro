@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import DivisionPracticeHub from '@/components/DivisionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -42,7 +43,9 @@ const faqItems = [
   title="Division Facts Practice — Free Online Division Drills | Math Practice Online"
   description="Practice basic division facts 1÷1 through 144÷12 with instant feedback. Build speed, accuracy, and confidence with mixed division fact drills. No signup required."
   canonical={`${SITE}/division/facts`}
+  pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division' }, { label: 'Facts' }]}
+  breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -66,7 +69,77 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Division Facts Practice</h1>
+  <Fragment slot="h1">
+    <div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
+      <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">Division Facts Practice</h1>
+      <nav aria-label="Change practice" class="font-practice">
+        <details class="relative" data-dismissable-menu>
+          <summary class="list-none flex items-center gap-1 text-base font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
+            Change practice
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+          </summary>
+          <div class="absolute right-0 top-full mt-1.5 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
+            <a href="/division/divide-by/1" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">Divide By</a>
+            <a href="/division/facts" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">Division Facts</a>
+            <a href="/division/remainders" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">With Remainders</a>
+          </div>
+        </details>
+      </nav>
+    </div>
+    <script>
+      // Same dismissable-menu behavior as the /addition/1-digit and
+      // /division/remainders prototypes' H1-row switcher: closes on Escape
+      // (returning focus to the summary), on an outside click, and the
+      // moment the user resumes practice (focuses the answer, types, or
+      // taps the on-screen keypad) via the `[data-practice-instrument]`
+      // marker the practice widget renders itself. See addition/1-digit.astro
+      // for the full rationale.
+      document.querySelectorAll<HTMLDetailsElement>('details[data-dismissable-menu]').forEach((details) => {
+        const summary = details.querySelector('summary');
+        const menu = details.querySelector<HTMLElement>(':scope > div');
+        const close = () => { details.open = false; };
+
+        const EDGE_MARGIN = 16;
+        function clampMenuPosition() {
+          if (!menu) return;
+          menu.style.left = '';
+          menu.style.right = '';
+          const rect = menu.getBoundingClientRect();
+          const viewportWidth = document.documentElement.clientWidth;
+          if (rect.right > viewportWidth - EDGE_MARGIN) {
+            menu.style.right = `${Math.max(0, rect.right - (viewportWidth - EDGE_MARGIN))}px`;
+          } else if (rect.left < EDGE_MARGIN) {
+            const detailsRect = details.getBoundingClientRect();
+            menu.style.right = 'auto';
+            menu.style.left = `${EDGE_MARGIN - detailsRect.left}px`;
+          }
+        }
+        details.addEventListener('toggle', () => {
+          if (details.open) clampMenuPosition();
+        });
+        window.addEventListener('resize', () => {
+          if (details.open) clampMenuPosition();
+        });
+
+        document.addEventListener('click', (e) => {
+          if (details.open && e.target instanceof Node && !details.contains(e.target)) {
+            close();
+          }
+        });
+        details.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && details.open) {
+            e.preventDefault();
+            close();
+            summary?.focus();
+          }
+        });
+        document.querySelectorAll<HTMLElement>('[data-practice-instrument]').forEach((instrument) => {
+          instrument.addEventListener('pointerdown', () => { if (details.open) close(); });
+          instrument.addEventListener('focusin', () => { if (details.open) close(); });
+        });
+      });
+    </script>
+  </Fragment>
 
   <Fragment slot="intro">
     <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">

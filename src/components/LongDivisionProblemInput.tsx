@@ -4,23 +4,27 @@ import NumberPad from './NumberPad';
 
 interface Props {
   problem: Problem;
-  onSubmit: (quotient: number, remainder: number) => void;
+  onSubmit: (quotient: number, remainder?: number) => void;
   disabled?: boolean;
   feedbackState?: 'correct' | 'incorrect' | 'idle';
   feedbackContent?: React.ReactNode;
+  /** Division Facts / Divide By have no remainder field — quotient-only entry. Default true. */
+  showRemainder?: boolean;
 }
 
 const QUOTIENT_MAX_DIGITS = 2;
 const REMAINDER_MAX_DIGITS = 2;
 
 /**
- * Authentic long-division notation for /division/remainders (prototype
- * variant only). Divisor sits left of a drawn bracket (border-top = the
- * bar, border-left + rounded corner = the ⟌ hook); the dividend sits
- * inside the bracket; the quotient — the primary answer — sits directly
- * above the bar in the same right-aligned column as the dividend, exactly
- * where a student would write it on paper. The remainder is a compact
- * "R: [ ]" beneath the whole setup, secondary to the quotient.
+ * Authentic long-division notation shared by every division practice family
+ * on the prototype surface (Division Facts, Divide By, and Division with
+ * Remainders). Divisor sits left of a drawn bracket (border-top = the bar,
+ * border-left + rounded corner = the ⟌ hook); the dividend sits inside the
+ * bracket; the quotient — the primary answer — sits directly above the bar
+ * in the same right-aligned column as the dividend, exactly where a student
+ * would write it on paper. When `showRemainder` is true (Division with
+ * Remainders only), a compact "R: [ ]" field sits beneath the whole setup,
+ * secondary to the quotient; Division Facts and Divide By never render it.
  *
  * Digit size and the quotient's answer-box height reuse addition's own
  * --practice-operand-size / --practice-answer-min-h tokens directly, so this
@@ -41,6 +45,7 @@ export default function LongDivisionProblemInput({
   disabled = false,
   feedbackState = 'idle',
   feedbackContent,
+  showRemainder = true,
 }: Props) {
   const [activeSlot, setActiveSlot] = useState<'quotient' | 'remainder'>('quotient');
   const [quotientValue, setQuotientValue] = useState('');
@@ -81,8 +86,9 @@ export default function LongDivisionProblemInput({
       if (quotientValue.length >= QUOTIENT_MAX_DIGITS) return;
       const newQ = quotientValue + d;
       setQuotientValue(newQ);
-      // Auto-advance only once the quotient is unambiguously complete (2 digits)
-      if (newQ.length === QUOTIENT_MAX_DIGITS) setActiveSlot('remainder');
+      // Auto-advance only once the quotient is unambiguously complete (2 digits) —
+      // and only when there's a remainder field to advance into.
+      if (showRemainder && newQ.length === QUOTIENT_MAX_DIGITS) setActiveSlot('remainder');
     } else {
       // No correctness gate here, matching the quotient field: a student can
       // type any 2-digit remainder, including a wrong one (e.g. 10 for a
@@ -112,8 +118,14 @@ export default function LongDivisionProblemInput({
     const now = Date.now();
     if (now - lastSubmitAtRef.current < 100) return;
     const q = parseInt(quotientValue, 10);
+    if (isNaN(q)) return;
+    if (!showRemainder) {
+      lastSubmitAtRef.current = now;
+      onSubmit(q);
+      return;
+    }
     const r = parseInt(remainderValue, 10);
-    if (isNaN(q) || isNaN(r)) return;
+    if (isNaN(r)) return;
     lastSubmitAtRef.current = now;
     onSubmit(q, r);
   }
@@ -124,6 +136,7 @@ export default function LongDivisionProblemInput({
       handleSubmit();
       return;
     }
+    if (!showRemainder) return;
     if (e.key === 'Tab' && !e.shiftKey && activeSlot === 'quotient') {
       e.preventDefault();
       setActiveSlot('remainder');
@@ -185,8 +198,8 @@ export default function LongDivisionProblemInput({
       <div
         className={`flex items-end justify-center transition-opacity duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
-        aria-label={`${problem.operandA} divided by ${problem.operandB}. Enter the quotient and remainder.`}
+        } ${showRemainder ? '' : 'my-[length:var(--ld-no-remainder-inset)]'}`}
+        aria-label={`${problem.operandA} divided by ${problem.operandB}. Enter the quotient${showRemainder ? ' and remainder' : ''}.`}
       >
         {/* Divisor — outside the bracket, aligned with the dividend's baseline */}
         <div className="pr-3 select-none">
@@ -252,37 +265,43 @@ export default function LongDivisionProblemInput({
 
       {/* Remainder — a real secondary answer field, not a status chip:
           large enough to read comfortably, but visibly smaller than the
-          quotient above it so hierarchy stays clear. */}
-      <div className="flex items-center gap-2.5 cursor-pointer select-none" onClick={() => switchSlot('remainder')}>
-        <span className="text-[length:var(--ld-remainder-label-size)] font-extrabold text-[#211D4F] uppercase tracking-wide">
-          R:
-        </span>
-        <span
-          className={`inline-flex items-center justify-center min-h-[length:var(--ld-remainder-box-min-h)] rounded-xl border-[1.5px] px-5 transition-colors duration-150 ${
-            activeSlot === 'remainder' && isFocused
-              ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
-              : 'border-[#8983B8] bg-transparent'
-          }`}
-        >
-          <span className="inline-block min-w-[2.5ch] text-center leading-none">
-            {remainderValue.length === 0 ? (
-              <span className="inline-flex items-center justify-center w-full leading-none">
-                <span aria-hidden="true" className="text-[length:var(--ld-remainder-size)] font-bold opacity-0 select-none">0</span>
-                {activeSlot === 'remainder' && (
-                  <span
-                    aria-hidden="true"
-                    className="ml-1 w-[3px] h-[length:var(--ld-remainder-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite] shrink-0"
-                  />
-                )}
-              </span>
-            ) : (
-              <span className={`text-[length:var(--ld-remainder-size)] font-bold tabular-nums leading-none transition-colors duration-150 ${digitColor}`}>
-                {remainderValue}
-              </span>
-            )}
+          quotient above it so hierarchy stays clear. Division Facts and
+          Divide By have no remainder — every exact-division problem — so
+          this field is entirely omitted there, not just hidden, and the
+          bracket block above gets extra breathing room (--ld-no-remainder-inset)
+          instead so the card still fills the same upper problem area. */}
+      {showRemainder && (
+        <div className="flex items-center gap-2.5 cursor-pointer select-none" onClick={() => switchSlot('remainder')}>
+          <span className="text-[length:var(--ld-remainder-label-size)] font-extrabold text-[#211D4F] uppercase tracking-wide">
+            R:
           </span>
-        </span>
-      </div>
+          <span
+            className={`inline-flex items-center justify-center min-h-[length:var(--ld-remainder-box-min-h)] rounded-xl border-[1.5px] px-5 transition-colors duration-150 ${
+              activeSlot === 'remainder' && isFocused
+                ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
+                : 'border-[#8983B8] bg-transparent'
+            }`}
+          >
+            <span className="inline-block min-w-[2.5ch] text-center leading-none">
+              {remainderValue.length === 0 ? (
+                <span className="inline-flex items-center justify-center w-full leading-none">
+                  <span aria-hidden="true" className="text-[length:var(--ld-remainder-size)] font-bold opacity-0 select-none">0</span>
+                  {activeSlot === 'remainder' && (
+                    <span
+                      aria-hidden="true"
+                      className="ml-1 w-[3px] h-[length:var(--ld-remainder-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite] shrink-0"
+                    />
+                  )}
+                </span>
+              ) : (
+                <span className={`text-[length:var(--ld-remainder-size)] font-bold tabular-nums leading-none transition-colors duration-150 ${digitColor}`}>
+                  {remainderValue}
+                </span>
+              )}
+            </span>
+          </span>
+        </div>
+      )}
 
       {feedbackContent}
 

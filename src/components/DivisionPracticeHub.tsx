@@ -1,21 +1,25 @@
 import PracticeWidget from './PracticeWidget';
-import PracticeModeNav from './PracticeModeNav';
 import { useState } from 'react';
 import { DIVISION_FACTS, DIVISION_REMAINDERS, divideByConfig } from '@/engine/presets';
 
 type Mode = 'facts' | 'divide-by' | 'remainders';
-
-const TABS: { id: Mode; label: string; href: string }[] = [
-  { id: 'divide-by', label: 'Divide By', href: '/division/divide-by/1' },
-  { id: 'facts', label: 'Division Facts', href: '/division/facts' },
-  { id: 'remainders', label: 'With Remainders', href: '/division/remainders' },
-];
 
 interface Props {
   active: Mode;
   selectedDivisor?: number;
 }
 
+/**
+ * All three division practice families — Division Facts, Divide By, and
+ * Division with Remainders — share one practice surface: the prototype
+ * variant's long-division bracket notation, card footprint, keypad, and
+ * Streak/Reset row (see PracticeWidget + LongDivisionProblemInput). Mode
+ * switching lives on each page's own H1 row as static markup (the same
+ * "H1 + contextual switcher" pattern /addition/1-digit and
+ * /division/remainders already use), not here — this component's only job
+ * is picking the right config and, for Divide By, offering the divisor
+ * picker specific to that one mode.
+ */
 export default function DivisionPracticeHub({ active, selectedDivisor = 1 }: Props) {
   const [showPicker, setShowPicker] = useState(false);
 
@@ -26,42 +30,26 @@ export default function DivisionPracticeHub({ active, selectedDivisor = 1 }: Pro
         ? DIVISION_REMAINDERS
         : divideByConfig(selectedDivisor);
 
-  // Prototype: /division/remainders tests the same "H1 + contextual switcher"
-  // pattern as /addition/1-digit (see that page's h1 slot) — mode switching
-  // lives there as static markup instead of this segmented tab row, and the
-  // widget renders with the long-division notation. Scoped to `remainders`
-  // only; facts/divide-by keep today's tab tray unchanged.
-  if (active === 'remainders') {
-    return <PracticeWidget config={config} variant="prototype" />;
-  }
-
-  const picker = active === 'divide-by' && (
-    <button
-      onClick={() => setShowPicker(true)}
-      className="w-full max-w-lg mx-auto mt-1.5 py-1 px-3 flex items-center justify-center gap-1.5 text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E0E7FF] text-[#1E1B4B] hover:border-[#4F46E5] transition-colors duration-150"
-    >
-      <span>Dividing by {selectedDivisor}</span>
-      <svg
-        className="w-3.5 h-3.5 text-[#6B7280] shrink-0"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2.5}
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
-      </svg>
-    </button>
-  );
-
   return (
     <>
-      <PracticeModeNav
-        items={TABS.map(({ id, label, href }) => ({ id, label, href }))}
-        activeId={active}
-        ariaLabel="Division mode"
-        extra={picker}
-      />
-      <PracticeWidget config={config} />
+      {active === 'divide-by' && (
+        <button
+          onClick={() => setShowPicker(true)}
+          className="w-full max-w-[length:var(--practice-card-max-w)] mx-auto mb-2.5 py-1.5 px-3 flex items-center justify-center gap-1.5 font-practice text-sm font-semibold rounded-lg bg-white shadow-sm border border-[#E4E1F5] text-[#211D4F] hover:border-[#4F46E5] transition-colors duration-150"
+        >
+          <span>Dividing by {selectedDivisor}</span>
+          <svg
+            className="w-3.5 h-3.5 text-[#8983B8] shrink-0"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2.5}
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+      )}
+      <PracticeWidget config={config} variant="prototype" />
       {showPicker && (
         <div
           className="fixed inset-0 z-50 flex items-end sm:items-center sm:justify-center bg-black/40"
