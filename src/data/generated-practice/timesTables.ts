@@ -5,8 +5,7 @@ import type { GeneratedPracticeEntry } from './types';
  *
  * This is the operation-specific source of truth used by the mature generated
  * /multiplication/times-tables/[table] pages, per
- * docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md. The shared template still
- * keeps legacy fallbacks for tables that have not completed content rollout.
+ * docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md.
  *
  * Content integrity notes (see docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md
  * "Anti-thin-content rules" for the full standard this was authored against):
@@ -17,8 +16,8 @@ import type { GeneratedPracticeEntry } from './types';
  *   authoritative source in this repository and is flagged, not repeated,
  *   here. See CANONICAL_GENERATED_PAGE_STANDARD.md's Phase 1A notes for the
  *   full list of reconciled/flagged content.
- * - The 7-times-table entry states plainly that no single reliable shortcut
- *   exists, rather than inventing one — see GeneratedPracticeEntry.strategyExplanation.
+ * - The 7-times-table entry uses five groups plus two more groups rather than
+ *   presenting a novelty shortcut — see GeneratedPracticeEntry.strategyExplanation.
  * - Grade guidance follows the family-level default below, with narrow,
  *   hedged overrides only where the existing codebase (or a clearly stated,
  *   defensible rationale) already supports a distinction — see
@@ -150,69 +149,69 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
   {
     n: 7,
     quickAnswerFact:
-      'The 7 times table has no single reliable shortcut the way the 2s, 5s, or 9s do, but every 7× fact can be checked by flipping it into an already-known fact from another table (7×6=6×7).',
+      'Multiplying by 7 means making seven equal groups. This page practices 7×1 through 7×12; for example, 7×8=56.',
     introClause:
-      'being honest that some tables require direct memorization helps set realistic expectations rather than searching for a trick that does not exist',
-    strategyTitle: 'Build From a Known Fact — No Single Shortcut',
+      'a 7s fact can be built from a nearby fact a student already knows instead of relying on a special trick',
+    strategyTitle: 'Start With Five Groups, Then Add Two',
     strategyExplanation:
-      'Rather than one universal trick, break 7×n into a fact you already know plus a small adjustment — for example, 7×8 = (5×8) + (2×8) = 40+16 = 56 — or use commutativity (7×8=8×7) to borrow a strategy from another table. For the handful of facts this doesn\'t simplify well, direct memorization is the most reliable path, and that is a normal, expected part of learning this table.',
+      'Use the matching 5s fact, then add two more equal groups. For 7×8, start with 5×8=40. Add 8 twice: 40+8+8=56. Use this as a way to work out an answer when it is not yet known.',
     parentTeacherNote:
-      "Because there's no single trick for the 7s, repeated exposure and targeted practice matter more here than for tables with a clear rule — prioritize the specific facts a student gets wrong (often 7×6, 7×7, and 7×8) rather than redrilling the whole table evenly.",
+      'If a child stops at the 5s answer, ask, “How many more groups do you need to make seven groups?” For 7×6, begin with 5×6=30, then add 6+6 to reach 42.',
     faqDifferentiator: {
-      question: 'Why doesn\'t the 7 times table have an easy trick like the 9s or 5s?',
+      question: 'How can facts from the 5 times table help with the 7 times table?',
       answer:
-        "Unlike 5 (ends in 0 or 5) or 9 (a well-known finger trick), 7 doesn't produce a simple visual or digit pattern across its products — that's a real property of the number, not a gap in available strategies. The most reliable approaches are decomposing into known facts (7×8 = 5×8+2×8 = 56) or direct memorization for the remaining facts.",
+        'Seven groups are five groups plus two more groups. For 7×9, start with 5×9=45 and add two groups of 9: 45+9+9=63.',
     },
   },
   {
     n: 8,
     quickAnswerFact:
-      "8×n is the same number doubled three times, connecting the 8 times table directly to both the 2s and 4s tables a student likely already knows.",
+      'Multiplying by 8 means making eight equal groups. This page practices 8×1 through 8×12; for example, 8×6=48.',
     introClause:
-      'because 8 is 2 multiplied by itself three times, this entire table can be built from repeated doubling rather than learned as 12 new facts',
+      'repeated doubling gives students a concrete way to find an 8s product when they do not recall it yet',
     strategyTitle: 'Double Three Times',
     strategyExplanation:
-      '8×n = double(double(double(n))). For 8×6: 6→12→24→48. A student who already knows the 4s table (double twice) only needs one more doubling step to reach the 8s.',
+      'Double the other number, double that answer, then double once more. For 8×6, double 6 to get 12, double 12 to get 24, and double 24 to get 48. This is a useful backup while direct recall is still growing.',
     parentTeacherNote:
-      "If a student's 8× answer matches the 4× answer for the same number, they likely stopped doubling one step early — this is a specific, identifiable error, not a general recall problem, and naming it directly usually fixes it quickly.",
+      'If a child gives the matching 4s answer, they may have stopped after two doubles. Ask them to say all three steps aloud. For 8×7: 7 doubled is 14, 14 doubled is 28, and 28 doubled is 56.',
     faqDifferentiator: {
       question: 'How many times do you double a number to get its 8 times table answer?',
       answer:
-        'Three times. For 8×5: double 5 to get 10, double 10 to get 20, and double 20 to get 40. Each doubling step multiplies by 2, and 2×2×2=8, so three doublings always produce the correct 8× answer.',
+        'Three times. For 8×5, double 5 to get 10, double 10 to get 20, and double 20 to get 40. The three doubling steps make eight equal groups.',
     },
   },
   {
     n: 9,
     quickAnswerFact:
-      'Every 9× fact equals 10×n minus n, and the digits of any 9 times table product always sum to a multiple of 9 — a reliable way to check an answer.',
+      'Multiplying by 9 means making nine equal groups. This page practices 9×1 through 9×12; for example, 9×7=63.',
     introClause:
-      'the widely known "finger trick" for the 9s works because of this same 10-minus-n relationship, not as an unrelated shortcut',
-    strategyTitle: 'Ten Times, Minus One Group (Plus the Finger Check)',
+      'each 9s fact is one group less than the matching 10s fact, giving students one dependable strategy across the full range',
+    strategyTitle: 'Use Ten Groups, Then Subtract One',
     strategyExplanation:
-      '9×n = 10×n − n. For 9×7: 10×7=70, minus 7 is 63. The familiar finger trick (fold down finger number n on two hands, count fingers left and right for the tens and ones digits) is a physical shortcut for this same relationship for n from 1 to 9, and can be used as a secondary check.',
+      'Start with ten groups, then subtract one group. For 9×7, find 10×7=70 and subtract one group of 7: 70−7=63. This method works for every fact from 9×1 through 9×12.',
     parentTeacherNote:
-      'The finger trick is a fast physical method, but confirm the student also understands why it works (10×n minus n) — relying on the trick alone can break down when fingers aren\'t available, such as during a timed digital drill.',
+      'If a child subtracts 1 instead of one whole group, ask, “What size group must come off?” For 9×8, start with 80 and subtract 8, not 1, to get 72.',
     faqDifferentiator: {
-      question: 'Does the 9 times table finger trick always work?',
+      question: 'What pattern appears in the 9 times table from 9×1 through 9×10?',
       answer:
-        'It works reliably for multipliers 1 through 9 on ten fingers. For example, to find 9×6: fold the 6th finger down, leaving 5 fingers to the left (tens digit) and 4 to the right (ones digit), giving 54. It is a physical shortcut for the same 10×n−n relationship, so it matches direct calculation across that range.',
+        'From 9×1=9 through 9×10=90, the tens digit rises while the ones digit falls, and the two digits add to 9. This specific two-digit pattern does not describe 9×11=99 or 9×12=108, so use ten groups minus one group for the full table.',
     },
   },
   {
     n: 10,
     quickAnswerFact:
-      'Multiplying any whole number by 10 appends a single zero to it, because multiplying by 10 shifts every digit one place value to the left.',
+      'Multiplying by 10 means making ten equal groups. This page practices 10×1 through 10×12; for example, 10×8=80.',
     introClause:
-      'understanding why appending a zero works — place value, not a coincidence — prepares students directly for multiplying by 100 and 1,000 later on',
-    strategyTitle: 'Append a Zero (Place-Value Shift)',
+      'the whole-number products in the 10s table follow a clear place-value pattern and have 0 in the ones place',
+    strategyTitle: 'Use the Whole-Number Tens Pattern',
     strategyExplanation:
-      '10×n adds a 0 to the end of n: 10×8=80, 10×12=120. This works because multiplying by 10 moves every digit one place value higher, not because of a memorized pattern — the same idea extends to ×100 (add two zeros) and beyond.',
+      'Count in groups of ten: 10, 20, 30, and so on. For the whole numbers practiced here, the product has the other number in the tens-and-higher places and 0 in the ones place: 10×3=30, 10×8=80, and 10×12=120.',
     parentTeacherNote:
-      "If a student can append a zero for 10×8 but hesitates on 10×12 (a two-digit number), check that they understand the rule applies to the whole number, not only single digits — usually a quick reminder fixes it rather than new instruction.",
+      'If a child writes 10×12 as 102, ask them to count twelve groups of ten or read 120 as “twelve tens.” This keeps the zero-ending pattern connected to place value.',
     faqDifferentiator: {
       question: 'Why does multiplying by 10 just add a zero?',
       answer:
-        'Because our number system is base-10: each place value is 10 times the one to its right. Multiplying by 10 shifts every digit one place to the left, and appending a 0 in the ones place is the visible result of that shift. For example, 10×12=120 because the 1 (tens) becomes hundreds and the 2 (ones) becomes tens.',
+        'For the whole-number facts on this page, multiplying by 10 makes the number ten times as large and puts 0 in the ones place. For example, 12 groups of 10 make 120. This is the reason 10×12 can be written as 12 followed by a zero.',
     },
     gradeOverride:
       'Often introduced in Grade 2 as an early multiplication concept, with fluency reinforced in Grade 3 alongside the rest of the times tables.',
@@ -220,41 +219,37 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
   {
     n: 11,
     quickAnswerFact:
-      'For multipliers 1 through 9, an 11× fact repeats the multiplier\'s digit (11×6=66), but this pattern breaks at 11×10, 11×11, and 11×12, which need to be learned separately.',
+      'Multiplying by 11 means making eleven equal groups. This page practices 11×1 through 11×12; for example, 11×7=77.',
     introClause:
-      'most of this table follows one of the simplest visual patterns among all the times tables, which makes the three exceptions easy to isolate and target directly',
-    strategyTitle: 'Repeat the Digit, Memorize Three Exceptions',
+      'ten groups plus one more group works for every 11s fact, including the facts beyond the repeated-digit pattern',
+    strategyTitle: 'Use Ten Groups, Then Add One',
     strategyExplanation:
-      '11×n for n=1–9 repeats the digit of n (11×4=44, 11×8=88). The pattern stops working at 11×10=110, 11×11=121, and 11×12=132, which do not follow the repeat-digit shortcut because the multiplier itself has two digits — these three need to be memorized on their own.',
+      'Start with ten groups, then add one more group. For 11×7, find 10×7=70 and add 7 to get 77. The same method works beyond the single-digit facts: 11×12 is 120+12=132.',
     parentTeacherNote:
-      'If a student extends the repeat-digit pattern incorrectly to 11×10, 11×11, or 11×12 (for example, answering 11×11 as "1111"), that is an expected, predictable error at this stage — explicitly flag these three as the exceptions rather than assuming general confusion about the whole table.',
+      'If a child repeats digits for 11×10, 11×11, or 11×12, remind them that the shortcut only covers multipliers 1 through 9. Prompt “ten groups plus one more” to find 110, 121, or 132 correctly.',
     faqDifferentiator: {
       question: 'Does the repeat-the-digit trick work for the entire 11 times table?',
       answer:
-        'No — it works for 11×1 through 11×9 (for example, 11×7=77), but not for 11×10 (110), 11×11 (121), or 11×12 (132). Those three facts don\'t follow the single-digit-repeat pattern because the multiplier has two digits, and are best learned as standalone facts.',
+        'No. It works for 11×1 through 11×9, such as 11×7=77. It does not work for 11×10=110, 11×11=121, or 11×12=132. The ten-groups-plus-one strategy works for all twelve facts.',
     },
-    // Grade override rationale: a narrow, hedged extension consistent with
-    // docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md's own example (11s/12s
-    // conventionally introduced slightly later) — not present in the
-    // pre-existing GRADE_BADGE map, added here as a defensible, hedged claim.
-    gradeOverride:
-      'Often reinforced after the 1–10 tables are secure, since the larger 11s facts require students to move beyond the familiar repeated-digit pattern and apply place-value understanding.',
+    // Use the family-level guidance rather than implying a required sequence.
+    gradeOverride: TIMES_TABLE_GRADE_DEFAULT,
   },
   {
     n: 12,
     quickAnswerFact:
-      '12×n splits cleanly into a 10×n fact plus a 2×n fact added together, so it never requires memorizing a fact independent of two tables already known.',
+      'Multiplying by 12 means making twelve equal groups. This page practices 12×1 through 12×12; for example, 12×8=96.',
     introClause:
-      'as the last table in the standard 1–12 range, the 12s table is a natural checkpoint for combining two earlier strategies — appending a zero and doubling — into one calculation',
-    strategyTitle: 'Split Into 10× Plus 2×',
+      'ten groups plus two more groups gives students a concrete way to build every product in the practiced range',
+    strategyTitle: 'Use Ten Groups, Then Add Two',
     strategyExplanation:
-      '12×n = 10×n + 2×n. For 12×9: 10×9=90, 2×9=18, and 90+18=108. This reuses two already-mastered strategies (append a zero, then double) instead of introducing a new one.',
+      'Find ten groups, find two more groups, then add. For 12×8, 10×8=80 and 2×8=16, so 80+16=96. This gives you a way to work out any 12s fact when you need it.',
     parentTeacherNote:
-      "If a student can do 10×n and 2×n separately but gets 12×n wrong, the error is almost always in the final addition step, not the multiplication — check the addition specifically before reteaching the multiplication strategy. Getting 12×n right consistently is also a good sign the student can combine two previously separate strategies (the ×10 table and the ×2 table) into one calculation, which is worth naming explicitly as a milestone.",
+      'If the two partial facts are correct but the final answer is not, check the addition before repeating the multiplication. For 12×9, have the child say 90+18=108 after finding 10×9 and 2×9.',
     faqDifferentiator: {
-      question: 'What is the fastest way to calculate a 12 times table fact by hand?',
+      question: 'How can the 10 and 2 times tables help with the 12 times table?',
       answer:
-        'Split it into a ×10 fact and a ×2 fact, then add them. For 12×11: 10×11=110, 2×11=22, and 110+22=132. This is exact, not an estimate, because 12=10+2, so 12×n is the sum of those two parts for any n.',
+        'Twelve groups are ten groups plus two groups. For 12×11, find 10×11=110 and 2×11=22, then add 110+22=132. This method works for every whole-number fact on the page.',
     },
     // No gradeOverride: insufficient justification for table-12-specific curriculum
     // timing guidance beyond the family-level default (see TIMES_TABLE_GRADE_DEFAULT).
