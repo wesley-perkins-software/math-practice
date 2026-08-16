@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import SpeedDrillSetup from '@/components/SpeedDrillSetup';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -40,6 +41,7 @@ const faqItems = [
   title="Arithmetic Speed Drill — 60-Second Math Challenge | Math Practice Online"
   description="How many arithmetic problems can you answer in 60 seconds? Choose addition, subtraction, multiplication, and division facts 1–12. Free online speed drill with personal best tracking."
   canonical={`${SITE}/arithmetic-speed-drill`}
+  pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Arithmetic Speed Drill' }]}
 >
   <Fragment slot="head">
@@ -63,13 +65,17 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Arithmetic Speed Drill</h1>
-  <div slot="intro">
-    <p>60 seconds. Choose your operations, then go. The drill moves as fast as you do — answers clear almost instantly so nothing slows you down.</p>
-    <p class="mt-2">All facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
-  </div>
+  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">Arithmetic Speed Drill</h1>
 
   <SpeedDrillSetup slot="widget" client:load />
+
+  <Fragment slot="quick-answer">
+    <p>60 seconds. Choose your operations, then go. The drill moves as fast as you do — answers clear almost instantly so nothing slows you down.</p>
+  </Fragment>
+
+  <Fragment slot="intro">
+    <p>All facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
+  </Fragment>
   <InternalLinks slot="links" links={links} />
 
   <div slot="how-it-works" class="mt-12 space-y-10">

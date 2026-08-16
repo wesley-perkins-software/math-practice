@@ -393,12 +393,17 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
           <div className={`flex flex-col items-center ${isPrototype ? 'gap-[length:var(--practice-stack-gap)]' : 'gap-3 md:gap-4'}`}>
-            {/* Timer bar — only for timed mode */}
+            {/* Timer bar — only for timed mode. Lives in the upper-left corner
+                of the card (the row's only left-aligned item once the
+                duration picker is absent, which it always is on fixed-
+                duration configs like the Speed Drill) so it reads as a
+                secondary status next to, not competing with, the arithmetic
+                problem below it. */}
             {isTimed && (
               <div className="w-full flex items-center justify-between">
                 {timerStarted
-                  ? <TimerDisplay secondsRemaining={secondsRemaining} />
-                  : <TimerDisplay secondsRemaining={duration} />
+                  ? <TimerDisplay secondsRemaining={secondsRemaining} variant={variant} />
+                  : <TimerDisplay secondsRemaining={duration} variant={variant} />
                 }
                 {/* Duration picker only available before timer starts */}
                 {!timerStarted && !isTimerDurationFixed && (
@@ -413,7 +418,11 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 share it with Division with Remainders) — showRemainder
                 toggles just the remainder field, since facts/divide-by never
                 have one. */}
-            {config.operation === 'division' && isPrototype ? (
+            {/* Checked per-problem (not per-config) so a mixed config like the
+                Arithmetic Speed Drill renders authentic long-division
+                notation whenever the CURRENT problem happens to be division,
+                even though config.operation is 'mixed' overall. */}
+            {problem.operation === 'division' && isPrototype ? (
               <LongDivisionProblemInput
                 problem={problem}
                 onSubmit={(q, r) => handleAnswer(q, r)}
@@ -566,29 +575,44 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
             )}
 
             {isTimed && (
-              <div className="flex items-center justify-between w-full">
-                <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
-                  Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
-                </span>
+              <div className={`flex items-end justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
+                {/* Personal Best: the timed counterpart to the untimed
+                    Streak stat above — same label-above-value shape, compact
+                    lower-left placement, motivating but not decorated. Live
+                    score during play is never shown (Speed Drill only ever
+                    reveals the count on the results screen), so there's no
+                    ambiguity between this and a "current score" stat. */}
+                {isPrototype ? (
+                  <div className="flex flex-col gap-0.5 leading-none">
+                    <span className="text-[13px] font-bold text-[#211D4F]">Personal Best</span>
+                    <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#8983B8]'}`}>
+                      {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+                    </span>
+                  </div>
+                ) : (
+                  <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
+                    Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+                  </span>
+                )}
                 {!personalBestResetPending ? (
                   <button
                     onClick={() => setPersonalBestResetPending(true)}
-                    className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
+                    className={`text-sm transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
                 ) : (
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs text-[#6B7280] mr-1">Reset personal best?</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm mr-0.5 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset best?</span>
                     <button
                       onClick={handleResetPersonalBest}
-                      className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
+                      className="text-sm font-semibold text-white bg-red-500 hover:bg-red-600 px-2.5 py-1 rounded transition-colors"
                     >
                       Yes
                     </button>
                     <button
                       onClick={() => setPersonalBestResetPending(false)}
-                      className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
+                      className={`text-sm font-semibold px-2.5 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
                     >
                       Cancel
                     </button>
@@ -608,6 +632,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
             preSessionScore={preSessionScore}
             isNewStreakRecord={isNewStreakRecord}
             onRestart={handleRestart}
+            variant={variant}
           />
         )}
       </div>
