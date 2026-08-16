@@ -25,7 +25,7 @@ export default function TimerDisplay({ secondsRemaining, variant = 'classic' }: 
     // countdown never shifts the layout.
     return (
       <div className="flex items-baseline gap-1.5" aria-live="off" aria-label={`${secondsRemaining} seconds remaining`}>
-        <span className="text-[11px] font-bold text-[#8983B8] uppercase tracking-wide">Time</span>
+        <span className="text-[11px] font-bold text-[#211D4F] uppercase tracking-wide">Time</span>
         <span
           className={`text-xl font-extrabold leading-none tabular-nums transition-colors ${
             isWarning ? 'text-[#EA580C]' : 'text-[#211D4F]'

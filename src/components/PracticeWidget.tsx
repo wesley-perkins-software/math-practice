@@ -40,6 +40,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
   const [preSessionScore, setPreSessionScore] = useState<number>(0);
+  const [preSessionPersonalBest, setPreSessionPersonalBest] = useState<number>(0);
   const [isNewStreakRecord, setIsNewStreakRecord] = useState(false);
   const [resetPending, setResetPending] = useState(false);
   const [personalBestResetPending, setPersonalBestResetPending] = useState(false);
@@ -71,6 +72,8 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   const totalAnsweredRef = useRef(0);
   const timerStartedRef = useRef(false);
   timerStartedRef.current = timerStarted;
+  const durationRef = useRef(duration);
+  durationRef.current = duration;
 
   // Clear reset confirmation when difficulty changes
   useEffect(() => {
@@ -142,6 +145,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
     // Capture the score from the previous session before starting a new one
     const currentStats = loadStats(config.storageKey);
     setPreSessionScore(currentStats.lastSessionScore);
+    setPreSessionPersonalBest(currentStats.personalBestScore);
     setIsNewStreakRecord(false);
     // For untimed: capture start time now. For timed: captured on first answer submission.
     if (!isTimed) {
@@ -165,7 +169,16 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
   function endSession() {
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
-    const elapsed = Math.round((Date.now() - sessionStartTimeRef.current) / 1000);
+    // Timed sessions report the CONFIGURED duration, not wall-clock elapsed
+    // time: the countdown interval isn't a perfectly precise 1000ms metronome
+    // (scheduling/rendering jitter), so Date.now() - sessionStartTime can land
+    // a little past the nominal duration (e.g. 61s for a 60s drill) even
+    // though the drill correctly ran for exactly `duration` countdown ticks.
+    // The countdown itself — and therefore scoring — is untouched; this only
+    // fixes what gets reported.
+    const elapsed = isTimed
+      ? durationRef.current
+      : Math.round((Date.now() - sessionStartTimeRef.current) / 1000);
     setResult(buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed));
     setPhase('complete');
   }
@@ -393,13 +406,23 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
         } as React.CSSProperties)
       : undefined;
 
+  // data-timed-instrument: gives practice-surface-prototype.css a hook to
+  // define --practice-stage-min-h (the shared problem-stage height — see
+  // WrittenProblemInput/LongDivisionProblemInput) and neutralize
+  // --ld-no-remainder-inset, scoped to only the timed+prototype surface
+  // (currently just the Speed Drill). The calc lives in CSS rather than as
+  // an inline px value here specifically so it stays responsive: it
+  // references --practice-operand-size/--practice-answer-min-h, which the
+  // tablet media query in that file already overrides on this same element.
+  const timedInstrumentAttr = isTimed && isPrototype ? { 'data-timed-instrument': true } : {};
+
   return (
     // data-practice-instrument: lets the H1-row switcher's vanilla script
     // (addition/1-digit.astro) detect "the user resumed practice" and close
     // itself — see the switcher's own comment for why this can't just be a
     // React prop (the switcher is deliberately framework-agnostic markup
     // living outside this island).
-    <div className={wrapperClasses} style={timedPrototypeStyle} {...(isPrototype ? { 'data-practice-instrument': true } : {})}>
+    <div className={wrapperClasses} style={timedPrototypeStyle} {...(isPrototype ? { 'data-practice-instrument': true } : {})} {...timedInstrumentAttr}>
       {/* Gradient accent bar — classic only; the prototype surface relies on its
           bordered surface + the brand-colored submit key instead of a decorative
           top bar, per the audit's note that gradients should solve something. */}
@@ -432,13 +455,14 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   // reuses the same `correct` state ScoreCard already reads
                   // at session end, so this is purely a display of existing
                   // state, not a new scoring path. Same compact
-                  // caption+numeral shape as Time (see TimerDisplay) so the
-                  // two corner stats carry matching visual weight; brand
-                  // indigo ties it to Personal Best below rather than to
-                  // Time's neutral ink, since both are "how well am I
-                  // doing" stats.
+                  // caption+numeral shape and caption ink as Time (see
+                  // TimerDisplay) so the two corner stats carry matching
+                  // visual weight; the numeral itself stays brand indigo,
+                  // tying it to Personal Best below rather than to Time's
+                  // neutral numeral, since both are "how well am I doing"
+                  // stats.
                   <div className="flex items-baseline gap-1.5">
-                    <span className="text-[11px] font-bold text-[#8983B8] uppercase tracking-wide">Correct</span>
+                    <span className="text-[11px] font-bold text-[#211D4F] uppercase tracking-wide">Correct</span>
                     <span className="text-xl font-extrabold leading-none tabular-nums text-[#4F46E5]">{correct}</span>
                   </div>
                 ) : (
@@ -633,9 +657,16 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   </span>
                 )}
                 {!personalBestResetPending ? (
+                  // font-medium (not the row's font-bold Personal Best label): the
+                  // ink here was already the same dark navy as the rest of the
+                  // interface, but at regular weight/text-sm its thin strokes read
+                  // as gray next to Personal Best's bold numeral. A touch of
+                  // weight fixes that legibility issue without adding size,
+                  // color, or placement emphasis — it stays secondary for those
+                  // reasons alone, not for weak contrast.
                   <button
                     onClick={() => setPersonalBestResetPending(true)}
-                    className={`text-sm transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
+                    className={`text-sm font-medium transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
@@ -668,6 +699,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
             stats={stats}
             isTimed={isTimed}
             preSessionScore={preSessionScore}
+            preSessionPersonalBest={preSessionPersonalBest}
             isNewStreakRecord={isNewStreakRecord}
             onRestart={handleRestart}
             variant={variant}

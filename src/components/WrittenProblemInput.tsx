@@ -115,6 +115,16 @@ export default function WrittenProblemInput({
 
     return (
       <div className="flex flex-col items-center gap-2.5 w-full">
+        {/* Problem stage: a shared fixed/min-height box the equation sits
+            inside, identical for every operation (only active on the timed
+            Speed Drill surface — --practice-stage-min-h is unset/0 on every
+            other prototype page, so this is a no-op there). Written
+            arithmetic already fills this height naturally; long division
+            (shorter notation) is centered inside it rather than stretched —
+            see LongDivisionProblemInput for the matching wrapper. This is
+            what keeps the keypad/Personal Best/Reset/card-height stationary
+            regardless of which operation the current problem is. */}
+        <div className="w-full flex items-center justify-center min-h-[length:var(--practice-stage-min-h,0px)]">
         {/* Written arithmetic: no bordering card — the rule, spacing, and
             right-alignment already read as "an equation" without another
             container-inside-a-container. The focus ring lives on the answer
@@ -212,6 +222,7 @@ export default function WrittenProblemInput({
               <span className={`text-[length:var(--practice-operand-size)] font-bold transition-colors duration-150 leading-none ${answerColorProto}`}>{value}</span>
             )}
           </div>
+        </div>
         </div>
 
         {feedbackContent}
