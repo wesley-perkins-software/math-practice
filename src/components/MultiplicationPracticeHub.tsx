@@ -6,6 +6,7 @@ type Mode = 'times-tables' | 'facts';
 interface Props {
   active: Mode;
   selectedTable?: number;
+  darkText?: boolean;
 }
 
 /**
@@ -17,8 +18,8 @@ interface Props {
  * Multiplication menu or the page's below-widget local chooser — this
  * component's only job is picking the right config.
  */
-export default function MultiplicationPracticeHub({ active, selectedTable = 1 }: Props) {
+export default function MultiplicationPracticeHub({ active, selectedTable = 1, darkText = false }: Props) {
   const config = active === 'facts' ? MULTIPLICATION_FACTS : multiplyTableConfig(selectedTable);
 
-  return <PracticeWidget config={config} variant="prototype" />;
+  return <PracticeWidget config={config} variant="prototype" darkText={darkText} />;
 }

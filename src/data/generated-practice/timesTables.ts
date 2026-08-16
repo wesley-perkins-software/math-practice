@@ -3,15 +3,10 @@ import type { GeneratedPracticeEntry } from './types';
 /**
  * Multiplication times-table fact bank (tables 1–12).
  *
- * This is the operation-specific source of truth for the future generated
- * /multiplication/times-tables/[table] page template, per
- * docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md ("Phase 1A"). It is NOT YET
- * consumed by any page — src/pages/multiplication/times-tables/[table].astro
- * and .../index.astro still use their own local TABLE_STRATEGIES / STRATEGY /
- * GRADE_BADGE / inline faqItems. This module supersedes those in content
- * terms but does not replace them in code until a later template-integration
- * PR (see the standard doc's "Implementation recommendations" and "Phased
- * rollout plan").
+ * This is the operation-specific source of truth used by the mature generated
+ * /multiplication/times-tables/[table] pages, per
+ * docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md. The shared template still
+ * keeps legacy fallbacks for tables that have not completed content rollout.
  *
  * Content integrity notes (see docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md
  * "Anti-thin-content rules" for the full standard this was authored against):
@@ -44,18 +39,18 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
   {
     n: 1,
     quickAnswerFact:
-      'Multiplying by 1 always returns the original number, so every fact in the 1 times table is already known once a student understands what multiplication represents.',
+      'Multiplying by 1 leaves the other number unchanged: 1×4=4, 1×9=9, and 1×12=12.',
     introClause:
-      "the 1s table is less about memorizing new facts and more about confirming a student understands what multiplication means in the first place",
-    strategyTitle: 'Identity Property (No Memorization Needed)',
+      'one group of a number is simply that number, so the 1s table is about understanding equal groups rather than learning a new list of answers',
+    strategyTitle: 'One Group Is the Same Number',
     strategyExplanation:
-      'Any number multiplied by 1 equals itself: 1×9=9, 1×12=12. Rather than drilling recall here, use this table to check that a student can explain why — for example, that 1×9 means "one group of nine."',
+      'Think of the first number as the number of equal groups. One group of 7 contains 7, so 1×7=7. The same idea works for every fact in this table: one group of 12 is 12, so 1×12=12.',
     parentTeacherNote:
-      'If a student hesitates on a 1×n fact, the issue is usually not memory but not yet understanding what multiplication represents — revisit the meaning of "groups of" before moving on to the 2s table, rather than treating it as a recall problem to drill.',
+      'Watch for a child who adds 1 to the other number, such as answering 1×8 with 9. Ask, “If you have one group of 8 objects, how many objects do you have?” This brings the question back to the meaning of multiplication.',
     faqDifferentiator: {
       question: 'Why does the 1 times table need practice if the answer is always the other number?',
       answer:
-        "It's included so students confirm they understand multiplication conceptually before other tables also require memorization. A mistake on a fact like 1×8 (answering anything other than 8) usually signals a conceptual gap about what multiplication means, not a recall gap — worth addressing before moving to tables that require actual memorization.",
+        'It helps students connect multiplication to equal groups. For example, 1×8 means one group of 8, so the answer is 8. Once that idea is clear, the facts do not need a separate trick.',
     },
     // Grade override rationale: matches the existing GRADE_BADGE distinction already
     // present in [table].astro (tables 1, 2, 5, 10 marked Grade 2–3 vs. the Grade 3–4
@@ -66,18 +61,18 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
   {
     n: 2,
     quickAnswerFact:
-      'Every 2× fact is double the other factor, so a student who can add a number to itself already knows the entire 2 times table.',
+      'Multiplying by 2 means making two equal groups, or doubling the other number. For example, 2×7 is 7+7=14.',
     introClause:
-      'doubling is a skill many students build before formal multiplication instruction, which makes the 2s table one of the fastest to connect to something already known',
-    strategyTitle: 'Doubling',
+      'the 2s table connects each multiplication fact to a familiar addition fact and produces the even-number sequence from 2 through 24',
+    strategyTitle: 'Think Doubles',
     strategyExplanation:
-      '2×n is the same as n+n. For 2×9, add 9+9=18. This table also previews the relationship the 4s and 8s tables build on later by doubling again.',
+      'Add the other number to itself. For 2×9, think 9+9=18. You can also count by 2s—2, 4, 6, 8, and so on—to check that every answer is even.',
     parentTeacherNote:
-      'Watch for a student who reliably doubles small numbers (2×3, 2×4) but slows down on larger ones (2×9, 2×11) — that suggests they are still counting rather than doubling, and practicing double-digit addition (9+9, 11+11) directly will transfer to this table.',
+      'If a child counts every object instead of doubling, ask, “What is the number plus itself?” For 2×9, the prompt “What is 9+9?” keeps the two equal groups visible without giving away 18.',
     faqDifferentiator: {
       question: 'Is the 2 times table the same thing as doubling?',
       answer:
-        'Yes — 2×n and "double n" are the same operation. For example, 2×11=22 is identical to doubling 11 (11+11=22). This table is a useful check of whether a student has internalized doubling as an addition skill before applying it inside multiplication.',
+        'Yes. Two groups of a number are the same as that number added to itself. For example, 2×11=22 because 11+11=22.',
     },
     gradeOverride:
       'Often introduced in Grade 2 as an early multiplication concept, with fluency reinforced in Grade 3 alongside the rest of the times tables.',
@@ -85,52 +80,52 @@ export const TIMES_TABLE_FACTS: GeneratedPracticeEntry[] = [
   {
     n: 3,
     quickAnswerFact:
-      'Every 3× fact equals the corresponding 2× fact plus one more group of the number, since 3×n = 2×n + n.',
+      'Multiplying by 3 means making three equal groups. For example, 3×4 is 4+4+4=12.',
     introClause:
-      "framing the 3s table as \"one more group past doubling\" turns an unfamiliar table into an extension of the 2s table already learned",
+      'each 3s fact can be built with repeated addition or by doubling the other number and adding one more equal group',
     strategyTitle: 'Add One More Group to a Double',
     strategyExplanation:
-      '3×n = (2×n) + n. For 3×8: double 8 is 16, plus 8 more is 24. This strategy reuses the 2s table directly instead of requiring new memorization.',
+      'Start with the double, then add the number once more. For 3×8, double 8 to get 16, then add one more 8 to get 24. That makes three equal groups of 8.',
     parentTeacherNote:
-      "If a student can double correctly but still struggles with 3×n, check whether they're adding the extra group correctly rather than doubling twice by mistake — a common slip that produces the 4× answer instead of the 3× answer for the same number.",
+      'Watch for a child who doubles twice and gives the 4s answer. Ask them to point to the two groups in the double, then add only one more group. For 3×6, that means 12+6, not 12+12.',
     faqDifferentiator: {
       question: 'What is a quick way to check a 3 times table answer by hand?',
       answer:
-        'Double the number, then add the number one more time. For 3×9: double 9 is 18, plus 9 more is 27. This works because 3×n is defined as 2×n+n, so the check is exact, not an estimate.',
+        'Double the other number, then add it one more time. For 3×9, double 9 to get 18, then add 9 to get 27. The three groups are 9+9+9.',
     },
   },
   {
     n: 4,
     quickAnswerFact:
-      "4×n is the same number doubled twice, so the entire 4 times table can be built from two applications of the 2s table.",
+      'Multiplying by 4 means making four equal groups. For example, 4×6=24, and you can find it by doubling 6 and then doubling the result.',
     introClause:
-      'students who can double fluently can derive the whole 4s table from two repeated doubling steps rather than memorizing 12 new facts',
+      'two clear doubling steps give students a practical way to work out a 4s fact from addition facts they already know',
     strategyTitle: 'Double, Then Double Again',
     strategyExplanation:
-      '4×n = double(double(n)). For 4×7: double 7 is 14, and double 14 is 28. Two doubling steps replace memorizing the table from scratch.',
+      'Double the other number, then double that answer. For 4×7, double 7 to get 14, then double 14 to get 28. Be sure to complete both doubling steps.',
     parentTeacherNote:
-      "A common error is doubling only once (landing on the 2× answer) or doubling three times (landing on the 8× answer) — if a student's 4× answer consistently matches a different table's answer for the same number, check which doubling step they're skipping or repeating rather than reteaching the whole table.",
+      'If an answer matches the 2s fact, the child may have stopped after one double; if it matches the 8s fact, they may have doubled three times. Ask them to say each step aloud: for 4×6, “6 doubled is 12; 12 doubled is 24.”',
     faqDifferentiator: {
       question: 'How is the 4 times table related to the 2 and 8 times tables?',
       answer:
-        '4×n sits exactly between them: it is the 2× answer doubled once, and the 8× answer halved. For 4×6=24, doubling once gives 8×6=48, and halving gives 2×6=12 — the same relationship holds for every fact in the table.',
+        'The 4s answer is the 2s answer doubled once more. For 4×6, double 6 to get 12, then double 12 to get 24. Doubling 24 once more gives 8×6=48.',
     },
   },
   {
     n: 5,
     quickAnswerFact:
-      'Every product in the 5 times table ends in 0 (for even multipliers) or 5 (for odd multipliers), making incorrect answers easy to spot at a glance.',
+      'Multiplying by 5 means making equal groups of 5. For example, 5×7=35, and this page practices the answers from 5×1=5 through 5×12=60.',
     introClause:
-      "this table doubles as a self-check tool for later multiplication practice: any 5× answer that doesn't end in 0 or 5 is immediately wrong",
+      'the answers follow the count-by-5s sequence and alternate between a last digit of 5 and a last digit of 0',
     strategyTitle: 'Skip-Count by Fives',
     strategyExplanation:
-      'Count 5, 10, 15, 20... up to the needed multiple. For 5×9, counting nine steps of five lands on 45. Many students can skip-count by fives fluently before they memorize the table outright.',
+      'Count 5, 10, 15, 20, and continue until you reach the needed group. For 5×9, nine counts land on 45. Use the last digit to check: an odd number of groups ends in 5, while an even number of groups ends in 0.',
     parentTeacherNote:
-      "If a student gives an answer to a 5× fact that doesn't end in 0 or 5, that's an immediate, visible sign of a computational slip rather than a memorization gap — point out the ends-in-0-or-5 pattern so the student can self-check going forward.",
+      'Watch for skipped numbers while counting by 5s. Ask the child to touch or mark one count for each group. If an answer does not end in 0 or 5, prompt them to use the last-digit pattern to check it.',
     faqDifferentiator: {
       question: 'Why do all 5 times table answers end in only two possible digits?',
       answer:
-        "Because 5×even always lands on a multiple of 10 (ending in 0), and 5×odd always lands on a multiple of 5 that isn't a multiple of 10 (ending in 5) — for example, 5×6=30 and 5×7=35. This is a direct consequence of how multiples of 5 alternate, not a coincidence.",
+        'As you count by 5s, the last digits alternate: 5, 0, 5, 0. An odd number of groups therefore ends in 5, as in 5×7=35, and an even number of groups ends in 0, as in 5×8=40.',
     },
     gradeOverride:
       'Often introduced in Grade 2 as an early multiplication concept, with fluency reinforced in Grade 3 alongside the rest of the times tables.',

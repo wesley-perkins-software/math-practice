@@ -47,12 +47,13 @@ const GRADE_BADGE: Partial<Record<number, string>> = {
 };
 const gradeBadge = GRADE_BADGE[tableNumber] ?? 'Grade 3 – Grade 4';
 
-// Phase 2 pilot (docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md): tables 2, 7, 9
+// Mature fact-bank pages: the approved table 6 exemplar, the completed 1–5
+// rollout, and the earlier table 7 and 9 pilots.
 // read their Strategy/Quick Answer/Parent-Teacher/FAQ content from the fact bank
-// instead of the legacy objects above. The other 9 tables are unaffected —
+// instead of the legacy objects above. The remaining tables are unaffected —
 // `fact` is undefined for them and every conditional below falls back to the
 // pre-existing content.
-const PILOT_TABLES = new Set([2, 6, 7, 9]);
+const PILOT_TABLES = new Set([1, 2, 3, 4, 5, 6, 7, 9]);
 const fact = PILOT_TABLES.has(tableNumber) ? getTimesTableFact(tableNumber) : undefined;
 
 const strategy = fact
@@ -65,7 +66,11 @@ const strategy = fact
 // string — kept short and specific to each table's clause so it doesn't just
 // restate the Quick Answer sentence built from `quickAnswerFact` below.
 const EXPANDED_INTRO: Partial<Record<number, string>> = {
-  2: `Because doubling is a skill many students build before formal multiplication instruction, the 2s table is one of the fastest to connect to something already known. This page drills 2×1 through 2×12 in random order until that connection becomes instant recall, not just a doubling skill in general.`,
+  1: `One group of a number is simply that number, so the 1s table is about understanding equal groups rather than memorizing a new list. This page mixes 1×1 through 1×12 so students can connect each expression to its meaning and answer confidently.`,
+  2: `The 2s table connects each multiplication fact to a familiar addition fact: two equal groups make a double. Its answers also form the even-number sequence from 2 through 24. This page mixes all twelve facts so students practice recalling each double without depending on a fixed order.`,
+  3: `Each fact in the 3s table represents three equal groups. Students can use repeated addition, or start with a double and add one more group. This page presents 3×1 through 3×12 in random order so they can practice choosing that strategy whenever an answer is not yet known.`,
+  4: `Two clear doubling steps give students a practical way to work out any 4s fact. This page mixes 4×1 through 4×12, helping students connect each multiplication fact to addition facts they already know while also building direct recall of the answers.`,
+  5: `The 5s answers follow the familiar count-by-5s sequence, and their last digits alternate between 5 and 0. This page mixes 5×1 through 5×12 so students learn to recall each fact even when the questions are not presented in counting order.`,
   7: `Being honest that some tables require direct memorization helps set realistic expectations, rather than searching for a trick that doesn't exist. This page drills 7×1 through 7×12 in random order, building real recall through repeated practice instead of a shortcut this table doesn't have.`,
   6: `Unlike doubling (2s) or counting by fives (5s and 10s), the 6 times table doesn't have an easy shortcut of its own. The good news: every 6 times fact is just one more group added to a 5 times fact already known. This page mixes up all twelve 6 times facts so that connection turns into fast, confident recall.`,
   9: `The widely known finger trick for the 9s works because of this same 10-minus-n relationship, not as an unrelated shortcut. This page drills 9×1 through 9×12 in random order so students build fast recall alongside — not instead of — that underlying number sense.`,
@@ -79,12 +84,9 @@ const EXPANDED_INTRO: Partial<Record<number, string>> = {
 // finding 5).
 const commutativityRef = tableNumber === 7 ? 8 : 7;
 
-// Font-color request scoped to the table 6 pilot page only: body/list text
-// switches from the site's default grey to black. Every other table keeps
-// its original grey text-[#6B7280]/[#4B5563] classes unchanged. The same
-// per-page `darkText`/`bodyTextClass`/`listTextClass` pattern is repeated in
-// [divisor].astro, LocalChooser.astro, NumberGrid.astro, and
-// InternalLinks.tsx to cover every grey element on these two pilot pages.
+// Approved content pages use black rather than the site's default muted grey.
+// A single range check covers this rollout and its table 6 exemplar without
+// growing a page-number-specific chain of conditionals.
 //
 // KNOWN LIMITATION, NOT SOLVED HERE: this is a page-by-page conditional
 // stopgap, not a real typography system — every other generated/leaf page
@@ -93,9 +95,10 @@ const commutativityRef = tableNumber === 7 ? 8 : 7;
 // (e.g. a CSS variable or Tailwind theme color) applied once, not this
 // per-page branching repeated across every page. Flagged for a later
 // dedicated shared-typography pass; intentionally not addressed in this
-// narrowly-scoped pilot cleanup.
-const bodyTextClass = tableNumber === 6 ? 'text-black' : 'text-[#6B7280]';
-const listTextClass = tableNumber === 6 ? 'text-black' : 'text-[#4B5563]';
+// content rollout.
+const darkText = tableNumber <= 6;
+const bodyTextClass = darkText ? 'text-black' : 'text-[#6B7280]';
+const listTextClass = darkText ? 'text-black' : 'text-[#4B5563]';
 
 // Build the full times table list for the FAQ answer
 const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}×${i + 1}=${tableNumber * (i + 1)}`).join(', ');
@@ -125,21 +128,22 @@ const faqItems = [
 const links = [
   { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
   { href: '/multiplication/facts', label: 'Mixed Facts Practice', description: 'All 144 facts from 1–12 in random order' },
-  // Table 6 uses neutral navigation wording ("7 Times Table" / "Practice the
-  // 7s") instead of "Next: ... / Continue table-by-table practice" — that
-  // phrasing implies an established required sequence that isn't documented
-  // anywhere on the site. Scoped to table 6 only; every other table keeps its
-  // original wording unchanged.
-  tableNumber === 6
-    ? { href: '/multiplication/times-tables/7', label: '7 Times Table', description: 'Practice the 7s' }
+  // Mature pages use neutral wording rather than implying that numerical
+  // order is a required learning progression.
+  tableNumber <= 6
+    ? {
+        href: `/multiplication/times-tables/${tableNumber + 1}`,
+        label: `${tableNumber + 1} Times Table`,
+        description: `Practice the ${tableNumber + 1}s`,
+      }
     : {
         href: tableNumber < 12 ? `/multiplication/times-tables/${tableNumber + 1}` : `/multiplication/times-tables/1`,
         label: tableNumber < 12 ? `Next: ${tableNumber + 1} Times Table` : 'Back to 1 Times Table',
         description: 'Continue table-by-table practice',
       },
   { href: '/division/facts', label: 'Division Facts', description: 'The inverse operation of multiplication' },
-  ...(tableNumber === 6
-    ? [{ href: '/division/divide-by/6', label: 'Divide by 6 Practice', description: 'The same 12 facts, practiced as division instead of multiplication' }]
+  ...(tableNumber <= 6
+    ? [{ href: `/division/divide-by/${tableNumber}`, label: `Divide by ${tableNumber} Practice`, description: 'The same 12 facts, practiced as division instead of multiplication' }]
     : []),
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Worksheet-style timed practice' },
 ];
@@ -156,6 +160,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
   description={pageDescription}
   canonical={`${SITE}/multiplication/times-tables/${tableNumber}`}
   pilotLayout
+  darkText={darkText}
   breadcrumb={[
     { label: 'Home', href: '/' },
     { label: 'Multiplication', href: '/multiplication' },
@@ -200,7 +205,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     </div>
   ) : null}
 
-  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
+  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} darkText={darkText} />
 
   <LocalChooser
     slot="local-chooser"
@@ -208,7 +213,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     current={`/multiplication/times-tables/${tableNumber}`}
     showGrid
     gridCurrent={tableNumber}
-    darkText={tableNumber === 6}
+    darkText={darkText}
   />
 
   <div slot="intro">
@@ -242,15 +247,15 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     <!-- Strategy -->
     <section aria-labelledby="strategy-heading">
       <h2 id="strategy-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Strategy for the {tableNumber}s</h2>
-      <div class="grid gap-3 sm:grid-cols-2">
+      <div class={`grid gap-3 ${tableNumber > 5 ? 'sm:grid-cols-2' : ''}`}>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">{strategy.name}</h3>
           <p class={`text-sm ${bodyTextClass} leading-relaxed`}>{strategy.tip}</p>
         </div>
-        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+        {tableNumber > 5 && <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
           <p class={`text-sm ${bodyTextClass} leading-relaxed`}>Every fact in the {tableNumber}s table appears in another table too. If you know {commutativityRef}×{tableNumber}, you already know {tableNumber}×{commutativityRef}. Flip any difficult fact to find a familiar one.</p>
-        </div>
+        </div>}
       </div>
     </section>
 
@@ -279,6 +284,6 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     </section>
 
     <!-- Internal Links (matching Related Practice's canonical last position) -->
-    <InternalLinks links={links} darkText={tableNumber === 6} />
+    <InternalLinks links={links} darkText={darkText} />
   </div>
 </PracticeLayout>
