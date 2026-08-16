@@ -588,7 +588,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 ) : (
                   <span
                     key={stats.currentStreak}
-                    className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}
+                    className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#6B7280]'}`}
                   >
                     {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
                   </span>
@@ -612,7 +612,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                 {!resetPending ? (
                   <button
                     onClick={() => setResetPending(true)}
-                    className={`text-sm transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
+                    className={`text-sm transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>
@@ -652,7 +652,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                     </span>
                   </div>
                 ) : (
-                  <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
+                  <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#6B7280]'}`}>
                     Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
                   </span>
                 )}
@@ -666,7 +666,7 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
                   // reasons alone, not for weak contrast.
                   <button
                     onClick={() => setPersonalBestResetPending(true)}
-                    className={`text-sm font-medium transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#A5B4FC] hover:text-[#6B7280] hover:bg-[#F5F3FF]'}`}
+                    className={`text-sm font-medium transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-[#F5F3FF]'}`}
                   >
                     Reset
                   </button>

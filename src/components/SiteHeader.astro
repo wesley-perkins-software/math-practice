@@ -67,28 +67,30 @@ const chevron = 'M6 9l6 6 6-6';
       {operationOrder.map((op) => {
         const menu = OPERATION_MENUS[op];
         const label = menu.hub.label.replace(' Practice', '');
-        return (
+        const gridEntry = menu.grid && (
           <details class="relative" data-dismissable-menu>
+            <summary class="list-none flex items-center justify-between px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5] cursor-pointer select-none">
+              {menu.grid.label}
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 -rotate-90" aria-hidden="true"><path d={chevron} /></svg>
+            </summary>
+            <div class="absolute left-full top-0 ml-1.5 z-30 w-48 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] p-2.5">
+              <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
+            </div>
+          </details>
+        );
+        return (
+          <details class="relative" data-dismissable-menu data-op-group="desktop">
             <summary class="list-none flex items-center gap-0.5 px-3 py-1.5 rounded-lg text-sm font-medium text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
               {label}
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5" aria-hidden="true"><path d={chevron} /></svg>
             </summary>
             <div class="absolute left-0 top-full mt-2 z-20 w-60 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] py-1.5">
               <a href={menu.hub.href} class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] hover:bg-[#F5F3FF]">{menu.hub.label}</a>
+              {menu.grid?.position === 'before' && gridEntry}
               {menu.items.map((item) => (
                 <a href={item.href} class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5]">{item.label}</a>
               ))}
-              {menu.grid && (
-                <details class="relative" data-dismissable-menu>
-                  <summary class="list-none flex items-center justify-between px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE] hover:text-[#4F46E5] cursor-pointer select-none">
-                    {menu.grid.label}
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 -rotate-90" aria-hidden="true"><path d={chevron} /></svg>
-                  </summary>
-                  <div class="absolute left-full top-0 ml-1.5 z-30 w-48 bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(30,27,75,0.24)] p-2.5">
-                    <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
-                  </div>
-                </details>
-              )}
+              {menu.grid?.position !== 'before' && gridEntry}
             </div>
           </details>
         );
@@ -110,28 +112,30 @@ const chevron = 'M6 9l6 6 6-6';
         {operationOrder.map((op) => {
           const menu = OPERATION_MENUS[op];
           const label = menu.hub.label.replace(' Practice', '');
+          const gridEntry = menu.grid && (
+            <details data-dismissable-menu>
+              <summary class="list-none flex items-center justify-between px-3 py-2 text-sm text-[#43405C] cursor-pointer select-none">
+                {menu.grid.label}
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#8983B8] shrink-0" aria-hidden="true"><path d={chevron} /></svg>
+              </summary>
+              <div class="px-3 py-2">
+                <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
+              </div>
+            </details>
+          );
           return (
-            <details class="border-b border-[#F0EEFC] last:border-b-0">
+            <details class="border-b border-[#F0EEFC] last:border-b-0" data-dismissable-menu data-op-group="mobile">
               <summary class="list-none flex items-center justify-between px-3.5 py-2.5 text-[15px] font-semibold text-[#1E1B4B] cursor-pointer select-none">
                 {label}
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-[#8983B8] shrink-0" aria-hidden="true"><path d={chevron} /></svg>
               </summary>
               <div class="pb-2 pl-3.5">
                 <a href={menu.hub.href} class="block px-3 py-2 text-sm font-semibold text-[#4F46E5]">{menu.hub.label}</a>
+                {menu.grid?.position === 'before' && gridEntry}
                 {menu.items.map((item) => (
                   <a href={item.href} class="block px-3 py-2 text-sm text-[#43405C]">{item.label}</a>
                 ))}
-                {menu.grid && (
-                  <details>
-                    <summary class="list-none flex items-center justify-between px-3 py-2 text-sm text-[#43405C] cursor-pointer select-none">
-                      {menu.grid.label}
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-3.5 h-3.5 text-[#8983B8] shrink-0" aria-hidden="true"><path d={chevron} /></svg>
-                    </summary>
-                    <div class="px-3 py-2">
-                      <NumberGrid mode="menu" basePath={menu.grid.basePath} max={menu.grid.max} />
-                    </div>
-                  </details>
-                )}
+                {menu.grid?.position !== 'before' && gridEntry}
               </div>
             </details>
           );
@@ -149,50 +153,129 @@ const chevron = 'M6 9l6 6 6-6';
 <script>
   // Shared open/close behavior for every disclosure menu in the header:
   // the top-level mobile trigger (`data-site-nav-menu`) and every operation
-  // dropdown/nested flyout (`data-dismissable-menu`). Escape closes the
-  // innermost open menu and returns focus to its own trigger (no
-  // stopPropagation, so a second Escape closes a parent menu too — a
-  // second `[data-dismissable-menu]` ancestor, if open, gets its own
-  // Escape keydown next since focus is still inside it).
-  document.querySelectorAll<HTMLDetailsElement>('details[data-site-nav-menu], details[data-dismissable-menu]').forEach((details) => {
-    const summary = details.querySelector('summary');
+  // dropdown/nested flyout (`data-dismissable-menu`).
+  //
+  // This site uses Astro's <ClientRouter /> (View Transitions) sitewide, so
+  // navigating between two pages that both render this header does NOT
+  // reload the document — the old header's DOM (including these listeners)
+  // is discarded and a fresh, entirely unbound copy swaps in. A plain
+  // top-level script only runs once, the first time it's encountered, so
+  // without re-binding, every page you reach via a client-side navigation
+  // would silently lose exclusivity/outside-click/Escape entirely (native
+  // <details> still opens/closes on click, just with none of this logic) —
+  // that was the actual defect behind "multiple menus stay open," not an
+  // event-ordering race in the same-page listeners themselves.
+  //
+  // Fix: per-element binding (exclusivity, Escape, position clamping) is
+  // wrapped in bindMenus() and re-run on every `astro:page-load`, which
+  // fires after the initial load AND after every transition. The
+  // page-content-agnostic listeners (click-outside, focusin, pointerdown/
+  // touchstart) re-query the DOM at event time rather than closing over a
+  // snapshot, so they're attached exactly once and never go stale.
+  const DISMISSABLE_SELECTOR = 'details[data-site-nav-menu], details[data-dismissable-menu]';
+  const BOUND_ATTR = 'data-menu-bound';
+  const EDGE_MARGIN = 16;
+
+  function clampMenuPosition(details: HTMLDetailsElement) {
     const menu = details.querySelector<HTMLElement>(':scope > div');
-    const close = () => { details.open = false; };
-
-    const EDGE_MARGIN = 16;
-    function clampMenuPosition() {
-      if (!menu) return;
-      menu.style.left = '';
-      menu.style.right = '';
-      const rect = menu.getBoundingClientRect();
-      const viewportWidth = document.documentElement.clientWidth;
-      if (rect.right > viewportWidth - EDGE_MARGIN) {
-        menu.style.right = '0';
-        menu.style.left = 'auto';
-      }
-      if (rect.left < EDGE_MARGIN) {
-        menu.style.left = '0';
-        menu.style.right = 'auto';
-      }
+    if (!menu) return;
+    menu.style.left = '';
+    menu.style.right = '';
+    const rect = menu.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    if (rect.right > viewportWidth - EDGE_MARGIN) {
+      menu.style.right = '0';
+      menu.style.left = 'auto';
     }
-    details.addEventListener('toggle', () => {
-      if (details.open) clampMenuPosition();
-    });
-    window.addEventListener('resize', () => {
-      if (details.open) clampMenuPosition();
-    });
+    if (rect.left < EDGE_MARGIN) {
+      menu.style.left = '0';
+      menu.style.right = 'auto';
+    }
+  }
 
-    document.addEventListener('click', (e) => {
-      if (details.open && e.target instanceof Node && !details.contains(e.target)) {
-        close();
-      }
+  function closeAllMenus() {
+    document.querySelectorAll<HTMLDetailsElement>(DISMISSABLE_SELECTOR).forEach((d) => {
+      if (d.open) d.removeAttribute('open');
     });
-    details.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && details.open) {
-        e.preventDefault();
-        close();
-        summary?.focus();
-      }
+  }
+
+  function bindMenus() {
+    document.querySelectorAll<HTMLDetailsElement>(DISMISSABLE_SELECTOR).forEach((details) => {
+      // Idempotent: astro:page-load can fire on a header that (rarely)
+      // wasn't replaced, so already-bound elements are skipped rather than
+      // double-bound.
+      if (details.hasAttribute(BOUND_ATTR)) return;
+      details.setAttribute(BOUND_ATTR, '');
+
+      const summary = details.querySelector('summary');
+
+      details.addEventListener('toggle', () => {
+        if (!details.open) return;
+        clampMenuPosition(details);
+
+        // Exclusivity: when a top-level operation <details> (Addition/
+        // Subtraction/Multiplication/Division) becomes open, synchronously
+        // remove the `open` attribute from every other top-level <details>
+        // that shares its `data-op-group` (the desktop row, or the mobile
+        // accordion panel — two independent groups) — at most one is ever
+        // open per group. The selector is scoped to `[data-op-group]`
+        // specifically, so nested Times Tables/Divide By flyouts (which
+        // carry no group) are never touched as if they were peers, and a
+        // closing parent doesn't reset a nested flyout's own open state.
+        const group = details.dataset.opGroup;
+        if (!group) return;
+        document.querySelectorAll<HTMLDetailsElement>(`details[data-op-group="${group}"]`).forEach((other) => {
+          if (other !== details && other.open) other.removeAttribute('open');
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        if (details.open) clampMenuPosition(details);
+      });
+
+      // Escape closes the innermost open menu and returns focus to its own
+      // trigger (no stopPropagation, so a second Escape closes a parent
+      // menu too — a second `[data-dismissable-menu]` ancestor, if open,
+      // gets its own Escape keydown next since focus is still inside it).
+      details.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && details.open) {
+          e.preventDefault();
+          details.removeAttribute('open');
+          summary?.focus();
+        }
+      });
+    });
+  }
+
+  // Click/tap anywhere not contained by a given open menu closes it —
+  // covers both "elsewhere on the page" and switching between sibling
+  // menus via mouse or touch (the toggle-based exclusivity above is the
+  // keyboard-safe version of the same rule). Re-queries at event time, so
+  // this single listener keeps working after every client-side navigation.
+  document.addEventListener('click', (e) => {
+    if (!(e.target instanceof Node)) return;
+    document.querySelectorAll<HTMLDetailsElement>(DISMISSABLE_SELECTOR).forEach((d) => {
+      if (d.open && !d.contains(e.target as Node)) d.removeAttribute('open');
     });
   });
+
+  // Resuming meaningful interaction with the practice widget — focusing the
+  // answer input, tapping/clicking the keypad, or any other pointer/touch
+  // interaction inside the practice surface — closes every open header
+  // menu. A menu left open while a student is mid-problem is a bug, not a
+  // feature.
+  document.addEventListener('focusin', (e) => {
+    if (e.target instanceof Element && e.target.closest('[data-practice-instrument]')) {
+      closeAllMenus();
+    }
+  });
+  (['pointerdown', 'touchstart'] as const).forEach((type) => {
+    document.addEventListener(type, (e) => {
+      if (e.target instanceof Element && e.target.closest('[data-practice-instrument]')) {
+        closeAllMenus();
+      }
+    }, { passive: true });
+  });
+
+  document.addEventListener('astro:page-load', bindMenus);
 </script>
