@@ -53,11 +53,11 @@ function relativeTimestamp(isoTimestamp: string): string {
 }
 
 const OPERATION_GROUPS: { key: Operation; label: string; color: string }[] = [
-  { key: 'addition', label: 'Addition', color: 'text-emerald-700 bg-emerald-50 border-emerald-200' },
-  { key: 'subtraction', label: 'Subtraction', color: 'text-sky-700 bg-sky-50 border-sky-200' },
-  { key: 'multiplication', label: 'Multiplication', color: 'text-violet-700 bg-violet-50 border-violet-200' },
-  { key: 'division', label: 'Division', color: 'text-orange-700 bg-orange-50 border-orange-200' },
-  { key: 'mixed', label: 'Speed Drills', color: 'text-rose-700 bg-rose-50 border-rose-200' },
+  { key: 'addition', label: 'Addition', color: 'text-black bg-emerald-50 border-emerald-200' },
+  { key: 'subtraction', label: 'Subtraction', color: 'text-black bg-sky-50 border-sky-200' },
+  { key: 'multiplication', label: 'Multiplication', color: 'text-black bg-violet-50 border-violet-200' },
+  { key: 'division', label: 'Division', color: 'text-black bg-orange-50 border-orange-200' },
+  { key: 'mixed', label: 'Speed Drills', color: 'text-black bg-rose-50 border-rose-200' },
 ];
 
 // ─── Achievement definitions ──────────────────────────────────────────────────
@@ -205,9 +205,9 @@ interface HeroCardProps {
 function HeroCard({ label, value, sub }: HeroCardProps) {
   return (
     <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 text-center">
-      <div className="text-2xl font-bold text-[#1E293B]">{value}</div>
-      {sub && <div className="text-[10px] text-[#94A3B8] uppercase tracking-wide font-medium mt-0.5">{sub}</div>}
-      <div className="text-xs text-[#64748B] mt-1">{label}</div>
+      <div className="text-2xl font-bold text-black">{value}</div>
+      {sub && <div className="text-xs text-black uppercase tracking-wide font-medium mt-0.5">{sub}</div>}
+      <div className="text-sm text-black mt-1">{label}</div>
     </div>
   );
 }
@@ -226,10 +226,10 @@ function AchievementBadge({ achievement, earned }: AchievementBadgeProps) {
           : 'bg-[#F8FAFC] border-[#E2E8F0]'
       }`}
     >
-      <div className={`text-xs font-bold leading-snug ${earned ? 'text-white' : 'text-[#475569]'}`}>
+      <div className={`text-sm font-bold leading-snug ${earned ? 'text-white' : 'text-black'}`}>
         {achievement.label}
       </div>
-      <div className={`text-[11px] mt-0.5 leading-snug ${earned ? 'text-[#C7D2FE]' : 'text-[#94A3B8]'}`}>
+      <div className={`text-sm mt-0.5 leading-snug ${earned ? 'text-white' : 'text-black'}`}>
         {achievement.description}
       </div>
     </div>
@@ -266,19 +266,19 @@ export default function ProgressDashboard() {
     return (
       <div className="text-center py-16">
         <div className="text-5xl mb-4">📊</div>
-        <p className="text-[#1E293B] font-semibold text-lg">No practice data yet</p>
-        <p className="text-[#64748B] mt-2 text-sm">Complete a session on any practice page to see your stats here.</p>
+        <p className="text-black font-semibold text-lg">No practice data yet</p>
+        <p className="text-black mt-2 text-base">Complete a session on any practice page to see your stats here.</p>
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-sm mx-auto">
           {[
-            { label: 'Addition', href: '/addition', color: 'bg-emerald-50 text-emerald-700 border-emerald-200' },
-            { label: 'Subtraction', href: '/subtraction', color: 'bg-sky-50 text-sky-700 border-sky-200' },
-            { label: 'Multiplication', href: '/multiplication', color: 'bg-violet-50 text-violet-700 border-violet-200' },
-            { label: 'Division', href: '/division/facts', color: 'bg-orange-50 text-orange-700 border-orange-200' },
+            { label: 'Addition', href: '/addition', color: 'bg-emerald-50 text-black border-emerald-200' },
+            { label: 'Subtraction', href: '/subtraction', color: 'bg-sky-50 text-black border-sky-200' },
+            { label: 'Multiplication', href: '/multiplication', color: 'bg-violet-50 text-black border-violet-200' },
+            { label: 'Division', href: '/division/facts', color: 'bg-orange-50 text-black border-orange-200' },
           ].map((op) => (
             <a
               key={op.href}
               href={op.href}
-              className={`border rounded-xl p-3 text-center text-xs font-semibold transition-all hover:shadow-sm ${op.color}`}
+              className={`border rounded-xl p-3 text-center text-sm font-semibold transition-all hover:shadow-sm ${op.color}`}
             >
               {op.label}
             </a>
@@ -350,18 +350,18 @@ export default function ProgressDashboard() {
       {todayProblems > 0 && (
         <div className="bg-[#4F46E5] rounded-xl px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <div className="text-white font-semibold text-sm">Today's Practice</div>
-            <div className="text-[#C7D2FE] text-xs mt-0.5">Keep up the great work!</div>
+            <div className="text-white font-semibold text-base">Today's Practice</div>
+            <div className="text-white text-sm mt-0.5">Keep up the great work!</div>
           </div>
           <div className="flex gap-6">
             <div className="text-center">
               <div className="text-white font-bold text-xl">{todayProblems}</div>
-              <div className="text-[#C7D2FE] text-[11px]">problems today</div>
+              <div className="text-white text-sm">problems today</div>
             </div>
             {currentStreakToday > 0 && (
               <div className="text-center">
                 <div className="text-white font-bold text-xl">{currentStreakToday}</div>
-                <div className="text-[#C7D2FE] text-[11px]">current streak</div>
+                <div className="text-white text-sm">current streak</div>
               </div>
             )}
           </div>
@@ -379,8 +379,8 @@ export default function ProgressDashboard() {
       {/* ── Achievements ─────────────────────────────────────────────────────── */}
       <div>
         <div className="mb-3">
-          <h2 className="text-base font-semibold text-[#1E293B]">Achievements</h2>
-          <p className="text-xs text-[#64748B] mt-0.5">Earn badges by reaching milestones in your practice.</p>
+          <h2 className="text-lg font-semibold text-black">Achievements</h2>
+          <p className="text-sm text-black mt-0.5">Earn badges by reaching milestones in your practice.</p>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
           {ACHIEVEMENTS.map((a) => (
@@ -423,8 +423,8 @@ export default function ProgressDashboard() {
               return (
                 <div key={achievement.id} className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3">
                   <div className="flex items-center justify-between mb-1.5">
-                    <span className="text-xs font-semibold text-[#1E293B]">Next: {achievement.label}</span>
-                    <span className="text-[11px] text-[#64748B]">{awayLabel}</span>
+                    <span className="text-sm font-semibold text-black">Next: {achievement.label}</span>
+                    <span className="text-sm text-black">{awayLabel}</span>
                   </div>
                   <div className="h-1.5 bg-[#E2E8F0] rounded-full overflow-hidden">
                     <div
@@ -432,7 +432,7 @@ export default function ProgressDashboard() {
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <div className="text-[10px] text-[#94A3B8] mt-1">{pct}% complete</div>
+                  <div className="text-xs text-black mt-1">{pct}% complete</div>
                 </div>
               );
             })}
@@ -444,15 +444,15 @@ export default function ProgressDashboard() {
       {opTotals.some((t) => t > 0) && (
         <div>
           <div className="mb-3">
-            <h2 className="text-base font-semibold text-[#1E293B]">Operations Strength</h2>
-            <p className="text-xs text-[#64748B] mt-0.5">How many problems you've solved in each type of math — a longer bar means more practice in that area.</p>
+            <h2 className="text-lg font-semibold text-black">Operations Strength</h2>
+            <p className="text-sm text-black mt-0.5">How many problems you've solved in each type of math — a longer bar means more practice in that area.</p>
           </div>
           <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 space-y-3">
             {OP_KEYS.map(({ label, color }, i) => (
               <div key={label}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-[#64748B] font-medium">{label}</span>
-                  <span className="text-xs text-[#94A3B8]">{opTotals[i].toLocaleString()} problems</span>
+                  <span className="text-sm text-black font-medium">{label}</span>
+                  <span className="text-sm text-black">{opTotals[i].toLocaleString()} problems</span>
                 </div>
                 <div className="h-2 bg-[#F1F5F9] rounded-full overflow-hidden">
                   <div
@@ -469,8 +469,8 @@ export default function ProgressDashboard() {
       {/* ── Practice Calendar ─────────────────────────────────────────────────── */}
       <div>
         <div className="mb-3">
-          <h2 className="text-base font-semibold text-[#1E293B]">Practice Calendar</h2>
-          <p className="text-xs text-[#64748B] mt-0.5">Each square is a day. Filled squares show when you practiced over the last 5 weeks.</p>
+          <h2 className="text-lg font-semibold text-black">Practice Calendar</h2>
+          <p className="text-sm text-black mt-0.5">Each square is a day. Filled squares show when you practiced over the last 5 weeks.</p>
         </div>
         <div className="bg-white border border-[#E2E8F0] rounded-xl p-4 w-fit">
           {/* Parse first day as local midnight to get the correct weekday */}
@@ -480,7 +480,7 @@ export default function ProgressDashboard() {
             return (
               <div className="inline-grid grid-cols-7 gap-1">
                 {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
-                  <div key={i} className="w-6 text-center text-[10px] font-semibold text-[#94A3B8] pb-0.5">{d}</div>
+                  <div key={i} className="w-6 text-center text-xs font-semibold text-black pb-0.5">{d}</div>
                 ))}
                 {Array.from({ length: firstDayOfWeek }).map((_, i) => (
                   <div key={`pad-${i}`} className="w-6 h-6" />
@@ -503,7 +503,7 @@ export default function ProgressDashboard() {
               </div>
             );
           })()}
-          <div className="flex items-center gap-4 mt-3 text-[11px] text-[#94A3B8]">
+          <div className="flex items-center gap-4 mt-3 text-sm text-black">
             <span className="flex items-center gap-1.5">
               <span className="w-2.5 h-2.5 rounded-sm bg-[#4F46E5] inline-block" />
               Practiced
@@ -519,8 +519,8 @@ export default function ProgressDashboard() {
       {/* ── Per-operation grouped practice table ─────────────────────────────── */}
       <div>
         <div className="mb-3">
-          <h2 className="text-base font-semibold text-[#1E293B]">By Practice Type</h2>
-          <p className="text-xs text-[#64748B] mt-0.5">Your stats broken down by each individual practice type.</p>
+          <h2 className="text-lg font-semibold text-black">By Practice Type</h2>
+          <p className="text-sm text-black mt-0.5">Your stats broken down by each individual practice type.</p>
         </div>
         <div className="space-y-4">
           {OPERATION_GROUPS.map(({ key, label, color }) => {
@@ -529,18 +529,18 @@ export default function ProgressDashboard() {
             return (
               <div key={key} className="border border-[#E2E8F0] rounded-xl overflow-hidden">
                 <div className={`px-4 py-2 border-b border-[#E2E8F0] flex items-center gap-2`}>
-                  <span className={`text-xs font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border ${color}`}>
+                  <span className={`text-sm font-bold uppercase tracking-wide px-2 py-0.5 rounded-full border ${color}`}>
                     {label}
                   </span>
                 </div>
-                <table className="w-full text-sm">
+                <table className="w-full text-base">
                   <thead>
                     <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
-                      <th className="text-left px-4 py-2.5 text-[#64748B] font-medium">Practice</th>
-                      <th className="text-right px-3 py-2.5 text-[#64748B] font-medium hidden sm:table-cell">Last Practiced</th>
-                      <th className="text-right px-3 py-2.5 text-[#64748B] font-medium">Sessions</th>
-                      <th className="text-right px-3 py-2.5 text-[#64748B] font-medium">Problems</th>
-                      <th className="text-right px-3 py-2.5 text-[#64748B] font-medium hidden sm:table-cell">
+                      <th className="text-left px-4 py-2.5 text-black font-medium">Practice</th>
+                      <th className="text-right px-3 py-2.5 text-black font-medium hidden sm:table-cell">Last Practiced</th>
+                      <th className="text-right px-3 py-2.5 text-black font-medium">Sessions</th>
+                      <th className="text-right px-3 py-2.5 text-black font-medium">Problems</th>
+                      <th className="text-right px-3 py-2.5 text-black font-medium hidden sm:table-cell">
                         {key === 'mixed' ? 'Best Score' : 'Longest Streak'}
                       </th>
                       <th className="px-3 py-2.5 hidden sm:table-cell" />
@@ -553,8 +553,8 @@ export default function ProgressDashboard() {
                         className={i < group.length - 1 ? 'border-b border-[#E2E8F0]' : ''}
                       >
                         <td className="px-4 py-3">
-                          <div className="text-[#1E293B] font-medium">{row.label}</div>
-                          <div className="sm:hidden text-[11px] text-[#94A3B8] mt-0.5">
+                          <div className="text-black font-medium">{row.label}</div>
+                          <div className="sm:hidden text-sm text-black mt-0.5">
                             {row.isTimed
                               ? (row.stats.bestTimedScore > 0
                                   ? `${row.stats.bestTimedScore}/min best`
@@ -567,12 +567,12 @@ export default function ProgressDashboard() {
                               : ''}
                           </div>
                         </td>
-                        <td className="px-3 py-3 text-right text-[#64748B] hidden sm:table-cell">
+                        <td className="px-3 py-3 text-right text-black hidden sm:table-cell">
                           {relativeDate(row.stats.lastSessionDate)}
                         </td>
-                        <td className="px-3 py-3 text-right text-[#64748B]">{row.stats.totalSessions}</td>
-                        <td className="px-3 py-3 text-right text-[#64748B]">{row.stats.totalProblemsAttempted}</td>
-                        <td className="px-3 py-3 text-right text-[#64748B] hidden sm:table-cell">
+                        <td className="px-3 py-3 text-right text-black">{row.stats.totalSessions}</td>
+                        <td className="px-3 py-3 text-right text-black">{row.stats.totalProblemsAttempted}</td>
+                        <td className="px-3 py-3 text-right text-black hidden sm:table-cell">
                           {row.isTimed
                             ? (row.stats.bestTimedScore > 0 ? `${row.stats.bestTimedScore}/min` : '—')
                             : (row.stats.longestStreak > 0 ? row.stats.longestStreak : '—')}
@@ -581,7 +581,7 @@ export default function ProgressDashboard() {
                           {row.path && (
                             <a
                               href={row.path}
-                              className="text-xs text-[#4F46E5] hover:text-[#3730A3] font-medium transition-colors whitespace-nowrap"
+                              className="text-sm text-black hover:text-black font-medium transition-colors whitespace-nowrap"
                             >
                               Practice →
                             </a>
@@ -601,34 +601,27 @@ export default function ProgressDashboard() {
       {recentSessions.length > 0 && (
         <div>
           <div className="mb-3">
-            <h2 className="text-base font-semibold text-[#1E293B]">Recent Sessions</h2>
-            <p className="text-xs text-[#64748B] mt-0.5">Your 6 most recent practice sessions.</p>
+            <h2 className="text-lg font-semibold text-black">Recent Sessions</h2>
+            <p className="text-sm text-black mt-0.5">Your 6 most recent practice sessions.</p>
           </div>
           <div className="border border-[#E2E8F0] rounded-xl overflow-hidden">
-            <table className="w-full text-sm">
+            <table className="w-full text-base">
               <thead>
                 <tr className="bg-[#F8FAFC] border-b border-[#E2E8F0]">
-                  <th className="text-left px-4 py-2.5 text-[#64748B] font-medium">Practice</th>
-                  <th className="text-right px-4 py-2.5 text-[#64748B] font-medium hidden sm:table-cell">When</th>
-                  <th className="text-right px-4 py-2.5 text-[#64748B] font-medium">Result</th>
+                  <th className="text-left px-4 py-2.5 text-black font-medium">Practice</th>
+                  <th className="text-right px-4 py-2.5 text-black font-medium hidden sm:table-cell">When</th>
+                  <th className="text-right px-4 py-2.5 text-black font-medium">Result</th>
                 </tr>
               </thead>
               <tbody>
                 {recentSessions.map((entry, i) => {
-                  const isGood = entry.score >= 80;
-                  const isMid = entry.score >= 60 && entry.score < 80;
-                  const scoreColor = isGood
-                    ? 'text-emerald-600'
-                    : isMid
-                    ? 'text-amber-600'
-                    : 'text-red-500';
                   return (
                     <tr key={i} className={i < recentSessions.length - 1 ? 'border-b border-[#E2E8F0]' : ''}>
-                      <td className="px-4 py-3 text-[#1E293B] font-medium">{entry.label}</td>
-                      <td className="px-4 py-3 text-right text-[#64748B] hidden sm:table-cell">
+                      <td className="px-4 py-3 text-black font-medium">{entry.label}</td>
+                      <td className="px-4 py-3 text-right text-black hidden sm:table-cell">
                         {relativeTimestamp(entry.timestamp)}
                       </td>
-                      <td className={`px-4 py-3 text-right font-semibold ${scoreColor}`}>
+                      <td className="px-4 py-3 text-right font-semibold text-black">
                         {entry.isTimed
                           ? `${entry.correct} correct`
                           : `${entry.score}%`}
@@ -647,17 +640,17 @@ export default function ProgressDashboard() {
         {!showResetConfirm ? (
           <button
             onClick={() => setShowResetConfirm(true)}
-            className="text-xs text-[#94A3B8] hover:text-red-500 transition-colors font-medium"
+            className="text-sm text-black hover:text-black transition-colors font-medium"
           >
             Reset All Progress
           </button>
         ) : (
           <div className="bg-red-50 border border-red-200 rounded-xl p-4">
             <div className="flex items-start gap-3">
-              <div className="text-red-500 text-xl leading-none mt-0.5">⚠️</div>
+              <div className="text-black text-xl leading-none mt-0.5">⚠️</div>
               <div className="flex-1">
-                <div className="text-sm font-bold text-red-700">DANGER: This Cannot Be Undone!</div>
-                <div className="text-xs text-red-600 mt-1 leading-relaxed">
+                <div className="text-base font-bold text-black">DANGER: This Cannot Be Undone!</div>
+                <div className="text-sm text-black mt-1 leading-relaxed">
                   You are about to permanently erase <strong>ALL</strong> of your practice history — every session, every streak, every achievement, and every record. Once deleted, this data is gone forever and cannot be recovered.
                 </div>
                 <div className="flex gap-2 mt-3">
@@ -666,13 +659,13 @@ export default function ProgressDashboard() {
                       clearAllProgress();
                       window.location.reload();
                     }}
-                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-lg transition-colors"
+                    className="px-3 py-1.5 bg-red-600 hover:bg-red-700 text-black text-sm font-bold rounded-lg transition-colors"
                   >
                     Yes, Delete Everything Forever
                   </button>
                   <button
                     onClick={() => setShowResetConfirm(false)}
-                    className="px-3 py-1.5 bg-white border border-[#E2E8F0] hover:bg-[#F8FAFC] text-[#475569] text-xs font-medium rounded-lg transition-colors"
+                    className="px-3 py-1.5 bg-white border border-[#E2E8F0] hover:bg-[#F8FAFC] text-black text-sm font-medium rounded-lg transition-colors"
                   >
                     Cancel, Keep My Progress
                   </button>

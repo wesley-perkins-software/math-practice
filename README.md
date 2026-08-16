@@ -74,7 +74,6 @@ The `PracticeWidget` owns an `idle → active → complete` state machine and ac
 pages/
 ├── index.astro                          # / — hub, no widget
 ├── math-practice.astro                  # /math-practice
-├── math-drills.astro                    # /math-drills
 ├── mental-math-practice.astro           # /mental-math-practice
 ├── arithmetic-speed-drill.astro         # /arithmetic-speed-drill
 ├── math-facts-practice.astro            # /math-facts-practice

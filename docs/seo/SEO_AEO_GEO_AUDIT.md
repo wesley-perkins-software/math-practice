@@ -1,0 +1,379 @@
+# Math Practice Online — SEO, AEO, GEO & Accessibility Audit
+
+**Status:** Living document. Operating roadmap for post-launch SEO, AEO, GEO, topical-authority, accessibility, performance, and engagement improvements.
+
+- **Site:** MathPracticeOnline.com
+- **Created:** 2026-08-02
+- **Last updated:** 2026-08-02 (Phase 2 pilot complete: the full Canonical Generated-Page Standard content pattern — Quick Answer, expanded intro, Strategy, Parent & Teacher Guidance, FAQ differentiator — is now live on Times Tables 2, 7, 9 only, reading from `src/data/generated-practice/timesTables.ts`; the other 9 multiplication tables and `index.astro` are unchanged)
+- **Purpose:** Give any future human contributor, Claude session, or Codex session a single source of truth for what was audited on this site, what's already fixed, what remains, why each item matters, what order to work in, and which decisions still need explicit human approval.
+- **Scope:** Technical SEO, semantic SEO, GEO (Generative Engine Optimization), AEO (Answer Engine Optimization), AI discoverability, topical authority, internal linking, crawl efficiency, page quality, page experience, Core Web Vitals, structured data, metadata, accessibility, engagement, trust signals, and rich-result eligibility. Excludes backlink acquisition, content marketing, and publishing net-new pages — this is entirely about improving what already exists in the codebase.
+- **Completed implementation reference:** [PR #116](https://github.com/wesley-perkins-software/math-practice/pull/116) (merged into `development`), [PR #117](https://github.com/wesley-perkins-software/math-practice/pull/117) (merged into `development`)
+- **Current phase:** Phase 2 of the Canonical Generated-Page Standard is complete as a **3-page pilot only** — `src/pages/multiplication/times-tables/[table].astro` now renders the full canonical content pattern (Quick Answer, expanded intro, Strategy, Parent & Teacher Guidance, FAQ differentiator) for tables 2, 7, and 9, sourced from `src/data/generated-practice/timesTables.ts`. The other 9 multiplication tables keep their pre-existing `TABLE_STRATEGIES`/`GRADE_BADGE` content unchanged, and `times-tables/index.astro` was not touched. Divide-by fact bank (Phase 1B) and the full 9-table rollout (Phase 3) remain not started — see the pilot's evaluation and go/no-go call below before scaling further. Separately, Canonical Leaf-Page Standard rolled out to all 9 non-generated leaf pages — the 3 Addition leaf pages (piloted first), the 3 Subtraction leaf pages, Multiplication Facts, Division Facts, and Division with Remainders — each gaining a Quick Answer block, expanded intro, mandatory Parent/Teacher guidance, refined FAQ, and a next-step CTA sentence. See `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md` for the full standard, the original pilot evaluation, and the rollout record. The three pattern revisions identified during the pilot (Quick Answer/intro visual differentiation, Parent/Teacher scannable layout, CTA de-duplication) were deliberately **not** applied in this rollout — they're deferred to a dedicated future UI refresh, per instruction. **The architecture for extending this standard to the 24 generated Times Tables / Divide By pages has now been designed** — see `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md` — but implementation (the per-number data modules and the page-level rollout) has **not** started.
+
+---
+
+## How this document works
+
+This is the operating roadmap for ongoing site-quality work, not a one-time report. Each recommendation below is a checklist item with the full rationale preserved next to it — the checkbox alone is not the record, the paragraph under it is.
+
+See [Maintenance rule](#maintenance-rule) at the bottom before editing this file.
+
+---
+
+## 1. Origin story: why this audit exists
+
+Three months after launch, MathPracticeOnline.com had picked up steady organic traffic from Google, Bing, Yahoo, DuckDuckGo, and referral traffic from ChatGPT. Engagement was strong (high time-on-page, many answer submissions) and the technical foundation — sitemaps, robots.txt, redirects, canonical URLs, some structured data — was already in place. The site entered a "polish phase": a comprehensive audit across technical SEO, semantic SEO, GEO/AEO, accessibility, and engagement, explicitly scoped to *existing-codebase* improvements only (no new pages, no backlink/content-marketing work), with every recommendation classified by effort:
+
+- **Quick Win** — under an hour
+- **Medium Improvement** — a few hours
+- **Large Project** — multiple days
+
+A concrete symptom kicked off the investigation: Google was displaying `mathpracticeonline.com` as the site name in search results instead of "Math Practice Online". That question is answered in [Section 3](#3-why-google-was-showing-the-domain-instead-of-the-name).
+
+Two rounds of investigation fed this document:
+
+1. **Broad audit** — three parallel explorations across metadata/structured-data/title architecture, pages/presets/internal linking, and technical SEO infrastructure (sitemap, robots.txt, canonicals, accessibility, Core Web Vitals).
+2. **Deep-dive audit** — a second, narrower pass focused specifically on internal linking depth, topical authority, semantic HTML, AEO/GEO, AI discoverability, crawl depth, orphan pages, thin pages, duplicate metadata, and engagement opportunities within the existing architecture.
+
+---
+
+## 2. Already fixed and shipped — PR #116
+
+All of the following were implemented, build-verified (`npm run build`, 68 pages, no errors), and merged into `development` via [PR #116](https://github.com/wesley-perkins-software/math-practice/pull/116).
+
+- [x] Add missing "Math Practice Online" brand suffix to ~15 page titles that were missing it — completed in PR #116. Affected: `math-worksheets/index.astro` and its 4 leaf worksheet pages, `math-facts.astro`, `division/facts.astro`, `division/remainders.astro`, `multiplication/facts.astro`, and the title templates for the 12 generated `/multiplication/times-tables/[table]` pages and 12 generated `/division/divide-by/[divisor]` pages.
+- [x] Fix duplicated "Math Practice Online **Online**" titles — completed in PR #116. `src/pages/terms.astro` and `src/pages/privacy.astro` had literal doubled brand text in their `<title>`.
+- [x] Add `noindex` support to `BaseLayout` and apply it to the 404 page — completed in PR #116. `404.astro` was previously a self-canonicalizing, indexable soft-404 with no `robots` directive at all.
+- [x] Repair Progress dashboard preset paths — completed in PR #116. `src/engine/presets.ts` had nine `path` fields pointing at wrong or dead routes (e.g. `/addition-practice` for presets that actually render on `/addition/1-digit` etc., and `/math-practice` for presets when no such page exists). These `path` values are used as real navigation links in `ProgressDashboard.tsx`, so this was a functional bug, not just an SEO nicety.
+- [x] Remove unused `public/og-default.svg` — completed in PR #116. Confirmed dead: not referenced by any meta tag or component.
+
+**Deferred at the time, pending explicit approval (still deferred — see Section 6):**
+- Removing/redirecting the duplicate-content `/addition-practice` and `/subtraction-practice` pages — explicitly held back per instruction; **do not implement without explicit sign-off.**
+- Consolidating JSON-LD Organization/WebSite schema — **implemented in this update, see Section 4.**
+- Centralizing site config, self-hosting fonts, and other Medium/Large items — still deferred, tracked below.
+
+---
+
+## 3. Why Google was showing the domain instead of the name
+
+This was traced to two compounding causes:
+
+1. **Title-tag inconsistency.** Roughly a third of indexable pages never included "Math Practice Online" in their `<title>` at all. Google leans on a consistent, repeated brand string across a site's titles to decide what name to show in the SERP. **Fixed in PR #116** (Section 2).
+2. **Fragmented site-identity structured data.** The `WebSite`/`Organization` JSON-LD — the schema Google explicitly uses for SERP site-name identity — existed only on the homepage, and was independently re-authored two more, slightly different ways: a nested `AboutPage.mainEntity.Organization` on `about.astro`, and a third minimal `provider: Organization` object repeated independently across ~30 hub/practice pages' `LearningResource` schema. Three different shapes of the same fact reads as noise, not a consistent signal, to Google. **Fixed in this update** — see Section 4.
+
+---
+
+## 4. Consolidate Organization/WebSite JSON-LD sitewide — ✅ Implemented
+
+- [x] Consolidate Organization/WebSite JSON-LD sitewide — **completed** in [PR #117](https://github.com/wesley-perkins-software/math-practice/pull/117).
+
+**Why it mattered:** Google's SERP site-name feature reads `WebSite`/`Organization` schema, weighted by consistency. Having three different shapes of "Organization" declared independently across the site diluted that signal and risked drifting out of sync (different names, different URLs, different claims) as pages were added.
+
+**Impact:** High — this was the structural half of the SERP-name fix (the title-tag half shipped in PR #116).
+
+**What changed:**
+
+- Added `src/config/site.ts`, exporting exactly four constants: `SITE_NAME`, `SITE_URL`, `ORGANIZATION_ID` (`https://mathpracticeonline.com/#organization`), and `WEBSITE_ID` (`https://mathpracticeonline.com/#website`). This is intentionally minimal — it is **not** the full 38-file `SITE` constant migration described in Section 5; every page's existing local `const SITE = 'https://mathpracticeonline.com'` was left untouched.
+- `BaseLayout.astro` now emits one shared JSON-LD `@graph` containing exactly one `Organization` node and one `WebSite` node (with stable, non-www `@id`s) on every page that renders through it — including noindex pages like `/404`, for consistency and simplicity, since noindex pages aren't indexed regardless.
+- `index.astro` (homepage): removed its independent `Organization` and `WebSite` JSON-LD blocks (now redundant with the sitewide graph). Its `EducationalApplication` schema was preserved and extended with `isPartOf: { "@id": WEBSITE_ID }` and `publisher: { "@id": ORGANIZATION_ID }`. The homepage's `FAQPage` schema was **not** touched (explicitly out of scope for this update — see Section 6).
+- `about.astro`: the nested `AboutPage.mainEntity` Organization object now carries `"@id": ORGANIZATION_ID`, unifying its identity with the sitewide entity while preserving its existing extra claims (`foundingDate`, `areaServed`, `serviceType`) — nothing was invented, nothing was deleted. The `AboutPage` node itself now also references `isPartOf: { "@id": WEBSITE_ID }`.
+- **30 pages'** `LearningResource.provider` fields — previously each independently declaring `{ "@type": "Organization", "name": "Math Practice Online", "url": SITE }` (or a 4-line multi-line equivalent on the 4 hub pages + speed drill page) — now reference the shared entity via `{ "@id": ORGANIZATION_ID }`. Full file list: `addition/index.astro`, `addition/1-digit.astro`, `addition/2-digit-no-carrying.astro`, `addition/2-digit-with-carrying.astro`, `subtraction/index.astro`, `subtraction/1-digit.astro`, `subtraction/2-digit-no-borrowing.astro`, `subtraction/2-digit-with-borrowing.astro`, `multiplication/index.astro`, `multiplication/facts.astro`, `multiplication/times-tables/index.astro`, `multiplication/times-tables/[table].astro`, `division/index.astro`, `division/facts.astro`, `division/remainders.astro`, `division/divide-by/[divisor].astro`, `math-facts.astro`, `math-worksheets/index.astro`, `math-worksheets/addition-worksheets.astro`, `math-worksheets/subtraction-worksheets.astro`, `math-worksheets/multiplication-worksheets.astro`, `math-worksheets/division-worksheets.astro`, `for-parents.astro`, `for-teachers.astro`, `arithmetic-speed-drill.astro`, `1st-grade-math-practice.astro`, `2nd-grade-math-practice.astro`, `3rd-grade-math-practice.astro`, `4th-grade-math-practice.astro`, `5th-grade-math-practice.astro`.
+
+**Canonical identity graph shape** (emitted by `BaseLayout.astro` on every page):
+
+```json
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://mathpracticeonline.com/#organization",
+      "name": "Math Practice Online",
+      "url": "https://mathpracticeonline.com/",
+      "logo": "https://mathpracticeonline.com/favicon.svg"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://mathpracticeonline.com/#website",
+      "url": "https://mathpracticeonline.com/",
+      "name": "Math Practice Online",
+      "publisher": { "@id": "https://mathpracticeonline.com/#organization" },
+      "inLanguage": "en-US"
+    }
+  ]
+}
+```
+
+The `logo` field was preserved from the homepage's pre-existing (legitimate, already-live) Organization declaration — not newly invented. No unsupported properties were added (no social profiles, no address/phone, no ratings, no employee data).
+
+**Verification performed:**
+- `npm run build` — succeeded, 68 pages, no errors.
+- `npm run check` (astro's TS/template checker) — **not run**: the project does not have `@astrojs/check`/`typescript` installed as a dependency and the command prompts to install them interactively; declined rather than adding a new dependency outside this task's scope. `npm run build` is the project's documented type-error gate (per `README.md`/`CLAUDE.md`) and was used instead.
+- No automated test suite exists in this repository (`package.json` has no `test` script) — none was skipped, none exists to run.
+- Inspected generated production HTML (`dist/`) for 7 representative pages: homepage, About page, the Addition hub, a leaf practice page (`/subtraction/2-digit-with-borrowing`), a generated times-table page (`/multiplication/times-tables/7`), a generated divide-by page (`/division/divide-by/8`), and a worksheet page (`/math-worksheets/addition-worksheets`). For every page: exactly one `Organization` node and one `WebSite` node, both with the canonical non-www `@id`s, one consistent `name` value ("Math Practice Online") throughout, valid JSON on every `<script type="application/ld+json">` block, and all pre-existing page-specific schema (`FAQPage`, `BreadcrumbList`, `LearningResource`, `HowTo`, `EducationalApplication`, `AboutPage`) still present and unchanged in substance.
+- **External validators (Google Rich Results Test, Schema.org validator) were not run** — no browser/external-network validation tooling was available in this session. This should be done manually before or shortly after merge.
+
+**Risk:** Low — additive/deduplicating change, no visible page content, navigation, or URL changes. The main residual risk is any external tool or third party that had scraped the old per-page Organization objects expecting the exact previous shape; none are known to exist.
+
+**Explicitly deferred from this change (see Section 5):** the full `SITE`-constant migration across all 38 files, self-hosting fonts, the homepage FAQ rewrite, and the division divisor grid were all out of scope for this task and were not touched.
+
+---
+
+## 4b. Homepage FAQ single-source-of-truth, "Math Drills" correction & About-page Organization cleanup — ✅ Implemented
+
+- [x] Rewrite the homepage FAQ from one shared data source — **completed** in this update (PR pending).
+- [x] Fix the "Math Drills" factual error — **completed** in this update (PR pending).
+- [x] Normalize the About-page Organization URL to the canonical trailing-slash form — **completed** in this update.
+- [x] Audit the About-page Organization claims (`foundingDate`, `areaServed`, `serviceType`) — **completed** in this update; `foundingDate` removed as unverified, the other two retained.
+
+**Why it mattered:** PR #117 deliberately deferred the homepage FAQ rewrite and the "Math Drills" fix behind the approval gate in Section 6, and flagged (but did not verify) the About page's pre-existing `foundingDate`/`areaServed`/`serviceType` claims. This update closes both gaps once explicit approval was given, narrowly scoped to exactly these four items.
+
+**What changed:**
+
+- **`src/pages/index.astro`** — Added a single `faqItems: { q: string; a: string }[]` array in frontmatter, following the same pattern already used by every other FAQ-bearing page on the site (e.g. `for-teachers.astro`, `addition/1-digit.astro`). The visible `<dl>` and the `FAQPage` JSON-LD `mainEntity` are now both generated by mapping over this one array — no more independently hand-authored copies. Item count is unchanged (8 before, 8 after). As part of the same rewrite, the "Are there timed practice modes?" answer — which previously stated in the JSON-LD only that *"Math Drills (2 minutes) and Arithmetic Speed Drill (60 seconds) are timed modes"* — now uses the already-accurate visible wording describing the one real Arithmetic Speed Drill (a 60-second challenge at `/arithmetic-speed-drill`) in both places. Also switched the file's local `const SITE` to source from the shared `SITE_URL` constant (`@/config/site`) instead of a separately hardcoded string.
+- **`src/pages/progress.astro`** — line describing "Best score" no longer pairs a nonexistent "Math Drills" mode with the Arithmetic Speed Drill; now reads "highest problems-per-minute on the Arithmetic Speed Drill."
+- **`README.md`** — removed a stale file-tree doc line referencing a `math-drills.astro` page that does not exist in `src/pages` (confirmed via directory listing) and reinforced the same inaccuracy.
+- **Ground truth confirmed before writing any copy:** `/math-drills` is a static 301 redirect alias to `/arithmetic-speed-drill` (`astro.config.mjs`), not a separate page. The `ARITHMETIC_SPEED_DRILL` preset (`src/engine/presets.ts`) is `fixedTimerDuration: true` at 60 seconds, and `SpeedDrillSetup.tsx` (the component actually rendered on `/arithmetic-speed-drill`) only lets a user choose which operations to include, not a duration — so the page is genuinely a fixed 60-second experience today, and the copy correctly says so rather than overstating a 30s/1m/2m/5m choice that isn't reachable on that page. (The `DurationPicker` component with those four options exists in the codebase but is only reachable when a preset has `mode: 'timed'` and `fixedTimerDuration` false — no live preset meets both conditions today, since the only two `mode: 'timed'` presets, `ARITHMETIC_SPEED_DRILL` and the orphaned `MATH_DRILLS`, both set `fixedTimerDuration: true`.) The orphaned `MATH_DRILLS` preset export in `presets.ts` (never imported by any page) was intentionally left in place — removing it touches practice-engine code, a named regression boundary for this task; it's tracked as a known, low-priority follow-up rather than fixed here.
+- **`src/pages/about.astro`** — Organization `url` changed from `SITE` (`https://mathpracticeonline.com`, no trailing slash) to `` `${SITE_URL}/` `` (`https://mathpracticeonline.com/`, trailing slash), matching the canonical form already used by the sitewide identity graph in `BaseLayout.astro`. The `AboutPage.url` field and the page's `canonical` prop were also switched from a locally hardcoded `SITE` constant to the shared `SITE_URL` import, and the now-unused local `const SITE` was removed from the file. The Organization `@id` (`https://mathpracticeonline.com/#organization`) is unchanged.
+- **`src/pages/about.astro` Organization claims:**
+  - `foundingDate: "2024"` — **removed.** No authoritative evidence anywhere in the repository supports this year: `README.md` and `CLAUDE.md` contain no founding/launch date at all; `package.json` has no creation metadata; git history (checked only as non-authoritative supporting context, per instructions) shows a first commit around 2026-04-09; and this very audit document's own Section 1 frames the site as "three months after launch" as of the 2026-08-02 audit date, implying a launch around May 2026 — directly contradicting "2024." No replacement date was guessed; the property was simply removed.
+  - `areaServed: "Worldwide"` — **retained.** The site has no login wall, no geographic restriction, and no page claims US-only availability; it's a freely accessible public static site, so "Worldwide" is an accurate service-availability claim. (It describes access, not curriculum applicability — no visible-page change was needed or made to support it.)
+  - `serviceType: "Educational Technology"` — **retained.** Accurate and consistent with the site's own description elsewhere; no more precise term is used authoritatively anywhere else in the project, so nothing was invented to replace it.
+
+**Verification performed:**
+- `npm run build` — succeeded, 68 pages, no errors.
+- No automated test suite or `npm run check`/typecheck script exists in this repository beyond `npm run build` (same situation noted in Section 4); none was skipped.
+- Inspected generated production HTML: homepage (`dist/index.html`) — visible FAQ and `FAQPage` JSON-LD both contain exactly 8 entries, every visible question matches its schema `name` verbatim, every visible answer's substantive wording matches its schema `text` (the one answer with an inline link renders the link only in the visible markup, per the shared plain-text answer string — a minor HTML-presentation difference, not a wording difference), all three JSON-LD scripts on the page parse as valid JSON, the sitewide Organization/WebSite `@graph` from PR #117 is present exactly once and unchanged, no "Math Drills" product claim remains anywhere on the page. Progress page (`dist/progress/index.html`) — the "Math Drills and Arithmetic Speed Drill" pairing is gone; the surviving generic phrase "practice history across all math drills" was intentionally left as legitimate descriptive usage. About page (`dist/about/index.html`) — Organization `url` is `https://mathpracticeonline.com/`, `@id` unchanged, `foundingDate` absent, `areaServed`/`serviceType` present and unchanged, all JSON-LD valid, no duplicate Organization/WebSite node introduced.
+- Repository-wide search after implementation: the only remaining "Math Drills"/"math drills" occurrences are (a) `progress.astro`'s legitimate generic phrase noted above, and (b) the orphaned, never-rendered `MATH_DRILLS` preset object/label inside `src/engine/presets.ts` (compiled into the shared client JS bundle but not user-visible content or structured data) — both classified as acceptable, not fixed further, per the scope boundary above.
+- **External validators (Google Rich Results Test, Schema.org validator) were not run** — no browser/external-network validation tooling was available in this session. Recommended post-deploy manual checks: run the Schema.org Validator and Google Rich Results Test against the live `/`, `/about`, and `/progress` URLs once deployed.
+
+**Risk:** Low — copy/data-source refactor and structured-data correction only; no visible design change beyond the FAQ now being generated from a loop (same markup/classes), no URL/redirect/canonical changes, no practice-engine behavior touched.
+
+---
+
+## 4c. Canonical Leaf-Page Standard — rolled out to all non-generated leaf pages
+
+- [x] Design the Canonical Leaf-Page Standard — **completed**, see `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`.
+- [x] Pilot the standard on 3 Addition leaf pages — **completed.**
+- [x] Roll the approved standard out to the remaining 6 non-generated leaf pages (Subtraction ×3, Multiplication Facts, Division Facts, Division with Remainders) — **completed in this update**, shipped exactly as piloted, with the pilot's recommended revisions deliberately deferred rather than applied (see below).
+- [ ] Apply the 3 pattern revisions identified in the pilot evaluation (Quick Answer/intro visual differentiation, Parent/Teacher scannable layout, CTA de-duplication) — **not started**, explicitly deferred to a future UI refresh.
+- [x] Design the architecture needed to extend the standard to the 24 generated Times Tables / Divide By pages — **completed as architecture-only work**, see `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md`. Defines operation-specific per-number data modules (`timesTables.ts`, `divideBy.ts`), the "substantive educational differentiation" anti-thin-content rule, family-level grade guidance, and a phased rollout plan.
+- [x] Phase 1A — author the multiplication times-table fact bank (12 entries) — **completed in this update.** `src/data/generated-practice/types.ts` and `src/data/generated-practice/timesTables.ts` added. **Data only — no page, layout, or preset was modified; the multiplication data layer is complete but no generated page has been migrated to use it yet.** See `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md`'s "Phase 1A" section for the full authoring record, audit table, and content-integrity findings (including a flagged, not-yet-fixed unsupported "hardest table" claim in `times-tables/index.astro`).
+- [ ] Phase 1B — author the divide-by fact bank (`src/data/generated-practice/divideBy.ts`) — **not started.**
+- [x] Phase 2 — pilot the full canonical content pattern on a small number of `[table].astro` instances — **completed in this update, scoped to tables 2, 7, and 9 only.** See "Phase 2 pilot" write-up below for implementation, validation, and evaluation.
+- [ ] Migrate `.../index.astro` / `[divisor].astro` and roll the standard out to the remaining 9 multiplication tables (plus Divide By) — **not started** — see the pilot's explicit go/no-go recommendation below before proceeding.
+
+**Why it mattered:** the content-quality audit (which produced this document's companion content-quality findings) identified that leaf practice pages — the pages with the most specific, high-intent search traffic — had the thinnest content on the site: ~25-word intros, no parent/teacher explanation (present only on hub pages), no AI-extractable "quick answer," and only implicit calls to action. This is the single largest content-quality gap on the site by both traffic relevance and page count.
+
+**Generated-page architecture (added in a prior update):** `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md` was added, defining the canonical section order, data-driven authoring model, and anti-thin-content rules for the 24 generated Times Tables / Divide By pages — operation-specific data modules, a "substantive educational differentiation" standard, family-level grade guidance with narrow per-number overrides only where defensible, and a phased rollout plan. That update was architecture-only, with no data modules, pages, or layouts created.
+
+**Phase 1A — multiplication times-table fact bank (new in this update):** authored the actual per-number data for all 12 multiplication times tables, per the architecture above. Added `src/data/generated-practice/types.ts` (the `GeneratedPracticeEntry` interface) and `src/data/generated-practice/timesTables.ts` (12 entries, a `TIMES_TABLE_GRADE_DEFAULT` constant, a `getTimesTableFact(n)` helper, and a dependency-free `validateTimesTableFacts()` function, runnable via `npm run validate:times-tables`). Every entry provides a genuinely number-specific Quick-Answer fact, intro clause, strategy, parent/teacher note, and FAQ differentiator — including an honest "no simple shortcut" strategy for table 7 rather than an invented trick. **This is data-layer work only: `src/pages/multiplication/times-tables/[table].astro`, `.../index.astro`, `[divisor].astro`, `PracticeLayout.astro`, and `presets.ts` were not modified.** The pre-existing `TABLE_STRATEGIES`/`STRATEGY`/`GRADE_BADGE`/inline FAQ content in those files still renders on the live generated pages, unchanged, until a later template-migration phase. This update also flagged (without fixing) a pre-existing, unsupported comparative claim in `times-tables/index.astro`'s FAQ ("The 7s and 8s are typically the hardest... the last four tables most students master") that has no authoritative source in this repository — see `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md`'s Phase 1A section for the full reconciliation record, contradiction log, and per-table audit table.
+
+**What changed (pilot only — 3 files):**
+
+- `src/pages/addition/1-digit.astro`, `src/pages/addition/2-digit-no-carrying.astro`, `src/pages/addition/2-digit-with-carrying.astro` — each page gained: a 1–2 sentence Quick Answer block directly under the H1 (self-contained, AI-extractable, no marketing language), an expanded 40–70 word intro, a mandatory 3–5 sentence Parent & Teacher Guidance section with specific diagnostic advice (not generic tips), a lightly revised FAQ (first question now reinforces the Quick Answer without duplicating it; question/answer count unchanged at 4 per page), and a one-sentence next-step CTA linking to the logical next skill using each page's existing `relatedLinks` data.
+- The practice widget's position relative to other content was preserved (still the second element on the page, right after the Quick Answer + intro, before all deeper explanatory content) — validated as correct in the pilot evaluation, not changed.
+- The `InternalLinks` "Related Practice" grid was repositioned from immediately after the widget to the very end of the page (after the FAQ and next-step CTA), matching the standard's canonical order. This was done **only inside the three pilot page files** — `PracticeLayout.astro` itself was not modified, so no other page using that layout is affected. See `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`'s Implementation Notes for the mechanism (nesting `InternalLinks` inside the existing `how-it-works` slot instead of using the separate `links` slot).
+- No metadata changes: titles, descriptions, canonicals, and URLs are all unchanged on all three pages. No new schema types were introduced; existing `LearningResource`, `FAQPage`, and (on the carrying page) `HowTo` JSON-LD were preserved as-is, with only the FAQ array's content lightly revised (still 4 items per page, schema stays in sync with visible content via the existing shared-array pattern).
+
+**Lessons learned from the pilot (full detail in `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`):** the core structure held up well and should not be redesigned, but three targeted revisions are recommended before sitewide rollout — (1) the Quick Answer block and the intro paragraph need clearer visual differentiation, since both are similar-length prose and can currently read as repetitive at a glance; (2) Parent/Teacher guidance should be allowed to be either one paragraph or a short lead + bullets, not forced into one dense paragraph every time; (3) the next-step CTA sentence sometimes duplicates the Related Practice grid's first entry and should either be dropped in that case or the grid should visually flag its "next step" entry instead. Additionally, the pilot confirmed that the 24 generated times-table/divide-by pages will need a structured per-number fact bank (not ad hoc coordination) to hit the same Quick-Answer/FAQ uniqueness bar — tracked as a separate follow-up decision, out of scope for this pilot.
+
+**Verification performed:**
+- `npm run build` — succeeded, 68 pages, no errors.
+- Inspected generated `dist/` HTML for all 3 pilot pages: all JSON-LD blocks (4 on the two non-carrying pages, 5 on the carrying page including `HowTo`) parse as valid JSON; canonical URLs, `<title>`, and `<h1>` text unchanged from before the pilot; heading hierarchy is clean on all three (`h1` → `h2` → `h3`, no skipped levels); the `InternalLinks`/"Related Practice" section renders exactly once per page (verified via its `aria-label` + `<h2>` pair, not duplicated); FAQ schema entry count matches the visible FAQ count (4) on the pages checked; the next-step CTA link and all `relatedLinks` hrefs render correctly.
+- No automated test suite or `npm run check` exists in this repository beyond `npm run build` (same situation as prior updates); none was skipped.
+- No accessibility regression found: no new `<img>` without alt text, no interactive elements added, heading order preserved, no ARIA changes to existing widget/form elements (none of the new content touches `AnswerInput`/`NumberPad`/form controls).
+
+**Risk:** Low — scoped to 3 files, no shared-layout or shared-component changes, no metadata/URL/schema-type changes, additive content only.
+
+**Explicitly not done in this pilot (per instruction):** no other leaf pages modified, no generated (times-table/divide-by) pages touched, no per-number fact bank introduced, no template unification (`HubLayout`/`PracticeLayout`) started, no layout redesign, no new schema types, no metadata/navigation/URL changes.
+
+*(The pilot record above is retained as historical documentation. The rollout below shipped the pilot's pattern unrevised — see `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`'s "Rollout" section for the full record, including why the pilot's recommended revisions were deliberately not applied here.)*
+
+### Rollout to the remaining 6 non-generated leaf pages — ✅ Implemented
+
+- [x] Apply the standard, exactly as piloted, to the 6 remaining non-generated leaf pages — **completed** in this update.
+
+**What changed:** `src/pages/subtraction/1-digit.astro`, `src/pages/subtraction/2-digit-no-borrowing.astro`, `src/pages/subtraction/2-digit-with-borrowing.astro`, `src/pages/multiplication/facts.astro`, `src/pages/division/facts.astro`, and `src/pages/division/remainders.astro` each gained the same 5 additions as the pilot pages: a Quick Answer block, an expanded 40–70 word intro, mandatory Parent & Teacher Guidance (skipped only where an equivalent — and more thorough — "Tips for Parents and Teachers" section already existed, on the two division pages, which were left untouched), FAQ reinforcement (first question now echoes the Quick Answer without duplicating it, question counts unchanged), and a next-step CTA sentence, with `InternalLinks` repositioned to the end of the page in each file individually. No revisions from the pilot evaluation were applied — the pattern shipped exactly as approved, per instruction, with the three recommended refinements explicitly deferred to a future UI pass.
+
+**Verification performed:** `npm run build` — 68 pages, no errors, same page count as before. Inspected generated `dist/` HTML for all 9 non-generated leaf pages (3 pilot + 6 rollout): all JSON-LD valid; FAQ schema/visible counts match on every page (4/4 on 7 pages, 5/5 on the two division pages, which already had 5 questions pre-rollout); heading hierarchy clean on all 9; titles and canonicals unchanged; `InternalLinks` renders once per page. `git diff --stat` confirms exactly the 6 intended files changed — no generated Times Tables/Divide By pages, layouts, or other site files touched.
+
+**Risk:** Low — identical, already-validated pattern applied to 6 more files; no shared-component or shared-layout changes.
+
+**Explicitly not done in this rollout (per instruction):** the 24 generated Times Tables/Divide By pages were not touched; the pilot's 3 recommended pattern revisions were not applied; the practice widget was not moved on any page; no layout, color, styling, metadata, URL, navigation, or schema-type changes were made anywhere.
+
+---
+
+### Phase 2 pilot — full Canonical Generated-Page Standard on Times Tables 2, 7, 9 — ✅ Implemented
+
+- [x] Wire the complete canonical content pattern — Quick Answer, expanded intro, Strategy, Parent & Teacher Guidance, FAQ differentiator — into `[table].astro` for tables 2, 7, and 9 only, reading from `src/data/generated-practice/timesTables.ts` — **completed in this update.**
+
+**What changed (1 file):** `src/pages/multiplication/times-tables/[table].astro`.
+
+- Added `PILOT_TABLES = new Set([2, 7, 9])` and `fact = PILOT_TABLES.has(tableNumber) ? getTimesTableFact(tableNumber) : undefined`. Every conditional below falls back to the pre-existing content when `fact` is undefined (all 9 other tables), so their rendered output is unchanged.
+- **Intro slot:** pilot tables now render a Quick Answer sentence (`"The N times table means multiplying N by each whole number from 1 to 12. {quickAnswerFact}"`) followed by one hand-composed ~44-48 word expanded-intro paragraph per table, woven around that table's `introClause`. The legacy `introLead`/`introSupport` pair is dropped for pilot tables specifically to avoid a third, redundant prose block — not mechanically stacked alongside the new content. Non-pilot tables keep `introLead`/`introSupport` exactly as before.
+- **Strategy section:** `strategy` now resolves to `{ name: fact.strategyTitle, tip: fact.strategyExplanation }` for pilot tables, falling back to `TABLE_STRATEGIES[tableNumber]` otherwise. No template markup changed — same `strategy.name`/`strategy.tip` variables feed the existing card and the "what is the trick" FAQ item.
+- **Parent & Teacher Guidance:** new section added between Strategy and FAQ, rendered only when `fact` is defined, sourced from `fact.parentTeacherNote` behind a one-sentence skeleton ("Parents and teachers helping a student with the N times table: ...").
+- **FAQ:** `fact.faqDifferentiator` appended as a 5th item, conditionally, so pilot pages show 5 FAQ items and the other 9 keep 4. The `FAQPage` JSON-LD block already maps over the shared `faqItems` array, so it picked up the 5th entry with no separate JSON-LD edit.
+- **Left deliberately unchanged:** `GRADE_BADGE`/`gradeBadge` and the JSON-LD `educationalLevel` value — both still read the legacy per-table lookup for all 12 tables, pilot included (see "Grade metadata" finding below). `TABLE_STRATEGIES` and `GRADE_BADGE` themselves are untouched, including their 2/7/9 entries — kept as the fallback path and grade-badge source. `times-tables/index.astro` was not touched at all.
+
+**Validation performed:**
+- `npm run validate:times-tables` — passes, 12/12 entries valid (unaffected by this change).
+- `npm run build` — succeeded, 68 pages, no errors, same page count as before.
+- Diffed `dist/` output for all 9 non-pilot tables (1, 3, 4, 5, 6, 8, 10, 11, 12) and `times-tables/index.astro` against a pre-change build: identical after normalizing incidental whitespace (an artifact of Astro's conditional-block compilation, not a content change) — no visible text, JSON-LD, canonical, or metadata differences on any non-pilot page.
+- Inspected `dist/` HTML for tables 2, 7, 9: `LearningResource` and `FAQPage` JSON-LD both valid and unchanged in shape apart from the FAQ array gaining the 5th, fact-bank-sourced entry; canonical URLs, `<title>`, and grade badge/`educationalLevel` unchanged from before the pilot; heading hierarchy clean (new "Parent & Teacher Guidance" `<h2>` sits correctly between the existing Strategy and FAQ `<h2>`s, no skipped levels); no new interactive elements, so no accessibility regression on existing controls.
+- Visually inspected all three pilot pages plus a non-pilot page (5) at 1280×900 (desktop) and 390×844 (mobile) viewports via a local dev server. See findings below.
+
+**Evaluation (this is the point of the pilot — see the standard's phased rollout plan):**
+
+1. **Field coverage:** all six fields used by the canonical standard (`quickAnswerFact`, `introClause`, `strategyTitle`, `strategyExplanation`, `parentTeacherNote`, `faqDifferentiator`) mapped cleanly onto a real page section with no gaps and no awkward fits. The interface is expressive enough for the content the standard specifies.
+2. **Fold position — the primary finding.** Adding the Quick Answer + expanded intro block visibly pushes the practice widget down on every pilot page. At a 900px-tall desktop viewport, the non-pilot page (table 5) shows the grade badge ("Best for: Grade 2 – Grade 3") right at the bottom edge of the fold; the pilot pages (2, 7, 9) do not — that badge and everything below it falls below the fold. On a 390×844 mobile viewport the effect is more pronounced: only the practice widget's tab switcher is visible at the very bottom of the fold on pilot pages, versus the widget's full picker plus the start of "Related Practice" visible on the non-pilot page. This is a real, measurable tradeoff, not a hypothetical one, and it should be weighed explicitly (not silently accepted) before a 9-table rollout — options include shortening the Quick Answer/intro further, or accepting the tradeoff since the widget is still the first interactive element a user reaches after a short scroll.
+3. **Grade metadata:** left untouched on the legacy `GRADE_BADGE`/`educationalLevel` path for all 12 tables per instruction. Recommendation, not a decision made here: grade *display* metadata (a short badge string) reads as a property of the page template/family-level config, not of the educational fact bank — `GeneratedPracticeEntry` currently only has prose-length grade fields (`gradeOverride`, `TIMES_TABLE_GRADE_DEFAULT`), which are the right shape for narrative sections but the wrong shape for a compact pill/JSON-LD value. No field was added to the interface in this pilot; this is flagged as an open question for whoever scopes the next phase, not resolved here.
+4. **Field length/redundancy:** no field needed revision, but table 7's `strategyExplanation` (~75 words) is noticeably longer than its neighboring static "Use Commutativity" card, visibly unbalancing the 2-column strategy grid for that table specifically (tables 2 and 9 read as comparable in length to the static card). Also, the page's pre-existing static "Use Commutativity" card text is hardcoded as `If you know 7×{tableNumber}, you already know {tableNumber}×7` — for table 7 specifically this renders the tautology "If you know 7×7, you already know 7×7." This is a pre-existing bug (present on all 12 tables' Commutativity card, using a literal `7` instead of a second distinct reference number), not something introduced by this pilot, but it is unusually visible on table 7 precisely because it's in this pilot — worth fixing whenever `[table].astro` is next touched, independent of the fact-bank rollout.
+5. **Differentiation:** tables 2, 7, 9 read as genuinely different from each other (doubling vs. honest no-shortcut vs. the 10×n−n/finger-trick relationship) and from the still-legacy tables — the Quick Answer and FAQ differentiator in particular would not read as true if swapped between pages.
+6. **Go/no-go recommendation:** **not yet ready to roll out to the remaining 9 tables as-is.** The content-field mapping itself is solid and needs no changes. Before scaling: (a) decide explicitly whether the fold-position tradeoff (finding 2) is acceptable across all 12 tables or whether the intro needs to be tightened further, and (b) decide where grade display metadata should live (finding 3) so all 12 tables use one consistent mechanism rather than 3 pages having it separate from the fact bank "by pilot accident." Neither of these blocks a future decision — the pilot's job was to surface them, not resolve them unilaterally.
+
+**Risk:** Low — scoped to 1 file, additive-only for 3 of 12 `tableNumber` values, verified byte-for-byte unchanged (modulo whitespace) for the other 9 and for `index.astro`.
+
+**Explicitly not done in this pilot (per instruction):** the remaining 9 multiplication tables and `times-tables/index.astro` were not touched; Divide By was not started; no `gradeBadgeLabel` or other new field was added to `GeneratedPracticeEntry`; the practice widget was not moved or redesigned; no layout, color, spacing, metadata, or navigation changes were made; the multiplication rollout is not marked complete.
+
+---
+
+## 5. Remaining roadmap
+
+Everything below is **not yet implemented**. Items are grouped the way the original audit grouped them; effort classification and full rationale are preserved in full (not summarized) so a future contributor can act on any item without re-deriving context.
+
+### Structural & data
+
+- [ ] **Resolve the `/addition-practice` and `/subtraction-practice` duplicate hubs** — *Quick Win.* **Do not implement without explicit approval — this is a standing decision boundary, not an oversight.** `/addition-practice` is a full duplicate-content page that conflicts with an existing `redirects` entry in `astro.config.mjs` (page file and redirect target the same path). `/subtraction-practice` has no redirect, no noindex, a self-referential canonical, and — confirmed in the deep-dive audit — is a true orphan with zero inbound internal links from anywhere on the site, yet it's still in the sitemap. Impact: Medium (duplicate-content dilution against `/addition` and `/subtraction`; near-identical titles, >95% match). Files: `src/pages/addition-practice/index.astro`, `src/pages/subtraction-practice/index.astro`, `astro.config.mjs`, `src/pages/1st-grade-math-practice.astro` (its one link to `/addition-practice`). Proposed implementation: delete both page files, add a `'/subtraction-practice': '/subtraction'` redirect to match the existing addition one, repoint the one inbound link to `/addition/1-digit`. Risk: low technically, but it's a content-removal decision — hence the explicit-approval gate.
+
+- [ ] **Centralize site identity into one config file (the *full* migration)** — *Medium.* Note: a *minimal* version of this (`src/config/site.ts` with 4 constants) was introduced in Section 4. This item is the larger, still-undone follow-up: `const SITE = 'https://mathpracticeonline.com'` is still copy-pasted at the top of 38+ page files, and the literal string `"Math Practice Online"` is still hand-typed in header/footer markup and various places outside JSON-LD. Impact: Medium — prevents regression of the SERP-name fix as the site grows. Files: all ~38 page files would import `SITE_URL`/`SITE_NAME` from `src/config/site.ts` instead of re-declaring `SITE` locally. Implementation: mechanical find-and-replace across pages, verify build after the sweep. Risk: Low but wide-reaching — this was explicitly deferred from the Section 4 change to keep that PR focused.
+
+- [ ] **Unify the legacy-route redirect pattern** — *Medium.* `division-practice/*` pages hand-roll noindex + meta-refresh HTML; `multiplication-practice/*` instead call `Astro.redirect()` inside a static, adapter-less build — which likely emits a 200-status meta-refresh page rather than a real 301, and carries no explicit noindex tag of its own. Impact: Low-medium, mostly crawl-budget hygiene; worth a build-output status-code check first. Files: `src/pages/multiplication-practice/*.astro` (5 files), `src/pages/division-practice/*.astro` (pattern to match against). Implementation: move the multiplication-practice paths into `astro.config.mjs`'s `redirects` map (the mechanism already used for `/addition-practice`) for a guaranteed real redirect, or adopt the division-practice noindex+meta-refresh pattern for consistency. Risk: Low.
+
+- [ ] **Add `twitter:site` / `twitter:creator`** — *Quick Win, blocked on input only the site owner has.* No Twitter/X card attribution tags exist anywhere. Harmless today. Impact: Low — cosmetic, X card previews only. Files: `src/layouts/BaseLayout.astro`. Implementation: add `<meta name="twitter:site" content="@yourhandle">` once an X account handle is confirmed to exist/be wanted. Risk: None.
+
+- [ ] **`site.webmanifest` completeness** — *Quick Win.* Missing `start_url`/`scope`; icons are declared `purpose: maskable` only, no plain "any"-purpose icon (some platforms and Lighthouse's PWA audit want both). Impact: Low — PWA/install-prompt polish, not search ranking. Files: `public/site.webmanifest`. Implementation: add `"start_url": "/"`, `"scope": "/"`, and an `"any"`-purpose icon entry alongside the existing maskable ones. Risk: None.
+
+- [ ] **`robots.txt`: explicit AI-crawler policy** — *Quick Win.* `robots.txt` has only a wildcard `User-agent: *` rule — GPTBot, ClaudeBot, PerplexityBot, Google-Extended, and CCBot are all implicitly allowed through it, but the site states no deliberate policy. Given ChatGPT is already a referral source, an explicit, intentional statement is worth making. Impact: Low-medium — deliberateness, not a bug fix. Files: `public/robots.txt`. Implementation: add named `User-agent:` blocks for the above bots with explicit `Allow: /`, keeping the wildcard as fallback. This is a Search-Essentials-safe transparency move, not a ranking trick. Risk: None if kept permissive — don't use this to block anything without a separate, deliberate decision. **Note: explicitly out of scope for the current task; do not implement opportunistically.**
+
+### Internal linking & content depth
+
+- [ ] **Give division a divisor grid, matching multiplication's times-table index** — *Quick Win.* `multiplication/times-tables/index.astro` links to all 12 times-table pages from one grid, keeping every one of them at crawl depth 3. Division has no equivalent — the 12 `divide-by/[divisor]` pages only cross-link via prev/next chains, and `/division/divide-by/8` ends up 4 clicks from the homepage, the single deepest page on the site. Impact: Medium — deep pages get crawled less often and pass less internal authority. Files: new `src/pages/division/divide-by/index.astro` (mirror `multiplication/times-tables/index.astro`), linked from `division/index.astro`. Risk: None — additive. **Note: explicitly out of scope for the current task.**
+
+- [x] **Link the multiplication hub to the times-table index** — *Quick Win.* **Completed in this update.** `multiplication/times-tables/index.astro` was previously reachable only via breadcrumb from a times-table leaf page — `multiplication/index.astro` never linked to it directly, despite linking to individual tables 1, 2, and 9 in its tips copy. Fixed by adding an "All Times Tables" entry to the hub's `relatedLinks` (rendered via `<InternalLinks>`), pointing at `/multiplication/times-tables`. Files: `src/pages/multiplication/index.astro`. Risk: None — additive only, no existing links changed.
+
+- [ ] **Thicken `/progress`'s static, crawlable content** — *Quick Win.* Real prose runs ~170-190 words; the rest (stats, achievements, streak calendar) is client-rendered from `localStorage` and empty for first-time visitors and crawlers — bordering on thin content. Files: `src/pages/progress.astro`. Implementation: expand the static intro/"why track"/"what gets tracked" copy with a couple more concrete paragraphs true regardless of whether the visitor has practiced yet. Risk: None. **Note: this is a content addition, not a navigation/linking fix — left for a separate content-scoped update rather than bundled into this navigation PR.**
+
+- [x] **Strengthen single-source links to `/math-facts`, `/for-parents`, `/for-teachers`** — *Quick Win.* **Completed in this update.** All three were previously linked only from the homepage — no hub page, footer, or grade page referenced them. Added a new footer row (Math Facts / For Parents / For Teachers) to all four places that hand-duplicate header/footer chrome: `src/layouts/HubLayout.astro`, `src/layouts/PracticeLayout.astro`, `src/pages/index.astro`, `src/pages/404.astro`. Risk: None.
+
+- [x] **Fix "Progress" vs "My Progress" nav-label inconsistency** — *Quick Win, newly identified during this update's navigation/terminology audit (not a pre-existing roadmap line).* Every one of the four files that hand-duplicate header/footer chrome (`HubLayout.astro`, `PracticeLayout.astro`, `index.astro`, `404.astro`) labeled the `/progress` link **"Progress"** in the header nav but **"My Progress"** in the footer nav — the same destination, two different labels, with no space-constraint justification (both are equally short). Page-level usage (`<title>`, `<h1>`, breadcrumb JSON-LD) was already 100% consistently "My Progress," so the header nav was the outlier. Fixed by changing the header nav label to "My Progress" in all four files, and separately fixing `src/pages/about.astro`, whose "What does it offer?" list linked to `/progress` with a third variant, "Progress Tracking" — changed to "My Progress" to match the page's actual title/H1. "Speed Drill" (header and footer both use the concise form consistently, while `<title>`/`<h1>`/JSON-LD/body copy consistently use the full "Arithmetic Speed Drill") was reviewed and found already consistent — no change needed there. Risk: None — label-only text changes, no hrefs or destinations touched.
+
+- [x] **Repoint stale legacy internal links on the 3rd/4th-grade pages** — *Quick Win, newly identified during this update's internal-link review (not a pre-existing roadmap line).* `3rd-grade-math-practice.astro`'s related-links list linked to `/multiplication-practice` (a legacy redirect stub that 301s to `/multiplication/facts`) instead of the canonical `/multiplication` hub, labeled "Multiplication Practice Hub." `4th-grade-math-practice.astro` had the equivalent issue with `/division-practice` (a client-side meta-refresh stub, not a true redirect) instead of `/division`, labeled "Division Practice Hub." Both now link directly to the canonical hub URLs with labels matching the hub pages' actual H1 text ("Multiplication Practice" / "Division Practice"), removing an unnecessary redirect hop and a stale label. Files: `src/pages/3rd-grade-math-practice.astro`, `src/pages/4th-grade-math-practice.astro`. Risk: None — same eventual destination, one fewer hop.
+
+- [x] **Rewrite the homepage FAQ visible text to match its own JSON-LD verbatim** — *Quick Win.* **Completed — see [Section 4b](#4b-homepage-faq-single-source-of-truth-math-drills-correction--about-page-organization-cleanup-✅-implemented).** `index.astro` now generates both the visible `<dl>` and the `FAQPage` JSON-LD from one shared `faqItems` array, matching the pattern already used by every other FAQ page.
+
+- [x] **Fix the homepage's factual error about "Math Drills" as a distinct mode** — *Quick Win.* **Completed — see [Section 4b](#4b-homepage-faq-single-source-of-truth-math-drills-correction--about-page-organization-cleanup-✅-implemented).** Corrected on `index.astro` (via the FAQ rewrite above) and on `progress.astro`; the stale `math-drills.astro` reference in `README.md`'s file tree was also removed.
+
+### AEO / GEO & semantic markup
+
+- [ ] **Extend HowTo schema to the no-carrying/no-borrowing sibling pages** — *Medium.* `addition/2-digit-with-carrying.astro` and `subtraction/2-digit-with-borrowing.astro` both carry HowTo schema matching their visible numbered steps. Their siblings — `2-digit-no-carrying.astro` and `2-digit-no-borrowing.astro` — have the identical visible 3-step "How to Solve" UI but no HowTo schema at all. Impact: Medium — HowTo is a rich-result and AI-answer eligibility signal; half the relevant pages are missing it for no content reason. Files: `src/pages/addition/2-digit-no-carrying.astro`, `src/pages/subtraction/2-digit-no-borrowing.astro`. Risk: Low — verify with Rich Results Test. **Note: explicitly out of scope for the current task.**
+
+- [ ] **Wrap leaf practice pages' educational content in `<article>`** — *Medium.* Leaf pages are structurally long-form articles (intro, "what you'll practice," a how-to walkthrough, FAQ) but render as `<div>`/`<section>` without an `<article>` landmark anywhere on the site. Not invalid HTML, but a missed signal for crawlers/AI extractors isolating "the content" from chrome. Files: `src/layouts/PracticeLayout.astro` (wrap the main content slot; sitewide once changed there). Risk: Low — check for tag-based CSS selectors before changing.
+
+- [ ] **Add an `llms.txt`** — *Quick Win.* No `llms.txt` exists. It's an emerging (not yet standardized) convention some sites use to give AI crawlers a concise, structured description of the site and key pages — plausible upside given ChatGPT is already a referral source, negligible downside. Files: new `public/llms.txt`. Risk: None. **Note: explicitly out of scope for the current task; do not implement opportunistically.**
+
+- [ ] **Fix the stray trailing-slash link inconsistency** — *Quick Win.* One homepage link uses `href="/multiplication/"` (trailing slash) while every other on-page reference uses `href="/multiplication"` — functionally fine, just inconsistent. Files: `src/pages/index.astro`. Risk: None.
+
+### Accessibility & Core Web Vitals
+
+The component-level accessibility audit came back largely clean — `aria-live` feedback regions, labeled inputs, focus rings, and zero raster `<img>` alt-text debt were already correct. What's left:
+
+- [ ] **Self-host Google Fonts** — *Medium.* Plus Jakarta Sans and JetBrains Mono load via a render-blocking `fonts.googleapis.com` stylesheet. JetBrains Mono renders the large problem digits, plausibly the LCP element on every practice page. Impact: Medium — a real Core Web Vitals/LCP opportunity. Files: `src/layouts/BaseLayout.astro`, new static font files under `public/` or via `astro:assets`. Implementation: download the two families' woff2 files, self-host, replace the Google Fonts `<link>` with local `@font-face` declarations plus a `<link rel="preload">` for the mono weight used on digits. Risk: Low — verify licensing (both open-source, permissively licensed) and font-file weight before shipping. **Note: explicitly out of scope for the current task; do not implement opportunistically.**
+
+- [ ] **Consolidate the duplicated header/footer markup** — *Medium.* The same header/footer markup is hand-duplicated across `index.astro`, `PracticeLayout.astro`, and `HubLayout.astro`. Not an SEO defect today, but it's exactly the kind of triplication that let earlier title-consistency and link-completeness issues creep in. Files: `src/pages/index.astro`, `src/layouts/PracticeLayout.astro`, `src/layouts/HubLayout.astro`; new `src/components/SiteHeader.astro`/`SiteFooter.astro`. Risk: Low — visually identical if done carefully; diff each page after the change.
+
+- [ ] **Associate number inputs with a persistent `<label>`** — *Medium.* Answer inputs currently rely on `aria-label` alone rather than an associated `<label for>` element. Functionally accessible today; a real `<label>` is more robust and is what a11y audit tools (axe, Lighthouse) flag as best practice. Files: `src/components/AnswerInput.tsx`, `src/components/WrittenProblemInput.tsx`. Risk: Low.
+
+- [ ] **Manually test the custom number pad with OS accessibility input** — *Large.* `AnswerInput.tsx`/`WrittenProblemInput.tsx` deliberately set `inputMode="none"` to suppress the native mobile keyboard in favor of a custom on-screen `NumberPad`. Reasonable UX call for the common case, but needs verification with switch control, voice control, and screen-reader-driven input on real devices — cannot be confirmed from source alone. Files: `src/components/AnswerInput.tsx`, `src/components/WrittenProblemInput.tsx`, `src/components/NumberPad.tsx`. Implementation: manual test pass with iOS/Android switch control and VoiceOver/TalkBack; add a native-keyboard fallback path if input is found to be blocked. Risk: None from testing itself; scope depends entirely on what's found.
+
+### Deep-dive audit: additional findings (linking depth, orphans, thin pages, duplicate metadata)
+
+- [ ] **Fix the `division/divide-by/8` crawl-depth outlier** — tracked above as the division divisor grid item; called out again here because the deep-dive audit specifically traced the minimum-hop path and confirmed it's the single deepest real content page on the site (4 clicks from home).
+- [ ] **`/subtraction-practice` confirmed as a true orphan** — zero inbound internal links from anywhere in `src/`, yet present in the sitemap (missing from `astro.config.mjs`'s sitemap `filter` exclude list, unlike its sibling `/addition-practice`). Tracked under the duplicate-hub resolution item above; **do not implement without explicit approval** (same decision boundary).
+- [ ] **`/addition-practice` and `/subtraction-practice` are near-duplicate titles/descriptions of `/addition` and `/subtraction`** (>95% identical titles) — the clearest duplicate-metadata pair found in the deep-dive audit. Same decision boundary as above.
+- [ ] **`progress.astro` borderline-thin static content** — tracked above under "Thicken /progress's static, crawlable content."
+- [ ] No other duplicate/near-duplicate title or description pairs were found across the remaining ~40 pages (every grade page, worksheet page, and dynamic-route page generates a unique per-parameter string).
+
+### Engagement opportunities within the existing architecture
+
+The site's existing engagement mechanics (streaks, achievements, a 35-day practice calendar, session-over-session comparison) were reviewed and found already well-built. These are **product/UX decisions, not SEO fixes** — listed here for completeness but explicitly not prioritized as SEO roadmap items:
+
+- [ ] Surface a contextual "practice this next" prompt on the post-session score card (`ScoreCard.tsx`) — every page already has hand-curated `links`/`InternalLinks` data with exactly this "next step" information; it's just not wired into the moment right after a session completes.
+- [ ] No streak-loss / return-visit nudge exists (no Notification API usage, no service worker); the data needed (`lastSessionDate` vs. today) is already computed in `ProgressDashboard.tsx`.
+- [ ] No email/newsletter capture anywhere — consistent with the site's no-accounts positioning, but means there's currently no mechanism to re-engage a lapsed user besides them remembering the URL.
+- [ ] Achievement/streak sharing isn't surfaced — no share/print/export action, despite `for-parents.astro`/`for-teachers.astro` already targeting exactly the audiences who'd use it.
+- [ ] `WorksheetGenerator.tsx` (printable worksheets) is disconnected from the progress-tracking system — printed practice is never reflected on `/progress`.
+
+---
+
+## 6. Decisions that require explicit human approval
+
+These are standing boundaries, not just deferred work — do not implement any of the following without the site owner explicitly signing off first, even if they appear to be "objectively correct" fixes:
+
+- Deleting or redirecting `/addition-practice` or `/subtraction-practice`.
+- Any change to `robots.txt`.
+- Adding `llms.txt`.
+- Self-hosting fonts.
+- Adding the division divisor grid.
+- Performing the full `src/config/site.ts` site-config migration across all ~38 files.
+
+*(Rewriting the homepage FAQ was previously listed here; explicit approval was given and it was completed — see [Section 4b](#4b-homepage-faq-single-source-of-truth-math-drills-correction--about-page-organization-cleanup-✅-implemented).)*
+
+---
+
+## 7. Prioritized roadmap (by expected ROI)
+
+Ordered by effort vs. how directly each item moves organic/AI-referral traffic — not by section order above. Items marked ✅ are complete.
+
+| # | Item | Effort | Status | Why it's ranked here |
+|---|------|--------|--------|----------------------|
+| 1 | Consolidate Organization/WebSite JSON-LD sitewide | Medium | ✅ Done ([#117](https://github.com/wesley-perkins-software/math-practice/pull/117)) | Completes the SERP-name fix; the title-tag half shipped in PR #116. |
+| 2 | Rewrite homepage FAQ to match its own JSON-LD + fix the "Math Drills" factual error | Quick Win | ✅ Done (this update, PR pending) | Highest-authority page no longer ships a factual inconsistency an AI engine could repeat. |
+| 3 | Division divisor grid | Quick Win | Deferred (approval gate) | Closes the site's one 4-click-deep page; mirrors a pattern that already exists for multiplication. |
+| 4 | Extend HowTo schema to no-carrying/no-borrowing pages | Medium | Not started | Doubles HowTo rich-result eligibility for near-zero new content — visible steps already exist. |
+| 5 | Full `src/config/site.ts` migration (all ~38 files) | Medium | Not started | Prevents the exact bug class already fixed twice from recurring as the site grows. |
+| 6 | Self-host Google Fonts | Medium | Deferred (approval gate) | Real Core Web Vitals/LCP win on the element most likely to be the LCP candidate sitewide. |
+| 7 | Small linking fixes (times-tables index link, `/progress` copy, trailing-slash, footer reach) | Quick Win | Partially done (this update, PR pending) — times-tables index link and footer reach (`/math-facts`, `/for-parents`, `/for-teachers`) shipped, plus Progress/My Progress nav-label consistency and two stale grade-page links; `/progress` copy thickening and the trailing-slash fix remain | Batch of near-zero-risk, near-zero-effort cleanups. |
+| 8 | robots.txt AI-crawler policy + llms.txt | Quick Win | Deferred (approval gate) | Directional GEO investment given ChatGPT is an active referral source. |
+| 9 | Resolve `/addition-practice` + `/subtraction-practice` | Quick Win | **Blocked — needs explicit approval** | Fix is scoped and low-risk; waiting on the content decision. |
+| 10 | Consolidate header/footer + `<article>` wrapping + `<label>` upgrade | Medium | Not started | Maintainability and semantic-clarity investments. |
+| 11 | Manual accessibility test of the custom number pad | Large | Not started | Needs real-device testing before scope is even known. |
+| 12 | Canonical Leaf-Page Standard — rollout to all 9 non-generated leaf pages | Medium | ✅ Done (this update) — generated pages and pattern revisions remain out of scope | Closes the largest content-quality gap identified (thin leaf-page intros, no parent/teacher guidance on leaf pages); see Section 4c and `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md`. The 24 generated Times Tables/Divide By pages need a per-number fact bank before extending further; the pilot's 3 recommended pattern revisions are deferred to a future UI refresh. |
+| 13 | Canonical Generated-Page Standard — architecture + Phase 1A data layer | Medium | ✅ Architecture done; ✅ Phase 1A (times-table fact bank) done (this update); Phase 1B, page-template migration, and rollout not started | Unblocks item 12's deferred generated-page extension. Architecture defines the data-module design and anti-thin-content rule; Phase 1A authored and validated the actual 12-entry multiplication fact bank (`src/data/generated-practice/timesTables.ts`), data-layer only. See `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md`. Divide-by fact bank and wiring the data into live generated pages remain future work. |
+
+---
+
+## Implementation Log
+
+| Date | PR | Work completed | Notes |
+|------|----|----------------|-------|
+| 2026-08-02 | [#116](https://github.com/wesley-perkins-software/math-practice/pull/116) | Title consistency, 404 noindex, Progress route fixes, dead asset cleanup | Initial direct-fix audit PR |
+| 2026-08-02 | [#117](https://github.com/wesley-perkins-software/math-practice/pull/117) | Added `docs/seo/SEO_AEO_GEO_AUDIT.md`; consolidated Organization/WebSite JSON-LD into one sitewide identity graph (`src/config/site.ts`, `BaseLayout.astro`, homepage, About page, and 30 `LearningResource.provider` references) | |
+| 2026-08-02 | Pending | Rewrote homepage FAQ from one shared `faqItems` source (visible + JSON-LD); fixed the "Math Drills" factual error on `index.astro`, `progress.astro`, and a stale `README.md` reference; normalized the About-page Organization `url` to the canonical trailing-slash form via `SITE_URL`; removed unverified `foundingDate: "2024"` from the About-page Organization node (kept `areaServed`/`serviceType`, both reviewed as accurate) | This update |
+| 2026-08-02 | Pending | Linked the multiplication hub to the times-tables index; added footer links to `/math-facts`, `/for-parents`, `/for-teachers` (`HubLayout.astro`, `PracticeLayout.astro`, `index.astro`, `404.astro`); fixed "Progress" vs "My Progress" header/footer nav-label inconsistency in the same 4 files plus `about.astro`'s "Progress Tracking" link text; repointed stale `/multiplication-practice` and `/division-practice` links on the 3rd/4th-grade pages to the canonical `/multiplication`/`/division` hubs | Navigation & internal-linking focused PR; division hub verified already complete (Divide By/Facts/Remainders all linked) and left unchanged; division divisor-grid item remains deferred/out of scope |
+| 2026-08-02 | Pending | Added `docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md` defining the target leaf-page content shape; piloted it on the 3 Addition leaf pages (Quick Answer block, expanded intro, mandatory Parent/Teacher guidance, refined FAQ, next-step CTA, `InternalLinks` repositioned to the end of the page within those 3 files only) | Pilot only — sitewide rollout to remaining ~30 leaf pages and the 24 generated pages explicitly not done, blocked on applying 3 recommended pattern revisions from the pilot evaluation first |
+| 2026-08-02 | Pending | Rolled out the approved Canonical Leaf-Page Standard, unrevised, to the 6 remaining non-generated leaf pages: `subtraction/1-digit.astro`, `subtraction/2-digit-no-borrowing.astro`, `subtraction/2-digit-with-borrowing.astro`, `multiplication/facts.astro`, `division/facts.astro`, `division/remainders.astro` | Completes rollout to all 9 non-generated leaf pages (pilot + this update). The 24 generated Times Tables/Divide By pages and the pilot's 3 recommended pattern revisions remain explicitly out of scope, per instruction |
+| 2026-08-02 | Pending | Added `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md`, defining the architecture for extending the Canonical Leaf-Page Standard to the 24 generated Times Tables / Divide By pages: operation-specific per-number data modules (`timesTables.ts`, `divideBy.ts`), a "substantive educational differentiation" anti-thin-content rule, family-level grade guidance with narrow per-number overrides, and a 5-phase rollout plan | Architecture/documentation only — no data modules, `.astro` pages, or layouts created or modified. Implementation and page-level rollout remain future work, tracked in Section 4c and the roadmap table |
+| 2026-08-02 | Pending | Phase 1A: authored the multiplication times-table fact bank. Added `src/data/generated-practice/types.ts` (`GeneratedPracticeEntry` interface) and `src/data/generated-practice/timesTables.ts` (12 entries covering tables 1–12, `TIMES_TABLE_GRADE_DEFAULT`, `getTimesTableFact(n)`, and `validateTimesTableFacts()`); added `npm run validate:times-tables` to `package.json`. Flagged (not fixed) an unsupported "hardest table" comparative claim in `times-tables/index.astro`'s existing FAQ | Data-layer only — no `.astro` page, layout, or preset modified. `[table].astro`/`.../index.astro` still render their pre-existing `TABLE_STRATEGIES`/`STRATEGY`/`GRADE_BADGE`/inline FAQ content unchanged. Full authoring record, per-table audit table, and content-integrity findings in `docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md`'s "Phase 1A" section. Divide-by fact bank (Phase 1B) and page-template migration (Phase 2+) remain not started |
+
+---
+
+## Maintenance rule
+
+- Update the checkbox whenever a roadmap item is completed.
+- Add the implementing PR to the [Implementation Log](#implementation-log).
+- Update "Last updated" at the top of this file.
+- Do not mark an item complete unless it has actually been implemented **and** verified (build passes, generated output checked).
+- Preserve deferred recommendations unless explicitly rejected by the site owner — don't delete them for being old.
+- If a recommendation is rejected rather than deferred, record it (and the reason) in place rather than deleting it, so the decision isn't re-litigated from scratch later.

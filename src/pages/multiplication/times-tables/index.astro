@@ -1,6 +1,7 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -36,7 +37,7 @@ const faqItems = [
   },
   {
     q: 'Which times tables should I learn first?',
-    a: 'Start with the easiest: the 1s (trivial), 2s (doubling), 5s (count by fives), and 10s (append a zero). These four tables cover a large portion of all facts and are the quickest to learn. Then move to the 3s, 4s, 9s (finger trick), 11s, and finally the hardest: 6s, 7s, 8s, and 12s.'
+    a: 'Start with the easiest: the 1s (trivial), 2s (doubling), 5s (count by fives), and 10s (append a zero). These four tables cover a large portion of all facts and are the quickest to learn. Then move to the 3s, 4s, 9s (finger trick), and 11s, finishing with the 6s, 7s, 8s, and 12s.'
   },
   {
     q: 'What grade do students learn times tables?',
@@ -47,8 +48,8 @@ const faqItems = [
     a: 'With daily practice, most students can memorize all 12 times tables in 3–6 months. The key is consistent short sessions (5–10 minutes daily) rather than long occasional practice. Learning table-by-table, starting with the easiest, reduces the total load significantly since many hard facts become familiar before you reach them.'
   },
   {
-    q: 'What is the hardest times table to memorize?',
-    a: 'The 7s and 8s are typically the hardest because they lack intuitive patterns. The 6s, 7s, 8s, and 12s are the last four tables most students master. Focusing practice on these specific tables — especially 6×7, 6×8, 7×8 — closes the final gaps quickly.'
+    q: 'Which times tables take the most practice to memorize?',
+    a: 'The 6s, 7s, 8s, and 12s are commonly the last tables students master, since they lack a single simple pattern like doubling, counting by fives, or appending a zero. Focusing extra practice on the specific facts that still feel slow — often ones like 6×7, 6×8, or 7×8 — closes the remaining gaps faster than redrilling every table evenly.'
   },
 ];
 ---
@@ -72,7 +73,7 @@ const faqItems = [
       "url": `${SITE}/multiplication/times-tables`,
       "educationalLevel": ["Grade 2", "Grade 3", "Grade 4"],
       "teaches": "Multiplication times tables 1 through 12",
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

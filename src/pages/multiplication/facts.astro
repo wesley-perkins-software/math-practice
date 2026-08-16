@@ -2,6 +2,9 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
+import LocalChooser from '@/components/LocalChooser.astro';
+import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -34,10 +37,12 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="Multiplication Facts Practice | Mixed Multiplication 1–12"
+  title="Multiplication Facts Practice | Mixed Multiplication 1–12 | Math Practice Online"
   description="Practice mixed multiplication facts from 1×1 to 12×12. Build multiplication fluency with instant feedback and streak tracking."
   canonical={`${SITE}/multiplication/facts`}
+  pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Multiplication', href: '/multiplication' }, { label: 'Facts' }]}
+  breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -48,7 +53,7 @@ const faqItems = [
       "url": `${SITE}/multiplication/facts`,
       "educationalLevel": ["Grade 3", "Grade 4"],
       "teaches": "Multiplication facts 1×1 through 12×12",
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -61,13 +66,20 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Facts Practice</h1>
-  <div slot="intro">
-    <p>Practice mixed multiplication facts from 1 through 12 in random order. This broad mode helps students strengthen overall multiplication fluency across the entire fact family.</p>
-    <p class="mt-2">Practice consistently to build speed and automatic recall across all fact families.</p>
-  </div>
+  <Fragment slot="h1">
+    <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">Multiplication Facts</h1>
+  </Fragment>
+
+  <Fragment slot="intro">
+    <div class="mb-4 bg-[#F8FAFC] border border-[#E2E8F0] rounded-xl px-4 py-3 text-[#1E293B] text-sm sm:text-base leading-relaxed">
+      <p>Multiplication facts are the products of two numbers from 1 to 12, such as 6 × 7 = 42. There are 144 total facts in the 1–12 grid, and fluent recall of all of them is the foundation for division, fractions, and multi-digit multiplication.</p>
+    </div>
+    <p>This page is for third and fourth graders working toward full multiplication fact fluency, as well as parents and teachers who want a broad recall check rather than one table at a time. Problems are pulled from all 144 facts in random order, so success here means genuine recall of the whole 1–12 grid, not memorization of a fixed sequence.</p>
+  </Fragment>
+
   <MultiplicationPracticeHub slot="widget" client:load active="facts" />
-  <InternalLinks slot="links" links={links} />
+
+  <LocalChooser slot="local-chooser" operation="multiplication" current="/multiplication/facts" />
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -78,7 +90,7 @@ const faqItems = [
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 144 multiplication facts from 1×1 through 12×12</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems presented in random order to build genuine recall (not rote sequence)</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
@@ -92,17 +104,23 @@ const faqItems = [
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Skip Counting</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Count up by the multiplier. For 6×7: 7, 14, 21, 28, 35, 42. Works for any table until facts feel automatic.</p>
+          <p class="text-sm text-body leading-relaxed">Count up by the multiplier. For 6×7: 7, 14, 21, 28, 35, 42. Works for any table until facts feel automatic.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Know 3×8? You already know 8×3. Turn unfamiliar facts into familiar ones by flipping the order.</p>
+          <p class="text-sm text-body leading-relaxed">Know 3×8? You already know 8×3. Turn unfamiliar facts into familiar ones by flipping the order.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Break It Apart</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">For 7×8: split as (7×4) + (7×4) = 28 + 28 = 56. Breaking into smaller known facts reduces memory load.</p>
+          <p class="text-sm text-body leading-relaxed">For 7×8: split as (7×4) + (7×4) = 28 + 28 = 56. Breaking into smaller known facts reduces memory load.</p>
         </div>
       </div>
+    </section>
+
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-body leading-relaxed">Random-order practice is intentionally harder than practicing one times table at a time — it tests recall, not sequence memory, and a child can look fluent on a single table while still guessing here. Watch for a child who is fast on some facts (like the 2s, 5s, and 10s) but consistently pauses on others (commonly 6s, 7s, 8s, and 9s); that pattern points to which specific tables need focused practice on the individual times-tables pages rather than more mixed drills. If a child is accurate but slow across the board, they're likely still calculating rather than recalling — short, frequent sessions build recall speed faster than long occasional ones. Mixed practice like this page is best used as a checkpoint after focused single-table practice, not as the first place a new table is learned.</p>
     </section>
 
     <!-- FAQ -->
@@ -112,10 +130,16 @@ const faqItems = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
           </div>
         ))}
       </div>
     </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-body">Want to focus on one table at a time? Try the <a href="/multiplication/times-tables/1" class="text-[#4F46E5] font-semibold hover:underline">times tables practice pages</a> →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>

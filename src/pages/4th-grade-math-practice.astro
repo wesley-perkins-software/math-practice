@@ -1,13 +1,14 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
   { href: '/multiplication/facts', label: 'Multiplication Facts (×1–×12)', description: 'Build fluency across all times tables' },
   { href: '/division/facts', label: 'Division Facts', description: 'Division facts with divisors 1–12' },
-  { href: '/division-practice', label: 'Division Practice Hub', description: 'All division difficulty levels' },
+  { href: '/division', label: 'Division Practice', description: 'All division difficulty levels' },
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print multiplication fact sheets' },
   { href: '/5th-grade-math-practice', label: '5th Grade Math Practice Online', description: 'Next level: all-operations fluency' },
 ];
@@ -47,7 +48,7 @@ const faqItems = [
       "url": `${SITE}/4th-grade-math-practice`,
       "educationalLevel": ["Grade 4"],
       "teaches": ["Multiplication", "Division"],
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",

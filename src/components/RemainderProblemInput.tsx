@@ -21,6 +21,7 @@ export default function RemainderProblemInput({
   const [quotientValue, setQuotientValue] = useState('');
   const [remainderValue, setRemainderValue] = useState('');
   const [isVisible, setIsVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
 
@@ -103,9 +104,9 @@ export default function RemainderProblemInput({
     <div className="flex flex-col items-center gap-2 w-full">
       {/* Written arithmetic block */}
       <div
-        className={`select-none w-fit mx-auto min-w-[8rem] transition-opacity duration-200 ease-out ${
+        className={`select-none w-fit mx-auto min-w-[9rem] rounded-2xl px-2 py-1 -mx-2 -my-1 transition-[opacity,box-shadow] duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
+        } ${isFocused ? 'ring-2 ring-[#4F46E5]/40 ring-offset-4 ring-offset-white' : ''}`}
         aria-label={`What is ${problem.operandA} ÷ ${problem.operandB}? Enter quotient and remainder.`}
         onClick={() => inputRef.current?.focus()}
       >
@@ -128,25 +129,27 @@ export default function RemainderProblemInput({
           disabled={disabled}
           aria-label={activeSlot === 'quotient' ? 'Enter quotient' : 'Enter remainder'}
           className="sr-only"
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
         />
 
         {/* Row 1: dividend, right-aligned */}
         <div className="text-right">
-          <span className="text-4xl md:text-5xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
+          <span className="text-5xl md:text-6xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
             {problem.operandA}
           </span>
         </div>
 
         {/* Row 2: ÷ divisor */}
         <div className="flex items-center justify-end gap-3">
-          <span className="text-3xl md:text-4xl font-semibold text-[#4F46E5]">÷</span>
-          <span className="text-4xl md:text-5xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
+          <span className="text-4xl md:text-5xl font-semibold text-[#4F46E5]">÷</span>
+          <span className="text-5xl md:text-6xl font-bold text-[#1E1B4B] tabular-nums font-['JetBrains_Mono']">
             {problem.operandB}
           </span>
         </div>
 
         {/* Horizontal rule */}
-        <div className="border-t-[3px] border-[#1E1B4B] mt-2" />
+        <div className="border-t-[3px] border-[#1E1B4B] mt-1.5" />
 
         {/* Quotient slot — tappable */}
         <div
@@ -154,7 +157,7 @@ export default function RemainderProblemInput({
           onClick={() => switchSlot('quotient')}
         >
           <span
-            className={`text-4xl md:text-5xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
+            className={`text-5xl md:text-6xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
               activeSlot === 'quotient'
                 ? 'text-[#1E1B4B] border-[#4F46E5]'
                 : 'text-[#A5B4FC] border-[#E0E7FF]'
@@ -173,7 +176,7 @@ export default function RemainderProblemInput({
 
         {/* Remainder label + slot — tappable */}
         <div
-          className="mt-4 mb-2 cursor-pointer"
+          className="mt-2.5 mb-1 cursor-pointer"
           onClick={() => switchSlot('remainder')}
         >
           <div className="text-xs font-medium text-[#A5B4FC] uppercase tracking-wide text-right mb-1">
@@ -181,7 +184,7 @@ export default function RemainderProblemInput({
           </div>
           <div className="flex justify-end">
             <span
-              className={`text-4xl md:text-5xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
+              className={`text-5xl md:text-6xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] ${
                 activeSlot === 'remainder'
                   ? 'text-[#1E1B4B] border-[#4F46E5]'
                   : 'text-[#C7D2FE] border-[#E0E7FF]'

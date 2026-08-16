@@ -1,0 +1,178 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import AdditionPracticeHub from '@/components/AdditionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+import LocalChooser from '@/components/LocalChooser.astro';
+import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
+
+const SITE = 'https://mathpracticeonline.com';
+
+const links = [
+  { href: '/addition', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/addition/2-digit-without-regrouping', label: '2-Digit Addition (Without Regrouping)', description: 'Review before tackling regrouping' },
+  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Reinforce the addition facts behind regrouping' },
+  { href: '/subtraction/2-digit-with-regrouping', label: '2-Digit Subtraction With Regrouping', description: 'The inverse skill: regrouping in subtraction' },
+  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style regrouping practice with instant feedback' },
+];
+
+const faqItems = [
+  {
+    q: 'What is regrouping in addition?',
+    a: 'Regrouping occurs when the digits in a column add up to 10 or more. You write the ones digit of the sum below that column and regroup 10 ones as 1 ten, moving it to the top of the next column to the left. For example, in 47 + 38: the ones column is 7 + 8 = 15, so write 5 in the ones place and regroup 1 ten into the tens column. Then 1 + 4 + 3 = 8 in the tens place, giving 85. This is also commonly called carrying.'
+  },
+  {
+    q: 'What grade is 2-digit addition with regrouping?',
+    a: 'Two-digit addition with regrouping is typically taught in Grade 2 and reinforced in Grade 3. Students should have solid fluency with single-digit addition and basic two-digit addition without regrouping before starting this level.'
+  },
+  {
+    q: 'Why is regrouping in addition sometimes called "carrying"?',
+    a: 'Carrying is the traditional name for the same process: when a column\'s sum exceeds 9, you write the ones digit and "carry" the tens digit to the next column by writing it above that column. Regrouping is the term used in modern curricula, and it describes the concept more precisely — exchanging 10 ones for 1 ten. Both terms describe the same step.'
+  },
+  {
+    q: 'What is the difference between addition with and without regrouping?',
+    a: 'In addition without regrouping, no column adds up to 10 or more, so every digit stays in its own column (e.g., 23 + 45 = 68). In addition with regrouping, at least one column totals 10 or more, so 10 ones must be exchanged for 1 ten and moved into the next column (e.g., 47 + 38 = 85).'
+  },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Addition With Regrouping Practice | Math Practice Online"
+  description="Practice 2-digit addition with regrouping. Every problem requires carrying a ten from the ones column, building advanced multi-digit addition accuracy with instant feedback and streak tracking."
+  canonical={`${SITE}/addition/2-digit-with-regrouping`}
+  pilotLayout
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition With Regrouping' }]}
+  breadcrumbVisual={false}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "2-Digit Addition With Regrouping Practice",
+      "description": "Interactive online practice for two-digit addition with regrouping. Every problem requires regrouping at least once, building the core multi-digit addition skill.",
+      "url": `${SITE}/addition/2-digit-with-regrouping`,
+      "educationalLevel": ["Grade 2", "Grade 3"],
+      "teaches": "Two-digit addition with regrouping (carrying)",
+      "provider": { "@id": ORGANIZATION_ID }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Do 2-Digit Addition With Regrouping",
+      "description": "Step-by-step guide to solving two-digit addition problems that require regrouping (carrying).",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Write the numbers in columns",
+          "text": "Align the two numbers so the ones digits are in the same column and the tens digits are in the same column."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Add the ones column",
+          "text": "Add the two ones digits. If the sum is 9 or less, write it below the ones column. If the sum is 10 or more, write only the ones digit below the column and regroup the tens digit (which will always be 1) into the tens column — this is the 'carry'."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Add the tens column",
+          "text": "Add the two tens digits plus the regrouped digit from the ones column. Write the result below the tens column. This gives you the final answer."
+        }
+      ]
+    })} />
+  </Fragment>
+
+  <Fragment slot="h1">
+    <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">2-Digit Addition With Regrouping</h1>
+  </Fragment>
+
+  <Fragment slot="quick-answer">
+    <p>Two-digit addition with regrouping happens when a column's sum reaches 10 or more, so 10 ones must be regrouped as 1 ten and moved into the next column, such as 56 + 27 = 83. Every problem on this page requires at least one regroup (also called a carry), building the skill that comes right after place-value column addition.</p>
+  </Fragment>
+
+  <AdditionPracticeHub slot="widget" active="2-digit-with-regrouping" variant="prototype" client:load />
+
+  <LocalChooser slot="local-chooser" operation="addition" current="/addition/2-digit-with-regrouping" />
+
+  <Fragment slot="intro">
+    <p>This page is for second and third graders who've already mastered two-digit addition without regrouping and single-digit facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one regroup, so there's no way to get through it without exchanging 10 ones for 1 ten in the tens column.</p>
+  </Fragment>
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Grade 2 – Grade 3</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit addition problems where the ones column always sums to 10 or more</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Regrouping 1 ten from the ones column into the tens column</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems range from 15–99 + 15–99 to ensure every problem requires regrouping</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak and score tracking</li>
+      </ul>
+    </section>
+
+    <!-- How to regroup -->
+    <section aria-labelledby="howto-heading">
+      <h2 id="howto-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Do Addition With Regrouping</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align the Columns</h3>
+          <p class="text-sm text-body leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Ones — and Regroup</h3>
+          <p class="text-sm text-body leading-relaxed">Add the ones column. If the sum is 10 or more, write the ones digit below and regroup 10 ones as 1 ten, placed above the tens column. Example: 7 + 8 = 15 → write 5, regroup 1 ten.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Tens + Regrouped Ten</h3>
+          <p class="text-sm text-body leading-relaxed">Add the tens column digits plus the regrouped 1. Write the result. Example: regrouped 1 + 4 + 3 = 8 in the tens place → final answer: 85.</p>
+        </div>
+      </div>
+      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-body">
+        <span class="font-semibold text-[#1E293B]">Example:</span> 47 + 38 → ones: 7 + 8 = 15 (write 5, regroup 1 ten) → tens: 1 + 4 + 3 = 8 → <span class="font-semibold text-[#4F46E5]">Answer: 85</span>
+      </div>
+    </section>
+
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-body leading-relaxed">Regrouping is where a lot of students who were doing fine start making mistakes — not because addition got harder, but because there's now an extra step to remember. Watch for a child who gets the ones column right but forgets to add the regrouped ten into the tens column; that's the single most common error, and it means the regrouped digit needs to be written down (not done mentally) until it's automatic. If a child regroups correctly but consistently writes the wrong digit — putting the tens digit below instead of carrying it over — they've mixed up which digit stays and which moves, which is worth re-explaining with a concrete example like 47 + 38 rather than assigning more timed problems. Once a child can explain out loud why they're regrouping a ten (not just where to write it), they're ready to move quickly through this level.</p>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-body">Comfortable with regrouping? Try <a href="/subtraction/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">2-digit subtraction with regrouping</a>, the inverse skill →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
+  </div>
+</PracticeLayout>

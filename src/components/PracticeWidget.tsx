@@ -9,6 +9,7 @@ import { trackEvent } from '@/lib/analytics';
 
 import WrittenProblemInput from './WrittenProblemInput';
 import RemainderProblemInput from './RemainderProblemInput';
+import LongDivisionProblemInput from './LongDivisionProblemInput';
 import FeedbackBanner from './FeedbackBanner';
 import ScoreCard from './ScoreCard';
 import TimerDisplay from './TimerDisplay';
@@ -19,10 +20,13 @@ type FeedbackState = 'correct' | 'incorrect' | 'hidden';
 
 interface Props {
   config: PracticeConfig;
-  topContent?: React.ReactNode;
+  /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
+  variant?: 'classic' | 'prototype';
+  /** Use black instead of muted grey for inactive statistics on dark-text pages. */
+  darkText?: boolean;
 }
 
-export default function PracticeWidget({ config, topContent }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -38,6 +42,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(DEFAULT_STATS);
   const [preSessionScore, setPreSessionScore] = useState<number>(0);
+  const [preSessionPersonalBest, setPreSessionPersonalBest] = useState<number>(0);
   const [isNewStreakRecord, setIsNewStreakRecord] = useState(false);
   const [resetPending, setResetPending] = useState(false);
   const [personalBestResetPending, setPersonalBestResetPending] = useState(false);
@@ -69,6 +74,8 @@ export default function PracticeWidget({ config, topContent }: Props) {
   const totalAnsweredRef = useRef(0);
   const timerStartedRef = useRef(false);
   timerStartedRef.current = timerStarted;
+  const durationRef = useRef(duration);
+  durationRef.current = duration;
 
   // Clear reset confirmation when difficulty changes
   useEffect(() => {
@@ -140,6 +147,7 @@ export default function PracticeWidget({ config, topContent }: Props) {
     // Capture the score from the previous session before starting a new one
     const currentStats = loadStats(config.storageKey);
     setPreSessionScore(currentStats.lastSessionScore);
+    setPreSessionPersonalBest(currentStats.personalBestScore);
     setIsNewStreakRecord(false);
     // For untimed: capture start time now. For timed: captured on first answer submission.
     if (!isTimed) {
@@ -163,7 +171,16 @@ export default function PracticeWidget({ config, topContent }: Props) {
   function endSession() {
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
-    const elapsed = Math.round((Date.now() - sessionStartTimeRef.current) / 1000);
+    // Timed sessions report the CONFIGURED duration, not wall-clock elapsed
+    // time: the countdown interval isn't a perfectly precise 1000ms metronome
+    // (scheduling/rendering jitter), so Date.now() - sessionStartTime can land
+    // a little past the nominal duration (e.g. 61s for a 60s drill) even
+    // though the drill correctly ran for exactly `duration` countdown ticks.
+    // The countdown itself — and therefore scoring — is untouched; this only
+    // fixes what gets reported.
+    const elapsed = isTimed
+      ? durationRef.current
+      : Math.round((Date.now() - sessionStartTimeRef.current) / 1000);
     setResult(buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed));
     setPhase('complete');
   }
@@ -351,143 +368,345 @@ export default function PracticeWidget({ config, topContent }: Props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div className="bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden">
-      {/* ── GRADIENT ACCENT BAR ─────────────────────── */}
-      <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
+  const isPrototype = variant === 'prototype';
 
-      <div className="p-4 md:p-5">
-        {/* ── TOP CONTENT (e.g. difficulty tabs) ──────── */}
-        {topContent && (
-          <div className="mb-4 pb-4 border-b border-[#E0E7FF]">
-            {topContent}
+  // Surface width, arithmetic width, and keypad width are three independent
+  // decisions (round 2 of the exploration): the surface itself is widened to
+  // ~30rem to give it real presence on desktop, while the equation column
+  // stays intrinsic and the keypad is separately capped at 18rem — neither
+  // inner control stretches just because the surface has more room.
+  //
+  // Round 9: max-width now reads from --practice-card-max-w (defined on
+  // [data-practice-instrument] in practice-surface-prototype.css) instead of
+  // a fixed 30rem — that variable is itself larger on touch tablets, so the
+  // card genuinely widens there instead of floating, desktop-sized, in more
+  // canvas. See that file's comment for why the override is scoped to a
+  // coarse pointer, not just a wide viewport.
+  const wrapperClasses = isPrototype
+    ? 'bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[length:var(--practice-card-max-w)] mx-auto overflow-hidden'
+    : 'bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden';
+
+  const innerPaddingClasses = isPrototype
+    ? 'px-[length:var(--practice-card-px)] pt-[length:var(--practice-card-pt)] pb-[length:var(--practice-card-pb)]'
+    : 'px-4 py-4 md:px-6 md:py-5';
+
+  // Timed + prototype (currently just the Speed Drill) carries a corner-stat
+  // row the untimed prototype pages don't have. Rather than shrinking the
+  // shared --practice-card-pt/pb/--practice-stack-gap tokens in
+  // practice-surface-prototype.css — which would quietly resize every
+  // approved practice card, not just this one — these are local inline
+  // overrides of the same custom properties, scoped to this element only.
+  // Descendants still read var(--practice-card-pt) etc. unchanged; only a
+  // timed+prototype instance (i.e. only the Speed Drill today) sees the
+  // tighter values.
+  const timedPrototypeStyle: React.CSSProperties | undefined =
+    isTimed && isPrototype
+      ? ({
+          '--practice-card-pt': '0.75rem',
+          '--practice-card-pb': '0.625rem',
+          '--practice-stack-gap': '0.25rem',
+        } as React.CSSProperties)
+      : undefined;
+
+  // data-timed-instrument: gives practice-surface-prototype.css a hook to
+  // define --practice-stage-min-h (the shared problem-stage height — see
+  // WrittenProblemInput/LongDivisionProblemInput) and neutralize
+  // --ld-no-remainder-inset, scoped to only the timed+prototype surface
+  // (currently just the Speed Drill). The calc lives in CSS rather than as
+  // an inline px value here specifically so it stays responsive: it
+  // references --practice-operand-size/--practice-answer-min-h, which the
+  // tablet media query in that file already overrides on this same element.
+  const timedInstrumentAttr = isTimed && isPrototype ? { 'data-timed-instrument': true } : {};
+
+  return (
+    // data-practice-instrument: lets the H1-row switcher's vanilla script
+    // (addition/1-digit.astro) detect "the user resumed practice" and close
+    // itself — see the switcher's own comment for why this can't just be a
+    // React prop (the switcher is deliberately framework-agnostic markup
+    // living outside this island).
+    <div className={wrapperClasses} style={timedPrototypeStyle} {...(isPrototype ? { 'data-practice-instrument': true } : {})} {...timedInstrumentAttr}>
+      {/* Gradient accent bar — classic only; the prototype surface relies on its
+          bordered surface + the brand-colored submit key instead of a decorative
+          top bar, per the audit's note that gradients should solve something. */}
+      {!isPrototype && (
+        <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
+      )}
+
+      <div className={innerPaddingClasses}>
+        {/* ── ACTIVE ──────────────────────────────────── */}
+        {phase === 'active' && problem && (
+          <div className={`flex flex-col items-center ${isPrototype ? 'gap-[length:var(--practice-stack-gap)]' : 'gap-3 md:gap-4'}`}>
+            {/* Timer/Correct bar — only for timed mode. Time sits upper-left,
+                Correct sits upper-right (prototype only — Correct is a
+                Speed-Drill-specific addition, not part of the shared classic
+                timed row). This is a standalone row, entirely separate from
+                the arithmetic block rendered below it: the equation's own
+                centering (a fixed-width column, mx-auto, in its own flex
+                item) never reads this row's contents, so unequal left/right
+                stat widths here cannot pull the arithmetic off-center —
+                verified by measuring the arithmetic column's midpoint
+                against the card's midpoint, not by eye. */}
+            {isTimed && (
+              <div className="w-full flex items-center justify-between">
+                {timerStarted
+                  ? <TimerDisplay secondsRemaining={secondsRemaining} variant={variant} />
+                  : <TimerDisplay secondsRemaining={duration} variant={variant} />
+                }
+                {isPrototype ? (
+                  // Correct: live count of correct answers this session —
+                  // reuses the same `correct` state ScoreCard already reads
+                  // at session end, so this is purely a display of existing
+                  // state, not a new scoring path. Same compact
+                  // caption+numeral shape and caption ink as Time (see
+                  // TimerDisplay) so the two corner stats carry matching
+                  // visual weight; the numeral itself stays brand indigo,
+                  // tying it to Personal Best below rather than to Time's
+                  // neutral numeral, since both are "how well am I doing"
+                  // stats.
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-[11px] font-bold text-[#211D4F] uppercase tracking-wide">Correct</span>
+                    <span className="text-xl font-extrabold leading-none tabular-nums text-[#4F46E5]">{correct}</span>
+                  </div>
+                ) : (
+                  /* Duration picker only available before timer starts (classic) */
+                  !timerStarted && !isTimerDurationFixed && (
+                    <DurationPicker value={duration} onChange={handleDurationChange} />
+                  )
+                )}
+              </div>
+            )}
+
+            {/* Written arithmetic block + input + number pad. Any division
+                problem on the prototype surface uses the authentic
+                long-division bracket notation (Division Facts and Divide By
+                share it with Division with Remainders) — showRemainder
+                toggles just the remainder field, since facts/divide-by never
+                have one. */}
+            {/* Checked per-problem (not per-config) so a mixed config like the
+                Arithmetic Speed Drill renders authentic long-division
+                notation whenever the CURRENT problem happens to be division,
+                even though config.operation is 'mixed' overall. */}
+            {problem.operation === 'division' && isPrototype ? (
+              <LongDivisionProblemInput
+                problem={problem}
+                onSubmit={(q, r) => handleAnswer(q, r)}
+                disabled={feedbackState !== 'hidden'}
+                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                showRemainder={Boolean(config.withRemainder)}
+                feedbackContent={(
+                  <div className="h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto flex items-center justify-center w-full">
+                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} variant={variant} />
+                  </div>
+                )}
+              />
+            ) : config.withRemainder ? (
+              <RemainderProblemInput
+                problem={problem}
+                onSubmit={(q, r) => handleAnswer(q, r)}
+                disabled={feedbackState !== 'hidden'}
+                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                feedbackContent={(
+                  <div className="min-h-[1.75rem] flex items-center justify-center w-full">
+                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
+                  </div>
+                )}
+              />
+            ) : (
+              <WrittenProblemInput
+                problem={problem}
+                onSubmit={handleAnswer}
+                disabled={feedbackState !== 'hidden'}
+                feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                variant={variant}
+                feedbackContent={(
+                  // Fixed height (not min-height) reserved from the start, sized to
+                  // the banner's actual rendered size — this is what makes the
+                  // keypad/streak/reset never shift between idle/correct/incorrect;
+                  // the old min-h-[1.75rem] was smaller than the banner's real
+                  // height, which is what caused the layout jump.
+                  // Idle-state content was rendered both ways and compared: a
+                  // small "Enter your answer" caption here read as an orphan,
+                  // disconnected from the actual point of attention (the
+                  // cursor sits up in the equation, not down in this lane) —
+                  // it added visual noise without earning it, since the
+                  // equation's own placeholder + keypad already make the next
+                  // step obvious. Genuinely empty read calmer and more
+                  // worksheet-like, so that's what ships: this lane only ever
+                  // shows something once there's real feedback to give.
+                  <div className={`${isPrototype ? 'h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
+                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} variant={variant} />
+                  </div>
+                )}
+              />
+            )}
+
+            {!isTimed && (
+              <div className={`flex items-center justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
+                {/* Streak: motivational session info, not footer metadata — a
+                    genuinely larger number carries this, not decoration. The
+                    stat is its own self-contained block (icon/number/label)
+                    specifically so a future "Best: N" stat can sit beside it
+                    later (`flex items-center gap-4`) without restructuring
+                    this row; not built now, just not architected against. */}
+                {isPrototype ? (
+                  // Round 5: reordered to label → value → reinforcing icon
+                  // (was flame → number → STREAK). The number is now the
+                  // single largest/heaviest element in the row — it reads
+                  // first on a squint test, with "Streak" as a small
+                  // sentence-case caption above it rather than a shouted
+                  // all-caps tag beside it. Structured as a label/value pair
+                  // (not a single fused string) specifically so a future
+                  // "Best 12" stat can sit beside it later via the same
+                  // pattern without restructuring this block.
+                  //
+                  // Round 6: the label was too faint (#6B6690 lavender-gray)
+                  // to read as a real word rather than disabled chrome —
+                  // moved to the same dark navy family as body/interface
+                  // text and bumped a step in size/weight so "Streak" reads
+                  // as a caption, not metadata. Round 7: #43405C still read
+                  // as gray in the actual rendered page, so both Streak and
+                  // Reset were standardized on #211D4F — the same ink
+                  // already used for the arithmetic operands/answer digits
+                  // on this page — for a genuinely dark, single ink family.
+                  // Numeral color
+                  // was A/B'd against a navy numeral with the flame as the
+                  // only accent: amber won on a squint test — size alone
+                  // (navy) still reads as "just bigger UI text," while the
+                  // color pairs with size to make the number unmistakably
+                  // the rewarding value, not a data point.
+                  <div key={stats.currentStreak} className="flex items-end gap-4 animate-[pop_0.25s_ease-out]">
+                    <div className="flex flex-col gap-0.5 leading-none">
+                      <span className="text-[13px] font-bold text-[#211D4F]">Streak</span>
+                      <span className="flex items-baseline gap-1">
+                        <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : darkText ? 'text-black' : 'text-[#8983B8]'}`}>
+                          {stats.currentStreak}
+                        </span>
+                        {stats.currentStreak > 0 && (
+                          <span aria-hidden="true" className="text-base leading-none translate-y-[-1px]">🔥</span>
+                        )}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <span
+                    key={stats.currentStreak}
+                    className={`text-sm font-semibold animate-[pop_0.25s_ease-out] ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#6B7280]'}`}
+                  >
+                    {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
+                  </span>
+                )}
+
+                {/* Reset / inline confirm. Round 6: same navy-family ink as
+                    Streak's label (not the old lavender-gray, which read as
+                    disabled) — kept visually secondary by weight/size
+                    (regular vs. the streak label's bold text-[13px])
+                    rather than by low contrast. Round 8: idle "Reset" label
+                    bumped one step (text-xs -> text-sm) for slightly better
+                    legibility — still regular weight and the same ink, so
+                    it stays secondary to Streak. Round 9 (tablet pass):
+                    the inline confirm ("Reset streak?"/Yes/Cancel) was
+                    still text-xs, a visible step down from the idle
+                    "Reset" label it replaces — bumped to match (text-sm,
+                    px-2.5 touch target) so the idle→confirm transition
+                    doesn't shrink the row's text. Kept regular/semibold
+                    weights and the destructive-red "Yes" as-is; still
+                    compact, not the row's most prominent element. */}
+                {!resetPending ? (
+                  <button
+                    onClick={() => setResetPending(true)}
+                    className={`text-sm transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-[#F5F3FF]'}`}
+                  >
+                    Reset
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm mr-0.5 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset streak?</span>
+                    <button
+                      onClick={handleResetCurrentStreak}
+                      className="text-sm font-semibold text-white bg-red-500 hover:bg-red-600 px-2.5 py-1 rounded transition-colors"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => setResetPending(false)}
+                      className={`text-sm font-semibold px-2.5 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {isTimed && (
+              <div className={`flex items-end justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
+                {/* Personal Best: the timed counterpart to the untimed
+                    Streak stat above — same label-above-value shape, compact
+                    lower-left placement, motivating but not decorated. Live
+                    score during play is never shown (Speed Drill only ever
+                    reveals the count on the results screen), so there's no
+                    ambiguity between this and a "current score" stat. */}
+                {isPrototype ? (
+                  <div className="flex flex-col gap-0.5 leading-none">
+                    <span className="text-[13px] font-bold text-[#211D4F]">Personal Best</span>
+                    <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : darkText ? 'text-black' : 'text-[#8983B8]'}`}>
+                      {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+                    </span>
+                  </div>
+                ) : (
+                  <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#6B7280]'}`}>
+                    Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+                  </span>
+                )}
+                {!personalBestResetPending ? (
+                  // font-medium (not the row's font-bold Personal Best label): the
+                  // ink here was already the same dark navy as the rest of the
+                  // interface, but at regular weight/text-sm its thin strokes read
+                  // as gray next to Personal Best's bold numeral. A touch of
+                  // weight fixes that legibility issue without adding size,
+                  // color, or placement emphasis — it stays secondary for those
+                  // reasons alone, not for weak contrast.
+                  <button
+                    onClick={() => setPersonalBestResetPending(true)}
+                    className={`text-sm font-medium transition-colors px-2 py-1 rounded ${isPrototype ? 'text-[#211D4F] hover:text-[#4F46E5] hover:bg-[#FAF9FE]' : 'text-[#6B7280] hover:text-[#4338CA] hover:bg-[#F5F3FF]'}`}
+                  >
+                    Reset
+                  </button>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <span className={`text-sm mr-0.5 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>Reset best?</span>
+                    <button
+                      onClick={handleResetPersonalBest}
+                      className="text-sm font-semibold text-white bg-red-500 hover:bg-red-600 px-2.5 py-1 rounded transition-colors"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      onClick={() => setPersonalBestResetPending(false)}
+                      className={`text-sm font-semibold px-2.5 py-1 rounded transition-colors ${isPrototype ? 'text-[#211D4F] bg-[#FAF9FE] hover:bg-[#F0EEFA]' : 'text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF]'}`}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         )}
 
-      {/* ── ACTIVE ──────────────────────────────────── */}
-      {phase === 'active' && problem && (
-        <div className="flex flex-col items-center gap-4 md:gap-5">
-          {/* Timer bar — only for timed mode */}
-          {isTimed && (
-            <div className="w-full flex items-center justify-between border-b border-[#E0E7FF] pb-3">
-              {timerStarted
-                ? <TimerDisplay secondsRemaining={secondsRemaining} />
-                : <TimerDisplay secondsRemaining={duration} />
-              }
-              {/* Duration picker only available before timer starts */}
-              {!timerStarted && !isTimerDurationFixed && (
-                <DurationPicker value={duration} onChange={handleDurationChange} />
-              )}
-            </div>
-          )}
-
-          {/* Written arithmetic block + input + number pad */}
-          {config.withRemainder ? (
-            <RemainderProblemInput
-              problem={problem}
-              onSubmit={(q, r) => handleAnswer(q, r)}
-              disabled={feedbackState !== 'hidden'}
-              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-              feedbackContent={(
-                <div className="h-8 flex items-center justify-center w-full">
-                  <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
-                </div>
-              )}
-            />
-          ) : (
-            <WrittenProblemInput
-              problem={problem}
-              onSubmit={handleAnswer}
-              disabled={feedbackState !== 'hidden'}
-              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-              feedbackContent={(
-                <div className="h-8 flex items-center justify-center w-full">
-                  <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} />
-                </div>
-              )}
-            />
-          )}
-
-          {!isTimed && (
-            <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
-              {/* Streak label — always visible so Reset has context */}
-              <span className={`text-sm font-semibold ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#A5B4FC]'}`}>
-                {stats.currentStreak > 0 ? '🔥 ' : ''}Streak: {stats.currentStreak}
-              </span>
-
-              {/* Reset / inline confirm */}
-              {!resetPending ? (
-                <button
-                  onClick={() => setResetPending(true)}
-                  className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
-                >
-                  Reset
-                </button>
-              ) : (
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-[#6B7280] mr-1">Reset streak?</span>
-                  <button
-                    onClick={handleResetCurrentStreak}
-                    className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
-                  >
-                    Yes
-                  </button>
-                  <button
-                    onClick={() => setResetPending(false)}
-                    className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {isTimed && (
-            <div className="flex items-center justify-between w-full pt-2 border-t border-[#E0E7FF]">
-              <span className={`text-sm font-semibold ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#A5B4FC]'}`}>
-                Personal Best: {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
-              </span>
-              {!personalBestResetPending ? (
-                <button
-                  onClick={() => setPersonalBestResetPending(true)}
-                  className="text-xs text-[#A5B4FC] hover:text-[#6B7280] transition-colors px-2 py-1 rounded hover:bg-[#F5F3FF]"
-                >
-                  Reset
-                </button>
-              ) : (
-                <div className="flex items-center gap-1">
-                  <span className="text-xs text-[#6B7280] mr-1">Reset personal best?</span>
-                  <button
-                    onClick={handleResetPersonalBest}
-                    className="text-xs font-semibold text-white bg-red-500 hover:bg-red-600 px-2 py-1 rounded transition-colors"
-                  >
-                    Yes
-                  </button>
-                  <button
-                    onClick={() => setPersonalBestResetPending(false)}
-                    className="text-xs font-semibold text-[#6B7280] bg-[#F5F3FF] hover:bg-[#E0E7FF] px-2 py-1 rounded transition-colors"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* ── COMPLETE ────────────────────────────────── */}
-      {phase === 'complete' && result && (
-        <ScoreCard
-          result={result}
-          stats={stats}
-          isTimed={isTimed}
-          preSessionScore={preSessionScore}
-          isNewStreakRecord={isNewStreakRecord}
-          onRestart={handleRestart}
-        />
-      )}
+        {/* ── COMPLETE ────────────────────────────────── */}
+        {phase === 'complete' && result && (
+          <ScoreCard
+            result={result}
+            stats={stats}
+            isTimed={isTimed}
+            preSessionScore={preSessionScore}
+            preSessionPersonalBest={preSessionPersonalBest}
+            isNewStreakRecord={isNewStreakRecord}
+            onRestart={handleRestart}
+            variant={variant}
+          />
+        )}
       </div>
     </div>
   );

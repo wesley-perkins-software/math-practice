@@ -8,9 +8,14 @@ export default defineConfig({
   output: 'static',
   redirects: {
     '/addition-practice': '/addition',
+    '/subtraction-practice': '/subtraction',
     '/timed-drills': '/arithmetic-speed-drill',
     '/math-drills': '/arithmetic-speed-drill',
     '/speed-drill': '/arithmetic-speed-drill',
+    '/addition/2-digit-no-carrying': '/addition/2-digit-without-regrouping',
+    '/addition/2-digit-with-carrying': '/addition/2-digit-with-regrouping',
+    '/subtraction/2-digit-no-borrowing': '/subtraction/2-digit-without-regrouping',
+    '/subtraction/2-digit-with-borrowing': '/subtraction/2-digit-with-regrouping',
   },
   integrations: [
     react(),
@@ -18,9 +23,14 @@ export default defineConfig({
       filter: (page) => {
         const redirectPaths = [
           '/addition-practice/',
+          '/subtraction-practice/',
           '/timed-drills/',
           '/math-drills/',
           '/speed-drill/',
+          '/addition/2-digit-no-carrying/',
+          '/addition/2-digit-with-carrying/',
+          '/subtraction/2-digit-no-borrowing/',
+          '/subtraction/2-digit-with-borrowing/',
           '/division-practice/',
           '/division-practice/facts/',
           '/division-practice/divide-by/',

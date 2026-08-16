@@ -1,6 +1,7 @@
 ---
 import HubLayout from '@/layouts/HubLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -22,6 +23,7 @@ const modes = [
 ];
 
 const relatedLinks = [
+  { href: '/multiplication/times-tables', label: 'All Times Tables', description: 'Browse every times table, 1 through 12, in one place' },
   { href: '/division/facts', label: 'Division Facts Practice', description: 'Use your times-table facts to solve division' },
   { href: '/3rd-grade-math-practice', label: '3rd Grade Math Practice Online', description: 'See what most 3rd graders practice next' },
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print times-table pages for extra practice' },
@@ -83,17 +85,13 @@ const faqItems = [
       "url": "https://mathpracticeonline.com/multiplication",
       "educationalLevel": ["Grade 2", "Grade 3", "Grade 4"],
       "teaches": "Multiplication",
-      "provider": {
-        "@type": "Organization",
-        "name": "Math Practice Online",
-        "url": "https://mathpracticeonline.com"
-      }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
   </Fragment>
 
   <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
     <!-- Breadcrumb -->
-    <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#A5B4FC] flex items-center flex-wrap gap-1">
+    <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#6B7280] flex items-center flex-wrap gap-1">
       <a href="/" class="hover:text-[#4F46E5] transition-colors">Home</a>
       <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>
       <span class="text-[#6B7280]">Multiplication Practice</span>

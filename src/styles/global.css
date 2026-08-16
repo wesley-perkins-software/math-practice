@@ -5,6 +5,8 @@
   --color-brand:          #4F46E5;
   --color-brand-dark:     #3730A3;
   --color-brand-light:    #EEF2FF;
+  --color-brand-violet:   #7C3AED;
+  --color-focus-ring:     rgba(79, 70, 229, 0.35);
 
   /* ── Page Canvas ────────────────────────────────── */
   --color-bg:             #F5F3FF;
@@ -17,6 +19,7 @@
 
   /* ── Text ───────────────────────────────────────── */
   --color-text-primary:   #1E1B4B;
+  --color-text-body:      #000000;
   --color-text-secondary: #4338CA;
   --color-text-muted:     #6B7280;
   --color-text-on-dark:   #EEF2FF;
@@ -50,6 +53,21 @@
 @keyframes float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-12px); }
+}
+
+@keyframes pop {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.16); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
 /* @page margin: 0 removes the browser's printed URL / date line from the footer */

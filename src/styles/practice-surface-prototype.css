@@ -1,0 +1,227 @@
+/*
+ * Prototype-only typography for the redesigned practice surface
+ * (/addition/1-digit). Self-hosted, single variable-font family covering
+ * both interface and numeral roles inside the practice surface — see the
+ * frontend-design typography evaluation in the design plan for why.
+ * Not wired into BaseLayout/global.css: this file is imported only by the
+ * one prototype page so nothing else on the site is affected yet.
+ *
+ * Round 2: replaced Atkinson Hyperlegible Next with Lexend (accessibility-
+ * first construction produced a narrow, technical-looking zero).
+ *
+ * Round 5: replaced Lexend with Figtree after a real bake-off rendered in
+ * this component (operands/operator/rule/answer at the actual 76px display
+ * size, plus the keypad at its 20px key size — never judged from a
+ * specimen page). Candidates tested: Lexend (control), Atkinson
+ * Hyperlegible Next, Nunito, Figtree, Manrope, rendered against 1+4, 6+6,
+ * 9+8, 0+7, 11/17/99, 100/198, and an operator/disambiguation string
+ * (0 O 1 I l 6 9 3 8 5, +, −, ×, ÷). Lexend's own complaint held up under
+ * test: its digits are unusually WIDE for their height, so even at reduced
+ * weight (600–650) they still read as bulky/blobby at 76px — an inherent
+ * proportion of the face, not just a weight problem (confirmed by
+ * re-rendering Lexend at 600/650 alongside the finalists: still the
+ * heaviest-looking of the set at equal weight). Nunito's fully rounded
+ * terminals read a step too far toward preschool/cartoon at this display
+ * size for a K-5-through-parent audience. Atkinson Hyperlegible Next was a
+ * close second — genuinely excellent 6/9 and 3/8 disambiguation from its
+ * accessibility-first construction — but reads slightly more "clinical/
+ * data-entry" than "textbook" at large display size, echoing the same
+ * quality that got it dropped in round 2. Figtree wins: materially
+ * narrower, calmer digit proportions than Lexend at the same weight (so it
+ * doesn't need to be lightened to stop looking heavy), fully conventional
+ * unambiguous 0/1/6/9/3/8/5 shapes, a true multiplication/division/minus
+ * set with correct optical weight against the digits, and it ships as a
+ * genuine variable font (400–800 in one file) so no extra static cuts are
+ * needed. One family still covers both the arithmetic display and the
+ * surface's interface text (streak, "Change level", feedback), per the
+ * typography reference's guidance not to introduce a second family unless
+ * a role genuinely can't be served by the first.
+ */
+@font-face {
+  font-family: 'Figtree Variable';
+  src: url('/fonts/figtree-variable.woff2') format('woff2-variations');
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+}
+
+.font-practice {
+  font-family: 'Figtree Variable', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  font-optical-sizing: auto;
+  font-variant-numeric: tabular-nums;
+}
+
+/*
+ * Tablet scale tokens (round 9 — tablet design pass).
+ *
+ * Problem: the prototype surface used one constant size at every viewport
+ * (round 6's deliberate choice — see NumberPad.tsx). That's correct for
+ * "mobile vs. desktop shouldn't invert sizing," but on a real iPad it read
+ * as the desktop-sized card simply floating in more canvas: the card,
+ * arithmetic, answer field, and keypad were pixel-identical to desktop, at
+ * a screen that's held closer and driven entirely by touch.
+ *
+ * Fix: every dimension the instrument uses is a custom property, scoped to
+ * [data-practice-instrument] (the surface's own root) with a single default
+ * set (unchanged from before this round) and one override set for the
+ * touch-tablet range. Tuning is now one place, not scattered arbitrary
+ * values through three components.
+ *
+ * The override is gated on BOTH a coarse pointer AND a width range, not
+ * width alone — this is the fix for a real ambiguity, not defensive
+ * boilerplate: 1024-1366px is simultaneously "iPad landscape" (should get
+ * the larger touch-oriented sizing) and "a resized desktop browser window
+ * or a small laptop" (should not — a mouse-driven user at that width isn't
+ * touching the screen from arm's length, they're the same desktop context
+ * as 1440px, just narrower). `pointer: coarse` is true on essentially every
+ * tablet's primary input and false on mouse/trackpad desktops regardless of
+ * window width, so it's the one signal that actually distinguishes the two
+ * without guessing from width alone. The width range on top of it keeps a
+ * touchscreen kiosk/TV at 1920px+ from also picking up tablet-scale sizing
+ * meant for a device held in the hands.
+ */
+[data-practice-instrument] {
+  --practice-card-max-w: 30rem;
+  --practice-card-px: 1.5rem;
+  --practice-card-pt: 1rem;
+  --practice-card-pb: 0.75rem;
+  --practice-stack-gap: 0.375rem;
+  --practice-column-w: 11.5rem;
+  --practice-operand-size: 4.75rem;
+  --practice-operator-size: 3rem;
+  --practice-answer-min-h: 3.75rem;
+  --practice-caret-h: 2.75rem;
+  --practice-feedback-h: 2.5rem;
+  --practice-feedback-max-w: 17rem;
+  --practice-feedback-text: 1rem;
+  --practice-feedback-py: 0.625rem;
+  --practice-keypad-max-w: 17rem;
+  --practice-key-h: 3.25rem;
+  --practice-key-font: 1.375rem;
+  --practice-key-gap: 0.375rem;
+  --practice-key-radius: 0.875rem;
+  --practice-key-icon: 1.5rem;
+
+  /* Long-division notation (/division/remainders prototype). Reuses
+     addition's own operand/answer-box/caret tokens directly (not
+     lookalike values) so the two widgets share one true footprint —
+     divisor, dividend, and quotient render at the exact same size as
+     addition's operands, and the quotient's answer box is the exact same
+     height as addition's. --practice-column-w (11.5rem, tuned for
+     addition's up-to-3-digit answers) has the same headroom this needs
+     for a 3-digit dividend at the same font size. */
+  --ld-digit-size: var(--practice-operand-size);
+  --ld-box-min-h: var(--practice-answer-min-h);
+  --ld-caret-h: var(--practice-caret-h);
+  --ld-bracket-border-w: 4px;
+
+  /* Remainder: a real secondary field, not a chip — roughly half the
+     primary digit size, big enough to read as a number rather than a
+     status dot. */
+  --ld-remainder-label-size: 1.125rem;
+  --ld-remainder-size: 2.5rem;
+  --ld-remainder-box-min-h: 3.25rem;
+  --ld-remainder-caret-h: 1.75rem;
+
+  /* Division Facts / Divide By have no remainder field, which would
+     otherwise leave their card visibly shorter than Division with
+     Remainders (and Addition). This adds vertical breathing room around
+     the bracket block instead — roughly the remainder row's own height
+     (label/box ~3.25rem + its gap-4 spacing) — so the upper problem area
+     fills the same footprint intentionally rather than the whole card
+     shrinking. */
+  --ld-no-remainder-inset: 1.75rem;
+}
+
+/*
+ * Timed-instrument problem stage (currently just the Speed Drill —
+ * see PracticeWidget's data-timed-instrument attribute). The written
+ * addition/subtraction/multiplication stack and the long-division bracket
+ * notation have genuinely different natural heights; without a shared
+ * floor, the practice card's height — and with it the keypad, Personal
+ * Best, and Reset row — shifted a few px whenever the current problem's
+ * operation changed.
+ *
+ * --practice-stage-min-h is a calc(), not a fixed px value, specifically so
+ * it stays in sync with the tablet override above: it reads
+ * --practice-operand-size/--practice-answer-min-h, which already differ
+ * between the base and coarse-pointer token sets on this same element, so
+ * this recomputes correctly at both scales instead of needing its own
+ * duplicate media query. The formula mirrors written arithmetic's own
+ * stacked layout (operandA row + operandB row + answer box, plus the
+ * operator-row/rule/answer-box margins between them) and was checked
+ * against the real rendered height via getBoundingClientRect, not derived
+ * from CSS alone — the flat 2.5rem term absorbs the small gap between the
+ * analytic sum and the browser's actual measured line-box heights.
+ *
+ * --ld-no-remainder-inset is zeroed here: that token exists to pad a
+ * *standalone*, unwrapped long-division block (Division Facts, Divide By)
+ * up toward addition's height. Inside the new stage wrapper the stage
+ * itself now owns that centering, so leaving the old inset active would
+ * double-compensate.
+ */
+[data-timed-instrument] {
+  --practice-stage-min-h: calc(2 * var(--practice-operand-size) + var(--practice-answer-min-h) + 2.5rem);
+  --ld-no-remainder-inset: 0px;
+  /* LongDivisionProblemInput's own outer flex gap (normally 1rem, tuned for
+     its standalone pages) is brought down to match WrittenProblemInput's
+     outer gap (gap-2.5 = 0.625rem) here only — once both notations sit in
+     an identically-sized stage above, this remaining gap mismatch was the
+     last source of the two components producing different overall card
+     heights. */
+  --ld-outer-gap: 0.625rem;
+}
+
+@media (pointer: coarse) and (min-width: 640px) and (max-width: 1366px) {
+  [data-practice-instrument] {
+    --practice-card-max-w: 34rem;
+    --practice-card-px: 2rem;
+    --practice-card-pt: 1.5rem;
+    --practice-card-pb: 1.25rem;
+    --practice-stack-gap: 0.625rem;
+    --practice-column-w: 13rem;
+    --practice-operand-size: 5.25rem;
+    --practice-operator-size: 3.375rem;
+    --practice-answer-min-h: 4.25rem;
+    --practice-caret-h: 3.125rem;
+    --practice-feedback-h: 2.75rem;
+    --practice-feedback-max-w: 19.25rem;
+    --practice-feedback-text: 1.0625rem;
+    --practice-feedback-py: 0.75rem;
+    --practice-keypad-max-w: 19.25rem;
+    --practice-key-h: 3.625rem;
+    --practice-key-font: 1.5rem;
+    --practice-key-gap: 0.5rem;
+    --practice-key-radius: 1rem;
+    --practice-key-icon: 1.625rem;
+
+    --ld-digit-size: var(--practice-operand-size);
+    --ld-box-min-h: var(--practice-answer-min-h);
+    --ld-caret-h: var(--practice-caret-h);
+    --ld-bracket-border-w: 5px;
+    --ld-remainder-label-size: 1.25rem;
+    --ld-remainder-size: 2.875rem;
+    --ld-remainder-box-min-h: 3.625rem;
+    --ld-remainder-caret-h: 2rem;
+    --ld-no-remainder-inset: 2.25rem;
+  }
+}
+
+/*
+ * Short-landscape recovery: on the shortest realistic tablet-landscape
+ * height (1024x768 is the older/smaller iPad's exact landscape
+ * resolution), the enlarged card above pushes the Streak/Reset row a
+ * little below the fold. Per the brief, that's an acceptable trade-off in
+ * landscape rather than something to fix by shrinking touch controls — but
+ * spacing can still adapt modestly first. This trims only the card's own
+ * padding and inter-element gap (never arithmetic/answer/keypad sizing)
+ * back toward the default-density values, clawing back real space without
+ * touching anything a finger has to hit.
+ */
+@media (pointer: coarse) and (min-width: 640px) and (max-width: 1366px) and (max-height: 850px) {
+  [data-practice-instrument] {
+    --practice-card-pt: 1rem;
+    --practice-card-pb: 0.75rem;
+    --practice-stack-gap: 0.375rem;
+  }
+}

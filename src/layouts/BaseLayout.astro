@@ -1,16 +1,42 @@
 ---
 import '@/styles/global.css';
 import { ClientRouter } from 'astro:transitions';
+import { SITE_NAME, SITE_URL, ORGANIZATION_ID, WEBSITE_ID } from '@/config/site';
 
 interface Props {
   title: string;
   description: string;
   canonical: string;
   ogType?: string;
+  noindex?: boolean;
 }
 
-const { title, description, canonical, ogType = 'website' } = Astro.props;
+const { title, description, canonical, ogType = 'website', noindex = false } = Astro.props;
 const canonicalUrl = canonical.endsWith('/') ? canonical : `${canonical}/`;
+
+// Single sitewide identity graph — the canonical source for Organization and
+// WebSite entities. Page-level schema should reference these by @id rather
+// than re-declaring Organization/WebSite. See docs/seo/SEO_AEO_GEO_AUDIT.md.
+const siteIdentityGraph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'Organization',
+      '@id': ORGANIZATION_ID,
+      name: SITE_NAME,
+      url: `${SITE_URL}/`,
+      logo: `${SITE_URL}/favicon.svg`,
+    },
+    {
+      '@type': 'WebSite',
+      '@id': WEBSITE_ID,
+      url: `${SITE_URL}/`,
+      name: SITE_NAME,
+      publisher: { '@id': ORGANIZATION_ID },
+      inLanguage: 'en-US',
+    },
+  ],
+};
 ---
 
 <!doctype html>
@@ -35,7 +61,11 @@ const canonicalUrl = canonical.endsWith('/') ? canonical : `${canonical}/`;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,follow" />}
     <link rel="canonical" href={canonicalUrl} />
+
+    <!-- Sitewide identity graph (Organization + WebSite) -->
+    <script type="application/ld+json" set:html={JSON.stringify(siteIdentityGraph)} />
 
     <!-- Open Graph -->
     <meta property="og:title" content={title} />

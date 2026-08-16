@@ -2,6 +2,10 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
+import LocalChooser from '@/components/LocalChooser.astro';
+import { ORGANIZATION_ID } from '@/config/site';
+import { getTimesTableFact } from '@/data/generated-practice/timesTables';
+import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
 
@@ -43,7 +47,48 @@ const GRADE_BADGE: Partial<Record<number, string>> = {
 };
 const gradeBadge = GRADE_BADGE[tableNumber] ?? 'Grade 3 – Grade 4';
 
-const strategy = TABLE_STRATEGIES[tableNumber];
+// Every 1–12 page now uses the mature operation-specific fact bank. Keeping
+// this lookup as the single switch for the generated Times Tables content
+// avoids page-number conditionals as later entries are edited.
+const fact = getTimesTableFact(tableNumber);
+
+const strategy = fact
+  ? { name: fact.strategyTitle, tip: fact.strategyExplanation }
+  : TABLE_STRATEGIES[tableNumber];
+
+// Hand-composed expanded intro paragraph for pilot tables only, woven around
+// each fact bank's `introClause` per docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md's
+// 40-70 word intro target. Not mechanically generated from a shared template
+// string — kept short and specific to each table's clause so it doesn't just
+// restate the Quick Answer sentence built from `quickAnswerFact` below.
+const EXPANDED_INTRO: Partial<Record<number, string>> = {
+  1: `One group of a number is simply that number, so the 1s table is about understanding equal groups rather than memorizing a new list. This page mixes 1×1 through 1×12 so students can connect each expression to its meaning and answer confidently.`,
+  2: `The 2s table connects each multiplication fact to a familiar addition fact: two equal groups make a double. Its answers also form the even-number sequence from 2 through 24. This page mixes all twelve facts so students practice recalling each double without depending on a fixed order.`,
+  3: `Each fact in the 3s table represents three equal groups. Students can use repeated addition, or start with a double and add one more group. This page presents 3×1 through 3×12 in random order so they can practice choosing that strategy whenever an answer is not yet known.`,
+  4: `Two clear doubling steps give students a practical way to work out any 4s fact. This page mixes 4×1 through 4×12, helping students connect each multiplication fact to addition facts they already know while also building direct recall of the answers.`,
+  5: `The 5s answers follow the familiar count-by-5s sequence, and their last digits alternate between 5 and 0. This page mixes 5×1 through 5×12 so students learn to recall each fact even when the questions are not presented in counting order.`,
+  7: `A 7s fact can be built from a nearby fact a student already knows. Five groups plus two more groups gives a simple starting point. This page mixes 7×1 through 7×12 so students can use that support when needed and practice recalling each product directly.`,
+  6: `Unlike doubling (2s) or counting by fives (5s and 10s), the 6 times table doesn't have an easy shortcut of its own. The good news: every 6 times fact is just one more group added to a 5 times fact already known. This page mixes up all twelve 6 times facts so that connection turns into fast, confident recall.`,
+  9: `Each 9s fact is one group less than the matching 10s fact. This page mixes 9×1 through 9×12 so students can use that dependable relationship when an answer is not yet known and practice recalling the products in any order.`,
+  8: `Each fact in the 8s table can be worked out by doubling the other number three times. This page mixes 8×1 through 8×12 so students can use repeated doubling as a helpful backup while they learn to recall the products directly.`,
+  10: `The 10s table follows a clear place-value pattern for the whole-number facts on this page: every product has 0 in the ones place. Mixed practice from 10×1 through 10×12 helps students recognize each fact without relying on counting order.`,
+  11: `Every 11s fact can be built from ten groups plus one more group. The repeated-digit pattern is a useful check from 11×1 through 11×9, while 11×10, 11×11, and 11×12 need the broader ten-plus-one idea.`,
+  12: `The 12s table combines two familiar facts: ten groups and two more groups. This page mixes 12×1 through 12×12 so students can use that concrete method when needed and practice recalling each product in any order.`,
+};
+
+// Reference number for the static "Use Commutativity" card below. Using a
+// literal 7 there produces a tautology on the 7 times table page itself
+// ("If you know 7×7, you already know 7×7") — swap the reference for tables
+// where it would equal tableNumber, leaving every other table's copy
+// unchanged (see docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md Phase 2
+// finding 5).
+const commutativityRef = tableNumber === 7 ? 8 : 7;
+
+// The mature generated Times Tables content uses one shared dark-content
+// treatment. It is keyed to the content system, never to an individual table.
+const darkText = Boolean(fact);
+const bodyTextClass = 'text-body';
+const listTextClass = 'text-body';
 
 // Build the full times table list for the FAQ answer
 const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}×${i + 1}=${tableNumber * (i + 1)}`).join(', ');
@@ -67,23 +112,35 @@ const faqItems = [
     q: `How does this times table practice work?`,
     a: `This page drills ${tableNumber}×1 through ${tableNumber}×12 in random order with instant right/wrong feedback after every answer. Scores and streaks are saved in your browser automatically.`,
   },
+  ...(fact ? [{ q: fact.faqDifferentiator.question, a: fact.faqDifferentiator.answer }] : []),
 ];
 
 const links = [
   { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
   { href: '/multiplication/facts', label: 'Mixed Facts Practice', description: 'All 144 facts from 1–12 in random order' },
-  {
-    href: tableNumber < 12 ? `/multiplication/times-tables/${tableNumber + 1}` : `/multiplication/times-tables/1`,
-    label: tableNumber < 12 ? `Next: ${tableNumber + 1} Times Table` : 'Back to 1 Times Table',
-    description: 'Continue table-by-table practice',
-  },
+  // Mature pages use neutral wording rather than implying that numerical
+  // order is a required learning progression.
+  fact
+    ? {
+        href: `/multiplication/times-tables/${tableNumber < 12 ? tableNumber + 1 : 1}`,
+        label: `${tableNumber < 12 ? tableNumber + 1 : 1} Times Table`,
+        description: `Practice the ${tableNumber < 12 ? tableNumber + 1 : 1}s`,
+      }
+    : {
+        href: tableNumber < 12 ? `/multiplication/times-tables/${tableNumber + 1}` : `/multiplication/times-tables/1`,
+        label: tableNumber < 12 ? `Next: ${tableNumber + 1} Times Table` : 'Back to 1 Times Table',
+        description: 'Continue table-by-table practice',
+      },
   { href: '/division/facts', label: 'Division Facts', description: 'The inverse operation of multiplication' },
+  ...(fact
+    ? [{ href: `/division/divide-by/${tableNumber}`, label: `Divide by ${tableNumber} Practice`, description: 'The same 12 facts, practiced as division instead of multiplication' }]
+    : []),
   { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Worksheet-style timed practice' },
 ];
 
-const pageTitle = `${tableNumber} Times Table Practice | Multiplication Table ${tableNumber}`;
+const pageTitle = `${tableNumber} Times Table Practice | Multiplication Table ${tableNumber} | Math Practice Online`;
 const pageDescription = `Practice the ${tableNumber} times table with focused multiplication problems. Build fast recall for ${tableNumber}×1 through ${tableNumber}×12 with instant feedback and streak tracking.`;
-const h1 = `${tableNumber} Times Table Practice`;
+const h1 = `${tableNumber} Times Table`;
 const introLead = `Focus on the ${tableNumber} times table to build automatic recall for one number at a time.`;
 const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}×12 so students can master the ${tableNumber}s before moving on to mixed multiplication practice.`;
 ---
@@ -92,12 +149,14 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
   title={pageTitle}
   description={pageDescription}
   canonical={`${SITE}/multiplication/times-tables/${tableNumber}`}
+  pilotLayout
   breadcrumb={[
     { label: 'Home', href: '/' },
     { label: 'Multiplication', href: '/multiplication' },
     { label: 'Times Tables', href: '/multiplication/times-tables' },
     { label: `${tableNumber} Times Table` },
   ]}
+  breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -110,7 +169,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
         ? ["Grade 2", "Grade 3"]
         : ["Grade 3", "Grade 4"],
       "teaches": `${tableNumber} times table multiplication facts`,
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -123,14 +182,38 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">{h1}</h1>
-  <div slot="intro">
-    <p>{introLead}</p>
-    <p class="mt-2">{introSupport}</p>
-  </div>
+  <Fragment slot="h1">
+    <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">{h1}</h1>
+  </Fragment>
 
-  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} />
-  <InternalLinks slot="links" links={links} />
+  {fact ? (
+    <div slot="quick-answer">
+      <p>
+        The {tableNumber} times table means multiplying {tableNumber} by each whole number from 1 to 12. {fact.quickAnswerFact}
+      </p>
+    </div>
+  ) : null}
+
+  <MultiplicationPracticeHub slot="widget" client:load active="times-tables" selectedTable={tableNumber} darkText={darkText} />
+
+  <LocalChooser
+    slot="local-chooser"
+    operation="multiplication"
+    current={`/multiplication/times-tables/${tableNumber}`}
+    showGrid
+    gridCurrent={tableNumber}
+  />
+
+  <div slot="intro">
+    {fact ? (
+      <p>{EXPANDED_INTRO[tableNumber]}</p>
+    ) : (
+      <>
+        <p>{introLead}</p>
+        <p class="mt-2">{introSupport}</p>
+      </>
+    )}
+  </div>
 
   <div slot="how-it-works" class="mt-12 space-y-8">
     <!-- Grade context -->
@@ -141,7 +224,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class={`space-y-2 text-sm ${listTextClass} leading-relaxed`}>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 12 facts in the {tableNumber} times table ({tableNumber}×1 through {tableNumber}×12)</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems presented in random order to build genuine recall</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
@@ -152,17 +235,28 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     <!-- Strategy -->
     <section aria-labelledby="strategy-heading">
       <h2 id="strategy-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Strategy for the {tableNumber}s</h2>
-      <div class="grid gap-3 sm:grid-cols-2">
+      <div class={`grid gap-3 ${tableNumber > 5 ? 'sm:grid-cols-2' : ''}`}>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">{strategy.name}</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">{strategy.tip}</p>
+          <p class={`text-sm ${bodyTextClass} leading-relaxed`}>{strategy.tip}</p>
         </div>
-        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+        {tableNumber > 5 && <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Every fact in the {tableNumber}s table appears in another table too. If you know 7×{tableNumber}, you already know {tableNumber}×7. Flip any difficult fact to find a familiar one.</p>
-        </div>
+          <p class={`text-sm ${bodyTextClass} leading-relaxed`}>Every fact in the {tableNumber}s table appears in another table too. If you know {commutativityRef}×{tableNumber}, you already know {tableNumber}×{commutativityRef}. Flip any difficult fact to find a familiar one.</p>
+        </div>}
       </div>
     </section>
+
+    {fact && (
+      <section aria-labelledby="parent-teacher-heading">
+        <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent & Teacher Guidance</h2>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <p class={`text-sm ${bodyTextClass} leading-relaxed`}>
+            Parents and teachers helping a student with the {tableNumber} times table: {fact.parentTeacherNote}
+          </p>
+        </div>
+      </section>
+    )}
 
     <!-- FAQ -->
     <section aria-labelledby="faq-heading">
@@ -171,10 +265,13 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class={`text-sm ${bodyTextClass} leading-relaxed`}>{a}</p>
           </div>
         ))}
       </div>
     </section>
+
+    <!-- Internal Links (matching Related Practice's canonical last position) -->
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>

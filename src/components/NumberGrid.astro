@@ -1,0 +1,50 @@
+---
+/**
+ * Shared 1..max number-picker grid, used by the header's Times
+ * Tables/Divide By flyouts (`mode="menu"`) and each below-widget local
+ * chooser (`mode="chooser"`). In "menu" mode every cell is a live link
+ * (the header doesn't assume you're currently on one of these pages). In
+ * "chooser" mode the cell matching `current` renders as plain text, not a
+ * link, since a local chooser must not link a page to itself.
+ */
+import { numberGridLinks } from '@/data/practiceNav';
+
+interface Props {
+  basePath: string;
+  max: number;
+  current?: number;
+  mode: 'menu' | 'chooser';
+}
+
+const { basePath, max, current, mode } = Astro.props;
+const links = numberGridLinks(basePath, max);
+---
+
+<div class="grid grid-cols-4 gap-1.5" role="list">
+  {links.map(({ n, href }) => {
+    const isCurrent = current === n;
+    if (isCurrent && mode === 'chooser') {
+      return (
+        <span
+          class="py-2 rounded-lg text-sm font-semibold text-center text-[#1E1B4B] ring-1 ring-inset ring-[#4F46E5]/40 bg-[#F5F3FF]"
+          aria-current="page"
+        >
+          {n}
+        </span>
+      );
+    }
+    return (
+      <a
+        href={href}
+        aria-current={isCurrent ? 'page' : undefined}
+        class={`py-2 rounded-lg text-sm text-center transition-colors duration-150 ${
+          isCurrent
+            ? 'font-semibold text-[#1E1B4B] ring-1 ring-inset ring-[#4F46E5]/40 bg-[#F5F3FF]'
+            : 'text-body bg-[#F5F3FF]/60 hover:bg-[#EEF2FF] hover:text-[#4F46E5]'
+        }`}
+      >
+        {n}
+      </a>
+    );
+  })}
+</div>

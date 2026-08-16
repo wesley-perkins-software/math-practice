@@ -1,12 +1,13 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
 
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
-  { href: '/addition', label: 'Addition Facts Practice', description: '1-digit through 2-digit addition with carrying' },
-  { href: '/subtraction', label: 'Subtraction Facts Practice', description: '1-digit through 2-digit subtraction with borrowing' },
+  { href: '/addition', label: 'Addition Facts Practice', description: '1-digit through 2-digit addition with regrouping' },
+  { href: '/subtraction', label: 'Subtraction Facts Practice', description: '1-digit through 2-digit subtraction with regrouping' },
   { href: '/multiplication', label: 'Multiplication Facts Practice', description: 'Times tables 1–12 and mixed multiplication facts' },
   { href: '/division', label: 'Division Facts Practice', description: 'Divide-by facts and division with remainders' },
   { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: 'Timed 60-second drill across all four operations' },
@@ -20,7 +21,7 @@ const faqItems = [
   },
   {
     q: 'What are addition facts?',
-    a: 'Addition facts are all the single-digit combinations: 1+1 through 9+9 (81 total facts). Students are expected to know these automatically by the end of 1st or 2nd grade. Mastery of addition facts supports subtraction, carrying in multi-digit addition, and mental arithmetic of all kinds.'
+    a: 'Addition facts are all the single-digit combinations: 1+1 through 9+9 (81 total facts). Students are expected to know these automatically by the end of 1st or 2nd grade. Mastery of addition facts supports subtraction, regrouping in multi-digit addition, and mental arithmetic of all kinds.'
   },
   {
     q: 'What are multiplication facts?',
@@ -42,7 +43,7 @@ const faqItems = [
 ---
 
 <PracticeLayout
-  title="Math Facts — Addition, Subtraction, Multiplication & Division Practice"
+  title="Math Facts — Addition, Subtraction, Multiplication & Division Practice | Math Practice Online"
   description="Practice all four math facts: addition, subtraction, multiplication, and division. Free online drills and printable worksheets for grades K–5. Build automatic fact recall with instant feedback."
   canonical={`${SITE}/math-facts`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Math Facts' }]}
@@ -56,7 +57,7 @@ const faqItems = [
       "url": `${SITE}/math-facts`,
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
       "teaches": ["Addition facts", "Subtraction facts", "Multiplication facts", "Division facts", "Arithmetic fluency"],
-      "provider": { "@type": "Organization", "name": "Math Practice Online", "url": SITE }
+      "provider": { "@id": ORGANIZATION_ID }
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
@@ -87,7 +88,7 @@ const faqItems = [
             <span class="w-10 h-10 rounded-xl bg-[#EFF6FF] text-[#2563EB] flex items-center justify-center text-xl font-black">+</span>
             <h3 class="text-base font-semibold text-[#1E293B] group-hover:text-[#2563EB] transition-colors">Addition Facts</h3>
           </div>
-          <p class="text-sm text-[#6B7280] leading-relaxed">All 81 single-digit combinations (1+1 through 9+9), plus 2-digit addition with and without carrying. Kindergarten through Grade 2 focus.</p>
+          <p class="text-sm text-[#6B7280] leading-relaxed">All 81 single-digit combinations (1+1 through 9+9), plus 2-digit addition with and without regrouping. Kindergarten through Grade 2 focus.</p>
           <span class="mt-3 inline-block text-sm font-semibold text-[#2563EB]">Practice Addition →</span>
         </a>
         <a href="/subtraction" class="block bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#7C3AED] hover:shadow-md transition-all group">
@@ -95,7 +96,7 @@ const faqItems = [
             <span class="w-10 h-10 rounded-xl bg-[#F5F3FF] text-[#7C3AED] flex items-center justify-center text-xl font-black">−</span>
             <h3 class="text-base font-semibold text-[#1E293B] group-hover:text-[#7C3AED] transition-colors">Subtraction Facts</h3>
           </div>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Single-digit differences and 2-digit subtraction with and without borrowing. Paired with addition facts as inverse operations. Grade 1–3 focus.</p>
+          <p class="text-sm text-[#6B7280] leading-relaxed">Single-digit differences and 2-digit subtraction with and without regrouping. Paired with addition facts as inverse operations. Grade 1–3 focus.</p>
           <span class="mt-3 inline-block text-sm font-semibold text-[#7C3AED]">Practice Subtraction →</span>
         </a>
         <a href="/multiplication" class="block bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#059669] hover:shadow-md transition-all group">
@@ -133,7 +134,7 @@ const faqItems = [
             <span class="w-28 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2</span>
             <div>
               <p class="text-sm font-medium text-[#1E293B]">2-digit addition & subtraction with regrouping</p>
-              <p class="text-sm text-[#6B7280] mt-0.5">Carrying and borrowing extend single-digit fact fluency to multi-digit problems. Place value understanding deepens.</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Regrouping (carrying and borrowing) extends single-digit fact fluency to multi-digit problems. Place value understanding deepens.</p>
             </div>
           </div>
           <div class="flex items-start gap-4 px-5 py-4">

@@ -30,6 +30,16 @@ function hasCarry(a: number, b: number): boolean {
   return false;
 }
 
+/**
+ * Returns true if the ones digits alone require regrouping 10 ones as 1 ten
+ * (onesDigitA + onesDigitB >= 10). Unlike `hasCarry`, this ignores carries
+ * that only occur further left (e.g. tens-to-hundreds), so it targets the
+ * introductory ones-to-tens regrouping skill specifically.
+ */
+function hasOnesRegroup(a: number, b: number): boolean {
+  return (a % 10) + (b % 10) >= 10;
+}
+
 /** Returns true if subtracting b from a (a >= b) requires a borrow in any column */
 function hasBorrow(a: number, b: number): boolean {
   let borrow = 0;
@@ -49,7 +59,7 @@ function hasBorrow(a: number, b: number): boolean {
 }
 
 function generateAddition(config: PracticeConfig): Problem {
-  const { operandA, operandB, carrying } = config;
+  const { operandA, operandB, carrying, requireOnesRegroup } = config;
   const noCarry = carrying === false;
   const requireCarry = carrying === true;
   let a: number, b: number;
@@ -60,7 +70,11 @@ function generateAddition(config: PracticeConfig): Problem {
     attempts++;
     // Safety valve: after 100 attempts relax the constraint to avoid infinite loops
     if (attempts > 100) break;
-  } while ((noCarry && hasCarry(a, b)) || (requireCarry && !hasCarry(a, b)));
+  } while (
+    (noCarry && hasCarry(a, b)) ||
+    (requireCarry && !hasCarry(a, b)) ||
+    (requireOnesRegroup && !hasOnesRegroup(a, b))
+  );
 
   return { id: nextId(), operandA: a, operandB: b, operation: 'addition', correctAnswer: a + b };
 }

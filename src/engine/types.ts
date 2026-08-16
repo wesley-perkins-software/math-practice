@@ -23,8 +23,15 @@ export interface PracticeConfig {
   fixedTimerDuration?: boolean;
   operandA: DigitRange;
   operandB: DigitRange;
-  /** Addition: if false, generator guarantees no carrying */
+  /** Addition: if false, generator guarantees no carrying (regrouping) in any column */
   carrying?: boolean;
+  /**
+   * Addition: if true, generator guarantees the ones column alone requires
+   * regrouping (onesDigitA + onesDigitB >= 10) — the introductory
+   * ones-to-tens regrouping skill, distinct from `carrying`, which only
+   * guarantees a carry occurs *somewhere* (e.g. tens-to-hundreds).
+   */
+  requireOnesRegroup?: boolean;
   /** Subtraction: if false, generator guarantees A >= B (no borrowing) */
   borrowing?: boolean;
   /** Multiplication/Division: constrain to 1–12 facts table */

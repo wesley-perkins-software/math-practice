@@ -1,0 +1,178 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import SubtractionPracticeHub from '@/components/SubtractionPracticeHub';
+import InternalLinks from '@/components/InternalLinks';
+import LocalChooser from '@/components/LocalChooser.astro';
+import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
+
+const SITE = 'https://mathpracticeonline.com';
+
+const links = [
+  { href: '/subtraction', label: 'All Subtraction Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/subtraction/2-digit-without-regrouping', label: '2-Digit Subtraction (Without Regrouping)', description: 'Review without regrouping first' },
+  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Reinforce subtraction fact fluency' },
+  { href: '/addition/2-digit-with-regrouping', label: '2-Digit Addition With Regrouping', description: 'Related regrouping skill in addition' },
+  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style regrouping practice' },
+];
+
+const faqItems = [
+  {
+    q: 'What is regrouping in subtraction?',
+    a: 'Regrouping happens when the ones digit of the top number (minuend) is smaller than the ones digit of the bottom number (subtrahend). You regroup 1 ten from the tens column as 10 ones — reducing the tens digit by 1 and adding 10 to the ones digit — so that subtraction is possible. For example, 72 − 38: ones 2 < 8, so regroup → 12 − 8 = 4; tens: 7 − 1 − 3 = 3 → answer 34. This is also commonly called borrowing.'
+  },
+  {
+    q: 'What grade is 2-digit subtraction with regrouping?',
+    a: 'Two-digit subtraction with regrouping is typically taught in Grade 2 and reinforced in Grade 3. Students should have solid single-digit subtraction fluency and experience with 2-digit subtraction without regrouping before starting this level.'
+  },
+  {
+    q: 'Why is regrouping in subtraction sometimes called "borrowing"?',
+    a: 'Borrowing is the traditional name for the same process: the idea that the ones column "borrows" a ten from the tens column to make subtraction possible. Regrouping is the term modern curricula use, and it more precisely describes exchanging 1 ten for 10 ones. Both terms describe the same step in written subtraction.'
+  },
+  {
+    q: 'What is the difference between subtraction with and without regrouping?',
+    a: 'In subtraction without regrouping, every digit in the top number is greater than or equal to the corresponding digit in the bottom number, so each column can be subtracted directly (e.g., 57 − 23 = 34). In subtraction with regrouping, the ones digit of the top number is smaller, so a ten must be exchanged for 10 ones before subtracting (e.g., 72 − 38 requires regrouping).'
+  },
+];
+---
+
+<PracticeLayout
+  title="2-Digit Subtraction With Regrouping Practice | Math Practice Online"
+  description="Practice 2-digit subtraction with regrouping online. Every problem requires borrowing a ten to build advanced subtraction accuracy. Instant feedback and streak tracking."
+  canonical={`${SITE}/subtraction/2-digit-with-regrouping`}
+  pilotLayout
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '2-Digit Subtraction With Regrouping' }]}
+  breadcrumbVisual={false}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "2-Digit Subtraction With Regrouping Practice",
+      "description": "Interactive online practice for two-digit subtraction with regrouping. Every problem requires regrouping at least once, building the core multi-digit subtraction skill.",
+      "url": `${SITE}/subtraction/2-digit-with-regrouping`,
+      "educationalLevel": ["Grade 2", "Grade 3"],
+      "teaches": "Two-digit subtraction with regrouping (borrowing)",
+      "provider": { "@id": ORGANIZATION_ID }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "HowTo",
+      "name": "How to Do 2-Digit Subtraction With Regrouping",
+      "description": "Step-by-step guide to solving two-digit subtraction problems that require regrouping (borrowing).",
+      "step": [
+        {
+          "@type": "HowToStep",
+          "position": 1,
+          "name": "Write the numbers in columns",
+          "text": "Align the two numbers so the ones digits are in the same column and the tens digits are in the same column."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 2,
+          "name": "Check the ones column and regroup if needed",
+          "text": "If the top ones digit is smaller than the bottom ones digit, regroup 1 ten from the tens column as 10 ones. Reduce the tens digit by 1 and add 10 to the ones digit. Example: top ones is 2, bottom is 8 — regroup to make top ones 12, and reduce the tens digit by 1."
+        },
+        {
+          "@type": "HowToStep",
+          "position": 3,
+          "name": "Subtract both columns",
+          "text": "Subtract the ones column using the new (regrouped) ones digit. Then subtract the tens column using the reduced tens digit. Write both results for your final answer."
+        }
+      ]
+    })} />
+  </Fragment>
+
+  <Fragment slot="h1">
+    <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">2-Digit Subtraction With Regrouping</h1>
+  </Fragment>
+
+  <Fragment slot="quick-answer">
+    <p>Two-digit subtraction with regrouping happens when a column's top digit is smaller than the bottom digit, so a ten must be regrouped from the next column, such as 63 − 27 = 36. Every problem on this page requires at least one regroup (also called a borrow), building the skill that comes right after column subtraction without regrouping.</p>
+  </Fragment>
+
+  <SubtractionPracticeHub slot="widget" active="2-digit-with-regrouping" variant="prototype" client:load />
+
+  <LocalChooser slot="local-chooser" operation="subtraction" current="/subtraction/2-digit-with-regrouping" />
+
+  <Fragment slot="intro">
+    <p>This page is for second and third graders who've already mastered two-digit subtraction without regrouping and single-digit subtraction facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one regroup, so there's no way through it without exchanging a ten from the tens column for 10 ones.</p>
+  </Fragment>
+
+  <div slot="how-it-works" class="mt-12 space-y-8">
+    <!-- Grade context -->
+    <div class="flex items-center gap-2">
+      <span class="text-xs font-semibold text-[#6366F1] bg-[#EEF2FF] px-3 py-1 rounded-full uppercase tracking-wide">Best for: Grade 2 – Grade 3</span>
+    </div>
+
+    <!-- What you'll practice -->
+    <section aria-labelledby="what-heading">
+      <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit subtraction problems where the ones column always requires regrouping</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Regrouping 1 ten from the tens column to make subtraction possible</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems range from 20–99 − 11–49 to ensure every problem requires regrouping</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak and score tracking</li>
+      </ul>
+    </section>
+
+    <!-- How to regroup -->
+    <section aria-labelledby="howto-heading">
+      <h2 id="howto-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Do Subtraction With Regrouping</h2>
+      <div class="grid gap-3 sm:grid-cols-3">
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align the Columns</h3>
+          <p class="text-sm text-body leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Regroup from the Tens</h3>
+          <p class="text-sm text-body leading-relaxed">If the top ones digit is smaller than the bottom, regroup 1 ten as 10 ones. Reduce the tens digit by 1 and add 10 to the ones digit. Example: 72 − 38 → top ones 2 &lt; 8 → regroup → ones become 12, tens become 6.</p>
+        </div>
+        <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+          <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
+          <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Subtract Both Columns</h3>
+          <p class="text-sm text-body leading-relaxed">Subtract the ones: 12 − 8 = 4. Then subtract the tens using the reduced digit: 6 − 3 = 3. Write both for the final answer: 34.</p>
+        </div>
+      </div>
+      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-body">
+        <span class="font-semibold text-[#1E293B]">Example:</span> 72 − 38 → ones: regroup → 12 − 8 = 4 → tens: 6 − 3 = 3 → <span class="font-semibold text-[#4F46E5]">Answer: 34</span>
+      </div>
+    </section>
+
+    <!-- Parent & Teacher Guidance -->
+    <section aria-labelledby="parent-teacher-heading">
+      <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
+      <p class="text-sm text-body leading-relaxed">Regrouping trips up students who were doing fine with subtraction facts, because there's now an extra step to track before subtracting. Watch for a child who tries to subtract the smaller digit from the larger one regardless of position (turning 72 − 38 into an ones-column answer of 8 − 2 = 6 instead of regrouping); that's the single most common error, and it means the child hasn't yet internalized why regrouping is necessary, not just how to do it. If a child regroups correctly but forgets to reduce the tens digit by 1 afterward, they're applying half the procedure — worth re-explaining with a concrete example like 72 − 38 rather than assigning more timed problems. Once a child can explain out loud why they're regrouping (not just where to cross out and rewrite), they're ready to move quickly through this level.</p>
+    </section>
+
+    <!-- FAQ -->
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- Next step -->
+    <p class="text-sm text-body">Comfortable with regrouping? Try <a href="/addition/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">2-digit addition with regrouping</a>, the inverse regrouping skill →</p>
+
+    <!-- Internal Links -->
+    <InternalLinks links={links} />
+  </div>
+</PracticeLayout>
