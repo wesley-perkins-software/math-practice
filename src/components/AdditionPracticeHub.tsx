@@ -8,31 +8,31 @@ import {
 } from '@/engine/presets';
 import type { PracticeConfig } from '@/engine/types';
 
-type Difficulty = '1-digit' | '2-digit-no-carrying' | '2-digit-with-carrying';
+type Difficulty = '1-digit' | '2-digit-without-regrouping' | '2-digit-with-regrouping';
 
 const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig; href: string }[] = [
   { id: '1-digit',  label: '1-Digit',  config: ADDITION_1_DIGIT, href: '/addition/1-digit' },
   {
-    id: '2-digit-no-carrying',
+    id: '2-digit-without-regrouping',
     label: (
       <>
         <span className="block">2-Digit</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Carry</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">No Regrouping</span>
       </>
     ),
     config: ADDITION_2_DIGIT,
-    href: '/addition/2-digit-no-carrying',
+    href: '/addition/2-digit-without-regrouping',
   },
   {
-    id: '2-digit-with-carrying',
+    id: '2-digit-with-regrouping',
     label: (
       <>
         <span className="block">2-Digit</span>
-        <span className="block text-[10px] font-normal opacity-60 leading-tight">Carrying</span>
+        <span className="block text-[10px] font-normal opacity-60 leading-tight">Regrouping</span>
       </>
     ),
     config: ADDITION_2_DIGIT_CARRYING,
-    href: '/addition/2-digit-with-carrying',
+    href: '/addition/2-digit-with-regrouping',
   },
 ];
 

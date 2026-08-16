@@ -10,46 +10,46 @@ const SITE = 'https://mathpracticeonline.com';
 const links = [
   { href: '/subtraction', label: 'All Subtraction Levels', description: 'Compare levels or start from the beginning' },
   { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Review subtraction fact fluency first' },
-  { href: '/subtraction/2-digit-with-borrowing', label: '2-Digit Subtraction with Borrowing', description: 'Progress to regrouping subtraction' },
-  { href: '/addition/2-digit-no-carrying', label: '2-Digit Addition (No Carrying)', description: 'Practice the inverse two-digit skill' },
+  { href: '/subtraction/2-digit-with-regrouping', label: '2-Digit Subtraction With Regrouping', description: 'Progress to regrouping subtraction' },
+  { href: '/addition/2-digit-without-regrouping', label: '2-Digit Addition (Without Regrouping)', description: 'Practice the inverse two-digit skill' },
   { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style practice with instant feedback' },
 ];
 
 const faqItems = [
   {
-    q: 'What does "no borrowing" mean in subtraction?',
-    a: 'A problem has no borrowing when every digit in the top number (minuend) is greater than or equal to the corresponding digit in the bottom number (subtrahend). Each column can be subtracted directly without regrouping. For example, 57 − 23: ones column 7 ≥ 3, tens column 5 ≥ 2 — no borrowing needed.'
+    q: 'What does "without regrouping" mean in subtraction?',
+    a: 'A problem has no regrouping when every digit in the top number (minuend) is greater than or equal to the corresponding digit in the bottom number (subtrahend). Each column can be subtracted directly without regrouping (also called borrowing). For example, 57 − 23: ones column 7 ≥ 3, tens column 5 ≥ 2 — no regrouping needed.'
   },
   {
-    q: 'What grade is 2-digit subtraction without borrowing?',
-    a: 'Two-digit subtraction without borrowing is typically a Grade 1–Grade 2 skill. Students practice column subtraction before borrowing is introduced, building confidence with place-value alignment first.'
+    q: 'What grade is 2-digit subtraction without regrouping?',
+    a: 'Two-digit subtraction without regrouping is typically a Grade 1–Grade 2 skill. Students practice column subtraction before regrouping is introduced, building confidence with place-value alignment first.'
   },
   {
     q: "What's the best way to check a subtraction answer?",
     a: 'Add the answer (difference) to the number you subtracted (subtrahend). If you get back the original number (minuend), the answer is correct. For 57 − 23 = 34: check 34 + 23 = 57. ✓ This inverse-operation check works for any subtraction problem.'
   },
   {
-    q: 'Why practice subtraction without borrowing before borrowing?',
-    a: 'Starting with no-borrowing problems lets students focus on place-value alignment and column subtraction in isolation, before adding the extra step of borrowing. The same progressive approach works in addition — students practice without carrying before tackling carrying.'
+    q: 'Why practice subtraction without regrouping before regrouping?',
+    a: 'Starting with without-regrouping problems lets students focus on place-value alignment and column subtraction in isolation, before adding the extra step of regrouping. The same progressive approach works in addition — students practice without regrouping before tackling regrouping.'
   },
 ];
 ---
 
 <PracticeLayout
-  title="2-Digit Subtraction Practice (No Borrowing) | Math Practice Online"
-  description="Practice 2-digit subtraction without borrowing online. Build place-value accuracy with subtraction problems that do not require regrouping. Instant feedback and streak tracking."
-  canonical={`${SITE}/subtraction/2-digit-no-borrowing`}
+  title="2-Digit Subtraction Without Regrouping Practice | Math Practice Online"
+  description="Practice 2-digit subtraction without regrouping online. Build place-value accuracy with subtraction problems that do not require borrowing. Instant feedback and streak tracking."
+  canonical={`${SITE}/subtraction/2-digit-without-regrouping`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '2-Digit Subtraction (No Borrowing)' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '2-Digit Subtraction Without Regrouping' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "LearningResource",
-      "name": "2-Digit Subtraction Practice (No Borrowing)",
-      "description": "Interactive online practice for two-digit subtraction without regrouping. Every problem is constructed so no borrowing is required, letting students focus on place-value alignment.",
-      "url": `${SITE}/subtraction/2-digit-no-borrowing`,
+      "name": "2-Digit Subtraction Without Regrouping Practice",
+      "description": "Interactive online practice for two-digit subtraction without regrouping. Every problem is constructed so no regrouping is required, letting students focus on place-value alignment.",
+      "url": `${SITE}/subtraction/2-digit-without-regrouping`,
       "educationalLevel": ["Grade 1", "Grade 2"],
       "teaches": "Two-digit subtraction without regrouping",
       "provider": { "@id": ORGANIZATION_ID }
@@ -67,7 +67,7 @@ const faqItems = [
 
   <Fragment slot="h1">
     <div class="flex items-center justify-between flex-wrap gap-x-3 gap-y-1">
-      <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">2-Digit Subtraction Practice (No Borrowing)</h1>
+      <h1 class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">2-Digit Subtraction Without Regrouping Practice</h1>
       <nav aria-label="Change practice" class="font-practice">
         <details class="relative" data-dismissable-menu>
           <summary class="list-none flex items-center gap-1 text-base font-semibold text-[#4F46E5] cursor-pointer select-none px-2 py-1 -mr-2 rounded-lg hover:bg-[#F5F3FF] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5] focus-visible:ring-offset-1">
@@ -76,8 +76,8 @@ const faqItems = [
           </summary>
           <div class="absolute right-0 top-full mt-1.5 z-20 w-56 max-w-[calc(100vw-2rem)] bg-white border border-[#E4E1F5] rounded-xl shadow-[0_8px_24px_rgba(79,70,229,0.16)] py-1.5">
             <a href="/subtraction/1-digit" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">1-Digit Subtraction</a>
-            <a href="/subtraction/2-digit-no-borrowing" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">2-Digit Subtraction (No Borrowing)</a>
-            <a href="/subtraction/2-digit-with-borrowing" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Subtraction (Borrowing)</a>
+            <a href="/subtraction/2-digit-without-regrouping" aria-current="page" class="block px-3.5 py-2 text-sm font-semibold text-[#4F46E5] bg-[#F5F3FF]">2-Digit Subtraction (Without Regrouping)</a>
+            <a href="/subtraction/2-digit-with-regrouping" class="block px-3.5 py-2 text-sm text-[#43405C] hover:bg-[#FAF9FE]">2-Digit Subtraction (With Regrouping)</a>
           </div>
         </details>
       </nav>
@@ -137,13 +137,13 @@ const faqItems = [
   </Fragment>
 
   <Fragment slot="quick-answer">
-    <p>Two-digit subtraction without borrowing subtracts two numbers from 10–99 where every top digit is greater than or equal to the matching bottom digit, such as 48 − 26 = 22. Because no digit ever needs to be borrowed, this is the step where students first apply column subtraction before regrouping is introduced.</p>
+    <p>Two-digit subtraction without regrouping subtracts two numbers from 10–99 where every top digit is greater than or equal to the matching bottom digit, such as 48 − 26 = 22. Because no digit ever needs to be regrouped (borrowed), this is the step where students first apply column subtraction before regrouping is introduced.</p>
   </Fragment>
 
-  <SubtractionPracticeHub slot="widget" active="2-digit-no-borrowing" variant="prototype" client:load />
+  <SubtractionPracticeHub slot="widget" active="2-digit-without-regrouping" variant="prototype" client:load />
 
   <Fragment slot="intro">
-    <p>This page is for first and second graders who've mastered single-digit subtraction and are learning multi-digit subtraction for the first time, plus parents and teachers checking whether a child can subtract each column independently. Every problem here is built so the top digit is always at least as large as the bottom digit in each column, isolating column subtraction from the separate skill of borrowing.</p>
+    <p>This page is for first and second graders who've mastered single-digit subtraction and are learning multi-digit subtraction for the first time, plus parents and teachers checking whether a child can subtract each column independently. Every problem here is built so the top digit is always at least as large as the bottom digit in each column, isolating column subtraction from the separate skill of regrouping.</p>
   </Fragment>
 
   <div slot="how-it-works" class="mt-12 space-y-8">
@@ -157,7 +157,7 @@ const faqItems = [
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
       <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit subtraction where each column can be solved independently</li>
-        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems from 10–99, constructed so no borrowing is ever needed</li>
+        <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems from 10–99, constructed so no regrouping is ever needed</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Aligning place values and subtracting ones and tens separately</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback with streak and score tracking</li>
       </ul>
@@ -191,7 +191,7 @@ const faqItems = [
     <!-- Parent & Teacher Guidance -->
     <section aria-labelledby="parent-teacher-heading">
       <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
-      <p class="text-sm text-[#6B7280] leading-relaxed">The skill being checked here isn't subtraction facts — it's whether a child subtracts the correct column pair without crossing columns. Watch for a child who solves 48 − 26 by subtracting 2 from 8 instead of 6 from 8; that's a column-alignment slip, not a subtraction-facts error, and lined paper or extra column spacing fixes it faster than more problems. A child who's accurate but slow is probably still solving each column by counting back instead of retrieving the fact instantly — that will speed up with more single-digit subtraction practice, not more two-digit problems. Because no problem here ever requires borrowing, a child ready to advance should be solving these quickly and correctly before starting the borrowing page.</p>
+      <p class="text-sm text-[#6B7280] leading-relaxed">The skill being checked here isn't subtraction facts — it's whether a child subtracts the correct column pair without crossing columns. Watch for a child who solves 48 − 26 by subtracting 2 from 8 instead of 6 from 8; that's a column-alignment slip, not a subtraction-facts error, and lined paper or extra column spacing fixes it faster than more problems. A child who's accurate but slow is probably still solving each column by counting back instead of retrieving the fact instantly — that will speed up with more single-digit subtraction practice, not more two-digit problems. Because no problem here ever requires regrouping, a child ready to advance should be solving these quickly and correctly before starting the regrouping page.</p>
     </section>
 
     <!-- FAQ -->
@@ -208,7 +208,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Ready for regrouping? Try <a href="/subtraction/2-digit-with-borrowing" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction with borrowing</a> next →</p>
+    <p class="text-sm text-[#4B5563]">Ready for regrouping? Try <a href="/subtraction/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction with regrouping</a> next →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

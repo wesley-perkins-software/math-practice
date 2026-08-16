@@ -14,24 +14,24 @@ const difficulties = [
     symbol: '4 + 7',
   },
   {
-    href: '/addition/2-digit-no-carrying',
-    label: '2-Digit Addition (No Carrying)',
+    href: '/addition/2-digit-without-regrouping',
+    label: '2-Digit Addition (Without Regrouping)',
     grade: 'Grade 1 – Grade 2',
-    description: 'Two-digit addition without regrouping. Master place-value alignment and column addition before introducing carrying.',
+    description: 'Two-digit addition without regrouping. Master place-value alignment and column addition before introducing regrouping.',
     symbol: '23 + 45',
   },
   {
-    href: '/addition/2-digit-with-carrying',
-    label: '2-Digit Addition with Carrying',
+    href: '/addition/2-digit-with-regrouping',
+    label: '2-Digit Addition With Regrouping',
     grade: 'Grade 2 – Grade 3',
-    description: 'Two-digit addition with regrouping. Practice carrying from the ones column to build advanced multi-digit fluency.',
+    description: 'Two-digit addition with regrouping. Practice regrouping (carrying) from the ones column to build advanced multi-digit fluency.',
     symbol: '47 + 38',
   },
 ];
 
 const relatedLinks = [
   { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Practice opposite facts (like 7+2 and 9−2)' },
-  { href: '/subtraction/2-digit-with-borrowing', label: 'Subtraction with Borrowing', description: 'The matching subtraction skill for carrying practice' },
+  { href: '/subtraction/2-digit-with-regrouping', label: 'Subtraction With Regrouping', description: 'The matching subtraction skill for regrouping practice' },
   { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Print extra addition pages for home or class' },
   { href: '/multiplication', label: 'Multiplication Practice', description: 'When addition feels easy, try beginner times tables' },
 ];
@@ -42,16 +42,16 @@ const faqItems = [
     a: '1-digit addition (sums within 18) is typically a Kindergarten and Grade 1 skill. Students learn to add single digits fluently before moving to multi-digit addition.'
   },
   {
-    q: 'What is carrying in addition?',
-    a: 'Carrying (also called regrouping) happens when the digits in a column add up to 10 or more. The ones digit is written in the answer, and the tens digit is "carried" to the next column. For example, 47 + 38: the ones column is 7 + 8 = 15, so you write 5 and carry 1 to the tens column.'
+    q: 'What is regrouping in addition?',
+    a: 'Regrouping happens when the digits in a column add up to 10 or more. The ones digit is written in the answer, and 10 ones are exchanged for 1 ten, which moves to the next column. For example, 47 + 38: the ones column is 7 + 8 = 15, so you write 5 and regroup 1 ten into the tens column. This is also commonly called carrying.'
   },
   {
-    q: 'What is the difference between addition with and without carrying?',
-    a: 'In addition without carrying, no column adds up to 10 or more, so every digit stays in its own column (e.g., 23 + 45 = 68). In addition with carrying, at least one column totals 10 or more, requiring a digit to be moved to the next column (e.g., 47 + 38 = 85).'
+    q: 'What is the difference between addition with and without regrouping?',
+    a: 'In addition without regrouping, no column adds up to 10 or more, so every digit stays in its own column (e.g., 23 + 45 = 68). In addition with regrouping, at least one column totals 10 or more, requiring 10 ones to be exchanged for 1 ten and moved to the next column (e.g., 47 + 38 = 85).'
   },
   {
-    q: 'How do I teach carrying to a child?',
-    a: 'Start with 1-digit addition to build fact fluency. Then introduce 2-digit addition without carrying so students understand column alignment. Once that is solid, introduce carrying: show that when a column sums to 10 or more, you write the ones digit and place the tens digit above the next column. Use physical manipulatives (base-ten blocks) alongside the practice problems for the best results.'
+    q: 'How do I teach regrouping to a child?',
+    a: 'Start with 1-digit addition to build fact fluency. Then introduce 2-digit addition without regrouping so students understand column alignment. Once that is solid, introduce regrouping: show that when a column sums to 10 or more, you write the ones digit and move the tens digit above the next column. Use physical manipulatives (base-ten blocks) alongside the practice problems for the best results.'
   },
   {
     q: 'How does this addition practice work?',
@@ -62,7 +62,7 @@ const faqItems = [
 
 <HubLayout
   title="Addition Practice — Free Online Addition Drills | Math Practice Online"
-  description="Free online addition practice for grades K–3. Choose 1-digit addition, 2-digit addition without carrying, or 2-digit addition with carrying. Instant feedback and streak tracking."
+  description="Free online addition practice for grades K–3. Choose 1-digit addition, 2-digit addition without regrouping, or 2-digit addition with regrouping. Instant feedback and streak tracking."
   canonical={`${SITE}/addition`}
 >
   <Fragment slot="head">
@@ -87,7 +87,7 @@ const faqItems = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Addition Practice",
-      "description": "Free online addition practice for grades K–3 covering 1-digit, 2-digit without carrying, and 2-digit with carrying. Instant feedback and progress tracking.",
+      "description": "Free online addition practice for grades K–3 covering 1-digit, 2-digit without regrouping, and 2-digit with regrouping. Instant feedback and progress tracking.",
       "url": "https://mathpracticeonline.com/addition",
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3"],
       "teaches": "Addition",
@@ -149,15 +149,15 @@ const faqItems = [
           <div class="flex items-start gap-4 px-5 py-4">
             <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 1 – 2</span>
             <div>
-              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition (No Carrying)</p>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition (Without Regrouping)</p>
               <p class="text-sm text-[#6B7280] mt-0.5">Extend single-digit fluency to two-digit numbers. Learn to align columns by place value and add tens and ones independently.</p>
             </div>
           </div>
           <div class="flex items-start gap-4 px-5 py-4">
             <span class="w-20 text-xs font-semibold text-[#6366F1] uppercase tracking-wide pt-0.5 shrink-0">Grade 2 – 3</span>
             <div>
-              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition with Carrying</p>
-              <p class="text-sm text-[#6B7280] mt-0.5">Master regrouping. When a column's digits sum to 10 or more, carry the tens digit into the next column. This skill extends directly to 3-digit and larger addition.</p>
+              <p class="text-sm font-medium text-[#1E293B]">2-Digit Addition With Regrouping</p>
+              <p class="text-sm text-[#6B7280] mt-0.5">Master regrouping. When a column's digits sum to 10 or more, move the tens digit into the next column. This skill extends directly to 3-digit and larger addition.</p>
             </div>
           </div>
         </div>
@@ -172,10 +172,10 @@ const faqItems = [
           Start with <a href="/addition/1-digit" class="text-[#4F46E5] font-medium hover:underline">1-digit addition</a> and practice daily until students can answer any single-digit fact quickly and without counting. Fluency here (typically by end of Grade 1) makes every later skill easier.
         </p>
         <p>
-          When moving to 2-digit addition, begin with <a href="/addition/2-digit-no-carrying" class="text-[#4F46E5] font-medium hover:underline">no-carrying problems</a> first. This isolates place-value alignment from the complexity of regrouping, giving students a chance to practice the column-addition process cleanly.
+          When moving to 2-digit addition, begin with <a href="/addition/2-digit-without-regrouping" class="text-[#4F46E5] font-medium hover:underline">problems without regrouping</a> first. This isolates place-value alignment from the complexity of regrouping, giving students a chance to practice the column-addition process cleanly.
         </p>
         <p>
-          Introduce <a href="/addition/2-digit-with-carrying" class="text-[#4F46E5] font-medium hover:underline">carrying</a> only after no-carrying problems feel easy. Use base-ten blocks alongside the screen practice to make the concept concrete before it becomes abstract.
+          Introduce <a href="/addition/2-digit-with-regrouping" class="text-[#4F46E5] font-medium hover:underline">regrouping</a> only after those problems feel easy. Use base-ten blocks alongside the screen practice to make the concept concrete before it becomes abstract.
         </p>
       </div>
     </section>

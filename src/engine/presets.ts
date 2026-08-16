@@ -15,8 +15,8 @@ export const ADDITION_1_DIGIT: PracticeConfig = {
 
 export const ADDITION_2_DIGIT: PracticeConfig = {
   storageKey: 'add-2d',
-  label: '2-Digit Addition (No Carrying)',
-  path: '/addition/2-digit-no-carrying',
+  label: '2-Digit Addition (Without Regrouping)',
+  path: '/addition/2-digit-without-regrouping',
   operation: 'addition',
   mode: 'untimed',
   timerDuration: 60,
@@ -27,8 +27,8 @@ export const ADDITION_2_DIGIT: PracticeConfig = {
 
 export const ADDITION_2_DIGIT_CARRYING: PracticeConfig = {
   storageKey: 'add-2d-carry',
-  label: 'Addition with Carrying',
-  path: '/addition/2-digit-with-carrying',
+  label: '2-Digit Addition (With Regrouping)',
+  path: '/addition/2-digit-with-regrouping',
   operation: 'addition',
   mode: 'untimed',
   timerDuration: 60,
@@ -69,8 +69,8 @@ export const SUBTRACTION_1_DIGIT: PracticeConfig = {
 
 export const SUBTRACTION_2_DIGIT: PracticeConfig = {
   storageKey: 'sub-2d',
-  label: '2-Digit Subtraction',
-  path: '/subtraction/2-digit-no-borrowing',
+  label: '2-Digit Subtraction (Without Regrouping)',
+  path: '/subtraction/2-digit-without-regrouping',
   operation: 'subtraction',
   mode: 'untimed',
   timerDuration: 60,
@@ -81,8 +81,8 @@ export const SUBTRACTION_2_DIGIT: PracticeConfig = {
 
 export const SUBTRACTION_2_DIGIT_BORROWING: PracticeConfig = {
   storageKey: 'sub-2d-borrow',
-  label: 'Subtraction with Borrowing',
-  path: '/subtraction/2-digit-with-borrowing',
+  label: '2-Digit Subtraction (With Regrouping)',
+  path: '/subtraction/2-digit-with-regrouping',
   operation: 'subtraction',
   mode: 'untimed',
   timerDuration: 60,
