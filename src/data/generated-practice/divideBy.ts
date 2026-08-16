@@ -5,9 +5,8 @@ import type { GeneratedPracticeEntry } from './types';
  *
  * Per docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md's Phase 1B ("Author
  * divideBy.ts (12 entries), following the same interface and review process
- * as Phase 1A"), the full family is 12 entries. Entries 1–6 have completed
- * editorial review. The remaining entries are intentionally absent, rather
- * than being filled with generic copy, until their rollout is reviewed.
+ * as Phase 1A"), the full family is 12 entries. All 12 entries have completed
+ * editorial review.
  *
  * Same content-integrity rules as timesTables.ts apply: every numeric example
  * below was recalculated, and no unsupported difficulty/curriculum claim is
@@ -120,27 +119,129 @@ export const DIVIDE_BY_FACTS: GeneratedPracticeEntry[] = [
         "Because 6 is a composite number — it's 2×3 — while 7 is prime and can't be split into smaller whole-number factors. That's why the divide-by-2-then-÷3 shortcut works for divide by 6 (and other composite divisors, like 8, 9, or 12), but there's no similar shortcut for divide by 7.",
     },
   },
+  {
+    n: 7,
+    quickAnswerFact:
+      'Dividing by 7 means splitting a number into seven equal groups; for example, 56÷7=8 because 7×8=56.',
+    introClause:
+      'Each problem can be answered by asking which 7 times table fact makes the number being divided.',
+    strategyTitle: 'Ask "7 Times What?"',
+    strategyExplanation:
+      'Turn the division fact into a multiplication question. For 56÷7, ask, "7 times what equals 56?" Since 7×8=56, the quotient is 8. The same approach shows that 84÷7=12 because 7×12=84.',
+    parentTeacherNote:
+      'If a child is unsure, ask the matching multiplication question without supplying the answer: "7 times what equals 63?" The fact 7×9=63 then shows that 63÷7=9.',
+    faqDifferentiator: {
+      question: 'Is there a shortcut for every divide-by-7 fact?',
+      answer:
+        'There is no single shortcut needed for these facts. Use the matching 7 times table fact: because 7×6=42, you know 42÷7=6.',
+    },
+  },
+  {
+    n: 8,
+    quickAnswerFact:
+      'Dividing by 8 means splitting a number into eight equal groups; for example, 64÷8=8.',
+    introClause:
+      'A matching 8 times table fact works for every question, and some numbers can also be divided by 8 by finding half three times.',
+    strategyTitle: 'Halve Three Times When It Helps',
+    strategyExplanation:
+      'Because 8=2×2×2, dividing by 8 can be done by halving three times. For 64÷8, half of 64 is 32, half of 32 is 16, and half of 16 is 8. This is a useful backup; you can also use 8×8=64 to get the same answer.',
+    parentTeacherNote:
+      'If a suitable divide-by-8 fact does not come to mind, prompt the child to try three halves. For 80÷8, the steps are 80 to 40, 40 to 20, and 20 to 10. Check with 8×10=80.',
+    faqDifferentiator: {
+      question: 'Why can halving three times help with dividing by 8?',
+      answer:
+        'Since 8 is 2×2×2, three equal halving steps divide by 8. Half of 48 is 24, then 12, then 6, so 48÷8=6.',
+    },
+  },
+  {
+    n: 9,
+    quickAnswerFact:
+      'Dividing by 9 means splitting a number into nine equal groups; for example, 63÷9=7 because 9×7=63.',
+    introClause:
+      'Thinking backward from the 9 times table keeps the division relationship clear without relying on a collection of number tricks.',
+    strategyTitle: 'Ask "9 Times What?"',
+    strategyExplanation:
+      'For 63÷9, ask, "9 times what equals 63?" The fact 9×7=63 gives the quotient 7. If 9×7 is not remembered, use 10×7=70 and subtract one group of 7: 70−7=63.',
+    parentTeacherNote:
+      'Prompt with the multiplication question, such as "9 times what equals 81?" If needed, connect 9 groups to 10 groups minus one group: 10×9=90 and 90−9=81, so 81÷9=9.',
+    faqDifferentiator: {
+      question: 'Can a 10 times table fact help with divide by 9?',
+      answer:
+        'It can help find the matching 9 times table fact. For 54÷9, six groups of 10 make 60; subtract one group of 6 to get 54. That shows 9×6=54, so 54÷9=6.',
+    },
+  },
+  {
+    n: 10,
+    quickAnswerFact:
+      'Dividing by 10 means splitting a number into ten equal groups; in these exact facts, 80÷10=8 because 10×8=80.',
+    introClause:
+      'Every number being divided is an exact multiple of 10, so the answers are the whole numbers 1 through 12 with no remainders.',
+    strategyTitle: 'Think in Groups of Ten',
+    strategyExplanation:
+      'Use the place-value pattern in the practiced facts: 30 is 3 groups of 10, so 30÷10=3; 80 is 8 groups of 10, so 80÷10=8; and 120 is 12 groups of 10, so 120÷10=12. This describes these exact whole-number facts, not a rule for removing a zero from every division problem.',
+    parentTeacherNote:
+      'Ask, "How many groups of 10 make this number?" Watch for a child using a "remove a zero" shortcut where it does not apply. Here it works because each practiced number is an exact multiple of 10, such as 70÷10=7.',
+    faqDifferentiator: {
+      question: 'Can I always remove a zero when dividing by 10?',
+      answer:
+        'No. On this page, the numbers are exact whole-number multiples of 10, so 90÷10=9 and 120÷10=12. The wording "remove a zero" is not a general rule for every number or every kind of division.',
+    },
+  },
+  {
+    n: 11,
+    quickAnswerFact:
+      'Dividing by 11 means splitting a number into eleven equal groups; for example, 77÷11=7 because 11×7=77.',
+    introClause:
+      'Thinking backward from the 11 times table works across the full range, including the facts with quotients 10, 11, and 12.',
+    strategyTitle: 'Ask "11 Times What?"',
+    strategyExplanation:
+      'For 77÷11, ask, "11 times what equals 77?" Since 11×7=77, the quotient is 7. You can also build an 11s fact from ten groups plus one more group: 10×12=120 and 1×12=12, so 11×12=132 and 132÷11=12.',
+    parentTeacherNote:
+      'Repeated digits can help with 11×1 through 11×9, but do not extend that observation to every fact. Ask for the matching multiplication fact for 110÷11, 121÷11, and 132÷11; their answers are 10, 11, and 12.',
+    faqDifferentiator: {
+      question: 'Does the repeated-digit pattern always work with divide by 11?',
+      answer:
+        'No. It neatly describes 11×1 through 11×9, such as 66÷11=6. The full practice range also includes 110÷11=10, 121÷11=11, and 132÷11=12, so use the matching multiplication fact for every problem.',
+    },
+  },
+  {
+    n: 12,
+    quickAnswerFact:
+      'Dividing by 12 means splitting a number into twelve equal groups; for example, 96÷12=8 because 12×8=96.',
+    introClause:
+      'A matching 12 times table fact answers each question, and a 10-groups-plus-2-groups calculation can help rebuild a fact when needed.',
+    strategyTitle: 'Build the Matching 12s Fact',
+    strategyExplanation:
+      'For 96÷12, ask, "12 times what equals 96?" If the fact is not remembered, split 12 groups into 10 groups and 2 groups: 10×8=80 and 2×8=16, then 80+16=96. Therefore 12×8=96 and 96÷12=8.',
+    parentTeacherNote:
+      'Keep the division question connected to multiplication. For 108÷12, ask for 12 times what. If needed, build 12×9 from 10×9=90 and 2×9=18; 90+18=108, so the quotient is 9.',
+    faqDifferentiator: {
+      question: 'How can 10s and 2s facts help with divide by 12?',
+      answer:
+        'They can rebuild the matching 12s fact. For 84÷12, 10×7=70 and 2×7=14; 70+14=84, so 12×7=84 and 84÷12=7.',
+    },
+  },
 ];
 
 /**
- * Look up a single divisor's fact entry. Returns undefined for divisors not
- * yet authored (currently 1–6 are present — see the module note above).
+ * Look up a single divisor's fact entry. Returns undefined for divisors
+ * outside the reviewed 1–12 range.
  */
 export function getDivideByFact(n: number): GeneratedPracticeEntry | undefined {
   return DIVIDE_BY_FACTS.find((entry) => entry.n === n);
 }
 
 /**
- * Lightweight, dependency-free validation for whatever entries are present in
- * this rollout-scope fact bank. Unlike timesTables.ts's validator, this does
- * NOT require exactly 12 entries — only the entries that exist are checked
- * for well-formedness, since the family is intentionally partial until a
- * future Phase 1B completion pass authors the remaining divisors.
+ * Lightweight, dependency-free validation for the completed 1–12 fact bank.
  */
 export function validateDivideByFacts(
   entries: GeneratedPracticeEntry[] = DIVIDE_BY_FACTS,
 ): string[] {
   const errors: string[] = [];
+
+  if (entries.length !== 12) {
+    errors.push(`Expected exactly 12 entries, found ${entries.length}`);
+  }
 
   const seenN = new Set<number>();
   const seenQuickAnswer = new Set<string>();

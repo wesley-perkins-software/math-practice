@@ -18,14 +18,13 @@ export function getStaticPaths() {
 
 const { divisor } = Astro.props;
 
-// Fact-bank membership is the rollout gate. Unreviewed divisors continue to
-// use the existing generic page until an authored entry is added.
+// Fact-bank membership selects the reviewed rendering path. The completed
+// bank contains every supported divisor from 1 through 12.
 const fact = getDivideByFact(divisor);
 const isMature = fact !== undefined;
 
-// Hand-composed expanded intro paragraph for the pilot divisor only, woven
-// around the fact bank's `introClause`, matching the ~40-70 word intro target
-// used for the times-table pilot pages.
+// Preserve the approved 1–6 introductions; later reviewed entries use the
+// same fact-bank clause composition without adding divisor-number gates.
 const EXPANDED_INTRO: Partial<Record<number, string>> = {
   1: `This page mixes up all twelve divide-by-1 facts in random order. ${fact?.introClause}`,
   2: `This page mixes up all twelve divide-by-2 facts in random order. ${fact?.introClause}`,
@@ -34,6 +33,8 @@ const EXPANDED_INTRO: Partial<Record<number, string>> = {
   5: `This page mixes up all twelve divide-by-5 facts in random order. ${fact?.introClause}`,
   6: `This page mixes up all twelve divide-by-6 facts in random order, so you get comfortable with them no matter what order they come in. If a fact doesn't come to mind right away, the strategy section below shows two reliable ways to work it out.`,
 };
+const expandedIntro = EXPANDED_INTRO[divisor]
+  ?? (fact ? `This page mixes up all twelve divide-by-${divisor} facts in random order. ${fact.introClause}` : '');
 
 // Fact-bank membership also identifies reviewed content for the shared dark
 // typography treatment. This avoids divisor-specific presentation checks.
@@ -142,10 +143,7 @@ const links = [
   { href: '/division/facts', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
   ...(fact ? [{ href: `/multiplication/times-tables/${divisor}`, label: `${divisor} Times Table Practice`, description: 'The multiplication facts these division problems come from' }] : []),
-  // Neutral "practice dividing by N" wording for the pilot divisor (6) only —
-  // "Previous/Next fact family" implied a required instructional sequence
-  // that isn't documented anywhere on the site. Every other divisor keeps
-  // its original "Previous/Next fact family" description unchanged.
+  // Neutral wording avoids implying a required instructional sequence.
   ...(prevDivisor ? [{ href: `/division/divide-by/${prevDivisor}`, label: `Divide by ${prevDivisor} Practice`, description: fact ? `Practice dividing by ${prevDivisor}` : `Previous fact family` }] : []),
   ...(nextDivisor ? [{ href: `/division/divide-by/${nextDivisor}`, label: `Divide by ${nextDivisor} Practice`, description: fact ? `Practice dividing by ${nextDivisor}` : `Next fact family` }] : []),
 ];
@@ -193,7 +191,7 @@ const links = [
   ) : null}
   <div slot="intro">
     {fact ? (
-      <p class="text-black">{EXPANDED_INTRO[divisor]}</p>
+      <p class="text-black">{expandedIntro}</p>
     ) : (
       <p>Focus on one fact family at a time with divide by {divisor} problems. This targeted practice helps students improve speed, sharpen accuracy, and gain confidence before mixing all divisors together in full division facts practice.</p>
     )}
@@ -276,10 +274,7 @@ const links = [
       </div>
     </section>
 
-    <!-- Internal Links: for the pilot divisor only, moved here to match the
-         times-table pilot's canonical last position (below the instructional
-         content). Non-pilot divisors keep their original position via the
-         `slot="links"` render above, unchanged. -->
+    <!-- Reviewed pages keep Related Practice below instructional content. -->
     {fact && <InternalLinks links={links} darkText />}
   </Fragment>
 </PracticeLayout>
