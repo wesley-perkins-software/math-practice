@@ -375,13 +375,31 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
     ? 'px-[length:var(--practice-card-px)] pt-[length:var(--practice-card-pt)] pb-[length:var(--practice-card-pb)]'
     : 'px-4 py-4 md:px-6 md:py-5';
 
+  // Timed + prototype (currently just the Speed Drill) carries a corner-stat
+  // row the untimed prototype pages don't have. Rather than shrinking the
+  // shared --practice-card-pt/pb/--practice-stack-gap tokens in
+  // practice-surface-prototype.css — which would quietly resize every
+  // approved practice card, not just this one — these are local inline
+  // overrides of the same custom properties, scoped to this element only.
+  // Descendants still read var(--practice-card-pt) etc. unchanged; only a
+  // timed+prototype instance (i.e. only the Speed Drill today) sees the
+  // tighter values.
+  const timedPrototypeStyle: React.CSSProperties | undefined =
+    isTimed && isPrototype
+      ? ({
+          '--practice-card-pt': '0.75rem',
+          '--practice-card-pb': '0.625rem',
+          '--practice-stack-gap': '0.25rem',
+        } as React.CSSProperties)
+      : undefined;
+
   return (
     // data-practice-instrument: lets the H1-row switcher's vanilla script
     // (addition/1-digit.astro) detect "the user resumed practice" and close
     // itself — see the switcher's own comment for why this can't just be a
     // React prop (the switcher is deliberately framework-agnostic markup
     // living outside this island).
-    <div className={wrapperClasses} {...(isPrototype ? { 'data-practice-instrument': true } : {})}>
+    <div className={wrapperClasses} style={timedPrototypeStyle} {...(isPrototype ? { 'data-practice-instrument': true } : {})}>
       {/* Gradient accent bar — classic only; the prototype surface relies on its
           bordered surface + the brand-colored submit key instead of a decorative
           top bar, per the audit's note that gradients should solve something. */}
@@ -393,21 +411,41 @@ export default function PracticeWidget({ config, variant = 'classic' }: Props) {
         {/* ── ACTIVE ──────────────────────────────────── */}
         {phase === 'active' && problem && (
           <div className={`flex flex-col items-center ${isPrototype ? 'gap-[length:var(--practice-stack-gap)]' : 'gap-3 md:gap-4'}`}>
-            {/* Timer bar — only for timed mode. Lives in the upper-left corner
-                of the card (the row's only left-aligned item once the
-                duration picker is absent, which it always is on fixed-
-                duration configs like the Speed Drill) so it reads as a
-                secondary status next to, not competing with, the arithmetic
-                problem below it. */}
+            {/* Timer/Correct bar — only for timed mode. Time sits upper-left,
+                Correct sits upper-right (prototype only — Correct is a
+                Speed-Drill-specific addition, not part of the shared classic
+                timed row). This is a standalone row, entirely separate from
+                the arithmetic block rendered below it: the equation's own
+                centering (a fixed-width column, mx-auto, in its own flex
+                item) never reads this row's contents, so unequal left/right
+                stat widths here cannot pull the arithmetic off-center —
+                verified by measuring the arithmetic column's midpoint
+                against the card's midpoint, not by eye. */}
             {isTimed && (
               <div className="w-full flex items-center justify-between">
                 {timerStarted
                   ? <TimerDisplay secondsRemaining={secondsRemaining} variant={variant} />
                   : <TimerDisplay secondsRemaining={duration} variant={variant} />
                 }
-                {/* Duration picker only available before timer starts */}
-                {!timerStarted && !isTimerDurationFixed && (
-                  <DurationPicker value={duration} onChange={handleDurationChange} />
+                {isPrototype ? (
+                  // Correct: live count of correct answers this session —
+                  // reuses the same `correct` state ScoreCard already reads
+                  // at session end, so this is purely a display of existing
+                  // state, not a new scoring path. Same compact
+                  // caption+numeral shape as Time (see TimerDisplay) so the
+                  // two corner stats carry matching visual weight; brand
+                  // indigo ties it to Personal Best below rather than to
+                  // Time's neutral ink, since both are "how well am I
+                  // doing" stats.
+                  <div className="flex items-baseline gap-1.5">
+                    <span className="text-[11px] font-bold text-[#8983B8] uppercase tracking-wide">Correct</span>
+                    <span className="text-xl font-extrabold leading-none tabular-nums text-[#4F46E5]">{correct}</span>
+                  </div>
+                ) : (
+                  /* Duration picker only available before timer starts (classic) */
+                  !timerStarted && !isTimerDurationFixed && (
+                    <DurationPicker value={duration} onChange={handleDurationChange} />
+                  )
                 )}
               </div>
             )}

@@ -11,19 +11,23 @@ export default function TimerDisplay({ secondsRemaining, variant = 'classic' }: 
   const isWarning = secondsRemaining <= 10;
 
   if (variant === 'prototype') {
-    // Same label-above-value shape as the Streak stat on untimed pages (see
-    // PracticeWidget) so the timer reads as "one more stat in this family,"
-    // not a bespoke clock widget. Sized well below --practice-operand-size
-    // so the arithmetic problem stays the dominant element on the surface —
-    // this is a secondary status, not the focal point. tabular-nums (via
-    // .font-practice) keeps the glyph widths constant frame to frame, and
-    // the display string itself is always "M:SS" (4 characters) for every
-    // duration this drill uses, so the countdown never shifts the layout.
+    // Compact single-line "CAPTION value" shape — a corner status, not a
+    // second display. Round 2: dropped the earlier two-line label-above-
+    // value treatment (borrowed from the Streak stat) once the Speed Drill
+    // grew a second corner stat (Correct) and the card needed to shed
+    // height: a stacked caption+numeral was costing ~40px of card height
+    // for a status that only needs to be glanceable, not prominent. Sized
+    // well below --practice-operand-size so the arithmetic problem stays
+    // the dominant element — this is a secondary status, not the focal
+    // point. tabular-nums (via .font-practice) keeps the glyph widths
+    // constant frame to frame, and the display string itself is always
+    // "M:SS" (4 characters) for every duration this drill uses, so the
+    // countdown never shifts the layout.
     return (
-      <div className="flex flex-col gap-0.5 leading-none" aria-live="off" aria-label={`${secondsRemaining} seconds remaining`}>
-        <span className="text-[11px] font-bold text-[#211D4F] uppercase tracking-wide">Time</span>
+      <div className="flex items-baseline gap-1.5" aria-live="off" aria-label={`${secondsRemaining} seconds remaining`}>
+        <span className="text-[11px] font-bold text-[#8983B8] uppercase tracking-wide">Time</span>
         <span
-          className={`text-[1.75rem] font-extrabold leading-none tabular-nums transition-colors ${
+          className={`text-xl font-extrabold leading-none tabular-nums transition-colors ${
             isWarning ? 'text-[#EA580C]' : 'text-[#211D4F]'
           }`}
         >
