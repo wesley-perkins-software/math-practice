@@ -7,7 +7,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "validate:times-tables": "node --experimental-strip-types src/data/generated-practice/timesTables.ts"
+    "validate:times-tables": "node --experimental-strip-types src/data/generated-practice/timesTables.ts",
+    "test:generator-regrouping": "node --experimental-strip-types src/engine/generator.regrouping.test.ts"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",

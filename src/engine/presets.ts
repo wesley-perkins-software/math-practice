@@ -35,6 +35,10 @@ export const ADDITION_2_DIGIT_CARRYING: PracticeConfig = {
   operandA: { min: 15, max: 99 },
   operandB: { min: 15, max: 99 },
   carrying: true,
+  // This is the introductory regrouping page: every problem must require
+  // regrouping 10 ones as 1 ten (onesDigitA + onesDigitB >= 10), not merely
+  // a carry somewhere in the sum (e.g. tens-to-hundreds only, as in 93 + 94).
+  requireOnesRegroup: true,
 };
 
 export const ADDITION_GENERAL: PracticeConfig = {
