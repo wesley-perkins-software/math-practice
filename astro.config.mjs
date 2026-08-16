@@ -8,6 +8,7 @@ export default defineConfig({
   output: 'static',
   redirects: {
     '/addition-practice': '/addition',
+    '/subtraction-practice': '/subtraction',
     '/timed-drills': '/arithmetic-speed-drill',
     '/math-drills': '/arithmetic-speed-drill',
     '/speed-drill': '/arithmetic-speed-drill',
@@ -22,6 +23,7 @@ export default defineConfig({
       filter: (page) => {
         const redirectPaths = [
           '/addition-practice/',
+          '/subtraction-practice/',
           '/timed-drills/',
           '/math-drills/',
           '/speed-drill/',
