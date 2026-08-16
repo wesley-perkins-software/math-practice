@@ -38,8 +38,8 @@ const expandedIntro = EXPANDED_INTRO[divisor]
 
 // Fact-bank membership also identifies reviewed content for the shared dark
 // typography treatment. This avoids divisor-specific presentation checks.
-const bodyTextClass = fact ? 'text-black' : 'text-[#6B7280]';
-const listTextClass = fact ? 'text-black' : 'text-[#4B5563]';
+const bodyTextClass = 'text-body';
+const listTextClass = 'text-body';
 const quickAnswerText = fact && divisor === 6
   ? `Divide by 6 means finding how many equal groups of 6 fit into a number, with the answer always a whole number on this page. ${fact.quickAnswerFact}`
   : fact
@@ -203,7 +203,6 @@ const links = [
     current={`/division/divide-by/${divisor}`}
     showGrid
     gridCurrent={divisor}
-    darkText={isMature}
   />
   {!fact && <InternalLinks slot="links" links={links} />}
 
@@ -275,6 +274,6 @@ const links = [
     </section>
 
     <!-- Reviewed pages keep Related Practice below instructional content. -->
-    {fact && <InternalLinks links={links} darkText />}
+    {fact && <InternalLinks links={links} />}
   </Fragment>
 </PracticeLayout>

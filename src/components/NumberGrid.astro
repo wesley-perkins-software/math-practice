@@ -14,18 +14,9 @@ interface Props {
   max: number;
   current?: number;
   mode: 'menu' | 'chooser';
-  /**
-   * Pilot-scope-only override (see [table].astro / [divisor].astro's
-   * `bodyTextClass`/`listTextClass`): renders non-current grid cells in
-   * black instead of the default `text-[#43405C]` chooser color. Defaults
-   * to false so every other page using this component is unchanged. NOT
-   * the intended long-term mechanism for sitewide typography — see the
-   * flag in [table].astro for the planned shared-typography follow-up.
-   */
-  darkText?: boolean;
 }
 
-const { basePath, max, current, mode, darkText = false } = Astro.props;
+const { basePath, max, current, mode } = Astro.props;
 const links = numberGridLinks(basePath, max);
 ---
 
@@ -49,7 +40,7 @@ const links = numberGridLinks(basePath, max);
         class={`py-2 rounded-lg text-sm text-center transition-colors duration-150 ${
           isCurrent
             ? 'font-semibold text-[#1E1B4B] ring-1 ring-inset ring-[#4F46E5]/40 bg-[#F5F3FF]'
-            : `${mode === 'menu' || darkText ? 'text-black' : 'text-[#43405C]'} bg-[#F5F3FF]/60 hover:bg-[#EEF2FF] hover:text-[#4F46E5]`
+            : 'text-body bg-[#F5F3FF]/60 hover:bg-[#EEF2FF] hover:text-[#4F46E5]'
         }`}
       >
         {n}

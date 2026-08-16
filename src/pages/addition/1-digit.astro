@@ -91,7 +91,7 @@ const faqItems = [
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 81 single-digit addition facts (1+1 through 9+9)</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Sums greater than 9 (e.g., 7 + 8 = 15) — the hardest and most important facts</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
@@ -105,15 +105,15 @@ const faqItems = [
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Count On</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Start from the larger number and count up. For 3 + 7: start at 7, count up 3 → 8, 9, 10.</p>
+          <p class="text-sm text-body leading-relaxed">Start from the larger number and count up. For 3 + 7: start at 7, count up 3 → 8, 9, 10.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Make Ten</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">For 8 + 6: split 6 into 2 + 4. Then 8 + 2 = 10, and 10 + 4 = 14.</p>
+          <p class="text-sm text-body leading-relaxed">For 8 + 6: split 6 into 2 + 4. Then 8 + 2 = 10, and 10 + 4 = 14.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Doubles</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Know that 6 + 6 = 12, so 6 + 7 = 13 (one more). Doubles are easy to memorize.</p>
+          <p class="text-sm text-body leading-relaxed">Know that 6 + 6 = 12, so 6 + 7 = 13 (one more). Doubles are easy to memorize.</p>
         </div>
       </div>
     </section>
@@ -121,7 +121,7 @@ const faqItems = [
     <!-- Parent & Teacher Guidance -->
     <section aria-labelledby="parent-teacher-heading">
       <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
-      <p class="text-sm text-[#6B7280] leading-relaxed">Most students can add small numbers using their fingers long before they can recall facts instantly — instant recall, not calculation, is the actual goal of this stage. Watch for kids who consistently pause on facts where the sum is 10 or higher (like 8 + 6 or 7 + 9); these are the facts most likely to still rely on counting rather than memory. A quick, low-pressure way to help is timing a short set of facts every few days and tracking whether the pause gets shorter, rather than only checking whether the answer is right. If a child consistently misses by one, they're likely still counting on their fingers instead of retrieving the fact — that's a sign to slow down and rebuild the fact from a known one (like 6 + 6 = 12) rather than repeat more timed drills.</p>
+      <p class="text-sm text-body leading-relaxed">Most students can add small numbers using their fingers long before they can recall facts instantly — instant recall, not calculation, is the actual goal of this stage. Watch for kids who consistently pause on facts where the sum is 10 or higher (like 8 + 6 or 7 + 9); these are the facts most likely to still rely on counting rather than memory. A quick, low-pressure way to help is timing a short set of facts every few days and tracking whether the pause gets shorter, rather than only checking whether the answer is right. If a child consistently misses by one, they're likely still counting on their fingers instead of retrieving the fact — that's a sign to slow down and rebuild the fact from a known one (like 6 + 6 = 12) rather than repeat more timed drills.</p>
     </section>
 
     <!-- FAQ -->
@@ -131,14 +131,14 @@ const faqItems = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Once these facts feel automatic, move on to <a href="/addition/2-digit-without-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition without regrouping</a> →</p>
+    <p class="text-sm text-body">Once these facts feel automatic, move on to <a href="/addition/2-digit-without-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition without regrouping</a> →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

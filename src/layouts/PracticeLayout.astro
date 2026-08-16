@@ -19,8 +19,6 @@ interface Props {
    * until the pilot is validated — see docs/seo/CANONICAL_LEAF_PAGE_STANDARD.md.
    */
   pilotLayout?: boolean;
-  /** Use black for normally muted explanatory text on approved dark-text pages. */
-  darkText?: boolean;
   /**
    * Defaults to true so every existing page's visible breadcrumb is unchanged.
    * When false, the breadcrumb `<nav>` is not rendered — but the BreadcrumbList
@@ -32,7 +30,7 @@ interface Props {
   breadcrumbVisual?: boolean;
 }
 
-const { title, description, canonical, breadcrumb = [], pilotLayout = false, darkText = false, breadcrumbVisual = true } = Astro.props;
+const { title, description, canonical, breadcrumb = [], pilotLayout = false, breadcrumbVisual = true } = Astro.props;
 ---
 
 <BaseLayout title={title} description={description} canonical={canonical}>
@@ -67,14 +65,14 @@ const { title, description, canonical, breadcrumb = [], pilotLayout = false, dar
     <main class={`max-w-3xl mx-auto px-4 sm:px-6 w-full ${pilotLayout ? 'pt-3 sm:pt-4 pb-10 [@media(pointer:coarse)_and_(min-width:640px)_and_(max-width:1366px)_and_(max-height:850px)]:pt-1' : 'py-8'}`}>
       <!-- Breadcrumb -->
       {breadcrumb.length > 0 && breadcrumbVisual && (
-        <nav aria-label="Breadcrumb" class={`text-sm ${darkText ? 'text-black' : 'text-[#6B7280]'} flex items-center flex-wrap gap-1 ${pilotLayout ? 'mb-2' : 'mb-4'}`}>
+        <nav aria-label="Breadcrumb" class={`text-sm text-[#6B7280] flex items-center flex-wrap gap-1 ${pilotLayout ? 'mb-2' : 'mb-4'}`}>
           {breadcrumb.map((item, i) => (
             <>
               {i > 0 && <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>}
               {item.href ? (
                 <a href={item.href} class="hover:text-[#4F46E5] transition-colors">{item.label}</a>
               ) : (
-                <span class={darkText ? 'text-black' : 'text-[#6B7280]'}>{item.label}</span>
+                <span class="text-[#6B7280]">{item.label}</span>
               )}
             </>
           ))}
@@ -108,7 +106,7 @@ const { title, description, canonical, breadcrumb = [], pilotLayout = false, dar
             <div class="mb-3 text-[#1E1B4B] text-sm sm:text-base font-semibold leading-snug">
               <slot name="quick-answer" />
             </div>
-            <div class={`${darkText ? 'text-black' : 'text-[#4B5563]'} text-base leading-relaxed`}>
+            <div class="text-body text-base leading-relaxed">
               <slot name="intro" />
             </div>
           </div>
@@ -116,7 +114,7 @@ const { title, description, canonical, breadcrumb = [], pilotLayout = false, dar
       ) : (
         <>
           <!-- Intro text (legacy order: above the widget, unchanged pending pilot results) -->
-          <div class="mt-3 mb-6 text-[#374151] text-base leading-relaxed max-w-xl">
+          <div class="mt-3 mb-6 text-body text-base leading-relaxed max-w-xl">
             <slot name="intro" />
           </div>
 
@@ -164,7 +162,7 @@ const { title, description, canonical, breadcrumb = [], pilotLayout = false, dar
         <a href="/privacy" class="hover:text-[#3730A3] transition-colors">Privacy Policy</a>
         <a href="/terms" class="hover:text-[#3730A3] transition-colors">Terms of Service</a>
       </div>
-      <p class={`text-xs ${darkText ? 'text-black' : 'text-[#6B7280]'} mt-4`}>© {new Date().getFullYear()} Math Practice Online. Free arithmetic practice for students of all ages.</p>
+      <p class="text-xs text-[#6B7280] mt-4">© {new Date().getFullYear()} Math Practice Online. Free arithmetic practice for students of all ages.</p>
     </div>
   </footer>
 </BaseLayout>

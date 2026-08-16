@@ -90,7 +90,7 @@ const faqItems = [
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All 144 multiplication facts from 1×1 through 12×12</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems presented in random order to build genuine recall (not rote sequence)</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
@@ -104,15 +104,15 @@ const faqItems = [
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Skip Counting</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Count up by the multiplier. For 6×7: 7, 14, 21, 28, 35, 42. Works for any table until facts feel automatic.</p>
+          <p class="text-sm text-body leading-relaxed">Count up by the multiplier. For 6×7: 7, 14, 21, 28, 35, 42. Works for any table until facts feel automatic.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Commutativity</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Know 3×8? You already know 8×3. Turn unfamiliar facts into familiar ones by flipping the order.</p>
+          <p class="text-sm text-body leading-relaxed">Know 3×8? You already know 8×3. Turn unfamiliar facts into familiar ones by flipping the order.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Break It Apart</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">For 7×8: split as (7×4) + (7×4) = 28 + 28 = 56. Breaking into smaller known facts reduces memory load.</p>
+          <p class="text-sm text-body leading-relaxed">For 7×8: split as (7×4) + (7×4) = 28 + 28 = 56. Breaking into smaller known facts reduces memory load.</p>
         </div>
       </div>
     </section>
@@ -120,7 +120,7 @@ const faqItems = [
     <!-- Parent & Teacher Guidance -->
     <section aria-labelledby="parent-teacher-heading">
       <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
-      <p class="text-sm text-[#6B7280] leading-relaxed">Random-order practice is intentionally harder than practicing one times table at a time — it tests recall, not sequence memory, and a child can look fluent on a single table while still guessing here. Watch for a child who is fast on some facts (like the 2s, 5s, and 10s) but consistently pauses on others (commonly 6s, 7s, 8s, and 9s); that pattern points to which specific tables need focused practice on the individual times-tables pages rather than more mixed drills. If a child is accurate but slow across the board, they're likely still calculating rather than recalling — short, frequent sessions build recall speed faster than long occasional ones. Mixed practice like this page is best used as a checkpoint after focused single-table practice, not as the first place a new table is learned.</p>
+      <p class="text-sm text-body leading-relaxed">Random-order practice is intentionally harder than practicing one times table at a time — it tests recall, not sequence memory, and a child can look fluent on a single table while still guessing here. Watch for a child who is fast on some facts (like the 2s, 5s, and 10s) but consistently pauses on others (commonly 6s, 7s, 8s, and 9s); that pattern points to which specific tables need focused practice on the individual times-tables pages rather than more mixed drills. If a child is accurate but slow across the board, they're likely still calculating rather than recalling — short, frequent sessions build recall speed faster than long occasional ones. Mixed practice like this page is best used as a checkpoint after focused single-table practice, not as the first place a new table is learned.</p>
     </section>
 
     <!-- FAQ -->
@@ -130,14 +130,14 @@ const faqItems = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Want to focus on one table at a time? Try the <a href="/multiplication/times-tables/1" class="text-[#4F46E5] font-semibold hover:underline">times tables practice pages</a> →</p>
+    <p class="text-sm text-body">Want to focus on one table at a time? Try the <a href="/multiplication/times-tables/1" class="text-[#4F46E5] font-semibold hover:underline">times tables practice pages</a> →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

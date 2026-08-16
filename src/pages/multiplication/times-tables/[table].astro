@@ -87,8 +87,8 @@ const commutativityRef = tableNumber === 7 ? 8 : 7;
 // The mature generated Times Tables content uses one shared dark-content
 // treatment. It is keyed to the content system, never to an individual table.
 const darkText = Boolean(fact);
-const bodyTextClass = 'text-black';
-const listTextClass = 'text-black';
+const bodyTextClass = 'text-body';
+const listTextClass = 'text-body';
 
 // Build the full times table list for the FAQ answer
 const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}Ã—${i + 1}=${tableNumber * (i + 1)}`).join(', ');
@@ -150,7 +150,6 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
   description={pageDescription}
   canonical={`${SITE}/multiplication/times-tables/${tableNumber}`}
   pilotLayout
-  darkText={darkText}
   breadcrumb={[
     { label: 'Home', href: '/' },
     { label: 'Multiplication', href: '/multiplication' },
@@ -203,7 +202,6 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
     current={`/multiplication/times-tables/${tableNumber}`}
     showGrid
     gridCurrent={tableNumber}
-    darkText={darkText}
   />
 
   <div slot="intro">
@@ -274,6 +272,6 @@ const introSupport = `This page drills ${tableNumber}Ã—1 through ${tableNumber}Ã
     </section>
 
     <!-- Internal Links (matching Related Practice's canonical last position) -->
-    <InternalLinks links={links} darkText={darkText} />
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>

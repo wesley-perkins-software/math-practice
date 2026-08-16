@@ -91,7 +91,7 @@ const faqItems = [
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit addition problems (10–99 + 10–99) where no column sums to 10 or more</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Aligning tens and ones columns by place value</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Adding each column independently from right to left</li>
@@ -106,17 +106,17 @@ const faqItems = [
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align by Place Value</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Write the numbers so the ones digits are in one column and the tens digits are in another. Alignment prevents place-value errors.</p>
+          <p class="text-sm text-body leading-relaxed">Write the numbers so the ones digits are in one column and the tens digits are in another. Alignment prevents place-value errors.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Ones Column</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Start on the right. Add the two ones digits together and write the result below the ones column.</p>
+          <p class="text-sm text-body leading-relaxed">Start on the right. Add the two ones digits together and write the result below the ones column.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Tens Column</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Move left to the tens column. Add those two digits and write the result. Since there is no regrouping, you're done.</p>
+          <p class="text-sm text-body leading-relaxed">Move left to the tens column. Add those two digits and write the result. Since there is no regrouping, you're done.</p>
         </div>
       </div>
     </section>
@@ -124,7 +124,7 @@ const faqItems = [
     <!-- Parent & Teacher Guidance -->
     <section aria-labelledby="parent-teacher-heading">
       <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
-      <p class="text-sm text-[#6B7280] leading-relaxed">The skill being tested here isn't addition itself — it's whether a child lines up the ones and tens columns correctly before adding. Watch for a child who solves 23 + 5 by adding 2 + 5 instead of 3 + 5; that's a column-alignment error, not an addition-facts error, and it needs a different fix (grid paper or wider spacing helps more than more practice problems). If a child solves every problem correctly but slowly, they're likely still adding each column one number at a time instead of retrieving facts instantly — that's normal at this stage and will speed up with the single-digit fact practice on the 1-digit page. Because no problem here ever requires regrouping, a child who's ready to move on should be getting these right quickly and consistently before starting the regrouping page.</p>
+      <p class="text-sm text-body leading-relaxed">The skill being tested here isn't addition itself — it's whether a child lines up the ones and tens columns correctly before adding. Watch for a child who solves 23 + 5 by adding 2 + 5 instead of 3 + 5; that's a column-alignment error, not an addition-facts error, and it needs a different fix (grid paper or wider spacing helps more than more practice problems). If a child solves every problem correctly but slowly, they're likely still adding each column one number at a time instead of retrieving facts instantly — that's normal at this stage and will speed up with the single-digit fact practice on the 1-digit page. Because no problem here ever requires regrouping, a child who's ready to move on should be getting these right quickly and consistently before starting the regrouping page.</p>
     </section>
 
     <!-- FAQ -->
@@ -134,14 +134,14 @@ const faqItems = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Ready for regrouping? Try <a href="/addition/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition with regrouping</a> next →</p>
+    <p class="text-sm text-body">Ready for regrouping? Try <a href="/addition/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition with regrouping</a> next →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

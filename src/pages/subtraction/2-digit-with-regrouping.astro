@@ -117,7 +117,7 @@ const faqItems = [
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit subtraction problems where the ones column always requires regrouping</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Regrouping 1 ten from the tens column to make subtraction possible</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems range from 20–99 − 11–49 to ensure every problem requires regrouping</li>
@@ -132,20 +132,20 @@ const faqItems = [
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align the Columns</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
+          <p class="text-sm text-body leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Regroup from the Tens</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">If the top ones digit is smaller than the bottom, regroup 1 ten as 10 ones. Reduce the tens digit by 1 and add 10 to the ones digit. Example: 72 − 38 → top ones 2 &lt; 8 → regroup → ones become 12, tens become 6.</p>
+          <p class="text-sm text-body leading-relaxed">If the top ones digit is smaller than the bottom, regroup 1 ten as 10 ones. Reduce the tens digit by 1 and add 10 to the ones digit. Example: 72 − 38 → top ones 2 &lt; 8 → regroup → ones become 12, tens become 6.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Subtract Both Columns</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Subtract the ones: 12 − 8 = 4. Then subtract the tens using the reduced digit: 6 − 3 = 3. Write both for the final answer: 34.</p>
+          <p class="text-sm text-body leading-relaxed">Subtract the ones: 12 − 8 = 4. Then subtract the tens using the reduced digit: 6 − 3 = 3. Write both for the final answer: 34.</p>
         </div>
       </div>
-      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-[#4B5563]">
+      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-body">
         <span class="font-semibold text-[#1E293B]">Example:</span> 72 − 38 → ones: regroup → 12 − 8 = 4 → tens: 6 − 3 = 3 → <span class="font-semibold text-[#4F46E5]">Answer: 34</span>
       </div>
     </section>
@@ -153,7 +153,7 @@ const faqItems = [
     <!-- Parent & Teacher Guidance -->
     <section aria-labelledby="parent-teacher-heading">
       <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
-      <p class="text-sm text-[#6B7280] leading-relaxed">Regrouping trips up students who were doing fine with subtraction facts, because there's now an extra step to track before subtracting. Watch for a child who tries to subtract the smaller digit from the larger one regardless of position (turning 72 − 38 into an ones-column answer of 8 − 2 = 6 instead of regrouping); that's the single most common error, and it means the child hasn't yet internalized why regrouping is necessary, not just how to do it. If a child regroups correctly but forgets to reduce the tens digit by 1 afterward, they're applying half the procedure — worth re-explaining with a concrete example like 72 − 38 rather than assigning more timed problems. Once a child can explain out loud why they're regrouping (not just where to cross out and rewrite), they're ready to move quickly through this level.</p>
+      <p class="text-sm text-body leading-relaxed">Regrouping trips up students who were doing fine with subtraction facts, because there's now an extra step to track before subtracting. Watch for a child who tries to subtract the smaller digit from the larger one regardless of position (turning 72 − 38 into an ones-column answer of 8 − 2 = 6 instead of regrouping); that's the single most common error, and it means the child hasn't yet internalized why regrouping is necessary, not just how to do it. If a child regroups correctly but forgets to reduce the tens digit by 1 afterward, they're applying half the procedure — worth re-explaining with a concrete example like 72 − 38 rather than assigning more timed problems. Once a child can explain out loud why they're regrouping (not just where to cross out and rewrite), they're ready to move quickly through this level.</p>
     </section>
 
     <!-- FAQ -->
@@ -163,14 +163,14 @@ const faqItems = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Comfortable with regrouping? Try <a href="/addition/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">2-digit addition with regrouping</a>, the inverse regrouping skill →</p>
+    <p class="text-sm text-body">Comfortable with regrouping? Try <a href="/addition/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">2-digit addition with regrouping</a>, the inverse regrouping skill →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

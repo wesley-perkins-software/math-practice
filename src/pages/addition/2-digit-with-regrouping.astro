@@ -117,7 +117,7 @@ const faqItems = [
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Two-digit addition problems where the ones column always sums to 10 or more</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Regrouping 1 ten from the ones column into the tens column</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Problems range from 15–99 + 15–99 to ensure every problem requires regrouping</li>
@@ -132,20 +132,20 @@ const faqItems = [
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 1</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Align the Columns</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
+          <p class="text-sm text-body leading-relaxed">Write both numbers with ones digits aligned in one column and tens digits in another. Good alignment prevents errors.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 2</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Ones — and Regroup</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Add the ones column. If the sum is 10 or more, write the ones digit below and regroup 10 ones as 1 ten, placed above the tens column. Example: 7 + 8 = 15 → write 5, regroup 1 ten.</p>
+          <p class="text-sm text-body leading-relaxed">Add the ones column. If the sum is 10 or more, write the ones digit below and regroup 10 ones as 1 ten, placed above the tens column. Example: 7 + 8 = 15 → write 5, regroup 1 ten.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <div class="text-[#4F46E5] font-bold text-sm mb-1">Step 3</div>
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Add the Tens + Regrouped Ten</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Add the tens column digits plus the regrouped 1. Write the result. Example: regrouped 1 + 4 + 3 = 8 in the tens place → final answer: 85.</p>
+          <p class="text-sm text-body leading-relaxed">Add the tens column digits plus the regrouped 1. Write the result. Example: regrouped 1 + 4 + 3 = 8 in the tens place → final answer: 85.</p>
         </div>
       </div>
-      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-[#4B5563]">
+      <div class="mt-4 bg-[#EEF2FF] rounded-xl px-5 py-4 text-sm text-body">
         <span class="font-semibold text-[#1E293B]">Example:</span> 47 + 38 → ones: 7 + 8 = 15 (write 5, regroup 1 ten) → tens: 1 + 4 + 3 = 8 → <span class="font-semibold text-[#4F46E5]">Answer: 85</span>
       </div>
     </section>
@@ -153,7 +153,7 @@ const faqItems = [
     <!-- Parent & Teacher Guidance -->
     <section aria-labelledby="parent-teacher-heading">
       <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
-      <p class="text-sm text-[#6B7280] leading-relaxed">Regrouping is where a lot of students who were doing fine start making mistakes — not because addition got harder, but because there's now an extra step to remember. Watch for a child who gets the ones column right but forgets to add the regrouped ten into the tens column; that's the single most common error, and it means the regrouped digit needs to be written down (not done mentally) until it's automatic. If a child regroups correctly but consistently writes the wrong digit — putting the tens digit below instead of carrying it over — they've mixed up which digit stays and which moves, which is worth re-explaining with a concrete example like 47 + 38 rather than assigning more timed problems. Once a child can explain out loud why they're regrouping a ten (not just where to write it), they're ready to move quickly through this level.</p>
+      <p class="text-sm text-body leading-relaxed">Regrouping is where a lot of students who were doing fine start making mistakes — not because addition got harder, but because there's now an extra step to remember. Watch for a child who gets the ones column right but forgets to add the regrouped ten into the tens column; that's the single most common error, and it means the regrouped digit needs to be written down (not done mentally) until it's automatic. If a child regroups correctly but consistently writes the wrong digit — putting the tens digit below instead of carrying it over — they've mixed up which digit stays and which moves, which is worth re-explaining with a concrete example like 47 + 38 rather than assigning more timed problems. Once a child can explain out loud why they're regrouping a ten (not just where to write it), they're ready to move quickly through this level.</p>
     </section>
 
     <!-- FAQ -->
@@ -163,14 +163,14 @@ const faqItems = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Comfortable with regrouping? Try <a href="/subtraction/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">2-digit subtraction with regrouping</a>, the inverse skill →</p>
+    <p class="text-sm text-body">Comfortable with regrouping? Try <a href="/subtraction/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">2-digit subtraction with regrouping</a>, the inverse skill →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />
