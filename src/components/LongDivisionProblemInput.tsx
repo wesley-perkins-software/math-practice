@@ -84,9 +84,11 @@ export default function LongDivisionProblemInput({
       // Auto-advance only once the quotient is unambiguously complete (2 digits)
       if (newQ.length === QUOTIENT_MAX_DIGITS) setActiveSlot('remainder');
     } else {
+      // No correctness gate here, matching the quotient field: a student can
+      // type any 2-digit remainder, including a wrong one (e.g. 10 for a
+      // problem whose divisor is 5) — submit and the feedback banner is what
+      // tells them it's wrong, not a silently rejected keystroke.
       if (remainderValue.length >= REMAINDER_MAX_DIGITS) return;
-      const candidate = parseInt(remainderValue + d, 10);
-      if (candidate >= problem.operandB) return;
       setRemainderValue((v) => v + d);
     }
   }
