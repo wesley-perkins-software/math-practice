@@ -18,29 +18,32 @@ export function getStaticPaths() {
 
 const { divisor } = Astro.props;
 
-// Pilot scope (docs/seo/CANONICAL_GENERATED_PAGE_STANDARD.md Phase 1B/3): only
-// divisor 6 reads from the divide-by fact bank so far. The other 11 divisors
-// are unaffected — `fact` is undefined for them and every conditional below
-// falls back to the existing generic content.
-const PILOT_DIVISORS = new Set([6]);
-const fact = PILOT_DIVISORS.has(divisor) ? getDivideByFact(divisor) : undefined;
+// Fact-bank membership is the rollout gate. Unreviewed divisors continue to
+// use the existing generic page until an authored entry is added.
+const fact = getDivideByFact(divisor);
+const isMature = fact !== undefined;
 
 // Hand-composed expanded intro paragraph for the pilot divisor only, woven
 // around the fact bank's `introClause`, matching the ~40-70 word intro target
 // used for the times-table pilot pages.
 const EXPANDED_INTRO: Partial<Record<number, string>> = {
+  1: `This page mixes up all twelve divide-by-1 facts in random order. ${fact?.introClause}`,
+  2: `This page mixes up all twelve divide-by-2 facts in random order. ${fact?.introClause}`,
+  3: `This page mixes up all twelve divide-by-3 facts in random order. ${fact?.introClause}`,
+  4: `This page mixes up all twelve divide-by-4 facts in random order. ${fact?.introClause}`,
+  5: `This page mixes up all twelve divide-by-5 facts in random order. ${fact?.introClause}`,
   6: `This page mixes up all twelve divide-by-6 facts in random order, so you get comfortable with them no matter what order they come in. If a fact doesn't come to mind right away, the strategy section below shows two reliable ways to work it out.`,
 };
 
-// Font-color request scoped to the divisor 6 pilot page only: body/list text
-// switches from the site's default grey to black. Every other divisor keeps
-// its original grey text-[#6B7280]/[#4B5563] classes unchanged. Same known
-// limitation as [table].astro's equivalent comment: this is a page-by-page
-// stopgap (repeated here and in LocalChooser/NumberGrid/InternalLinks via a
-// `darkText` prop), not a real shared typography system — flagged for a
-// later dedicated pass, not solved in this cleanup.
+// Fact-bank membership also identifies reviewed content for the shared dark
+// typography treatment. This avoids divisor-specific presentation checks.
 const bodyTextClass = fact ? 'text-black' : 'text-[#6B7280]';
 const listTextClass = fact ? 'text-black' : 'text-[#4B5563]';
+const quickAnswerText = fact && divisor === 6
+  ? `Divide by 6 means finding how many equal groups of 6 fit into a number, with the answer always a whole number on this page. ${fact.quickAnswerFact}`
+  : fact
+    ? `Divide by ${divisor} practice here covers the 12 exact whole-number facts from ${divisor}÷${divisor}=1 through ${divisor * 12}÷${divisor}=12. ${fact.quickAnswerFact}`
+    : '';
 
 const title = `Divide by ${divisor} Practice | Math Practice Online`;
 const description = `Practice dividing by ${divisor} with exact whole-number answers. Build speed and confidence with focused ÷${divisor} drills — all ${divisor === 1 ? '12' : '12'} facts in one place. No signup required.`;
@@ -59,7 +62,7 @@ const nextDivisor = divisor < 12 ? divisor + 1 : null;
 // A sample of the divide-by-N facts for the FAQ answer
 const sampleFacts = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map(n => `${n * divisor}÷${divisor}=${n}`).join(', ');
 
-const faqItems = [
+const legacyFaqItems = [
   {
     q: `What are the divide by ${divisor} facts?`,
     a: `The divide by ${divisor} facts are all problems where ${divisor} is the divisor and the quotient is a whole number from 1 to 12: ${sampleFacts}. These ${12} facts form one complete division fact family for the divisor ${divisor}.`,
@@ -108,10 +111,37 @@ const faqItems = [
     : []),
 ];
 
+const matureFaqItems = fact && divisor <= 5 ? [
+  {
+    q: `What does divide by ${divisor} mean?`,
+    a: divisor === 1
+      ? `Dividing by 1 means putting the whole number into one group. That group contains everything, so 8÷1=8.`
+      : `Dividing by ${divisor} means splitting a number into ${divisor} equal groups and finding how many are in each group. For example, ${divisor * 7}÷${divisor}=7.`,
+  },
+  {
+    q: fact.faqDifferentiator.question,
+    a: fact.faqDifferentiator.answer,
+  },
+  {
+    q: `Which multiplication facts help with divide by ${divisor}?`,
+    a: `The ${divisor} times table facts work in reverse. Because ${divisor}×8=${divisor * 8}, you know ${divisor * 8}÷${divisor}=8.`,
+  },
+  {
+    q: `Does divide by ${divisor} practice include remainders?`,
+    a: `No. This page uses the 12 exact facts from ${divisor}÷${divisor}=1 through ${divisor * 12}÷${divisor}=12, so every answer is a whole number. Problems that do not divide evenly are covered in Division with Remainders.`,
+  },
+  {
+    q: 'How is this different from Mixed Division Facts?',
+    a: `This page uses ${divisor} as the divisor in every problem. Mixed Division Facts combines different divisors in one practice session.`,
+  },
+] : null;
+
+const faqItems = matureFaqItems ?? legacyFaqItems;
+
 const links = [
   { href: '/division/facts', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
-  ...(fact ? [{ href: '/multiplication/times-tables/6', label: '6 Times Table Practice', description: 'The multiplication facts these division problems come from' }] : []),
+  ...(fact ? [{ href: `/multiplication/times-tables/${divisor}`, label: `${divisor} Times Table Practice`, description: 'The multiplication facts these division problems come from' }] : []),
   // Neutral "practice dividing by N" wording for the pilot divisor (6) only —
   // "Previous/Next fact family" implied a required instructional sequence
   // that isn't documented anywhere on the site. Every other divisor keeps
@@ -157,13 +187,13 @@ const links = [
   {fact ? (
     <div slot="quick-answer">
       <p>
-        Divide by {divisor} means finding how many equal groups of {divisor} fit into a number, with the answer always a whole number on this page. {fact.quickAnswerFact}
+        {quickAnswerText}
       </p>
     </div>
   ) : null}
   <div slot="intro">
     {fact ? (
-      <p>{EXPANDED_INTRO[divisor]}</p>
+      <p class="text-black">{EXPANDED_INTRO[divisor]}</p>
     ) : (
       <p>Focus on one fact family at a time with divide by {divisor} problems. This targeted practice helps students improve speed, sharpen accuracy, and gain confidence before mixing all divisors together in full division facts practice.</p>
     )}
@@ -175,7 +205,7 @@ const links = [
     current={`/division/divide-by/${divisor}`}
     showGrid
     gridCurrent={divisor}
-    darkText={!!fact}
+    darkText={isMature}
   />
   {!fact && <InternalLinks slot="links" links={links} />}
 
@@ -184,9 +214,12 @@ const links = [
       <h2 id={`div-by-${divisor}-context-heading`} class="text-lg font-semibold text-[#1E293B] mb-4">About Divide by {divisor} Facts</h2>
       <div class={`bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5 text-sm ${listTextClass} leading-relaxed space-y-3`}>
         {fact ? (
-          <p>
-            This page includes all 12 divide-by-{divisor} facts, from <span class="font-mono font-semibold text-[#1E1B4B]">{divisor}÷{divisor}=1</span> up to <span class="font-mono font-semibold text-[#1E1B4B]">{divisor * 12}÷{divisor}=12</span>, each with a whole-number answer. Grade context: <span class="font-semibold text-[#4F46E5]">{gradeContext}</span>.
-          </p>
+          <>
+            <p>
+              This page includes all 12 divide-by-{divisor} facts, from <span class="font-mono font-semibold text-[#1E1B4B]">{divisor}÷{divisor}=1</span> up to <span class="font-mono font-semibold text-[#1E1B4B]">{divisor * 12}÷{divisor}=12</span>, each with a whole-number answer. Grade context: <span class="font-semibold text-[#4F46E5]">{gradeContext}</span>.
+            </p>
+            {divisor <= 5 && <p>Each problem matches a {divisor} times table fact asked backward. This focused practice does not include remainders or long division.</p>}
+          </>
         ) : (
           <>
             <p>
