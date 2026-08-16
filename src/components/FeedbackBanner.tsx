@@ -47,7 +47,7 @@ export default function FeedbackBanner({ state, correctAnswer, correctRemainder,
         ) : (
           <span>
             {correctRemainder !== undefined
-              ? <>The answer was <span className="tabular-nums">{correctAnswer} r{correctRemainder}</span></>
+              ? <>The answer was <span className="tabular-nums">{correctAnswer} R {correctRemainder}</span></>
               : <>The answer was <span className="tabular-nums">{correctAnswer}</span></>}
           </span>
         )}
