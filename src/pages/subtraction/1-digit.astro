@@ -91,7 +91,7 @@ const faqItems = [
     <!-- What you'll practice -->
     <section aria-labelledby="what-heading">
       <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-3">What You'll Practice</h2>
-      <ul class="space-y-2 text-sm text-[#4B5563] leading-relaxed">
+      <ul class="space-y-2 text-sm text-body leading-relaxed">
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> All single-digit subtraction facts (1−1 through 9−1, up to 9−9)</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Differences from 0 to 8, including the hardest subtraction facts</li>
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Instant feedback on every answer with streak tracking</li>
@@ -105,15 +105,15 @@ const faqItems = [
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Count Back</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Start from the larger number and count down. For 9 − 3: start at 9, count back 3 → 8, 7, 6.</p>
+          <p class="text-sm text-body leading-relaxed">Start from the larger number and count down. For 9 − 3: start at 9, count back 3 → 8, 7, 6.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Think Addition</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">For 8 − 5: ask "5 + ? = 8." If you know your addition facts, you can find subtraction answers instantly.</p>
+          <p class="text-sm text-body leading-relaxed">For 8 − 5: ask "5 + ? = 8." If you know your addition facts, you can find subtraction answers instantly.</p>
         </div>
         <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
           <h3 class="text-sm font-semibold text-[#1E293B] mb-1">Use Fact Families</h3>
-          <p class="text-sm text-[#6B7280] leading-relaxed">Know that 6 + 4 = 10, so 10 − 4 = 6 and 10 − 6 = 4. Addition and subtraction facts come in families of four.</p>
+          <p class="text-sm text-body leading-relaxed">Know that 6 + 4 = 10, so 10 − 4 = 6 and 10 − 6 = 4. Addition and subtraction facts come in families of four.</p>
         </div>
       </div>
     </section>
@@ -121,7 +121,7 @@ const faqItems = [
     <!-- Parent & Teacher Guidance -->
     <section aria-labelledby="parent-teacher-heading">
       <h2 id="parent-teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Parent &amp; Teacher Guidance</h2>
-      <p class="text-sm text-[#6B7280] leading-relaxed">Subtraction is where "counting" strategies show their limits — a child who's fast at addition often slows down here because counting backward is harder to track than counting forward. Watch for a child who consistently gets an answer one off (like answering 9 − 4 = 4 instead of 5); that's usually a counting error, not a fact-recall error, and it means they're still counting on fingers rather than retrieving the fact. The "think addition" strategy (asking "5 + ? = 9" instead of counting back from 9) is often the fastest fix for a child stuck on counting, since it reuses addition facts they may already know solidly. If a child knows their addition facts well but still struggles here, the gap is usually the connection between the two operations, not weak number sense.</p>
+      <p class="text-sm text-body leading-relaxed">Subtraction is where "counting" strategies show their limits — a child who's fast at addition often slows down here because counting backward is harder to track than counting forward. Watch for a child who consistently gets an answer one off (like answering 9 − 4 = 4 instead of 5); that's usually a counting error, not a fact-recall error, and it means they're still counting on fingers rather than retrieving the fact. The "think addition" strategy (asking "5 + ? = 9" instead of counting back from 9) is often the fastest fix for a child stuck on counting, since it reuses addition facts they may already know solidly. If a child knows their addition facts well but still struggles here, the gap is usually the connection between the two operations, not weak number sense.</p>
     </section>
 
     <!-- FAQ -->
@@ -131,14 +131,14 @@ const faqItems = [
         {faqItems.map(({ q, a }) => (
           <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
             <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-            <p class="text-sm text-[#6B7280] leading-relaxed">{a}</p>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
           </div>
         ))}
       </div>
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-[#4B5563]">Once these facts feel automatic, move on to <a href="/subtraction/2-digit-without-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction without regrouping</a> →</p>
+    <p class="text-sm text-body">Once these facts feel automatic, move on to <a href="/subtraction/2-digit-without-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction without regrouping</a> →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />
