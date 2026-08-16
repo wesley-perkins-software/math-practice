@@ -29,7 +29,7 @@ const fact = PILOT_DIVISORS.has(divisor) ? getDivideByFact(divisor) : undefined;
 // around the fact bank's `introClause`, matching the ~40-70 word intro target
 // used for the times-table pilot pages.
 const EXPANDED_INTRO: Partial<Record<number, string>> = {
-  6: `Because 6 is the product of 2 and 3, a divide-by-6 fact that isn't yet automatic can always be split into an easier divide-by-2 step and a divide-by-3 step, in addition to the direct 6 times table recall this practice builds. This page drills all 12 divide-by-6 facts in random order until that recall becomes fast on its own.`,
+  6: `This page mixes up all twelve divide-by-6 facts in random order, so you get comfortable with them no matter what order they come in. If a fact doesn't come to mind right away, the strategy section below shows two reliable ways to work it out.`,
 };
 
 const title = `Divide by ${divisor} Practice | Math Practice Online`;
@@ -64,9 +64,11 @@ const faqItems = [
   },
   {
     q: `What should I practice after mastering divide by ${divisor}?`,
-    a: nextDivisor
-      ? `After ÷${divisor} feels automatic, move to divide by ${nextDivisor} to continue building through the fact families. Once all individual divisors are solid, use Division Facts practice to mix all divisors together for comprehensive fluency.`
-      : `After ÷${divisor} feels automatic, use Division Facts practice to mix all divisors together. You can also move on to division with remainders, which extends fluency to non-exact problems.`,
+    a: fact
+      ? `When you're comfortable dividing by ${divisor}, try practicing another divisor or switch to Mixed Division Facts to combine them all together.`
+      : nextDivisor
+        ? `After ÷${divisor} feels automatic, move to divide by ${nextDivisor} to continue building through the fact families. Once all individual divisors are solid, use Division Facts practice to mix all divisors together for comprehensive fluency.`
+        : `After ÷${divisor} feels automatic, use Division Facts practice to mix all divisors together. You can also move on to division with remainders, which extends fluency to non-exact problems.`,
   },
   {
     q: 'How does this practice work?',
@@ -86,7 +88,7 @@ const faqItems = [
 const links = [
   { href: '/division/facts', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
-  ...(fact ? [{ href: '/multiplication/times-tables/6', label: 'Practice the Inverse Skill: 6 Times Table', description: 'The multiplication facts these division facts reverse' }] : []),
+  ...(fact ? [{ href: '/multiplication/times-tables/6', label: '6 Times Table Practice', description: 'The multiplication facts these division problems come from' }] : []),
   ...(prevDivisor ? [{ href: `/division/divide-by/${prevDivisor}`, label: `Divide by ${prevDivisor} Practice`, description: `Previous fact family` }] : []),
   ...(nextDivisor ? [{ href: `/division/divide-by/${nextDivisor}`, label: `Divide by ${nextDivisor} Practice`, description: `Next fact family` }] : []),
 ];
@@ -147,18 +149,26 @@ const links = [
     showGrid
     gridCurrent={divisor}
   />
-  <InternalLinks slot="links" links={links} />
+  {!fact && <InternalLinks slot="links" links={links} />}
 
   <Fragment slot="how-it-works">
     <section class="mt-12" aria-labelledby={`div-by-${divisor}-context-heading`}>
       <h2 id={`div-by-${divisor}-context-heading`} class="text-lg font-semibold text-[#1E293B] mb-4">About Divide by {divisor} Facts</h2>
       <div class="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5 text-sm text-[#4B5563] leading-relaxed space-y-3">
-        <p>
-          The divide by {divisor} facts are the division half of the ×{divisor} multiplication fact family. Every fact you know from the {divisor} times table gives you a division fact for free — <span class="font-mono font-semibold text-[#1E1B4B]">{divisor}×8={divisor * 8}</span> means <span class="font-mono font-semibold text-[#1E1B4B]">{divisor * 8}÷{divisor}=8</span>.
-        </p>
-        <p>
-          There are 12 divide by {divisor} facts ({divisor}÷{divisor}=1 through {divisor * 12}÷{divisor}=12). Mastering all 12 in this focused mode makes mixed division practice significantly faster. Grade context: <span class="font-semibold text-[#4F46E5]">{gradeContext}</span>.
-        </p>
+        {fact ? (
+          <p>
+            This page includes all 12 divide-by-{divisor} facts, from <span class="font-mono font-semibold text-[#1E1B4B]">{divisor}÷{divisor}=1</span> up to <span class="font-mono font-semibold text-[#1E1B4B]">{divisor * 12}÷{divisor}=12</span>, each with a whole-number answer. Grade context: <span class="font-semibold text-[#4F46E5]">{gradeContext}</span>.
+          </p>
+        ) : (
+          <>
+            <p>
+              The divide by {divisor} facts are the division half of the ×{divisor} multiplication fact family. Every fact you know from the {divisor} times table gives you a division fact for free — <span class="font-mono font-semibold text-[#1E1B4B]">{divisor}×8={divisor * 8}</span> means <span class="font-mono font-semibold text-[#1E1B4B]">{divisor * 8}÷{divisor}=8</span>.
+            </p>
+            <p>
+              There are 12 divide by {divisor} facts ({divisor}÷{divisor}=1 through {divisor * 12}÷{divisor}=12). Mastering all 12 in this focused mode makes mixed division practice significantly faster. Grade context: <span class="font-semibold text-[#4F46E5]">{gradeContext}</span>.
+            </p>
+          </>
+        )}
       </div>
     </section>
 
@@ -178,13 +188,18 @@ const links = [
         <p>
           Use this page to close a specific gap. If a student is slow on the ÷{divisor} facts in mixed practice, come here for a focused session of just those 12 problems before returning to the mixed drill.
         </p>
-        <p>
-          Connect each divide by {divisor} fact explicitly to its multiplication partner. Ask: "What times {divisor} equals {divisor * 7}?" — then confirm: "So {divisor * 7} ÷ {divisor} = 7." This bidirectional thinking builds the fact family connection that makes both operations stick.
-        </p>
-        <p>
-          Once ÷{divisor} facts are automatic,{nextDivisor ? ` move to <a href="/division/divide-by/${nextDivisor}" class="text-[#4F46E5] font-medium hover:underline">divide by ${nextDivisor}</a> or return to` : ' return to'} <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">mixed division facts</a> to consolidate fluency across all divisors.
-        </p>
-        {fact && <p>{fact.parentTeacherNote}</p>}
+        {fact ? (
+          <p>{fact.parentTeacherNote}</p>
+        ) : (
+          <>
+            <p>
+              Connect each divide by {divisor} fact explicitly to its multiplication partner. Ask: "What times {divisor} equals {divisor * 7}?" — then confirm: "So {divisor * 7} ÷ {divisor} = 7." This bidirectional thinking builds the fact family connection that makes both operations stick.
+            </p>
+            <p>
+              Once ÷{divisor} facts are automatic,{nextDivisor ? ` move to <a href="/division/divide-by/${nextDivisor}" class="text-[#4F46E5] font-medium hover:underline">divide by ${nextDivisor}</a> or return to` : ' return to'} <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">mixed division facts</a> to consolidate fluency across all divisors.
+            </p>
+          </>
+        )}
       </div>
     </section>
 
@@ -199,5 +214,11 @@ const links = [
         ))}
       </div>
     </section>
+
+    <!-- Internal Links: for the pilot divisor only, moved here to match the
+         times-table pilot's canonical last position (below the instructional
+         content). Non-pilot divisors keep their original position via the
+         `slot="links"` render above, unchanged. -->
+    {fact && <InternalLinks links={links} />}
   </Fragment>
 </PracticeLayout>

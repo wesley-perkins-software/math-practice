@@ -23,18 +23,18 @@ export const DIVIDE_BY_FACTS: GeneratedPracticeEntry[] = [
   {
     n: 6,
     quickAnswerFact:
-      'Every divide-by-6 fact reverses a 6 times table fact (48÷6=8 because 6×8=48), and because 6=2×3, any divide-by-6 problem can also be solved in two easier steps: divide by 2, then by 3.',
+      'Each answer matches a 6 times table fact — for example, 48÷6=8 because 6×8=48.',
     introClause:
-      'because 6 is the product of 2 and 3, a divide-by-6 fact that is not yet automatic can always be split into an easier divide-by-2 step and a divide-by-3 step, in addition to the direct multiplication-fact recall this practice builds',
+      'divide-by-6 practice uses the same 12 facts as the 6 times table, just asked the other way around, so a fact that does not come to mind right away can always be worked out from the 6 times table or by dividing in two smaller steps',
     strategyTitle: 'Ask "6 Times What?" — or Split Into ÷2 Then ÷3',
     strategyExplanation:
-      'The fastest method is to think in reverse: 48÷6 asks "6 times what equals 48?" Recalling 6×8=48 gives the answer directly. When a fact is not yet automatic, use 6=2×3 instead: divide by 2 first, then by 3 (or the reverse order). For 48÷6: 48÷2=24, then 24÷3=8 — the same answer, reached in two smaller steps.',
+      'Think in reverse: 48÷6 is asking "6 times what equals 48?" If you remember 6×8=48, you have your answer right away. If a fact doesn\'t come to mind, try splitting it instead, since 6=2×3: divide by 2 first, then by 3 (or the other way around). For 48÷6: 48÷2=24, then 24÷3=8 — same answer, in two easier steps.',
     parentTeacherNote:
-      'If a student knows 6×7=42 from times-table practice but hesitates on 42÷6, the gap is usually retrieval direction, not the fact itself — this page targets exactly that gap. For a student who freezes on a ÷6 fact but can handle ÷2 and ÷3 separately, teach the split method (halve, then divide by 3) as a fallback while direct recall catches up; it is mathematically exact, not an estimate.',
+      'Ask "6 times what equals ___" before showing the division problem — most kids find the multiplication direction easier, and connecting the two is what makes both stick. If a fact still doesn\'t come, splitting it into ÷2 then ÷3 (see the strategy above) is a solid fallback. Once ÷6 feels comfortable, try another divisor or switch to mixed division facts — whichever feels useful next.',
     faqDifferentiator: {
-      question: 'Can a divide by 6 answer be checked using division by smaller numbers?',
+      question: 'Why does splitting into ÷2 and ÷3 work for divide by 6, but not for divide by 7?',
       answer:
-        'Yes — because 6=2×3, any divide-by-6 problem can be split into a divide-by-2 step and a divide-by-3 step, in either order. For 42÷6: dividing by 2 first gives 21, then dividing 21 by 3 gives 7. This works because 42÷6 = 42÷(2×3) = (42÷2)÷3, matching the direct answer 42÷6=7.',
+        "Because 6 is a composite number — it's 2×3 — while 7 is prime and can't be split into smaller whole-number factors. That's why the divide-by-2-then-÷3 shortcut works for divide by 6 (and other composite divisors, like 8, 9, or 12), but there's no similar shortcut for divide by 7.",
     },
   },
 ];
