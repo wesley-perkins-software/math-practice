@@ -154,79 +154,108 @@ const chevron = 'M6 9l6 6 6-6';
   // Shared open/close behavior for every disclosure menu in the header:
   // the top-level mobile trigger (`data-site-nav-menu`) and every operation
   // dropdown/nested flyout (`data-dismissable-menu`).
-  const dismissableSelector = 'details[data-site-nav-menu], details[data-dismissable-menu]';
-  const allMenus = Array.from(document.querySelectorAll<HTMLDetailsElement>(dismissableSelector));
+  //
+  // This site uses Astro's <ClientRouter /> (View Transitions) sitewide, so
+  // navigating between two pages that both render this header does NOT
+  // reload the document — the old header's DOM (including these listeners)
+  // is discarded and a fresh, entirely unbound copy swaps in. A plain
+  // top-level script only runs once, the first time it's encountered, so
+  // without re-binding, every page you reach via a client-side navigation
+  // would silently lose exclusivity/outside-click/Escape entirely (native
+  // <details> still opens/closes on click, just with none of this logic) —
+  // that was the actual defect behind "multiple menus stay open," not an
+  // event-ordering race in the same-page listeners themselves.
+  //
+  // Fix: per-element binding (exclusivity, Escape, position clamping) is
+  // wrapped in bindMenus() and re-run on every `astro:page-load`, which
+  // fires after the initial load AND after every transition. The
+  // page-content-agnostic listeners (click-outside, focusin, pointerdown/
+  // touchstart) re-query the DOM at event time rather than closing over a
+  // snapshot, so they're attached exactly once and never go stale.
+  const DISMISSABLE_SELECTOR = 'details[data-site-nav-menu], details[data-dismissable-menu]';
+  const BOUND_ATTR = 'data-menu-bound';
+  const EDGE_MARGIN = 16;
 
-  function closeAllMenus() {
-    allMenus.forEach((d) => { if (d.open) d.open = false; });
+  function clampMenuPosition(details: HTMLDetailsElement) {
+    const menu = details.querySelector<HTMLElement>(':scope > div');
+    if (!menu) return;
+    menu.style.left = '';
+    menu.style.right = '';
+    const rect = menu.getBoundingClientRect();
+    const viewportWidth = document.documentElement.clientWidth;
+    if (rect.right > viewportWidth - EDGE_MARGIN) {
+      menu.style.right = '0';
+      menu.style.left = 'auto';
+    }
+    if (rect.left < EDGE_MARGIN) {
+      menu.style.left = '0';
+      menu.style.right = 'auto';
+    }
   }
 
-  allMenus.forEach((details) => {
-    const summary = details.querySelector('summary');
-    const menu = details.querySelector<HTMLElement>(':scope > div');
+  function closeAllMenus() {
+    document.querySelectorAll<HTMLDetailsElement>(DISMISSABLE_SELECTOR).forEach((d) => {
+      if (d.open) d.removeAttribute('open');
+    });
+  }
 
-    const EDGE_MARGIN = 16;
-    function clampMenuPosition() {
-      if (!menu) return;
-      menu.style.left = '';
-      menu.style.right = '';
-      const rect = menu.getBoundingClientRect();
-      const viewportWidth = document.documentElement.clientWidth;
-      if (rect.right > viewportWidth - EDGE_MARGIN) {
-        menu.style.right = '0';
-        menu.style.left = 'auto';
-      }
-      if (rect.left < EDGE_MARGIN) {
-        menu.style.left = '0';
-        menu.style.right = 'auto';
-      }
-    }
+  function bindMenus() {
+    document.querySelectorAll<HTMLDetailsElement>(DISMISSABLE_SELECTOR).forEach((details) => {
+      // Idempotent: astro:page-load can fire on a header that (rarely)
+      // wasn't replaced, so already-bound elements are skipped rather than
+      // double-bound.
+      if (details.hasAttribute(BOUND_ATTR)) return;
+      details.setAttribute(BOUND_ATTR, '');
 
-    details.addEventListener('toggle', () => {
-      if (!details.open) return;
-      clampMenuPosition();
+      const summary = details.querySelector('summary');
 
-      // Exclusivity: opening a top-level operation menu (Addition/
-      // Subtraction/Multiplication/Division) closes every other top-level
-      // operation menu in the same group (the desktop row, or the mobile
-      // panel) — at most one is ever open at once. Nested Times Tables/
-      // Divide By flyouts don't carry a group, so they're untouched by
-      // this, and a closing parent doesn't reset a nested flyout's own
-      // open state (unchanged prior behavior).
-      const group = details.dataset.opGroup;
-      if (!group) return;
-      allMenus.forEach((other) => {
-        if (other !== details && other.dataset.opGroup === group && other.open) {
-          other.open = false;
+      details.addEventListener('toggle', () => {
+        if (!details.open) return;
+        clampMenuPosition(details);
+
+        // Exclusivity: when a top-level operation <details> (Addition/
+        // Subtraction/Multiplication/Division) becomes open, synchronously
+        // remove the `open` attribute from every other top-level <details>
+        // that shares its `data-op-group` (the desktop row, or the mobile
+        // accordion panel — two independent groups) — at most one is ever
+        // open per group. The selector is scoped to `[data-op-group]`
+        // specifically, so nested Times Tables/Divide By flyouts (which
+        // carry no group) are never touched as if they were peers, and a
+        // closing parent doesn't reset a nested flyout's own open state.
+        const group = details.dataset.opGroup;
+        if (!group) return;
+        document.querySelectorAll<HTMLDetailsElement>(`details[data-op-group="${group}"]`).forEach((other) => {
+          if (other !== details && other.open) other.removeAttribute('open');
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        if (details.open) clampMenuPosition(details);
+      });
+
+      // Escape closes the innermost open menu and returns focus to its own
+      // trigger (no stopPropagation, so a second Escape closes a parent
+      // menu too — a second `[data-dismissable-menu]` ancestor, if open,
+      // gets its own Escape keydown next since focus is still inside it).
+      details.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && details.open) {
+          e.preventDefault();
+          details.removeAttribute('open');
+          summary?.focus();
         }
       });
     });
-
-    window.addEventListener('resize', () => {
-      if (details.open) clampMenuPosition();
-    });
-
-    // Escape closes the innermost open menu and returns focus to its own
-    // trigger (no stopPropagation, so a second Escape closes a parent menu
-    // too — a second `[data-dismissable-menu]` ancestor, if open, gets its
-    // own Escape keydown next since focus is still inside it).
-    details.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && details.open) {
-        e.preventDefault();
-        details.open = false;
-        summary?.focus();
-      }
-    });
-  });
+  }
 
   // Click/tap anywhere not contained by a given open menu closes it —
   // covers both "elsewhere on the page" and switching between sibling
   // menus via mouse or touch (the toggle-based exclusivity above is the
-  // keyboard-safe backstop for the same rule).
+  // keyboard-safe version of the same rule). Re-queries at event time, so
+  // this single listener keeps working after every client-side navigation.
   document.addEventListener('click', (e) => {
     if (!(e.target instanceof Node)) return;
-    allMenus.forEach((d) => {
-      if (d.open && !d.contains(e.target as Node)) d.open = false;
+    document.querySelectorAll<HTMLDetailsElement>(DISMISSABLE_SELECTOR).forEach((d) => {
+      if (d.open && !d.contains(e.target as Node)) d.removeAttribute('open');
     });
   });
 
@@ -247,4 +276,6 @@ const chevron = 'M6 9l6 6 6-6';
       }
     }, { passive: true });
   });
+
+  document.addEventListener('astro:page-load', bindMenus);
 </script>
