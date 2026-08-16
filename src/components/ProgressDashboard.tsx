@@ -226,10 +226,10 @@ function AchievementBadge({ achievement, earned }: AchievementBadgeProps) {
           : 'bg-[#F8FAFC] border-[#E2E8F0]'
       }`}
     >
-      <div className="text-sm font-bold leading-snug text-black">
+      <div className={`text-sm font-bold leading-snug ${earned ? 'text-white' : 'text-black'}`}>
         {achievement.label}
       </div>
-      <div className="text-sm mt-0.5 leading-snug text-black">
+      <div className={`text-sm mt-0.5 leading-snug ${earned ? 'text-white' : 'text-black'}`}>
         {achievement.description}
       </div>
     </div>
@@ -350,18 +350,18 @@ export default function ProgressDashboard() {
       {todayProblems > 0 && (
         <div className="bg-[#4F46E5] rounded-xl px-5 py-4 flex items-center justify-between gap-4 flex-wrap">
           <div>
-            <div className="text-black font-semibold text-base">Today's Practice</div>
-            <div className="text-black text-sm mt-0.5">Keep up the great work!</div>
+            <div className="text-white font-semibold text-base">Today's Practice</div>
+            <div className="text-white text-sm mt-0.5">Keep up the great work!</div>
           </div>
           <div className="flex gap-6">
             <div className="text-center">
-              <div className="text-black font-bold text-xl">{todayProblems}</div>
-              <div className="text-black text-sm">problems today</div>
+              <div className="text-white font-bold text-xl">{todayProblems}</div>
+              <div className="text-white text-sm">problems today</div>
             </div>
             {currentStreakToday > 0 && (
               <div className="text-center">
-                <div className="text-black font-bold text-xl">{currentStreakToday}</div>
-                <div className="text-black text-sm">current streak</div>
+                <div className="text-white font-bold text-xl">{currentStreakToday}</div>
+                <div className="text-white text-sm">current streak</div>
               </div>
             )}
           </div>
