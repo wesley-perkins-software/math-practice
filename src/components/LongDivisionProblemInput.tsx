@@ -22,12 +22,18 @@ const REMAINDER_MAX_DIGITS = 2;
  * where a student would write it on paper. The remainder is a compact
  * "R: [ ]" beneath the whole setup, secondary to the quotient.
  *
+ * Digit size and the quotient's answer-box height reuse addition's own
+ * --practice-operand-size / --practice-answer-min-h tokens directly, so this
+ * widget shares addition's exact footprint rather than a smaller lookalike.
+ *
  * Quotient and dividend share a column sized to the CURRENT problem's actual
  * dividend digit count (not a constant), so a 2-digit dividend sits flush
  * against the bracket instead of floating in a gutter reserved for 3 digits
  * — while still staying fixed while the student types (the dividend's digit
  * count can't change mid-problem, only the quotient's can, and the quotient
- * can never have more digits than the dividend it divides into).
+ * can never have more digits than the dividend it divides into). The two
+ * rows share identical right-side padding so their digits land on the same
+ * place-value axis independent of how their left-side padding differs.
  */
 export default function LongDivisionProblemInput({
   problem,
@@ -150,7 +156,7 @@ export default function LongDivisionProblemInput({
   const columnWidth = `${String(problem.operandA).length}ch`;
 
   return (
-    <div className="flex flex-col items-center gap-3 w-full font-practice">
+    <div className="flex flex-col items-center gap-4 w-full font-practice">
       {/* Hidden input captures keyboard events for whichever slot is active */}
       <input
         ref={inputRef}
@@ -181,51 +187,59 @@ export default function LongDivisionProblemInput({
         aria-label={`${problem.operandA} divided by ${problem.operandB}. Enter the quotient and remainder.`}
       >
         {/* Divisor — outside the bracket, aligned with the dividend's baseline */}
-        <div className="pr-2.5 select-none">
+        <div className="pr-3 select-none">
           <span className="text-[length:var(--ld-digit-size)] font-bold text-[#211D4F] tabular-nums leading-none">
             {problem.operandB}
           </span>
         </div>
 
-        {/* Quotient (above the bar) + bracket/dividend (below the bar) share
-            one right-aligned w-[3ch] column, so their place values line up
-            regardless of how many digits either one has. */}
+        {/* Quotient (above the bar) + bracket/dividend (below the bar). Both
+            rows use identical right-side padding (pr-4) around an inner
+            column sized to the dividend's own digit count, so the digits
+            themselves land on the same place-value axis regardless of how
+            differently the two rows are padded on the left (the bracket
+            needs extra room for its border-left "hook"; the answer box
+            doesn't). */}
         <div className="flex flex-col items-end">
-          {/* Quotient — the primary answer, occupying the actual quotient position */}
-          <div className="cursor-pointer mb-1.5" onClick={() => switchSlot('quotient')}>
+          {/* Quotient — the primary answer. Styled and sized exactly like
+              addition's own answer box (same border, same focus ring, same
+              min-height) so it reads as an intentional field, not a chip,
+              while still sitting directly above the bar like a student
+              would write it. */}
+          <div className="cursor-pointer mb-2" onClick={() => switchSlot('quotient')}>
             <span
-              style={{ width: columnWidth }}
-              className={`inline-flex items-center justify-end min-h-[length:var(--ld-box-min-h)] rounded-xl border-[1.5px] px-1.5 transition-colors duration-150 ${
+              className={`inline-flex items-center justify-end min-h-[length:var(--ld-box-min-h)] rounded-xl border-[1.5px] pl-3 pr-4 transition-colors duration-150 ${
                 activeSlot === 'quotient' && isFocused
                   ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
                   : 'border-[#8983B8] bg-transparent'
               }`}
             >
-              {quotientValue.length === 0 ? (
-                <span className="inline-flex items-center leading-none">
-                  <span aria-hidden="true" className="text-[length:var(--ld-digit-size)] font-bold opacity-0 select-none">0</span>
-                  {activeSlot === 'quotient' && (
-                    <span
-                      aria-hidden="true"
-                      className="ml-1 w-[3px] h-[length:var(--ld-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite]"
-                    />
-                  )}
-                </span>
-              ) : (
-                <span className={`text-[length:var(--ld-digit-size)] font-bold tabular-nums leading-none transition-colors duration-150 ${digitColor}`}>
-                  {quotientValue}
-                </span>
-              )}
+              <span style={{ minWidth: columnWidth }} className="inline-block text-right leading-none">
+                {quotientValue.length === 0 ? (
+                  <span className="inline-flex items-center justify-end w-full leading-none">
+                    <span aria-hidden="true" className="text-[length:var(--ld-digit-size)] font-bold opacity-0 select-none">0</span>
+                    {activeSlot === 'quotient' && (
+                      <span
+                        aria-hidden="true"
+                        className="ml-1 w-[3px] h-[length:var(--ld-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite] shrink-0"
+                      />
+                    )}
+                  </span>
+                ) : (
+                  <span className={`text-[length:var(--ld-digit-size)] font-bold tabular-nums leading-none transition-colors duration-150 ${digitColor}`}>
+                    {quotientValue}
+                  </span>
+                )}
+              </span>
             </span>
           </div>
 
           {/* The bracket: border-top is the bar, border-left + rounded
-              top-left corner draws the ⟌ hook. The dividend sits inside it. */}
-          <div
-            className="border-t-[length:var(--ld-bracket-border-w)] border-l-[length:var(--ld-bracket-border-w)] border-[#211D4F] rounded-tl-2xl pl-2 pr-1 pt-1.5"
-          >
+              top-left corner draws the ⟌ hook. The dividend sits inside it,
+              padded to match the quotient box's own right-side padding. */}
+          <div className="border-t-[length:var(--ld-bracket-border-w)] border-l-[length:var(--ld-bracket-border-w)] border-[#211D4F] rounded-tl-2xl pl-3 pr-4 pt-2">
             <span
-              style={{ width: columnWidth }}
+              style={{ minWidth: columnWidth }}
               className="inline-block text-right text-[length:var(--ld-digit-size)] font-bold text-[#211D4F] tabular-nums leading-none"
             >
               {problem.operandA}
@@ -234,33 +248,37 @@ export default function LongDivisionProblemInput({
         </div>
       </div>
 
-      {/* Remainder — compact and secondary, beneath the division setup */}
-      <div className="flex items-center gap-2 cursor-pointer select-none" onClick={() => switchSlot('remainder')}>
-        <span className="text-[length:var(--ld-remainder-label-size)] font-bold text-[#6B6690] uppercase tracking-wide">
+      {/* Remainder — a real secondary answer field, not a status chip:
+          large enough to read comfortably, but visibly smaller than the
+          quotient above it so hierarchy stays clear. */}
+      <div className="flex items-center gap-2.5 cursor-pointer select-none" onClick={() => switchSlot('remainder')}>
+        <span className="text-[length:var(--ld-remainder-label-size)] font-extrabold text-[#211D4F] uppercase tracking-wide">
           R:
         </span>
         <span
-          className={`inline-flex items-center justify-center w-[4ch] min-h-[length:var(--ld-remainder-box-min-h)] rounded-lg border-[1.5px] px-2 transition-colors duration-150 ${
+          className={`inline-flex items-center justify-center min-h-[length:var(--ld-remainder-box-min-h)] rounded-xl border-[1.5px] px-4 transition-colors duration-150 ${
             activeSlot === 'remainder' && isFocused
               ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]'
               : 'border-[#8983B8] bg-transparent'
           }`}
         >
-          {remainderValue.length === 0 ? (
-            <span className="inline-flex items-center leading-none">
-              <span aria-hidden="true" className="text-[length:var(--ld-remainder-size)] font-bold opacity-0 select-none">0</span>
-              {activeSlot === 'remainder' && (
-                <span
-                  aria-hidden="true"
-                  className="ml-1 w-[2.5px] h-[length:var(--ld-remainder-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite]"
-                />
-              )}
-            </span>
-          ) : (
-            <span className={`text-[length:var(--ld-remainder-size)] font-bold tabular-nums leading-none transition-colors duration-150 ${digitColor}`}>
-              {remainderValue}
-            </span>
-          )}
+          <span className="inline-block min-w-[2ch] text-center leading-none">
+            {remainderValue.length === 0 ? (
+              <span className="inline-flex items-center justify-center w-full leading-none">
+                <span aria-hidden="true" className="text-[length:var(--ld-remainder-size)] font-bold opacity-0 select-none">0</span>
+                {activeSlot === 'remainder' && (
+                  <span
+                    aria-hidden="true"
+                    className="ml-1 w-[3px] h-[length:var(--ld-remainder-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite] shrink-0"
+                  />
+                )}
+              </span>
+            ) : (
+              <span className={`text-[length:var(--ld-remainder-size)] font-bold tabular-nums leading-none transition-colors duration-150 ${digitColor}`}>
+                {remainderValue}
+              </span>
+            )}
+          </span>
         </span>
       </div>
 

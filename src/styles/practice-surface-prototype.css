@@ -102,18 +102,26 @@
   --practice-key-radius: 0.875rem;
   --practice-key-icon: 1.5rem;
 
-  /* Long-division notation (/division/remainders prototype). Sized smaller
-     than --practice-operand-size since the dividend here can run to 3
-     digits (divisor 2–12 × quotient 1–12 + remainder), where addition's
-     operand size was tuned for at most 2. */
-  --ld-digit-size: 2.75rem;
-  --ld-box-min-h: 3.25rem;
-  --ld-caret-h: 2rem;
-  --ld-bracket-border-w: 3px;
-  --ld-remainder-label-size: 0.9375rem;
-  --ld-remainder-size: 1.5rem;
-  --ld-remainder-box-min-h: 2.5rem;
-  --ld-remainder-caret-h: 1.25rem;
+  /* Long-division notation (/division/remainders prototype). Reuses
+     addition's own operand/answer-box/caret tokens directly (not
+     lookalike values) so the two widgets share one true footprint —
+     divisor, dividend, and quotient render at the exact same size as
+     addition's operands, and the quotient's answer box is the exact same
+     height as addition's. --practice-column-w (11.5rem, tuned for
+     addition's up-to-3-digit answers) has the same headroom this needs
+     for a 3-digit dividend at the same font size. */
+  --ld-digit-size: var(--practice-operand-size);
+  --ld-box-min-h: var(--practice-answer-min-h);
+  --ld-caret-h: var(--practice-caret-h);
+  --ld-bracket-border-w: 4px;
+
+  /* Remainder: a real secondary field, not a chip — roughly half the
+     primary digit size, big enough to read as a number rather than a
+     status dot. */
+  --ld-remainder-label-size: 1.125rem;
+  --ld-remainder-size: 2.5rem;
+  --ld-remainder-box-min-h: 3.25rem;
+  --ld-remainder-caret-h: 1.75rem;
 }
 
 @media (pointer: coarse) and (min-width: 640px) and (max-width: 1366px) {
@@ -139,14 +147,14 @@
     --practice-key-radius: 1rem;
     --practice-key-icon: 1.625rem;
 
-    --ld-digit-size: 3.25rem;
-    --ld-box-min-h: 3.75rem;
-    --ld-caret-h: 2.375rem;
-    --ld-bracket-border-w: 4px;
-    --ld-remainder-label-size: 1.0625rem;
-    --ld-remainder-size: 1.75rem;
-    --ld-remainder-box-min-h: 2.875rem;
-    --ld-remainder-caret-h: 1.5rem;
+    --ld-digit-size: var(--practice-operand-size);
+    --ld-box-min-h: var(--practice-answer-min-h);
+    --ld-caret-h: var(--practice-caret-h);
+    --ld-bracket-border-w: 5px;
+    --ld-remainder-label-size: 1.25rem;
+    --ld-remainder-size: 2.875rem;
+    --ld-remainder-box-min-h: 3.625rem;
+    --ld-remainder-caret-h: 2rem;
   }
 }
 
