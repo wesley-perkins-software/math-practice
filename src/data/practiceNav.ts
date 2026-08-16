@@ -12,6 +12,9 @@
 
 export type Operation = 'addition' | 'subtraction' | 'multiplication' | 'division';
 
+/** Canonical top-level order used by every responsive header presentation. */
+export const OPERATION_ORDER: Operation[] = ['addition', 'subtraction', 'multiplication', 'division'];
+
 export interface NavLink {
   label: string;
   href: string;
@@ -37,6 +40,10 @@ export interface OperationMenu {
     position?: 'before' | 'after';
   };
 }
+
+export type OperationMenuEntry =
+  | { type: 'link'; label: string; href: string }
+  | { type: 'grid'; label: string; basePath: string; max: number };
 
 export const OPERATION_MENUS: Record<Operation, OperationMenu> = {
   addition: {
@@ -73,6 +80,19 @@ export const OPERATION_MENUS: Record<Operation, OperationMenu> = {
     grid: { label: 'Divide By', basePath: '/division/divide-by', max: 12, position: 'before' },
   },
 };
+
+/**
+ * Returns an operation's practice choices in their canonical display order.
+ * Responsive header renderers consume this instead of independently placing
+ * the optional grid before/after the flat links.
+ */
+export function operationMenuEntries(menu: OperationMenu): OperationMenuEntry[] {
+  const links: OperationMenuEntry[] = menu.items.map((item) => ({ type: 'link', ...item }));
+  if (!menu.grid) return links;
+
+  const grid: OperationMenuEntry = { type: 'grid', ...menu.grid };
+  return menu.grid.position === 'before' ? [grid, ...links] : [...links, grid];
+}
 
 /** Builds the 1..max number links for a parameterized picker (Times Tables, Divide By). */
 export function numberGridLinks(basePath: string, max: number): { n: number; href: string }[] {
