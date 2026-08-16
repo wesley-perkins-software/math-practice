@@ -18,22 +18,32 @@ interface Props {
   current: string;
   showGrid?: boolean;
   gridCurrent?: number;
+  /**
+   * Pilot-scope-only override (see [table].astro / [divisor].astro's
+   * `bodyTextClass`/`listTextClass`): renders this section's grey labels in
+   * black instead of the default `text-[#6B7280]`. Defaults to false so
+   * every other page using this component is unchanged. NOT the intended
+   * long-term mechanism for sitewide typography — see the flag in
+   * [table].astro for the planned shared-typography follow-up.
+   */
+  darkText?: boolean;
 }
 
-const { operation, current, showGrid = false, gridCurrent } = Astro.props;
+const { operation, current, showGrid = false, gridCurrent, darkText = false } = Astro.props;
 const menu = OPERATION_MENUS[operation];
 const items = menu.items.filter((item) => item.href !== current);
+const labelTextClass = darkText ? 'text-black' : 'text-[#6B7280]';
 ---
 
 <section aria-labelledby="local-chooser-heading" class="mt-8 pt-6 border-t border-[#E0E7FF]">
-  <h2 id="local-chooser-heading" class="text-xs font-semibold text-[#6B7280] uppercase tracking-wide mb-2.5">
+  <h2 id="local-chooser-heading" class={`text-xs font-semibold ${labelTextClass} uppercase tracking-wide mb-2.5`}>
     Choose another {operation} practice
   </h2>
 
   {showGrid && menu.grid && menu.grid.position === 'before' && (
     <div class="max-w-xs">
-      <p class="text-xs font-medium text-[#6B7280] mb-1.5">{menu.grid.label}</p>
-      <NumberGrid mode="chooser" basePath={menu.grid.basePath} max={menu.grid.max} current={gridCurrent} />
+      <p class={`text-xs font-medium ${labelTextClass} mb-1.5`}>{menu.grid.label}</p>
+      <NumberGrid mode="chooser" basePath={menu.grid.basePath} max={menu.grid.max} current={gridCurrent} darkText={darkText} />
     </div>
   )}
 
@@ -47,14 +57,14 @@ const items = menu.items.filter((item) => item.href !== current);
 
   {showGrid && menu.grid && menu.grid.position !== 'before' && (
     <div class="mt-3 max-w-xs">
-      <p class="text-xs font-medium text-[#6B7280] mb-1.5">{menu.grid.label}</p>
-      <NumberGrid mode="chooser" basePath={menu.grid.basePath} max={menu.grid.max} current={gridCurrent} />
+      <p class={`text-xs font-medium ${labelTextClass} mb-1.5`}>{menu.grid.label}</p>
+      <NumberGrid mode="chooser" basePath={menu.grid.basePath} max={menu.grid.max} current={gridCurrent} darkText={darkText} />
     </div>
   )}
 
   {menu.hub.href !== current && (
     <p class="mt-3">
-      <a href={menu.hub.href} class="text-xs text-[#6B7280] hover:text-[#4F46E5] transition-colors">
+      <a href={menu.hub.href} class={`text-xs ${labelTextClass} hover:text-[#4F46E5] transition-colors`}>
         View all {operation} practice →
       </a>
     </p>

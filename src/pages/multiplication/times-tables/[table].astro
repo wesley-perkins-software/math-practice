@@ -67,7 +67,7 @@ const strategy = fact
 const EXPANDED_INTRO: Partial<Record<number, string>> = {
   2: `Because doubling is a skill many students build before formal multiplication instruction, the 2s table is one of the fastest to connect to something already known. This page drills 2×1 through 2×12 in random order until that connection becomes instant recall, not just a doubling skill in general.`,
   7: `Being honest that some tables require direct memorization helps set realistic expectations, rather than searching for a trick that doesn't exist. This page drills 7×1 through 7×12 in random order, building real recall through repeated practice instead of a shortcut this table doesn't have.`,
-  6: `The 6 times table is often the first one that doesn't have an easy shortcut like doubling or counting by fives. The good news: every 6 times fact is just one more group added to a 5 times fact already known. This page mixes up all twelve 6 times facts so that connection turns into fast, confident recall.`,
+  6: `Unlike doubling (2s) or counting by fives (5s and 10s), the 6 times table doesn't have an easy shortcut of its own. The good news: every 6 times fact is just one more group added to a 5 times fact already known. This page mixes up all twelve 6 times facts so that connection turns into fast, confident recall.`,
   9: `The widely known finger trick for the 9s works because of this same 10-minus-n relationship, not as an unrelated shortcut. This page drills 9×1 through 9×12 in random order so students build fast recall alongside — not instead of — that underlying number sense.`,
 };
 
@@ -81,7 +81,19 @@ const commutativityRef = tableNumber === 7 ? 8 : 7;
 
 // Font-color request scoped to the table 6 pilot page only: body/list text
 // switches from the site's default grey to black. Every other table keeps
-// its original grey text-[#6B7280]/[#4B5563] classes unchanged.
+// its original grey text-[#6B7280]/[#4B5563] classes unchanged. The same
+// per-page `darkText`/`bodyTextClass`/`listTextClass` pattern is repeated in
+// [divisor].astro, LocalChooser.astro, NumberGrid.astro, and
+// InternalLinks.tsx to cover every grey element on these two pilot pages.
+//
+// KNOWN LIMITATION, NOT SOLVED HERE: this is a page-by-page conditional
+// stopgap, not a real typography system — every other generated/leaf page
+// still hardcodes the same grey tones ad hoc. If black body text is the
+// desired sitewide direction, that calls for a shared typography token
+// (e.g. a CSS variable or Tailwind theme color) applied once, not this
+// per-page branching repeated across every page. Flagged for a later
+// dedicated shared-typography pass; intentionally not addressed in this
+// narrowly-scoped pilot cleanup.
 const bodyTextClass = tableNumber === 6 ? 'text-black' : 'text-[#6B7280]';
 const listTextClass = tableNumber === 6 ? 'text-black' : 'text-[#4B5563]';
 
@@ -196,6 +208,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     current={`/multiplication/times-tables/${tableNumber}`}
     showGrid
     gridCurrent={tableNumber}
+    darkText={tableNumber === 6}
   />
 
   <div slot="intro">
@@ -266,6 +279,6 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
     </section>
 
     <!-- Internal Links (matching Related Practice's canonical last position) -->
-    <InternalLinks links={links} />
+    <InternalLinks links={links} darkText={tableNumber === 6} />
   </div>
 </PracticeLayout>

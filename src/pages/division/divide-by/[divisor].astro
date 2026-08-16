@@ -34,7 +34,11 @@ const EXPANDED_INTRO: Partial<Record<number, string>> = {
 
 // Font-color request scoped to the divisor 6 pilot page only: body/list text
 // switches from the site's default grey to black. Every other divisor keeps
-// its original grey text-[#6B7280]/[#4B5563] classes unchanged.
+// its original grey text-[#6B7280]/[#4B5563] classes unchanged. Same known
+// limitation as [table].astro's equivalent comment: this is a page-by-page
+// stopgap (repeated here and in LocalChooser/NumberGrid/InternalLinks via a
+// `darkText` prop), not a real shared typography system — flagged for a
+// later dedicated pass, not solved in this cleanup.
 const bodyTextClass = fact ? 'text-black' : 'text-[#6B7280]';
 const listTextClass = fact ? 'text-black' : 'text-[#4B5563]';
 
@@ -66,7 +70,14 @@ const faqItems = [
   },
   {
     q: `How does practicing one divisor at a time help?`,
-    a: `Focusing on a single divisor (like ÷${divisor}) lets students recognize patterns within one fact family before mixing all divisors together. This targeted approach builds confidence faster and makes specific weak spots easier to identify and close. Once ÷${divisor} feels automatic, mixed practice reinforces all facts together.`,
+    // "Once ÷N feels automatic" / "builds confidence faster" replaced for the
+    // pilot divisor only (see the equivalent fix already applied to the FAQ
+    // below and to the Tips section): "feels automatic" reads clinically, and
+    // "builds confidence faster" is an unsupported comparative claim. Every
+    // other divisor keeps the original wording unchanged.
+    a: fact
+      ? `Focusing on a single divisor (like ÷${divisor}) lets students recognize patterns within one fact family before mixing all divisors together. This makes it easier to spot which specific facts still need more practice. Once you can answer the ÷${divisor} facts quickly and confidently, mixed practice reinforces all facts together.`
+      : `Focusing on a single divisor (like ÷${divisor}) lets students recognize patterns within one fact family before mixing all divisors together. This targeted approach builds confidence faster and makes specific weak spots easier to identify and close. Once ÷${divisor} feels automatic, mixed practice reinforces all facts together.`,
   },
   {
     q: `What should I practice after mastering divide by ${divisor}?`,
@@ -164,6 +175,7 @@ const links = [
     current={`/division/divide-by/${divisor}`}
     showGrid
     gridCurrent={divisor}
+    darkText={!!fact}
   />
   {!fact && <InternalLinks slot="links" links={links} />}
 
@@ -235,6 +247,6 @@ const links = [
          times-table pilot's canonical last position (below the instructional
          content). Non-pilot divisors keep their original position via the
          `slot="links"` render above, unchanged. -->
-    {fact && <InternalLinks links={links} />}
+    {fact && <InternalLinks links={links} darkText />}
   </Fragment>
 </PracticeLayout>
