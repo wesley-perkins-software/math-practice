@@ -7,6 +7,8 @@ interface Props {
   isTimed: boolean;
   /** lastSessionScore from before this session started, for comparison */
   preSessionScore: number;
+  /** personalBestScore from before this session started, for comparison when a new best is set */
+  preSessionPersonalBest: number;
   /** True when this session set a new all-time longest streak record */
   isNewStreakRecord: boolean;
   onRestart: () => void;
@@ -14,7 +16,7 @@ interface Props {
   variant?: 'classic' | 'prototype';
 }
 
-export default function ScoreCard({ result, stats, isTimed, preSessionScore, isNewStreakRecord, onRestart, variant = 'classic' }: Props) {
+export default function ScoreCard({ result, stats, isTimed, preSessionScore, preSessionPersonalBest, isNewStreakRecord, onRestart, variant = 'classic' }: Props) {
   const isPrototype = variant === 'prototype';
   const isPersonalBest =
     isTimed &&
@@ -51,9 +53,9 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, isN
           </div>
         )}
         <div className={`text-7xl font-bold tabular-nums ${isPrototype ? 'text-[#211D4F]' : "text-[#1E1B4B] font-['JetBrains_Mono']"}`}>{result.correct}</div>
-        <div className={`text-sm mt-1 ${isPrototype ? 'text-[#6B6690]' : 'text-[#6B7280]'}`}>
+        <div className={`text-sm mt-1 ${isPrototype ? 'text-[#211D4F]' : 'text-[#6B7280]'}`}>
           {isTimed
-            ? `correct in ${result.durationSeconds}s`
+            ? `correct in ${result.durationSeconds} seconds`
             : `correct out of ${result.total}`}
         </div>
         {!isTimed && (
@@ -66,13 +68,33 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, isN
         )}
       </div>
 
-      {isTimed && (
-        <div className={`w-full text-center ${isPrototype ? '' : 'hidden'}`}>
-          <span className="text-[13px] font-bold text-[#211D4F]">Personal Best</span>
-          <div className={`text-2xl font-extrabold tabular-nums mt-0.5 ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#8983B8]'}`}>
-            {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+      {/* Personal Best supporting stat. When this session IS the new best,
+          repeating the just-shown headline score under a second "Personal
+          Best" label added nothing (it was the same number twice) — so a
+          new best instead shows what it beat, when there's a real prior
+          score to show. First-ever timed session (no prior best) omits this
+          block entirely rather than showing a comparison to nothing. When
+          this session ISN'T a new best, the current Personal Best is the
+          useful number (the target to beat next time), so that's shown as
+          before. */}
+      {isTimed && isPrototype && (
+        isPersonalBest ? (
+          preSessionPersonalBest > 0 && (
+            <div className="w-full text-center">
+              <span className="text-[13px] font-bold text-[#211D4F]">Previous Best</span>
+              <div className="text-2xl font-extrabold tabular-nums mt-0.5 text-[#8983B8]">
+                {preSessionPersonalBest}
+              </div>
+            </div>
+          )
+        ) : (
+          <div className="w-full text-center">
+            <span className="text-[13px] font-bold text-[#211D4F]">Personal Best</span>
+            <div className={`text-2xl font-extrabold tabular-nums mt-0.5 ${stats.personalBestScore > 0 ? 'text-[#4F46E5]' : 'text-[#8983B8]'}`}>
+              {stats.personalBestScore > 0 ? stats.personalBestScore : '—'}
+            </div>
           </div>
-        </div>
+        )
       )}
 
       {!isTimed && (
@@ -94,11 +116,17 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, isN
       >
         Play Again
       </button>
+      {/* Kept: /progress genuinely surfaces this drill's own history (its
+          Speed Drills row under "By Practice Type" — sessions, best score,
+          last practiced — plus this drill's own results in "Recent
+          Sessions"), not just generic site navigation. Simplified from "View
+          my full progress →" to a quieter, tertiary label now that Play
+          Again is the only button-styled action on the screen. */}
       <a
         href="/progress"
         className={`text-xs font-medium transition-colors text-center w-full block ${isPrototype ? 'text-[#4F46E5] hover:text-[#3E35C7]' : 'text-[#4F46E5] hover:text-[#3730A3]'}`}
       >
-        View my full progress →
+        View progress
       </a>
     </div>
   );

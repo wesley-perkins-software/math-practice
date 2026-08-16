@@ -171,7 +171,7 @@ export default function LongDivisionProblemInput({
   const columnWidth = `${String(problem.operandA).length}ch`;
 
   return (
-    <div className="flex flex-col items-center gap-4 w-full font-practice">
+    <div className="flex flex-col items-center gap-[length:var(--ld-outer-gap,1rem)] w-full font-practice">
       {/* Hidden input captures keyboard events for whichever slot is active */}
       <input
         ref={inputRef}
@@ -195,6 +195,13 @@ export default function LongDivisionProblemInput({
         onBlur={() => setIsFocused(false)}
       />
 
+      {/* Problem stage: same shared fixed/min-height box WrittenProblemInput
+          uses (--practice-stage-min-h — a no-op except on the timed Speed
+          Drill surface). Long division's notation is naturally shorter than
+          the written stack, so instead of stretching the bracket/quotient to
+          fill the extra space, the whole group (bracket + optional
+          remainder field) is centered as one unit inside the stage. */}
+      <div className="w-full flex flex-col items-center justify-center gap-4 min-h-[length:var(--practice-stage-min-h,0px)]">
       <div
         className={`flex items-end justify-center transition-opacity duration-200 ease-out ${
           isVisible ? 'opacity-100' : 'opacity-0'
@@ -302,6 +309,7 @@ export default function LongDivisionProblemInput({
           </span>
         </div>
       )}
+      </div>
 
       {feedbackContent}
 

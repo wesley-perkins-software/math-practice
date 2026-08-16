@@ -39,7 +39,7 @@ export default function SpeedDrillSetup() {
         <div className="mt-4 text-center font-practice">
           <button
             onClick={() => setConfig(null)}
-            className="text-sm text-[#6B6690] hover:text-[#4F46E5] transition-colors"
+            className="text-sm text-[#211D4F] hover:text-[#4F46E5] transition-colors"
           >
             ← Change operations
           </button>
