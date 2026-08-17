@@ -77,8 +77,6 @@ const faqItems = [
   <Fragment slot="intro">
     <p>All facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
   </Fragment>
-  <InternalLinks slot="links" links={links} />
-
   <div slot="how-it-works" class="mt-12 space-y-10">
     <!-- What you'll practice -->
     <section aria-labelledby="hiw-heading">
@@ -122,5 +120,7 @@ const faqItems = [
         ))}
       </div>
     </section>
+
+    <InternalLinks links={links} />
   </div>
 </PracticeLayout>
