@@ -2,18 +2,19 @@
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
 
 const SITE = 'https://mathpracticeonline.com';
-const EFFECTIVE_DATE = 'April 18, 2026';
+const EFFECTIVE_DATE = 'August 25, 2026';
 ---
 
 <PracticeLayout
   title="Privacy Policy — Math Practice Online"
-  description="Math Practice Online collects no personal information. Your progress data stays in your browser only. Read our full privacy policy."
+  description="Learn how Math Practice Online handles browser-local progress and uses services for analytics, hosting, and advertising."
   canonical={`${SITE}/privacy`}
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Privacy Policy' }]}
 >
   <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Privacy Policy</h1>
   <p slot="intro">
-    Your privacy matters. Here's exactly what we do — and don't — collect.
+    Your privacy matters. This policy explains how Math Practice Online handles practice data and the
+    third-party services used on the site.
   </p>
 
   <div slot="links" class="space-y-8 text-sm text-[#374151] leading-relaxed max-w-xl">
@@ -23,61 +24,86 @@ const EFFECTIVE_DATE = 'April 18, 2026';
     <section>
       <h2 class="text-base font-semibold text-[#1E293B] mb-2">The short version</h2>
       <p>
-        Math Practice Online does not collect, store, or transmit any personal information about you.
-        We have no user accounts, no login, and no server-side data storage tied to individuals.
-        The only data we use is stored locally in your own browser.
+        Math Practice Online does not require an account or ask you to provide a name, email address,
+        password, student profile, or school or student identifier to use the practice tools. Scores,
+        streaks, and other saved practice progress are stored locally in your browser. We also use
+        third-party services for analytics, hosting, and advertising, as described below.
       </p>
     </section>
 
     <section>
-      <h2 class="text-base font-semibold text-[#1E293B] mb-2">What data we store — and where</h2>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Information you provide</h2>
       <p>
-        When you complete a practice session, your scores and stats are saved to your browser's
-        <strong>localStorage</strong>. This data never leaves your device. We cannot see it, and
-        it is not transmitted to any server. You can clear it at any time by clearing your browser's
-        site data.
+        The practice tools do not include account-registration or profile forms. You do not need to
+        provide a name, email address, account credentials, student profile, or school or student
+        identifier to practice.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Practice progress in your browser</h2>
+      <p>
+        Scores, streaks, practice-session history, and applicable practice preferences are saved in
+        your browser's <strong>localStorage</strong>. These Math Practice Online progress records do
+        not require an account, are not uploaded to a Math Practice Online account, and are not
+        synchronized between devices. You can remove them by clearing this site's data in your browser.
       </p>
     </section>
 
     <section>
       <h2 class="text-base font-semibold text-[#1E293B] mb-2">Cookies</h2>
       <p>
-        Math Practice Online does not set any first-party cookies. Google Analytics sets third-party
-        cookies (e.g., <code>_ga</code>, <code>_ga_*</code>) to distinguish users for aggregate
-        analytics purposes. These cookies do not identify you personally.
+        Third-party services used for analytics, advertising, and site operation may use cookies,
+        browser storage, identifiers, or similar technologies where applicable. The technologies used
+        can depend on the service, its configuration, your region, and applicable privacy requirements.
       </p>
     </section>
 
     <section>
       <h2 class="text-base font-semibold text-[#1E293B] mb-2">Analytics</h2>
       <p>
-        Math Practice Online uses Google Analytics 4 (GA4) to collect anonymous, aggregate data about
-        how visitors use the site — for example, which pages are visited and how practice sessions are
-        used. This data is used solely to understand and improve the site. No personal information is
-        collected. Google anonymizes IP addresses before storage. You can opt out at any time using the
+        Math Practice Online uses Google Analytics 4 (GA4) to understand page and practice usage, site
+        performance, and engagement so we can improve the site. Google Analytics may process technical
+        information such as browser or device information, page and activity information, and cookies,
+        identifiers, or similar technologies where applicable. You can opt out using the
         <a href="https://tools.google.com/dlpage/gaoptout" class="underline hover:text-[#4F46E5]" target="_blank" rel="noopener noreferrer">Google Analytics Opt-out Browser Add-on</a>.
       </p>
     </section>
 
     <section>
-      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Children's privacy (COPPA)</h2>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Google AdSense and advertising</h2>
       <p>
-        Math Practice Online is designed for use by children in K–5. We take children's privacy seriously.
-        Because we collect no personal information whatsoever — no names, no email addresses,
-        no account data — there is no risk of inadvertently collecting data from children under 13.
-        Parents and guardians can clear the browser's localStorage at any time to erase all stored
-        practice data.
+        Math Practice Online includes Google AdSense advertising technology and may display advertising
+        through Google AdSense to support free access to the site. Google and its advertising partners
+        may process device or browser information, IP address and other request information, and cookies
+        or other identifiers where applicable for ad delivery, measurement, security, fraud prevention,
+        and related advertising operations. The processing that applies can depend on your region,
+        Google settings, and applicable privacy requirements. The mathpracticeonline.com domain has been
+        tagged with Google for child-directed treatment. Learn more about
+        <a href="https://policies.google.com/technologies/partner-sites" class="underline hover:text-[#4F46E5]" target="_blank" rel="noopener noreferrer">how Google uses information from sites or apps that use its services</a>.
+      </p>
+    </section>
+
+    <section>
+      <h2 class="text-base font-semibold text-[#1E293B] mb-2">Children's privacy</h2>
+      <p>
+        Math Practice Online is designed for elementary-age students in K–5. Practice does not require
+        an account, name, email address, password, or student profile. Saved practice progress remains in
+        the browser and can be removed by clearing the site's browser data. The entire
+        mathpracticeonline.com domain has been tagged with Google for child-directed treatment.
+        Google Analytics, Google AdSense, and hosting and network services are described in the sections
+        above and below.
       </p>
     </section>
 
     <section>
       <h2 class="text-base font-semibold text-[#1E293B] mb-2">Third-party services</h2>
       <p>
-        This site uses Google Analytics 4 for anonymous usage analytics (see Analytics section above)
-        and is hosted on a third-party infrastructure provider whose standard server logs may record
-        anonymous request data (IP address, browser type, pages visited) as part of normal web server
-        operation. We do not use this data for tracking individuals and it is subject to the hosting
-        provider's own privacy practices.
+        Google Analytics provides usage analytics, while Google AdSense provides advertising technology;
+        each service is described separately above. The site also uses third-party hosting and network
+        infrastructure. Those providers may process technical request information such as IP address,
+        browser or device information, requested pages, and server-log information as part of normal site
+        operation. Their processing is subject to their own privacy practices.
       </p>
     </section>
 
