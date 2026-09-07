@@ -1,12 +1,21 @@
 import type { PracticeConfig, Problem, Operation } from './types';
+import { defaultRandom, type RandomSource } from './random';
+
+/**
+ * Version of the generator rules covered by the deterministic contract.
+ * The same normalized config, seed, fresh/equivalent history, count, and
+ * generator/RNG versions produce the same ordered arithmetic content. IDs are
+ * deliberately outside that guarantee.
+ */
+export const GENERATOR_VERSION = 'gen-v1' as const;
 
 let _idCounter = 0;
 function nextId(): string {
   return String(++_idCounter);
 }
 
-function randInt(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+function randInt(min: number, max: number, random: RandomSource): number {
+  return Math.floor(random() * (max - min + 1)) + min;
 }
 
 interface RecentProblem {
@@ -19,6 +28,23 @@ interface RecentProblem {
 const RECENT_HISTORY_LIMIT = 5;
 const MAX_RETRY_ATTEMPTS = 20;
 const recentByStorageKey = new Map<string, RecentProblem[]>();
+
+export interface GenerationHistory {
+  /** Internal per-practice history used by the existing repeat-suppression rules. */
+  readonly recentByStorageKey: Map<string, RecentProblem[]>;
+}
+
+export interface GenerationOptions {
+  random?: RandomSource;
+  history?: GenerationHistory;
+}
+
+const defaultHistory: GenerationHistory = { recentByStorageKey };
+
+/** Creates isolated repeat-suppression state for a deterministic generation run. */
+export function createGenerationHistory(): GenerationHistory {
+  return { recentByStorageKey: new Map() };
+}
 
 /** Returns true if adding two non-negative integers requires a carry in any column */
 function hasCarry(a: number, b: number): boolean {
@@ -58,15 +84,15 @@ function hasBorrow(a: number, b: number): boolean {
   return false;
 }
 
-function generateAddition(config: PracticeConfig): Problem {
+function generateAddition(config: PracticeConfig, random: RandomSource): Problem {
   const { operandA, operandB, carrying, requireOnesRegroup } = config;
   const noCarry = carrying === false;
   const requireCarry = carrying === true;
   let a: number, b: number;
   let attempts = 0;
   do {
-    a = randInt(operandA.min, operandA.max);
-    b = randInt(operandB.min, operandB.max);
+    a = randInt(operandA.min, operandA.max, random);
+    b = randInt(operandB.min, operandB.max, random);
     attempts++;
     // Safety valve: after 100 attempts relax the constraint to avoid infinite loops
     if (attempts > 100) break;
@@ -79,7 +105,7 @@ function generateAddition(config: PracticeConfig): Problem {
   return { id: nextId(), operandA: a, operandB: b, operation: 'addition', correctAnswer: a + b };
 }
 
-function generateSubtraction(config: PracticeConfig): Problem {
+function generateSubtraction(config: PracticeConfig, random: RandomSource): Problem {
   const { operandA, operandB, borrowing } = config;
   const noBorrow = borrowing === false;
   const requireBorrow = borrowing === true;
@@ -88,8 +114,8 @@ function generateSubtraction(config: PracticeConfig): Problem {
   let b: number | undefined;
   let attempts = 0;
   while (attempts < 100) {
-    const candidateA = randInt(operandA.min, operandA.max);
-    const candidateB = randInt(operandB.min, operandB.max);
+    const candidateA = randInt(operandA.min, operandA.max, random);
+    const candidateB = randInt(operandB.min, operandB.max, random);
     attempts++;
 
     if (candidateB > candidateA) continue;
@@ -127,49 +153,49 @@ function generateSubtraction(config: PracticeConfig): Problem {
   return { id: nextId(), operandA: a, operandB: b, operation: 'subtraction', correctAnswer: a - b };
 }
 
-function generateMultiplication(config: PracticeConfig): Problem {
+function generateMultiplication(config: PracticeConfig, random: RandomSource): Problem {
   const maxF = config.maxFactor ?? 12;
   let a: number, b: number;
   if (config.factsMode) {
-    a = randInt(1, maxF);
-    b = randInt(1, maxF);
+    a = randInt(1, maxF, random);
+    b = randInt(1, maxF, random);
   } else {
-    a = randInt(config.operandA.min, config.operandA.max);
-    b = randInt(config.operandB.min, config.operandB.max);
+    a = randInt(config.operandA.min, config.operandA.max, random);
+    b = randInt(config.operandB.min, config.operandB.max, random);
   }
   return { id: nextId(), operandA: a, operandB: b, operation: 'multiplication', correctAnswer: a * b };
 }
 
-function generateDivisionWithRemainder(): Problem {
-  const divisor = randInt(2, 12);
-  const quotient = randInt(1, 12);
-  const remainder = randInt(1, divisor - 1);
+function generateDivisionWithRemainder(random: RandomSource): Problem {
+  const divisor = randInt(2, 12, random);
+  const quotient = randInt(1, 12, random);
+  const remainder = randInt(1, divisor - 1, random);
   const dividend = divisor * quotient + remainder;
   return { id: nextId(), operandA: dividend, operandB: divisor, operation: 'division', correctAnswer: quotient, remainder };
 }
 
-function generateDivision(config: PracticeConfig): Problem {
-  if (config.withRemainder) return generateDivisionWithRemainder();
+function generateDivision(config: PracticeConfig, random: RandomSource): Problem {
+  if (config.withRemainder) return generateDivisionWithRemainder(random);
 
   const maxF = config.maxFactor ?? 12;
   let divisor: number, quotient: number;
   if (config.factsMode) {
-    divisor = randInt(config.operandB.min, config.operandB.max);
-    quotient = randInt(1, maxF);
+    divisor = randInt(config.operandB.min, config.operandB.max, random);
+    quotient = randInt(1, maxF, random);
   } else {
-    divisor = randInt(Math.max(config.operandB.min, 1), config.operandB.max);
-    quotient = randInt(config.operandA.min, config.operandA.max);
+    divisor = randInt(Math.max(config.operandB.min, 1), config.operandB.max, random);
+    quotient = randInt(config.operandA.min, config.operandA.max, random);
   }
   const dividend = divisor * quotient;
   return { id: nextId(), operandA: dividend, operandB: divisor, operation: 'division', correctAnswer: quotient };
 }
 
-function generateSingle(config: PracticeConfig, op: Exclude<Operation, 'mixed'>): Problem {
+function generateSingle(config: PracticeConfig, op: Exclude<Operation, 'mixed'>, random: RandomSource): Problem {
   switch (op) {
-    case 'addition':      return generateAddition(config);
-    case 'subtraction':   return generateSubtraction(config);
-    case 'multiplication': return generateMultiplication(config);
-    case 'division':      return generateDivision(config);
+    case 'addition':      return generateAddition(config, random);
+    case 'subtraction':   return generateSubtraction(config, random);
+    case 'multiplication': return generateMultiplication(config, random);
+    case 'division':      return generateDivision(config, random);
   }
 }
 
@@ -183,24 +209,24 @@ function isOneDigitAdditionConfig(config: PracticeConfig): boolean {
   );
 }
 
-function wouldRepeatTooMuch(history: RecentProblem[], candidate: Problem): boolean {
+function isExactRepeat(history: RecentProblem[], candidate: Problem): boolean {
   const previous = history[history.length - 1];
-  if (
+  return Boolean(
     previous &&
     previous.operation === candidate.operation &&
     previous.operandA === candidate.operandA &&
     previous.operandB === candidate.operandB
-  ) {
-    return true;
-  }
+  );
+}
 
+function repeatsRecentAdditionAnswer(history: RecentProblem[], candidate: Problem): boolean {
   if (history.length < 2) return false;
   const lastTwo = history.slice(-2);
   return lastTwo.every((item) => item.correctAnswer === candidate.correctAnswer);
 }
 
-function saveToHistory(config: PracticeConfig, problem: Problem): void {
-  const current = recentByStorageKey.get(config.storageKey) ?? [];
+function saveToHistory(history: GenerationHistory, config: PracticeConfig, problem: Problem): void {
+  const current = history.recentByStorageKey.get(config.storageKey) ?? [];
   const next: RecentProblem[] = [
     ...current,
     {
@@ -210,34 +236,40 @@ function saveToHistory(config: PracticeConfig, problem: Problem): void {
       correctAnswer: problem.correctAnswer,
     },
   ].slice(-RECENT_HISTORY_LIMIT);
-  recentByStorageKey.set(config.storageKey, next);
+  history.recentByStorageKey.set(config.storageKey, next);
 }
 
-export function generateProblem(config: PracticeConfig): Problem {
-  let candidate: Problem;
-  if (config.operation === 'mixed') {
-    const ops = config.operations ?? ['addition', 'subtraction', 'multiplication', 'division'];
-    const op = ops[Math.floor(Math.random() * ops.length)];
-    candidate = generateSingle(config, op);
-  } else {
-    candidate = generateSingle(config, config.operation);
-  }
+export function generateProblem(config: PracticeConfig, options: GenerationOptions = {}): Problem {
+  const random = options.random ?? defaultRandom;
+  const generationHistory = options.history ?? defaultHistory;
+  const generateCandidate = (): Problem => {
+    if (config.operation === 'mixed') {
+      const ops = config.operations ?? ['addition', 'subtraction', 'multiplication', 'division'];
+      const op = ops[Math.floor(random() * ops.length)];
+      return generateSingle(config, op, random);
+    }
+    return generateSingle(config, config.operation, random);
+  };
 
-  if (!isOneDigitAdditionConfig(config)) {
-    return candidate;
-  }
-
-  const history = recentByStorageKey.get(config.storageKey) ?? [];
+  const history = generationHistory.recentByStorageKey.get(config.storageKey) ?? [];
+  const suppressRepeatedAnswers = isOneDigitAdditionConfig(config);
+  let candidate = generateCandidate();
   let attempts = 0;
-  while (attempts < MAX_RETRY_ATTEMPTS && wouldRepeatTooMuch(history, candidate)) {
-    candidate = generateSingle(config, 'addition');
+  // Keep generation total for singleton/impossible spaces: after the existing
+  // bounded retry budget, accept the only candidate rather than loop forever.
+  while (
+    attempts < MAX_RETRY_ATTEMPTS &&
+    (isExactRepeat(history, candidate) ||
+      (suppressRepeatedAnswers && repeatsRecentAdditionAnswer(history, candidate)))
+  ) {
+    candidate = generateCandidate();
     attempts++;
   }
 
-  saveToHistory(config, candidate);
+  saveToHistory(generationHistory, config, candidate);
   return candidate;
 }
 
-export function generateProblemSet(config: PracticeConfig, count: number): Problem[] {
-  return Array.from({ length: count }, () => generateProblem(config));
+export function generateProblemSet(config: PracticeConfig, count: number, options: GenerationOptions = {}): Problem[] {
+  return Array.from({ length: count }, () => generateProblem(config, options));
 }
