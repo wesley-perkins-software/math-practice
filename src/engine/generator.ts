@@ -209,17 +209,17 @@ function isOneDigitAdditionConfig(config: PracticeConfig): boolean {
   );
 }
 
-function wouldRepeatTooMuch(history: RecentProblem[], candidate: Problem): boolean {
+function isExactRepeat(history: RecentProblem[], candidate: Problem): boolean {
   const previous = history[history.length - 1];
-  if (
+  return Boolean(
     previous &&
     previous.operation === candidate.operation &&
     previous.operandA === candidate.operandA &&
     previous.operandB === candidate.operandB
-  ) {
-    return true;
-  }
+  );
+}
 
+function repeatsRecentAdditionAnswer(history: RecentProblem[], candidate: Problem): boolean {
   if (history.length < 2) return false;
   const lastTwo = history.slice(-2);
   return lastTwo.every((item) => item.correctAnswer === candidate.correctAnswer);
@@ -242,23 +242,27 @@ function saveToHistory(history: GenerationHistory, config: PracticeConfig, probl
 export function generateProblem(config: PracticeConfig, options: GenerationOptions = {}): Problem {
   const random = options.random ?? defaultRandom;
   const generationHistory = options.history ?? defaultHistory;
-  let candidate: Problem;
-  if (config.operation === 'mixed') {
-    const ops = config.operations ?? ['addition', 'subtraction', 'multiplication', 'division'];
-    const op = ops[Math.floor(random() * ops.length)];
-    candidate = generateSingle(config, op, random);
-  } else {
-    candidate = generateSingle(config, config.operation, random);
-  }
-
-  if (!isOneDigitAdditionConfig(config)) {
-    return candidate;
-  }
+  const generateCandidate = (): Problem => {
+    if (config.operation === 'mixed') {
+      const ops = config.operations ?? ['addition', 'subtraction', 'multiplication', 'division'];
+      const op = ops[Math.floor(random() * ops.length)];
+      return generateSingle(config, op, random);
+    }
+    return generateSingle(config, config.operation, random);
+  };
 
   const history = generationHistory.recentByStorageKey.get(config.storageKey) ?? [];
+  const suppressRepeatedAnswers = isOneDigitAdditionConfig(config);
+  let candidate = generateCandidate();
   let attempts = 0;
-  while (attempts < MAX_RETRY_ATTEMPTS && wouldRepeatTooMuch(history, candidate)) {
-    candidate = generateSingle(config, 'addition', random);
+  // Keep generation total for singleton/impossible spaces: after the existing
+  // bounded retry budget, accept the only candidate rather than loop forever.
+  while (
+    attempts < MAX_RETRY_ATTEMPTS &&
+    (isExactRepeat(history, candidate) ||
+      (suppressRepeatedAnswers && repeatsRecentAdditionAnswer(history, candidate)))
+  ) {
+    candidate = generateCandidate();
     attempts++;
   }
 

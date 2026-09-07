@@ -13,7 +13,10 @@ import {
   DIVISION_REMAINDERS,
   MIXED_PRACTICE,
   MULTIPLICATION_FACTS,
+  SUBTRACTION_1_DIGIT,
   SUBTRACTION_2_DIGIT_BORROWING,
+  divideByConfig,
+  multiplyTableConfig,
 } from '../src/engine/presets';
 
 const tuple = (problem: ReturnType<typeof generateProblem>) => [
@@ -92,6 +95,53 @@ export const tests = [
     );
     assert.equal(draws, 200);
     assert.deepEqual([problem.operandA, problem.operandB], [20, 11]);
+  }),
+
+  test('exact consecutive subtraction duplicates redraw from the continuing injected stream', () => {
+    const problems = generateProblemSet(
+      { ...SUBTRACTION_1_DIGIT, storageKey: 'subtraction-exact-repeat' },
+      2,
+      {
+        // 9-1, rejected 9-1, then accepted 9-2.
+        random: sequence([0.999, 0, 0.999, 0, 0.999, 0.125]),
+        history: createGenerationHistory(),
+      },
+    );
+    assert.deepEqual(problems.map((problem) => [problem.operandA, problem.operandB]), [
+      [9, 1],
+      [9, 2],
+    ]);
+  }),
+
+  test('exact-repeat suppression is bounded when a config has only one possible problem', () => {
+    let draws = 0;
+    const config = {
+      ...SUBTRACTION_1_DIGIT,
+      storageKey: 'subtraction-single-candidate',
+      operandA: { min: 1, max: 1 },
+      operandB: { min: 1, max: 1 },
+    };
+    const problems = generateProblemSet(config, 2, {
+      random: () => { draws++; return 0; },
+      history: createGenerationHistory(),
+    });
+    assert.equal(problems.length, 2);
+    assert.equal(draws, 44);
+    assert.deepEqual(problems.map(tuple), [tuple(problems[0]!), tuple(problems[0]!)]);
+  }),
+
+  test('fixed times-table operands and divide-by divisors retain their skill identity', () => {
+    const multiplication = generateProblemSet(multiplyTableConfig(6), 2, {
+      random: sequence([0, 0, 0, 0.5]),
+      history: createGenerationHistory(),
+    });
+    assert.deepEqual(multiplication.map((problem) => [problem.operandA, problem.operandB]), [[6, 1], [6, 7]]);
+
+    const division = generateProblemSet(divideByConfig(6), 2, {
+      random: sequence([0, 0, 0, 0.5]),
+      history: createGenerationHistory(),
+    });
+    assert.deepEqual(division.map((problem) => [problem.operandB, problem.correctAnswer]), [[6, 1], [6, 7]]);
   }),
 
   test('same deterministic inputs reproduce ordered content while different seeds diverge', () => {
