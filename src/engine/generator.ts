@@ -37,6 +37,8 @@ export interface GenerationHistory {
 export interface GenerationOptions {
   random?: RandomSource;
   history?: GenerationHistory;
+  /** Session-only multiplication families; route/storage identity stays in config. */
+  selectedFacts?: readonly number[];
 }
 
 const defaultHistory: GenerationHistory = { recentByStorageKey };
@@ -153,10 +155,13 @@ function generateSubtraction(config: PracticeConfig, random: RandomSource): Prob
   return { id: nextId(), operandA: a, operandB: b, operation: 'subtraction', correctAnswer: a - b };
 }
 
-function generateMultiplication(config: PracticeConfig, random: RandomSource): Problem {
+function generateMultiplication(config: PracticeConfig, random: RandomSource, selectedFacts?: readonly number[]): Problem {
   const maxF = config.maxFactor ?? 12;
   let a: number, b: number;
-  if (config.factsMode) {
+  if (config.factsMode && selectedFacts?.length) {
+    a = selectedFacts[randInt(0, selectedFacts.length - 1, random)];
+    b = randInt(1, maxF, random);
+  } else if (config.factsMode) {
     a = randInt(1, maxF, random);
     b = randInt(1, maxF, random);
   } else {
@@ -190,11 +195,11 @@ function generateDivision(config: PracticeConfig, random: RandomSource): Problem
   return { id: nextId(), operandA: dividend, operandB: divisor, operation: 'division', correctAnswer: quotient };
 }
 
-function generateSingle(config: PracticeConfig, op: Exclude<Operation, 'mixed'>, random: RandomSource): Problem {
+function generateSingle(config: PracticeConfig, op: Exclude<Operation, 'mixed'>, random: RandomSource, selectedFacts?: readonly number[]): Problem {
   switch (op) {
     case 'addition':      return generateAddition(config, random);
     case 'subtraction':   return generateSubtraction(config, random);
-    case 'multiplication': return generateMultiplication(config, random);
+    case 'multiplication': return generateMultiplication(config, random, selectedFacts);
     case 'division':      return generateDivision(config, random);
   }
 }
@@ -246,9 +251,9 @@ export function generateProblem(config: PracticeConfig, options: GenerationOptio
     if (config.operation === 'mixed') {
       const ops = config.operations ?? ['addition', 'subtraction', 'multiplication', 'division'];
       const op = ops[Math.floor(random() * ops.length)];
-      return generateSingle(config, op, random);
+      return generateSingle(config, op, random, options.selectedFacts);
     }
-    return generateSingle(config, config.operation, random);
+    return generateSingle(config, config.operation, random, options.selectedFacts);
   };
 
   const history = generationHistory.recentByStorageKey.get(config.storageKey) ?? [];

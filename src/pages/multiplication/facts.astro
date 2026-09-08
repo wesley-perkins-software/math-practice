@@ -1,6 +1,6 @@
 ---
 import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
+import MultiplicationFactsPilot from '@/components/MultiplicationFactsPilot';
 import InternalLinks from '@/components/InternalLinks';
 import LocalChooser from '@/components/LocalChooser.astro';
 import { ORGANIZATION_ID } from '@/config/site';
@@ -77,7 +77,7 @@ const faqItems = [
     <p>This page is for third and fourth graders working toward full multiplication fact fluency, as well as parents and teachers who want a broad recall check rather than one table at a time. Problems are pulled from all 144 facts in random order, so success here means genuine recall of the whole 1–12 grid, not memorization of a fixed sequence.</p>
   </Fragment>
 
-  <MultiplicationPracticeHub slot="widget" client:load active="facts" />
+  <MultiplicationFactsPilot slot="widget" client:only="react" />
 
   <LocalChooser slot="local-chooser" operation="multiplication" current="/multiplication/facts" />
 

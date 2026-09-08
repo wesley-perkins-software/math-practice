@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { PracticeConfig, Problem, SessionResult, PageStats, QuestionCount } from '@/engine/types';
 import type { TimerDuration } from '@/engine/types';
-import { generateProblem } from '@/engine/generator';
+import { generateProblem, type GenerationOptions } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
 import { loadStats, saveStats, updateStatsAfterSession, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
@@ -27,9 +27,11 @@ interface Props {
   darkText?: boolean;
   /** Optional session boundary; omitted preserves endless untimed/timer-only behavior. */
   questionCount?: QuestionCount;
+  /** Narrow, session-only generation choices (currently the facts-page pilot). */
+  generationOptions?: Pick<GenerationOptions, 'selectedFacts'>;
 }
 
-export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, generationOptions }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -101,7 +103,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   useEffect(() => {
     setStats(loadStats(config.storageKey));
     if (phaseRef.current === 'active') {
-      setProblem(generateProblem(config));
+      setProblem(generateProblem(config, generationOptions));
       setFeedbackState('hidden');
     } else {
       // idle on mount, or complete when switching difficulty — auto-start immediately
@@ -167,7 +169,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       setSessionStartTime(now);
       sessionStartTimeRef.current = now;
     }
-    setProblem(generateProblem(config));
+    setProblem(generateProblem(config, generationOptions));
     setProblemIndex(0);
     setCorrect(0);
     setFeedbackState('hidden');
@@ -345,7 +347,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         endSession();
       } else if (transition.shouldGenerateNext) {
         setProblemIndex((i) => i + 1);
-        setProblem(generateProblem(config));
+        setProblem(generateProblem(config, generationOptions));
         setFeedbackState('hidden');
       }
     }, FEEDBACK_DELAY_MS);
