@@ -57,6 +57,9 @@ Parameterized practice state must not change route content, title, H1, canonical
 8. **PR 8 — Minimal Pilot Analytics**
 9. **PR 9 — First evidence-based reuse**
 
+The durable preset transport and SEO rules are maintained in
+[`public-practice-preset-url-contract.md`](./public-practice-preset-url-contract.md).
+
 Keep each PR independently reviewable and deployable. PR 4 may proceed partly in parallel with PRs 2–3, but it must merge before persisted new session behavior or the pilot ships.
 
 ## 5. Key Architecture Decisions
