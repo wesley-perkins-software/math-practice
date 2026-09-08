@@ -1,6 +1,8 @@
 export type Operation = 'addition' | 'subtraction' | 'multiplication' | 'division' | 'mixed';
 export type PracticeMode = 'untimed' | 'timed';
 export type TimerDuration = 30 | 60 | 120 | 300;
+/** Supported finite session sizes. Omission means the session is unbounded. */
+export type QuestionCount = 10 | 20 | 30 | 50;
 
 export interface DigitRange {
   min: number;
