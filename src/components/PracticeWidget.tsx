@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine/types';
+import type { PracticeConfig, Problem, SessionResult, PageStats, QuestionCount } from '@/engine/types';
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
 import { loadStats, saveStats, updateStatsAfterSession, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
+import { expirePracticeTimer, finishAnswerFeedback, recordCompletedQuestion, startPracticeSession } from '@/engine/session';
 import { trackEvent } from '@/lib/analytics';
 
 import WrittenProblemInput from './WrittenProblemInput';
@@ -24,9 +25,11 @@ interface Props {
   variant?: 'classic' | 'prototype';
   /** Use black instead of muted grey for inactive statistics on dark-text pages. */
   darkText?: boolean;
+  /** Optional session boundary; omitted preserves endless untimed/timer-only behavior. */
+  questionCount?: QuestionCount;
 }
 
-export default function PracticeWidget({ config, variant = 'classic', darkText = false }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount }: Props) {
   const isTimed = config.mode === 'timed';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
@@ -63,6 +66,9 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sessionBoundaryRef = useRef(startPracticeSession());
+  const completionShownRef = useRef(false);
+  const persistedResultRef = useRef<string | null>(null);
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
@@ -106,7 +112,9 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   }, [config.storageKey]);
 
   function savePendingUntimedSession() {
-    if (isTimed || totalAnsweredRef.current === 0) return;
+    // A finite session has its own explicit boundary; do not turn tab hiding
+    // into a partial completion or reset its in-progress answer count.
+    if (isTimed || questionCount !== undefined || totalAnsweredRef.current === 0) return;
     const elapsed = sessionStartTimeRef.current > 0
       ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
       : 0;
@@ -141,6 +149,10 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     savePendingUntimedSession();
 
     totalAnsweredRef.current = 0;
+    correctRef.current = 0;
+    sessionBoundaryRef.current = startPracticeSession();
+    completionShownRef.current = false;
+    persistedResultRef.current = null;
     timerStartedRef.current = false;
     setTimerStarted(false);
     setSecondsRemaining(duration);
@@ -169,6 +181,8 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   }
 
   function endSession() {
+    if (completionShownRef.current) return;
+    completionShownRef.current = true;
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     // Timed sessions report the CONFIGURED duration, not wall-clock elapsed
@@ -191,7 +205,9 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     timerIntervalRef.current = setInterval(() => {
       setSecondsRemaining((s) => {
         if (s <= 1) {
-          endSession();
+          const expiration = expirePracticeTimer(sessionBoundaryRef.current);
+          sessionBoundaryRef.current = expiration.state;
+          if (expiration.shouldComplete) endSession();
           return 0;
         }
         return s - 1;
@@ -207,10 +223,17 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
     if (phase === 'complete' && result) {
+      if (persistedResultRef.current === result.timestamp) return;
+      persistedResultRef.current = result.timestamp;
       const current = loadStats(config.storageKey);
       const prevLongestStreak = current.longestStreak;
       const prevPersonalBest = current.personalBestScore;
-      const updated = updateStatsAfterSession(current, result, isTimed);
+      const sessionUpdated = updateStatsAfterSession(current, result, isTimed);
+      // Untimed answers are recorded as they happen. Finishing a finite
+      // untimed session must not add those attempts for a second time.
+      const updated = isTimed
+        ? sessionUpdated
+        : { ...sessionUpdated, totalProblemsAttempted: current.totalProblemsAttempted };
       saveStats(config.storageKey, updated);
       setStats(updated);
       const newStreakRecord = !isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0;
@@ -225,6 +248,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         isTimed,
         timestamp: result.timestamp,
       });
+      if (!isTimed) totalAnsweredRef.current = 0;
       trackEvent('practice_session_complete', {
         operation: config.operation,
         practice_label: config.label ?? config.storageKey,
@@ -248,6 +272,10 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   function handleAnswer(answer: number, remainder?: number) {
     if (!problem || phase !== 'active') return;
 
+    const submission = recordCompletedQuestion(sessionBoundaryRef.current, questionCount);
+    sessionBoundaryRef.current = submission.state;
+    if (!submission.accepted) return;
+
     // Start the timer on the first answer submission
     if (isTimed && !timerStartedRef.current) {
       timerStartedRef.current = true;
@@ -257,7 +285,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       sessionStartTimeRef.current = now;
     }
 
-    totalAnsweredRef.current += 1;
+    totalAnsweredRef.current = submission.state.completedQuestions;
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
     trackEvent('answer_submit', {
@@ -294,6 +322,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     }
 
     if (isCorrect) {
+      correctRef.current += 1;
       setCorrect((c) => c + 1);
       setFeedbackCorrectRemainder(undefined);
       setFeedbackState('correct');
@@ -310,9 +339,15 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     // Clear any pending transition timer
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     transitionTimerRef.current = setTimeout(() => {
-      setProblemIndex((i) => i + 1);
-      setProblem(generateProblem(config));
-      setFeedbackState('hidden');
+      const transition = finishAnswerFeedback(sessionBoundaryRef.current);
+      sessionBoundaryRef.current = transition.state;
+      if (transition.shouldComplete) {
+        endSession();
+      } else if (transition.shouldGenerateNext) {
+        setProblemIndex((i) => i + 1);
+        setProblem(generateProblem(config));
+        setFeedbackState('hidden');
+      }
     }, FEEDBACK_DELAY_MS);
   }
 
