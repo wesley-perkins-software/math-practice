@@ -3,7 +3,7 @@ import type { PracticeConfig, Problem, SessionResult, PageStats, QuestionCount }
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
 import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
+import { loadStats, saveStats, updateStatsAfterSession, updateStatsAfterUntimedAnswer, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 import { expirePracticeTimer, finishAnswerFeedback, recordCompletedQuestion, startPracticeSession } from '@/engine/session';
 import { trackEvent } from '@/lib/analytics';
@@ -27,10 +27,13 @@ interface Props {
   darkText?: boolean;
   /** Optional session boundary; omitted preserves endless untimed/timer-only behavior. */
   questionCount?: QuestionCount;
+  /** Shared assignments retain base progress identity but opt out of streak mechanics and use focused results. */
+  sessionPresentation?: 'canonical' | 'shared';
 }
 
-export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical' }: Props) {
   const isTimed = config.mode === 'timed';
+  const trackStreaks = sessionPresentation === 'canonical';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
   // Session state
@@ -300,23 +303,15 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       // Sessions never end via timer, so tracking totalProblemsAttempted here ensures
       // the progress dashboard reflects activity even before a session is formally closed.
       const currentStats = loadStats(config.storageKey);
-      const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
-      const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
-      const updatedStats = {
-        ...currentStats,
-        currentStreak: newCurrentStreak,
-        longestStreak: newLongestStreak,
-        totalProblemsAttempted: currentStats.totalProblemsAttempted + 1,
-        lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
-      };
+      const updatedStats = updateStatsAfterUntimedAnswer(currentStats, isCorrect, trackStreaks);
       saveStats(config.storageKey, updatedStats);
       setStats(updatedStats);
       const STREAK_MILESTONES = [5, 10, 25, 50];
-      if (isCorrect && STREAK_MILESTONES.includes(newCurrentStreak)) {
+      if (trackStreaks && isCorrect && STREAK_MILESTONES.includes(updatedStats.currentStreak)) {
         trackEvent('streak_milestone', {
           operation: config.operation,
           practice_label: config.label ?? config.storageKey,
-          streak_count: newCurrentStreak,
+          streak_count: updatedStats.currentStreak,
         });
       }
     }
@@ -575,7 +570,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
               />
             )}
 
-            {!isTimed && (
+            {!isTimed && trackStreaks && (
               <div className={`flex items-center justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
                 {/* Streak: motivational session info, not footer metadata — a
                     genuinely larger number carries this, not decoration. The
@@ -740,6 +735,8 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
             isNewStreakRecord={isNewStreakRecord}
             onRestart={handleRestart}
             variant={variant}
+            presentation={sessionPresentation}
+            questionCount={questionCount}
           />
         )}
       </div>

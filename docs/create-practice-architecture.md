@@ -59,6 +59,8 @@ The codec rejects unknown/duplicate parameters and malformed scalar/list syntax 
 
 The browser shows no practice widget until parsing, validation, and registry resolution succeed. Missing or invalid query state shows a generic invalid-link message and never starts a fallback practice. Valid replay remains inside the mounted widget and therefore retains the same resolved definition and options while generating normally random new questions.
 
+Shared practice is a focused assignment session, so it neither presents nor updates canonical streak mechanics. It still records attempts, completed sessions, scores, and session history against the registry-resolved base progress identity. Its completion view emphasizes attempted-answer score and accuracy (plus the answered target when finite), with replay as the sole action; it does not imply assignment-specific reporting.
+
 `/practice/` has one clean canonical URL, is `noindex,follow`, and is excluded from the sitemap. Query combinations never create static routes or query-specific canonicals. Public Preset V1 remains a separate intact contract.
 
 ## Deferred scope

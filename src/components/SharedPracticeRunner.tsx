@@ -19,6 +19,16 @@ export default function SharedPracticeRunner() {
       <a className="inline-flex mt-6 rounded-lg bg-[#4F46E5] px-4 py-2.5 text-white font-semibold hover:bg-[#4338CA]" href="/">Browse math practice</a>
     </section>
   );
-  const { config, questionCount, summary } = state.practice;
-  return <section aria-labelledby="shared-practice-title"><div className="text-center mb-5"><h1 id="shared-practice-title" className="text-2xl sm:text-3xl font-bold text-[#1E293B]">Shared Practice</h1><p className="mt-2 text-sm sm:text-base font-medium text-[#475569]">{summary}</p></div><PracticeWidget config={config} questionCount={questionCount} variant="prototype" /></section>;
+  const { config, questionCount, heading } = state.practice;
+  return (
+    <section aria-labelledby="shared-practice-title">
+      <header className="mx-auto mb-5 max-w-3xl px-2 text-center">
+        <h1 id="shared-practice-title" className="text-2xl sm:text-3xl font-bold leading-tight text-[#1E293B]">{heading.title}</h1>
+        <ul aria-label="Assignment details" className="mt-2 flex flex-wrap justify-center gap-x-2 gap-y-1 text-sm sm:text-base font-medium text-[#475569]">
+          {heading.details.map((detail, index) => <li key={detail}>{index > 0 && <span aria-hidden="true" className="mr-2">·</span>}{detail}</li>)}
+        </ul>
+      </header>
+      <PracticeWidget config={config} questionCount={questionCount} variant="prototype" sessionPresentation="shared" />
+    </section>
+  );
 }

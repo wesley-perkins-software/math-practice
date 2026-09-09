@@ -1,6 +1,6 @@
 import { assert, test } from './harness';
 import { parsePracticeDefinitionV2Query, serializePracticeDefinitionV2 } from '../src/engine/practiceDefinitionUrl';
-import { prepareSharedPractice } from '../src/engine/sharedPractice';
+import { formatDuration, formatSharedPracticeHeading, prepareSharedPractice } from '../src/engine/sharedPractice';
 
 function valid(query: string) {
   const result = parsePracticeDefinitionV2Query(query);
@@ -49,10 +49,27 @@ export const tests = [
     const second = prepareSharedPractice(valid('v=2&skill=multiplication-facts&facts=3&mode=timed&duration=60'));
     assert.equal(first.config.storageKey, 'mult-facts'); assert.equal(second.config.storageKey, 'mult-facts');
     assert.deepEqual(first.config.selectedFacts, [6, 7, 8]); assert.equal(first.questionCount, 20);
-    assert.equal(first.summary, 'Multiplication Facts: 6, 7, 8 · 20 questions · Untimed');
+    assert.deepEqual(first.heading, { title: 'Multiplication Facts', details: ['6, 7, 8 facts', '20 questions', 'Untimed'] });
     assert.equal(second.config.mode, 'timed'); assert.equal(second.config.timerDuration, 60); assert.equal(second.config.fixedTimerDuration, true);
     const division = prepareSharedPractice(valid('v=2&skill=division-facts&divisors=6,8&mode=timed&duration=120&questions=20'));
     assert.equal(division.config.storageKey, 'div-facts'); assert.deepEqual(division.config.selectedDivisors, [6, 8]);
-    assert.equal(division.summary, 'Division Facts: 6, 8 · 2 minutes · Up to 20 questions');
+    assert.deepEqual(division.heading, { title: 'Division Facts', details: ['Divide by 6, 8', '2 minutes', 'Up to 20 questions'] });
+  }),
+  test('shared heading details cover plain skills and every session shape naturally', () => {
+    const heading = (query: string) => formatSharedPracticeHeading(valid(query));
+    assert.deepEqual(heading('v=2&skill=addition-2digit-regrouping&mode=untimed&questions=30'), {
+      title: '2-Digit Addition With Regrouping', details: ['30 questions', 'Untimed'],
+    });
+    assert.deepEqual(heading('v=2&skill=subtraction-2digit-no-regrouping&mode=untimed'), {
+      title: '2-Digit Subtraction Without Regrouping', details: ['Untimed'],
+    });
+    assert.deepEqual(heading('v=2&skill=addition-1-digit&mode=timed&duration=30'), {
+      title: '1-Digit Addition', details: ['30 seconds'],
+    });
+    assert.deepEqual(heading('v=2&skill=addition-1-digit&mode=timed&duration=120&questions=20'), {
+      title: '1-Digit Addition', details: ['2 minutes', 'Up to 20 questions'],
+    });
+    assert.equal(formatDuration(60), '1 minute');
+    assert.equal(formatDuration(300), '5 minutes');
   }),
 ];
