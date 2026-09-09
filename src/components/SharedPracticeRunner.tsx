@@ -20,5 +20,5 @@ export default function SharedPracticeRunner() {
     </section>
   );
   const { config, questionCount, summary } = state.practice;
-  return <section aria-labelledby="shared-practice-title"><div className="text-center mb-5"><h1 id="shared-practice-title" className="text-2xl sm:text-3xl font-bold text-[#1E293B]">Shared Practice</h1><p className="mt-2 text-sm sm:text-base font-medium text-[#475569]">{summary}</p></div><PracticeWidget config={config} questionCount={questionCount} /></section>;
+  return <section aria-labelledby="shared-practice-title"><div className="text-center mb-5"><h1 id="shared-practice-title" className="text-2xl sm:text-3xl font-bold text-[#1E293B]">Shared Practice</h1><p className="mt-2 text-sm sm:text-base font-medium text-[#475569]">{summary}</p></div><PracticeWidget config={config} questionCount={questionCount} variant="prototype" /></section>;
 }

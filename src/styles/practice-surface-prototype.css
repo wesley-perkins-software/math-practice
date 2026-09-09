@@ -1,10 +1,10 @@
 /*
- * Prototype-only typography for the redesigned practice surface
- * (/addition/1-digit). Self-hosted, single variable-font family covering
+ * Shared typography for the current practice surface used by canonical skill
+ * pages and the shared runner. Self-hosted, single variable-font family covering
  * both interface and numeral roles inside the practice surface — see the
  * frontend-design typography evaluation in the design plan for why.
- * Not wired into BaseLayout/global.css: this file is imported only by the
- * one prototype page so nothing else on the site is affected yet.
+ * Not wired into BaseLayout/global.css: practice routes import it explicitly so
+ * non-practice pages do not pay for these specialized surface rules.
  *
  * Round 2: replaced Atkinson Hyperlegible Next with Lexend (accessibility-
  * first construction produced a narrow, technical-looking zero).
