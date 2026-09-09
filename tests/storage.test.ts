@@ -14,7 +14,7 @@ import {
   resetLongestStreak,
   resetPersonalBestScore,
   saveStats,
-  updateStatsAfterSession,
+  updateStatsAfterSession, updateStatsAfterUntimedAnswer,
 } from '../src/engine/storage';
 
 class MemoryStorage {
@@ -128,6 +128,17 @@ export const tests = [
     const untimed = updateStatsAfterSession(stats, result, false);
     assert.deepEqual([untimed.bestTimedScore, untimed.personalBestScore], [12, 10]);
     assert.deepEqual([untimed.currentStreak, untimed.longestStreak], [4, 8]);
+  }),
+  test('untimed answer updates can suppress only streak persistence', () => {
+    const sharedCorrect = updateStatsAfterUntimedAnswer(stats, true, false);
+    const sharedWrong = updateStatsAfterUntimedAnswer(sharedCorrect, false, false);
+    assert.deepEqual([sharedWrong.currentStreak, sharedWrong.longestStreak], [stats.currentStreak, stats.longestStreak]);
+    assert.equal(sharedWrong.totalProblemsAttempted, stats.totalProblemsAttempted + 2);
+    assert.ok(sharedWrong.lastSessionDate.length > 0);
+    const canonicalCorrect = updateStatsAfterUntimedAnswer(stats, true);
+    assert.deepEqual([canonicalCorrect.currentStreak, canonicalCorrect.longestStreak], [stats.currentStreak + 1, stats.longestStreak]);
+    const canonicalWrong = updateStatsAfterUntimedAnswer(canonicalCorrect, false);
+    assert.equal(canonicalWrong.currentStreak, 0);
   }),
   test('session log preserves valid entries in order and filters malformed entries', () => {
     const storage = setup();

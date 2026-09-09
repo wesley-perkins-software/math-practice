@@ -140,6 +140,22 @@ export function updateStatsAfterSession(
   };
 }
 
+/** Records an untimed answer while optionally preserving canonical streak state. */
+export function updateStatsAfterUntimedAnswer(
+  existing: PageStats,
+  isCorrect: boolean,
+  trackStreaks = true,
+): PageStats {
+  const currentStreak = trackStreaks ? (isCorrect ? existing.currentStreak + 1 : 0) : existing.currentStreak;
+  return {
+    ...existing,
+    currentStreak,
+    longestStreak: trackStreaks ? Math.max(existing.longestStreak, currentStreak) : existing.longestStreak,
+    totalProblemsAttempted: existing.totalProblemsAttempted + 1,
+    lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
+  };
+}
+
 export function resetCurrentStreak(key: string): void {
   const stats = loadStats(key);
   saveStats(key, { ...stats, currentStreak: 0 });

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import type { SessionResult, PageStats } from '@/engine/types';
+import type { SessionResult, PageStats, QuestionCount } from '@/engine/types';
 
 interface Props {
   result: SessionResult;
@@ -14,10 +14,13 @@ interface Props {
   onRestart: () => void;
   /** 'prototype' opts into the redesigned surface (shared with the four operation practice pages). */
   variant?: 'classic' | 'prototype';
+  presentation?: 'canonical' | 'shared';
+  questionCount?: QuestionCount;
 }
 
-export default function ScoreCard({ result, stats, isTimed, preSessionScore, preSessionPersonalBest, isNewStreakRecord, onRestart, variant = 'classic' }: Props) {
+export default function ScoreCard({ result, stats, isTimed, preSessionScore, preSessionPersonalBest, isNewStreakRecord, onRestart, variant = 'classic', presentation = 'canonical', questionCount }: Props) {
   const isPrototype = variant === 'prototype';
+  const isShared = presentation === 'shared';
   const isPersonalBest =
     isTimed &&
     stats.personalBestScore > 0 &&
@@ -35,6 +38,21 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, pre
   useEffect(() => {
     headingRef.current?.focus();
   }, []);
+
+  if (isShared) return (
+    <div className={`flex flex-col items-center gap-5 py-4 w-full animate-[fadeIn_0.25s_ease-out] ${isPrototype ? 'font-practice' : ''}`}>
+      <div ref={headingRef} tabIndex={-1} className="text-center outline-none">
+        <h2 className="text-xl font-extrabold text-[#211D4F]">Practice Complete</h2>
+        <div className="mt-3 text-6xl font-extrabold tabular-nums text-[#211D4F]">{result.correct} / {result.total}</div>
+        <div className="mt-1 text-sm font-medium text-[#475569]">correct</div>
+        <div className="mt-3 text-3xl font-bold tabular-nums text-[#4F46E5]">{accuracy}% <span className="text-base font-semibold">accuracy</span></div>
+        {questionCount && <p className="mt-3 text-sm text-[#475569]">{result.total} / {questionCount} answered</p>}
+      </div>
+      <button onClick={onRestart} className="w-full py-3.5 px-6 text-white font-bold text-base rounded-xl transition-all shadow-[0_3px_0_0_#3730A3,0_6px_16px_rgba(79,70,229,0.30)] hover:shadow-[0_3px_0_0_#312E81,0_8px_20px_rgba(79,70,229,0.40)] active:translate-y-[2px] active:shadow-[0_1px_0_0_#3730A3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]/50 focus-visible:ring-offset-2 bg-[#4F46E5] hover:bg-[#3E35C7]">
+        Play Again
+      </button>
+    </div>
+  );
 
   return (
     <div className={`flex flex-col items-center gap-5 py-4 w-full animate-[fadeIn_0.25s_ease-out] ${isPrototype ? 'font-practice' : ''}`}>

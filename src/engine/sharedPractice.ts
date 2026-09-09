@@ -1,17 +1,33 @@
 import { buildPracticeRuntimeConfig, resolvePracticeDefinition, type PracticeDefinitionV2 } from './practiceDefinition';
 
-export function formatPracticeSummary(definition: PracticeDefinitionV2): string {
+export interface SharedPracticeHeading {
+  title: string;
+  details: readonly string[];
+}
+
+export function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${seconds} seconds`;
+  const minutes = seconds / 60;
+  return `${minutes} ${minutes === 1 ? 'minute' : 'minutes'}`;
+}
+
+export function formatSharedPracticeHeading(definition: PracticeDefinitionV2): SharedPracticeHeading {
   const { entry } = resolvePracticeDefinition(definition);
-  let skill = entry.displayName;
-  if (definition.practiceType === 'multiplication-facts') skill += `: ${definition.skillOptions.facts.join(', ')}`;
-  if (definition.practiceType === 'division-facts') skill += `: ${definition.skillOptions.divisors.join(', ')}`;
+  const details: string[] = [];
+  if (definition.practiceType === 'multiplication-facts') details.push(`${definition.skillOptions.facts.join(', ')} facts`);
+  if (definition.practiceType === 'division-facts') details.push(`Divide by ${definition.skillOptions.divisors.join(', ')}`);
   const session = definition.sessionOptions;
   const count = session.questionCount;
-  if (session.mode === 'untimed') return `${skill} · ${count ? `${count} questions · ` : ''}Untimed`;
-  const duration = session.durationSeconds < 60 ? `${session.durationSeconds} seconds` : `${session.durationSeconds / 60} ${session.durationSeconds === 60 ? 'minute' : 'minutes'}`;
-  return `${skill} · ${duration}${count ? ` · Up to ${count} questions` : ''}`;
+  if (session.mode === 'untimed') {
+    if (count) details.push(`${count} questions`);
+    details.push('Untimed');
+  } else {
+    details.push(formatDuration(session.durationSeconds));
+    if (count) details.push(`Up to ${count} questions`);
+  }
+  return Object.freeze({ title: entry.displayName, details: Object.freeze(details) });
 }
 
 export function prepareSharedPractice(definition: PracticeDefinitionV2) {
-  return Object.freeze({ definition, config: buildPracticeRuntimeConfig(definition), questionCount: definition.sessionOptions.questionCount, summary: formatPracticeSummary(definition) });
+  return Object.freeze({ definition, config: buildPracticeRuntimeConfig(definition), questionCount: definition.sessionOptions.questionCount, heading: formatSharedPracticeHeading(definition) });
 }
