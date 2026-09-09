@@ -41,7 +41,7 @@ export default defineConfig({
           '/multiplication-practice/mixed/',
           '/multiplication-practice/times-tables/',
         ];
-        return !redirectPaths.some((path) => page.endsWith(path));
+        return !page.endsWith('/practice/') && !redirectPaths.some((path) => page.endsWith(path));
       },
     }),
   ],

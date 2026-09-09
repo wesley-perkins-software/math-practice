@@ -157,7 +157,8 @@ function generateMultiplication(config: PracticeConfig, random: RandomSource): P
   const maxF = config.maxFactor ?? 12;
   let a: number, b: number;
   if (config.factsMode) {
-    a = randInt(1, maxF, random);
+    const facts = config.selectedFacts;
+    a = facts ? facts[randInt(0, facts.length - 1, random)] : randInt(1, maxF, random);
     b = randInt(1, maxF, random);
   } else {
     a = randInt(config.operandA.min, config.operandA.max, random);
@@ -180,7 +181,8 @@ function generateDivision(config: PracticeConfig, random: RandomSource): Problem
   const maxF = config.maxFactor ?? 12;
   let divisor: number, quotient: number;
   if (config.factsMode) {
-    divisor = randInt(config.operandB.min, config.operandB.max, random);
+    const divisors = config.selectedDivisors;
+    divisor = divisors ? divisors[randInt(0, divisors.length - 1, random)] : randInt(config.operandB.min, config.operandB.max, random);
     quotient = randInt(1, maxF, random);
   } else {
     divisor = randInt(Math.max(config.operandB.min, 1), config.operandB.max, random);
