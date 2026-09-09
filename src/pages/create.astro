@@ -1,0 +1,22 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import CreatePracticeBuilder from '@/components/CreatePracticeBuilder';
+import { SITE_URL } from '@/config/site';
+---
+<BaseLayout title="Create Custom Math Practice | Math Practice Online" description="Create custom math practice, choose the skill, number of questions, and timer, then share one link. No sign-up required." canonical={`${SITE_URL}/create/`}>
+  <SiteHeader />
+  <main class="px-4 py-10 sm:px-6 sm:py-14">
+    <div class="mx-auto max-w-3xl">
+      <header class="mb-8 text-center">
+        <h1 class="text-3xl font-extrabold tracking-tight text-[#1E293B] sm:text-4xl">Create Custom Math Practice</h1>
+        <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-[#475569] sm:text-lg">Choose a skill, set the practice options, and share one link. No sign-up required.</p>
+      </header>
+      <CreatePracticeBuilder client:load />
+      <section class="mx-auto mt-12 max-w-2xl border-t border-[#C7D2FE] pt-8 text-[#475569]">
+        <h2 class="text-xl font-bold text-[#1E293B]">Practice that is ready to share</h2>
+        <p class="mt-3 leading-relaxed">Choose an available math skill, set a question limit or timer, and copy the link. A student can open it and begin immediately—no teacher or student account required.</p>
+      </section>
+    </div>
+  </main>
+</BaseLayout>

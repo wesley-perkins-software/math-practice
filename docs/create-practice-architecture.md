@@ -7,10 +7,10 @@ This document is the durable product and domain contract for configurable practi
 The product has three distinct experiences:
 
 1. **Existing skill pages** are searchable, canonical landing pages for practicing a particular skill immediately. They remain playable without setup and do not host the full builder; a small contextual Create Practice link may be added later.
-2. **`/create/` — Create Custom Math Practice** will configure one practice type, its skill-specific options, and common session options; preview the result; and create/copy a durable link. Printable output may follow.
+2. **`/create/` — Create Custom Math Practice** is a single-page, progressive-disclosure builder that configures one practice type, its skill-specific options, and common session options; previews the result; and creates/copies a durable link. Printable output may follow.
 3. **`/practice/`** executes a validated `PracticeDefinition` in a minimal student-facing runner. It does not expose builder controls, and configured query variants do not become separate SEO pages.
 
-The shared runner now exists. `/create/` remains deferred.
+The creator and shared runner now exist. The creator starts empty and embeds no practice engine. Its current controls are the assignment—there is no draft/applied distinction. It validates the candidate with the V2 validator, serializes it with the V2 serializer, and derives both Copy Practice Link and Start Practice from that one live URL. `/create/` is indexable, self-canonical, and included in the sitemap.
 
 ## Taxonomy
 
