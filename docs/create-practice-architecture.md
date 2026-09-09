@@ -8,9 +8,9 @@ The product has three distinct experiences:
 
 1. **Existing skill pages** are searchable, canonical landing pages for practicing a particular skill immediately. They remain playable without setup and do not host the full builder; a small contextual Create Practice link may be added later.
 2. **`/create/` — Create Custom Math Practice** will configure one practice type, its skill-specific options, and common session options; preview the result; and create/copy a durable link. Printable output may follow.
-3. **`/practice/`** will execute a validated `PracticeDefinition` in a minimal student-facing runner. It will not expose builder controls, and configured query variants will not become separate SEO pages.
+3. **`/practice/`** executes a validated `PracticeDefinition` in a minimal student-facing runner. It does not expose builder controls, and configured query variants do not become separate SEO pages.
 
-Neither new route exists yet.
+The shared runner now exists. `/create/` remains deferred.
 
 ## Taxonomy
 
@@ -51,9 +51,15 @@ Public/custom state cannot choose routes, storage keys, renderers, feedback timi
 
 Fractions, decimals, place value, rounding, number sense, percentages, measurement, geometry, and factors/multiples can add implemented categories and registry entries with their own skill-option validators and base configurations. For example, `equivalent-fractions` or `place-value-identify-digit` changes neither the definition shell nor the creator/runner responsibilities. Speculative types are not registered before implementations exist.
 
-## URL direction
+## V2 URL and runner contract
 
-The eventual transport is conceptually `/practice/?v=2&skill=multiplication-facts&facts=6,7,8&mode=untimed&questions=20`. This PR defines the structured object contract only: it does not implement a V2 URL codec and does not replace the proven narrow Public Preset V1 codec.
+The flat transport is `/practice/?v=2&skill=multiplication-facts&facts=6,7,8&mode=untimed&questions=20`. Canonical parameter order is `v`, `skill`, the applicable `facts` or `divisors`, `mode`, timed-only `duration`, then optional `questions`. `v`, `skill`, and `mode` are required. Multiplication facts requires `facts`; division facts requires `divisors`; other registered types accept no skill-specific parameter. Timed sessions require `duration`; question count is optional in either mode.
+
+The codec rejects unknown/duplicate parameters and malformed scalar/list syntax before constructing a candidate. The existing strict V2 validator remains authoritative for types, ranges, combinations, duplicate selections, and normalization. The URL never represents trusted runtime identity or generator internals.
+
+The browser shows no practice widget until parsing, validation, and registry resolution succeed. Missing or invalid query state shows a generic invalid-link message and never starts a fallback practice. Valid replay remains inside the mounted widget and therefore retains the same resolved definition and options while generating normally random new questions.
+
+`/practice/` has one clean canonical URL, is `noindex,follow`, and is excluded from the sitemap. Query combinations never create static routes or query-specific canonicals. Public Preset V1 remains a separate intact contract.
 
 ## Deferred scope
 

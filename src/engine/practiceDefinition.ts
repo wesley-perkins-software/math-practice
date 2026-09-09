@@ -32,6 +32,25 @@ export interface ResolvedPracticeDefinition {
   readonly sessionOptions: PracticeSessionOptions;
 }
 
+/** Applies only registry-validated public choices to a trusted base config. */
+export function buildPracticeRuntimeConfig(definition: PracticeDefinitionV2): PracticeConfig {
+  const resolved = resolvePracticeDefinition(definition);
+  const session = resolved.sessionOptions;
+  const runtime: PracticeConfig = {
+    ...resolved.baseConfig,
+    mode: session.mode,
+    ...(session.mode === 'timed'
+      ? { timerDuration: session.durationSeconds, fixedTimerDuration: true }
+      : {}),
+  };
+  if (definition.practiceType === 'multiplication-facts') {
+    runtime.selectedFacts = definition.skillOptions.facts;
+  } else if (definition.practiceType === 'division-facts') {
+    runtime.selectedDivisors = definition.skillOptions.divisors;
+  }
+  return Object.freeze(runtime);
+}
+
 const durations: readonly TimerDuration[] = [30, 60, 120, 300];
 const questionCounts: readonly QuestionCount[] = [10, 20, 30, 50];
 const hasExactKeys = (input: object, required: readonly string[], optional: readonly string[] = []) => {

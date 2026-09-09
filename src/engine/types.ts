@@ -40,6 +40,10 @@ export interface PracticeConfig {
   factsMode?: boolean;
   /** Upper bound for facts mode. Default 12. */
   maxFactor?: number;
+  /** Trusted runtime-only constraints for shared V2 multiplication practice. */
+  selectedFacts?: readonly number[];
+  /** Trusted runtime-only constraints for shared V2 exact-division practice. */
+  selectedDivisors?: readonly number[];
   /** Division: generate problems with remainders */
   withRemainder?: boolean;
   /** Override the delay (ms) before advancing after a correct answer (default: 600) */

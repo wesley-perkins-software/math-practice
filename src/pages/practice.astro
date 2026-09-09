@@ -1,0 +1,10 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import SiteHeader from '@/components/SiteHeader.astro';
+import SharedPracticeRunner from '@/components/SharedPracticeRunner';
+import '@/styles/practice-surface-prototype.css';
+---
+<BaseLayout title="Shared Math Practice | Math Practice Online" description="Open a shared math practice link and begin practicing immediately." canonical="https://mathpracticeonline.com/practice/" noindex>
+  <SiteHeader />
+  <main class="min-h-[calc(100vh-4rem)] bg-[#F8FAFC] px-4 py-8 sm:px-6 sm:py-12"><div class="max-w-3xl mx-auto"><SharedPracticeRunner client:load /></div></main>
+</BaseLayout>
