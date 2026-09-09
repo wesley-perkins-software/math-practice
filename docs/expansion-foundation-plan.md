@@ -53,9 +53,7 @@ Parameterized practice state must not change route content, title, H1, canonical
 4. **PR 4 — Legacy Storage Validation and Versioned New-Record Adapters**
 5. **PR 5 — Readable URL Preset Codec and SEO Contract Tests**
 6. **PR 6 — Optional Question-Count Session Semantics**
-7. **PR 7 — `/multiplication/facts/` Configure-and-Share Pilot**
-8. **PR 8 — Minimal Pilot Analytics**
-9. **PR 9 — First evidence-based reuse**
+7. **Create Practice rollout — PracticeDefinition/registry → shared runner → builder → arithmetic coverage → discoverability → analytics**
 
 The durable preset transport and SEO rules are maintained in
 [`public-practice-preset-url-contract.md`](./public-practice-preset-url-contract.md).
@@ -117,25 +115,15 @@ Foundation work may progress only when the relevant gate is satisfied:
 - No-parameter routes render and behave identically to the current site.
 - No major widget refactor or new canonical SEO route occurs during foundation.
 
-## 8. First Visible Growth Release
+## 8. Create Practice Direction
 
-Pilot configure-and-share on `/multiplication/facts/`:
+The proposed customization UI on `/multiplication/facts/` was rejected before merge. The generalized Create Practice architecture supersedes that pilot: establish PracticeDefinition and its registry, then add the shared runner, dedicated builder, arithmetic coverage, discoverability, and analytics in that order.
 
-- Existing practice still starts immediately with no setup wall.
-- A secondary, collapsed **Customize practice** control exposes safe options.
-- Users may select fact families 1–12.
-- Sessions may remain endless or use 10, 20, 30, or 50 questions.
-- Sessions may be untimed or use a supported timer.
-- An explicit action starts the configured session.
-- A valid configuration produces a copyable, readable share URL.
-- Invalid or unsupported state falls back to ordinary multiplication-facts practice.
-- A restore-defaults action returns to the normal route preset.
-
-The pilot does **not** include QR sharing, saved presets, projector mode, or arbitrary operand ranges.
+[`create-practice-architecture.md`](./create-practice-architecture.md) is the source of truth for this product model and rollout. This foundation plan retains the earlier infrastructure history without duplicating that contract.
 
 ## 9. Growth Features Unlocked Later
 
-Once the pilot is stable and measured, the foundation can support:
+Once the dedicated creator and runner are stable and measured, the foundation can support:
 
 - configurable division facts;
 - teacher quick-start presets;
@@ -148,7 +136,7 @@ Once the pilot is stable and measured, the foundation can support:
 - carefully validated fact-strategy practice; and
 - broader K–5 practice expansion.
 
-Prioritize reuse proven by the multiplication pilot before widening the configuration surface.
+Prioritize validated arithmetic coverage before widening the configuration surface.
 
 ## 10. Deferred / Out of Scope
 
