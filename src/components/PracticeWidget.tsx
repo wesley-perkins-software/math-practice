@@ -668,7 +668,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
               </div>
             )}
 
-            {isTimed && (
+            {isTimed && trackStreaks && (
               <div className={`flex items-end justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
                 {/* Personal Best: the timed counterpart to the untimed
                     Streak stat above — same label-above-value shape, compact

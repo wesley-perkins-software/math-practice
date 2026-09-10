@@ -26,7 +26,7 @@ export default function InternalLinks({ title = 'Related Practice', links }: Pro
               {link.label}
             </div>
             {link.description && (
-              <div className="text-xs mt-1 text-body">{link.description}</div>
+              <div className="text-sm mt-1 text-body">{link.description}</div>
             )}
           </a>
         ))}

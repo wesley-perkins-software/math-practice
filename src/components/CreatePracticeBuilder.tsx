@@ -8,6 +8,12 @@ const CATEGORY_NAMES: Record<PracticeCategoryId, string> = { addition: 'Addition
 const COUNTS: readonly (QuestionCount | undefined)[] = [undefined, 10, 20, 30, 50];
 const DURATIONS: readonly TimerDuration[] = [30, 60, 120, 300];
 
+const PRACTICE_TYPE_DESCRIPTIONS: Partial<Record<PracticeTypeId, string>> = {
+  'multiplication-facts': 'Multiplication facts from 1–12.',
+  'division-facts': 'Divide by numbers 1–12.',
+  'division-remainders': 'Division problems that may have a remainder.',
+};
+
 function SelectionGrid({ kind, values, onChange }: { kind: 'facts' | 'divisors'; values: readonly number[]; onChange: (values: number[]) => void }) {
   const noun = kind === 'facts' ? 'facts' : 'numbers';
   const toggle = (value: number) => {
@@ -16,7 +22,7 @@ function SelectionGrid({ kind, values, onChange }: { kind: 'facts' | 'divisors';
       onChange(values.filter((item) => item !== value));
     } else onChange([...values, value]);
   };
-  return <fieldset className="builder-card">
+  return <fieldset>
     <legend className="builder-heading">{kind === 'facts' ? 'Choose the facts' : 'Choose what to divide by'}</legend>
     <div className="flex flex-wrap items-start justify-between gap-3">
       <p className="builder-help">Select one or more {noun}. At least one must stay selected.</p>
@@ -26,6 +32,25 @@ function SelectionGrid({ kind, values, onChange }: { kind: 'facts' | 'divisors';
       {Array.from({ length: 12 }, (_, i) => i + 1).map((value) => <button key={value} type="button" aria-pressed={values.includes(value)} onClick={() => toggle(value)} className="builder-number-button">
         {kind === 'facts' ? value : `÷ ${value}`}<span className="sr-only"> {values.includes(value) ? 'selected' : 'not selected'}</span>
       </button>)}
+    </div>
+  </fieldset>;
+}
+
+function SegmentedGroup<T extends string | number | undefined>({ legend, name, options, value, labelFor, onChange }: {
+  legend: string;
+  name: string;
+  options: readonly T[];
+  value: T;
+  labelFor: (option: T) => string;
+  onChange: (option: T) => void;
+}) {
+  return <fieldset>
+    <legend className="builder-label">{legend}</legend>
+    <div className="builder-segmented mt-2">
+      {options.map((option) => <label key={String(option)} className="builder-segment-option">
+        <input type="radio" name={name} className="sr-only peer" checked={value === option} onChange={() => onChange(option)} />
+        <span className="builder-segment">{labelFor(option)}</span>
+      </label>)}
     </div>
   </fieldset>;
 }
@@ -42,6 +67,7 @@ export default function CreatePracticeBuilder() {
   const [state, setState] = useState<CreatePracticeState>(DEFAULT_CREATE_PRACTICE_STATE);
   const [origin, setOrigin] = useState('');
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
+  const [showLink, setShowLink] = useState(false);
   const urlInput = useRef<HTMLInputElement>(null);
   const derived = useMemo(() => deriveCreatePractice(state), [state]);
   const relativeUrl = derived.success ? derived.relativeUrl : '';
@@ -53,48 +79,67 @@ export default function CreatePracticeBuilder() {
   const update = (changes: Partial<CreatePracticeState>) => setState((current) => ({ ...current, ...changes }));
   const chooseType = (id: PracticeTypeId) => setState((current) => selectCreatePracticeType(current, id));
   const setSelection = (key: 'facts' | 'divisors', values: number[]) => update({ skillOptions: { [key]: values } });
-  const selectClass = 'builder-select';
+
+  const hasSkillOptions = state.practiceType === 'multiplication-facts' || state.practiceType === 'division-facts';
 
   return <div className="space-y-6">
-    <fieldset className="builder-card">
-      <legend className="builder-heading">Choose what to practice</legend>
-      <p className="builder-help">Pick one skill. You can change it at any time.</p>
-      <div className="mt-5 space-y-5">
-        {PRACTICE_CATEGORY_IDS.map((category) => <div key={category}>
-          <h3 className="mb-2 text-sm font-bold uppercase tracking-wide text-[#4338CA]">{CATEGORY_NAMES[category]}</h3>
-          <div className="grid gap-2 sm:grid-cols-2">
-            {PRACTICE_TYPE_REGISTRY.filter((entry) => entry.category === category).map((entry) => <label key={entry.id} className="builder-type-option">
-              <input type="radio" name="practice-type" value={entry.id} checked={state.practiceType === entry.id} onChange={() => chooseType(entry.id)} />
-              <span>{entry.displayName}</span>
-            </label>)}
+    <div className="builder-shell">
+      <fieldset>
+        <legend className="builder-heading">Choose what to practice</legend>
+        <p className="builder-help">Pick one skill. You can change it at any time.</p>
+        <div className="mt-5 space-y-5">
+          {PRACTICE_CATEGORY_IDS.map((category) => <div key={category}>
+            <h3 className="mb-2 text-xs font-semibold text-[#475569]">{CATEGORY_NAMES[category]}</h3>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {PRACTICE_TYPE_REGISTRY.filter((entry) => entry.category === category).map((entry) => <label key={entry.id} className="builder-type-option">
+                <input type="radio" name="practice-type" value={entry.id} checked={state.practiceType === entry.id} onChange={() => chooseType(entry.id)} />
+                <span className="flex flex-col">
+                  <span>{entry.displayName}</span>
+                  {PRACTICE_TYPE_DESCRIPTIONS[entry.id] && <span className="mt-0.5 text-sm font-normal text-[#334155]">{PRACTICE_TYPE_DESCRIPTIONS[entry.id]}</span>}
+                </span>
+              </label>)}
+            </div>
+          </div>)}
+        </div>
+        {!state.practiceType && <p className="builder-help mt-5 text-center">Choose a skill above to build your practice.</p>}
+      </fieldset>
+
+      {hasSkillOptions && <div className="builder-stage">
+        {state.practiceType === 'multiplication-facts' && <SelectionGrid kind="facts" values={((state.skillOptions as { facts?: readonly number[] }).facts) ?? []} onChange={(v) => setSelection('facts', v)} />}
+        {state.practiceType === 'division-facts' && <SelectionGrid kind="divisors" values={((state.skillOptions as { divisors?: readonly number[] }).divisors) ?? []} onChange={(v) => setSelection('divisors', v)} />}
+      </div>}
+
+      {state.practiceType && <div className="builder-stage">
+        <fieldset>
+          <legend className="builder-heading">Practice settings</legend>
+          <div className="mt-4 grid gap-5 sm:grid-cols-2">
+            <SegmentedGroup legend="Mode" name="mode" options={['untimed', 'timed'] as const} value={state.mode} labelFor={(v) => (v === 'untimed' ? 'Untimed' : 'Timed')} onChange={(v) => update({ mode: v as PracticeMode })} />
+            <SegmentedGroup legend="Question limit" name="question-count" options={COUNTS} value={state.questionCount} labelFor={(v) => (v ? `${v}` : 'Endless')} onChange={(v) => update({ questionCount: v as QuestionCount | undefined })} />
           </div>
-        </div>)}
-      </div>
-    </fieldset>
+          {state.mode === 'timed' && <div className="mt-5">
+            <SegmentedGroup legend="Timer" name="duration" options={DURATIONS} value={state.durationSeconds} labelFor={(v) => formatDuration(v)} onChange={(v) => update({ durationSeconds: v as TimerDuration })} />
+          </div>}
+          {state.mode === 'timed' && <p className="builder-help mt-4">If you set both a timer and question limit, practice ends when either one is reached.</p>}
+        </fieldset>
+      </div>}
+    </div>
 
-    {state.practiceType === 'multiplication-facts' && <SelectionGrid kind="facts" values={((state.skillOptions as { facts?: readonly number[] }).facts) ?? []} onChange={(v) => setSelection('facts', v)} />}
-    {state.practiceType === 'division-facts' && <SelectionGrid kind="divisors" values={((state.skillOptions as { divisors?: readonly number[] }).divisors) ?? []} onChange={(v) => setSelection('divisors', v)} />}
-
-    {state.practiceType && <fieldset className="builder-card">
-      <legend className="builder-heading">Practice settings</legend>
-      <div className="mt-4 grid gap-5 sm:grid-cols-2">
-        <label className="builder-label">Mode<select className={selectClass} value={state.mode} onChange={(e) => update({ mode: e.target.value as PracticeMode })}><option value="untimed">Untimed</option><option value="timed">Timed</option></select></label>
-        {state.mode === 'timed' && <label className="builder-label">Timer<select className={selectClass} value={state.durationSeconds} onChange={(e) => update({ durationSeconds: Number(e.target.value) as TimerDuration })}>{DURATIONS.map((duration) => <option key={duration} value={duration}>{formatDuration(duration)}</option>)}</select></label>}
-        <label className="builder-label">Question limit<select className={selectClass} value={state.questionCount ?? 'endless'} onChange={(e) => update({ questionCount: e.target.value === 'endless' ? undefined : Number(e.target.value) as QuestionCount })}>{COUNTS.map((count) => <option key={count ?? 'endless'} value={count ?? 'endless'}>{count ? `${count} questions` : 'Endless'}</option>)}</select></label>
+    {derived.success && (() => { const heading = formatSharedPracticeHeading(derived.definition); return <section className="builder-summary" aria-labelledby="practice-summary-title">
+      <p className="text-xs font-bold uppercase tracking-wide text-[#4F46E5]">Your practice</p>
+      <h2 id="practice-summary-title" className="mt-1 text-2xl font-extrabold text-[#1E293B] sm:text-3xl">{heading.title}</h2>
+      <p className="mt-2 text-base font-medium text-[#334155] sm:text-lg">{heading.details.join(' · ')}</p>
+      <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <button type="button" className="builder-primary" onClick={async () => setCopyStatus(await copyText(shareUrl, urlInput.current) ? 'copied' : 'failed')}>{copyStatus === 'copied' ? 'Copied ✓' : 'Copy Practice Link'}</button>
+        <a className="builder-text-button" href={relativeUrl} target="_blank" rel="noopener noreferrer">Preview practice →</a>
       </div>
-      {state.mode === 'timed' && <p className="builder-help mt-4">If you set both a timer and question limit, practice ends when either one is reached.</p>}
-    </fieldset>}
-
-    {derived.success ? (() => { const heading = formatSharedPracticeHeading(derived.definition); return <section className="builder-summary" aria-labelledby="practice-summary-title">
-      <p className="text-sm font-bold uppercase tracking-wide text-[#4F46E5]">Your practice</p>
-      <h2 id="practice-summary-title" className="mt-2 text-2xl font-extrabold text-[#1E293B]">{heading.title}</h2>
-      <p className="mt-2 font-medium text-[#475569]">{heading.details.join(' · ')}</p>
-      <label className="mt-5 block text-sm font-semibold text-[#334155]">Practice link<input ref={urlInput} className="builder-url" readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} /></label>
-      <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-        <button type="button" className="builder-primary" onClick={async () => setCopyStatus(await copyText(shareUrl, urlInput.current) ? 'copied' : 'failed')}>Copy Practice Link</button>
-        <a className="builder-secondary" href={relativeUrl}>Start Practice</a>
+      <p className={`mt-3 min-h-6 text-sm font-semibold ${copyStatus === 'failed' ? 'text-red-700' : 'text-emerald-700'}`} role="status" aria-live="polite">{copyStatus === 'copied' ? 'Copied!' : copyStatus === 'failed' ? 'Could not copy automatically. Select and copy the link below.' : ''}</p>
+      <div className="mt-4">
+        <button type="button" className="builder-text-button -ml-3" aria-expanded={showLink} onClick={() => setShowLink((v) => !v)}>{showLink ? 'Hide practice link' : 'Show practice link'}</button>
+        <label className={showLink ? 'mt-2 block text-sm font-semibold text-[#1E293B]' : 'sr-only'}>
+          Practice link
+          <input ref={urlInput} className={showLink ? 'builder-url' : 'builder-url builder-url-hidden'} readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} />
+        </label>
       </div>
-      <p className={`mt-3 min-h-6 text-sm font-semibold ${copyStatus === 'failed' ? 'text-red-700' : 'text-emerald-700'}`} role="status" aria-live="polite">{copyStatus === 'copied' ? 'Copied!' : copyStatus === 'failed' ? 'Could not copy automatically. Select and copy the link above.' : ''}</p>
-    </section>; })() : <section className="rounded-2xl border border-dashed border-[#A5B4FC] bg-[#EEF2FF] p-6 text-center"><h2 className="text-lg font-bold">Your practice will appear here</h2><p className="mt-1 text-[#475569]">Choose a skill to configure and share it.</p></section>}
+    </section>; })()}
   </div>;
 }

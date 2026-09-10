@@ -49,11 +49,15 @@ export const tests = [
     const second = prepareSharedPractice(valid('v=2&skill=multiplication-facts&facts=3&mode=timed&duration=60'));
     assert.equal(first.config.storageKey, 'mult-facts'); assert.equal(second.config.storageKey, 'mult-facts');
     assert.deepEqual(first.config.selectedFacts, [6, 7, 8]); assert.equal(first.questionCount, 20);
-    assert.deepEqual(first.heading, { title: 'Multiplication Facts', details: ['6, 7, 8 facts', '20 questions', 'Untimed'] });
+    assert.deepEqual(first.heading, { title: 'Multiplication Facts', details: ['6, 7, and 8 facts', '20 questions', 'Untimed'] });
     assert.equal(second.config.mode, 'timed'); assert.equal(second.config.timerDuration, 60); assert.equal(second.config.fixedTimerDuration, true);
     const division = prepareSharedPractice(valid('v=2&skill=division-facts&divisors=6,8&mode=timed&duration=120&questions=20'));
     assert.equal(division.config.storageKey, 'div-facts'); assert.deepEqual(division.config.selectedDivisors, [6, 8]);
-    assert.deepEqual(division.heading, { title: 'Division Facts', details: ['Divide by 6, 8', '2 minutes', 'Up to 20 questions'] });
+    assert.deepEqual(division.heading, { title: 'Division Facts', details: ['Divide by 6 and 8', '2 minutes', 'Up to 20 questions'] });
+    const allFacts = prepareSharedPractice(valid('v=2&skill=multiplication-facts&facts=1,2,3,4,5,6,7,8,9,10,11,12&mode=timed&duration=30&questions=50'));
+    assert.deepEqual(allFacts.heading, { title: 'Multiplication Facts', details: ['30 seconds', 'Up to 50 questions'] }, 'the runner omits the redundant all-facts detail since the H1 already names the skill');
+    const allDivisors = prepareSharedPractice(valid('v=2&skill=division-facts&divisors=1,2,3,4,5,6,7,8,9,10,11,12&mode=untimed'));
+    assert.deepEqual(allDivisors.heading, { title: 'Division Facts', details: ['Untimed'] }, 'the runner omits the redundant all-divisors detail since the H1 already names the skill');
   }),
   test('shared heading details cover plain skills and every session shape naturally', () => {
     const heading = (query: string) => formatSharedPracticeHeading(valid(query));
