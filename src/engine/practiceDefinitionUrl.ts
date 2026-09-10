@@ -6,7 +6,7 @@ import {
 } from './practiceDefinition';
 import { getPracticeTypeEntry } from './practiceTypes';
 
-const COMMON_PARAMETERS = new Set(['v', 'skill', 'mode', 'duration', 'questions']);
+const COMMON_PARAMETERS = new Set(['v', 'skill', 'mode', 'duration', 'problems']);
 const SKILL_PARAMETER: Readonly<Record<string, 'facts' | 'divisors' | undefined>> = Object.freeze({
   'multiplication-facts': 'facts',
   'division-facts': 'divisors',
@@ -70,10 +70,10 @@ export function parsePracticeDefinitionV2Query(query: string | URLSearchParams):
       if (parsed === undefined) return failure('sessionOptions', 'Duration must be a plain positive integer');
       sessionOptions.durationSeconds = parsed;
     }
-    const questions = values.get('questions');
-    if (questions !== undefined) {
-      const parsed = parseInteger(questions);
-      if (parsed === undefined) return failure('sessionOptions', 'Questions must be a plain positive integer');
+    const problems = values.get('problems');
+    if (problems !== undefined) {
+      const parsed = parseInteger(problems);
+      if (parsed === undefined) return failure('sessionOptions', 'Problems must be a plain positive integer');
       sessionOptions.questionCount = parsed;
     }
     return validatePracticeDefinitionV2({ version: 2, practiceType: skill, skillOptions, sessionOptions });
@@ -91,6 +91,6 @@ export function serializePracticeDefinitionV2(definition: PracticeDefinitionV2):
   if (definition.practiceType === 'division-facts') params.set('divisors', definition.skillOptions.divisors.join(','));
   params.set('mode', definition.sessionOptions.mode);
   if (definition.sessionOptions.mode === 'timed') params.set('duration', String(definition.sessionOptions.durationSeconds));
-  if (definition.sessionOptions.questionCount !== undefined) params.set('questions', String(definition.sessionOptions.questionCount));
+  if (definition.sessionOptions.questionCount !== undefined) params.set('problems', String(definition.sessionOptions.questionCount));
   return params.toString().replaceAll('%2C', ',');
 }
