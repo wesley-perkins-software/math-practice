@@ -125,7 +125,9 @@ export function updateStatsAfterSession(
   isTimed: boolean,
 ): PageStats {
   const sessionScore = calculateSessionScore(result.correct, result.total);
-  const timedScore = isTimed ? calculateTimedScore(result.correct, result.durationSeconds) : 0;
+  // New timed results carry authoritative elapsed time. Legacy results safely
+  // retain their historic durationSeconds normalization.
+  const timedScore = isTimed ? calculateTimedScore(result.correct, result.elapsedSeconds ?? result.durationSeconds) : 0;
 
   // Streak is updated per-answer in PracticeWidget — preserve existing values here.
   return {
@@ -193,6 +195,10 @@ function isSessionLogEntry(value: unknown): value is SessionLogEntry {
     && isNonNegativeFiniteNumber(value.durationSeconds)
     && typeof value.isTimed === 'boolean'
     && typeof value.timestamp === 'string')) return false;
+  if (value.elapsedSeconds !== undefined && !isNonNegativeFiniteNumber(value.elapsedSeconds)) return false;
+  if (value.timeLimitSeconds !== undefined && !isNonNegativeFiniteNumber(value.timeLimitSeconds)) return false;
+  if (value.completionReason !== undefined && value.completionReason !== 'time-limit' && value.completionReason !== 'question-limit') return false;
+  if (value.questionTarget !== undefined && !isNonNegativeFiniteNumber(value.questionTarget)) return false;
   return value.correct <= value.total && value.score <= 100;
 }
 

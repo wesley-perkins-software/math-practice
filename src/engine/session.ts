@@ -10,6 +10,8 @@ export interface PracticeSessionState {
   completedQuestions: number;
   acceptingAnswer: boolean;
   questionCompletionPending: boolean;
+  /** Set as soon as a completion boundary wins, even if feedback is still showing. */
+  completionReason?: 'time-limit' | 'question-limit';
 }
 
 export function startPracticeSession(): PracticeSessionState {
@@ -37,6 +39,9 @@ export function recordCompletedQuestion(
       completedQuestions,
       acceptingAnswer: false,
       questionCompletionPending: questionCount !== undefined && completedQuestions >= questionCount,
+      ...(questionCount !== undefined && completedQuestions >= questionCount
+        ? { completionReason: 'question-limit' as const }
+        : {}),
     },
   };
 }
@@ -69,9 +74,11 @@ export function expirePracticeTimer(state: PracticeSessionState): {
   state: PracticeSessionState;
   shouldComplete: boolean;
 } {
-  if (state.status === 'complete') return { state, shouldComplete: false };
+  // Reaching the target reserves completion at submission time. Its normal
+  // feedback delay must not let a later countdown tick steal the boundary.
+  if (state.status === 'complete' || state.questionCompletionPending) return { state, shouldComplete: false };
   return {
-    state: { ...state, status: 'complete', acceptingAnswer: false, questionCompletionPending: false },
+    state: { ...state, status: 'complete', acceptingAnswer: false, questionCompletionPending: false, completionReason: 'time-limit' },
     shouldComplete: true,
   };
 }

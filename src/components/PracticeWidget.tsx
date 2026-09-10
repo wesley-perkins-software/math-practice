@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { PracticeConfig, Problem, SessionResult, PageStats, QuestionCount } from '@/engine/types';
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
-import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
+import { scoreAnswer, buildSessionResult, buildTimedSessionResult } from '@/engine/scorer';
 import { loadStats, saveStats, updateStatsAfterSession, updateStatsAfterUntimedAnswer, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
 import { expirePracticeTimer, finishAnswerFeedback, recordCompletedQuestion, startPracticeSession } from '@/engine/session';
@@ -72,6 +72,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   const sessionBoundaryRef = useRef(startPracticeSession());
   const completionShownRef = useRef(false);
   const persistedResultRef = useRef<string | null>(null);
+  const logicalCompletionTimeRef = useRef<number | null>(null);
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
@@ -156,6 +157,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     sessionBoundaryRef.current = startPracticeSession();
     completionShownRef.current = false;
     persistedResultRef.current = null;
+    logicalCompletionTimeRef.current = null;
     timerStartedRef.current = false;
     setTimerStarted(false);
     setSecondsRemaining(duration);
@@ -183,22 +185,28 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     });
   }
 
-  function endSession() {
+  function endSession(completionReason?: SessionResult['completionReason']) {
     if (completionShownRef.current) return;
     completionShownRef.current = true;
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
-    // Timed sessions report the CONFIGURED duration, not wall-clock elapsed
-    // time: the countdown interval isn't a perfectly precise 1000ms metronome
-    // (scheduling/rendering jitter), so Date.now() - sessionStartTime can land
-    // a little past the nominal duration (e.g. 61s for a 60s drill) even
-    // though the drill correctly ran for exactly `duration` countdown ticks.
-    // The countdown itself — and therefore scoring — is untouched; this only
-    // fixes what gets reported.
-    const elapsed = isTimed
-      ? durationRef.current
-      : Math.round((Date.now() - sessionStartTimeRef.current) / 1000);
-    setResult(buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed));
+    const completedResult = isTimed
+      ? buildTimedSessionResult(
+          correctRef.current,
+          totalAnsweredRef.current,
+          sessionStartTimeRef.current,
+          logicalCompletionTimeRef.current ?? Date.now(),
+          durationRef.current,
+          completionReason ?? 'time-limit',
+          questionCount,
+        )
+      : buildSessionResult(
+          correctRef.current,
+          totalAnsweredRef.current,
+          Math.round((Date.now() - sessionStartTimeRef.current) / 1000),
+          questionCount === undefined ? {} : { completionReason: 'question-limit', questionTarget: questionCount },
+        );
+    setResult(completedResult);
     setPhase('complete');
   }
 
@@ -210,7 +218,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         if (s <= 1) {
           const expiration = expirePracticeTimer(sessionBoundaryRef.current);
           sessionBoundaryRef.current = expiration.state;
-          if (expiration.shouldComplete) endSession();
+          if (expiration.shouldComplete) endSession(expiration.state.completionReason);
           return 0;
         }
         return s - 1;
@@ -248,6 +256,10 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         total: result.total,
         score: result.score,
         durationSeconds: result.durationSeconds,
+        ...(result.elapsedSeconds === undefined ? {} : { elapsedSeconds: result.elapsedSeconds }),
+        ...(result.timeLimitSeconds === undefined ? {} : { timeLimitSeconds: result.timeLimitSeconds }),
+        ...(result.completionReason === undefined ? {} : { completionReason: result.completionReason }),
+        ...(result.questionTarget === undefined ? {} : { questionTarget: result.questionTarget }),
         isTimed,
         timestamp: result.timestamp,
       });
@@ -289,6 +301,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     }
 
     totalAnsweredRef.current = submission.state.completedQuestions;
+    if (submission.state.questionCompletionPending) logicalCompletionTimeRef.current = Date.now();
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
     trackEvent('answer_submit', {
@@ -337,7 +350,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       const transition = finishAnswerFeedback(sessionBoundaryRef.current);
       sessionBoundaryRef.current = transition.state;
       if (transition.shouldComplete) {
-        endSession();
+        endSession(transition.state.completionReason);
       } else if (transition.shouldGenerateNext) {
         setProblemIndex((i) => i + 1);
         setProblem(generateProblem(config));
