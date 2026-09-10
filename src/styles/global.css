@@ -53,12 +53,14 @@
   .builder-label { @apply flex flex-col gap-2 text-sm font-bold text-[#1E293B]; }
   .builder-select { @apply min-h-12 rounded-xl border border-[#A5B4FC] bg-white px-3 text-base font-semibold text-[#1E293B] focus:outline-none focus:ring-4 focus:ring-[#4F46E5]/25; }
   .builder-segmented { @apply grid gap-1.5 rounded-xl border border-[#D8DEFC] bg-[#FAFAFE] p-1.5; grid-template-columns: repeat(auto-fit, minmax(4.25rem, 1fr)); }
+  .builder-segmented-compact { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .builder-segmented-compact .builder-segment { @apply px-1; }
   .builder-segment { @apply flex min-h-12 cursor-pointer items-center justify-center rounded-lg px-3 text-center text-sm font-bold text-[#3730A3] transition peer-checked:bg-[#4F46E5] peer-checked:text-white peer-focus-visible:outline-none peer-focus-visible:ring-4 peer-focus-visible:ring-[#4F46E5]/30; }
   .builder-segment-option:hover:not(:has(input:checked)) .builder-segment { background-color: #EEF2FF; }
   .builder-summary { @apply rounded-2xl border-2 border-[#818CF8] bg-white p-6 shadow-md sm:p-8; }
   .builder-url { @apply mt-2 block w-full rounded-lg border border-[#CBD5E1] bg-[#F8FAFC] px-3 py-2.5 font-mono text-xs font-normal text-[#475569] focus:outline-none focus:ring-4 focus:ring-[#4F46E5]/25; }
   .builder-url-hidden { @apply absolute h-px w-px overflow-hidden whitespace-nowrap border-0 p-0; clip: rect(0, 0, 0, 0); clip-path: inset(50%); }
-  .builder-primary { @apply inline-flex min-h-12 items-center justify-center rounded-xl bg-[#4F46E5] px-5 py-3 font-bold text-white shadow-sm transition hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#4F46E5]/30; }
+  .builder-primary { @apply inline-flex min-h-12 items-center justify-center rounded-xl bg-[#4F46E5] px-5 py-3 font-bold text-white shadow-sm transition hover:bg-[#3730A3] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#4F46E5]/30 disabled:cursor-not-allowed disabled:bg-[#94A3B8]; }
   .builder-secondary { @apply inline-flex min-h-12 items-center justify-center rounded-xl border-2 border-[#4F46E5] bg-white px-5 py-3 font-bold text-[#4338CA] transition hover:bg-[#EEF2FF] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#4F46E5]/30; }
 }
 

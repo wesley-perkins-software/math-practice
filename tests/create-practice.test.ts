@@ -105,8 +105,14 @@ export const tests = [
     assert.equal(page.includes('for a student'), false);
     const builder = source('src/components/CreatePracticeBuilder.tsx');
     assert.ok(builder.includes('legend="Problem limit"'));
-    assert.ok(builder.includes('`${v} problems`'));
+    assert.ok(builder.includes("[10, 20, 30, 50, undefined]"));
+    assert.ok(builder.includes("(v ? `${v}` : 'No limit')"));
     assert.equal(builder.includes('Question limit'), false);
+    assert.equal(builder.includes("if (values.length === 1) return"), false, 'the final selection may be cleared');
+    assert.ok(builder.includes('>Select all</button>'));
+    assert.ok(builder.includes('>Clear all</button>'));
+    assert.ok(builder.includes('Choose at least one'));
+    assert.ok(builder.includes('disabled>Copy Practice Link</button>'));
     assert.ok(builder.includes('href={relativeUrl}'), 'Preview practice must read the same derived relativeUrl used for Copy, not a second URL');
     assert.ok(builder.includes('target="_blank"'));
     assert.ok(builder.includes('rel="noopener noreferrer"'));
