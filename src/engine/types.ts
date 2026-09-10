@@ -67,7 +67,16 @@ export interface Problem {
 export interface SessionResult {
   correct: number;
   total: number;
+  /** Actual session length. Kept for session-log/storage compatibility. */
   durationSeconds: number;
+  /** Actual elapsed practice time for a timed session, measured from its established timer start. */
+  elapsedSeconds?: number;
+  /** Configured countdown limit; unlike elapsedSeconds, this is assignment configuration. */
+  timeLimitSeconds?: number;
+  /** Runtime boundary that won the session's idempotent completion guard. */
+  completionReason?: 'time-limit' | 'question-limit';
+  /** Configured accepted-answer target for a finite session. */
+  questionTarget?: QuestionCount;
   /** 0–100 integer percent correct */
   score: number;
   /** ISO 8601 */
@@ -97,6 +106,10 @@ export interface SessionLogEntry {
   /** 0–100 percent correct */
   score: number;
   durationSeconds: number;
+  elapsedSeconds?: number;
+  timeLimitSeconds?: number;
+  completionReason?: 'time-limit' | 'question-limit';
+  questionTarget?: QuestionCount;
   isTimed: boolean;
   /** ISO 8601 */
   timestamp: string;

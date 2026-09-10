@@ -61,6 +61,8 @@ The browser shows no practice widget until parsing, validation, and registry res
 
 Shared practice is a focused assignment session, so it neither presents nor updates canonical streak mechanics. It still records attempts, completed sessions, scores, and session history against the registry-resolved base progress identity. Its completion view emphasizes attempted-answer score and accuracy (plus the answered target when finite), with replay as the sole action; it does not imply assignment-specific reporting.
 
+For timed runtime results, the public `duration` remains only the configured countdown limit. The session result separately records the actual elapsed practice time (from the existing first-submission timer start), the configured time limit, and whether the time or question boundary won. A final accepted answer reserves a question-limit completion before its normal feedback delay, so that presentation delay neither inflates elapsed time nor lets a later countdown tick replace the winning boundary. These fields are runtime/history data and are never serialized into a practice URL. Older history entries without them remain valid.
+
 `/practice/` has one clean canonical URL, is `noindex,follow`, and is excluded from the sitemap. Query combinations never create static routes or query-specific canonicals. Public Preset V1 remains a separate intact contract.
 
 ## Deferred scope

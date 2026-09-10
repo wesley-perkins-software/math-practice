@@ -129,6 +129,20 @@ export const tests = [
     assert.deepEqual([untimed.bestTimedScore, untimed.personalBestScore], [12, 10]);
     assert.deepEqual([untimed.currentStreak, untimed.longestStreak], [4, 8]);
   }),
+  test('new timed results normalize by actual elapsed time while legacy results remain compatible', () => {
+    const early = { correct: 20, total: 20, durationSeconds: 52.4, elapsedSeconds: 52.4, timeLimitSeconds: 300, completionReason: 'question-limit' as const, questionTarget: 20 as const, score: 100, timestamp: 'new' };
+    assert.equal(updateStatsAfterSession(DEFAULT_STATS, early, true).bestTimedScore, 23);
+    const legacy = { correct: 20, total: 20, durationSeconds: 300, score: 100, timestamp: 'old' };
+    assert.equal(updateStatsAfterSession(DEFAULT_STATS, legacy, true).bestTimedScore, 4);
+  }),
+  test('session history accepts legacy entries and round trips richer completion metadata', () => {
+    setup();
+    const legacy = entry(1);
+    const rich = { ...entry(2), durationSeconds: 52.4, elapsedSeconds: 52.4, timeLimitSeconds: 300, completionReason: 'question-limit' as const, questionTarget: 20 as const };
+    appendSessionLog(legacy);
+    appendSessionLog(rich);
+    assert.deepEqual(loadSessionLog(), [legacy, rich]);
+  }),
   test('untimed answer updates can suppress only streak persistence', () => {
     const sharedCorrect = updateStatsAfterUntimedAnswer(stats, true, false);
     const sharedWrong = updateStatsAfterUntimedAnswer(sharedCorrect, false, false);
