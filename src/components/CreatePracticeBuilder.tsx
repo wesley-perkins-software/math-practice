@@ -124,12 +124,12 @@ export default function CreatePracticeBuilder() {
           <legend className="builder-heading">Practice settings</legend>
           <div className="mt-4 grid gap-5 sm:grid-cols-2">
             <SegmentedGroup legend="Mode" name="mode" options={['untimed', 'timed'] as const} value={state.mode} labelFor={(v) => (v === 'untimed' ? 'Untimed' : 'Timed')} onChange={(v) => update({ mode: v as PracticeMode })} />
-            <SegmentedGroup legend="Question limit" name="question-count" options={COUNTS} value={state.questionCount} labelFor={(v) => (v ? `${v}` : 'Endless')} onChange={(v) => update({ questionCount: v as QuestionCount | undefined })} />
+            <SegmentedGroup legend="Problem limit" name="question-count" options={COUNTS} value={state.questionCount} labelFor={(v) => (v ? `${v} problems` : 'Endless')} onChange={(v) => update({ questionCount: v as QuestionCount | undefined })} />
           </div>
           {state.mode === 'timed' && <div className="mt-5">
             <SegmentedGroup legend="Timer" name="duration" options={DURATIONS} value={state.durationSeconds} labelFor={(v) => formatDuration(v)} onChange={(v) => update({ durationSeconds: v as TimerDuration })} />
           </div>}
-          {state.mode === 'timed' && <p className="builder-help mt-4">If you set both a timer and question limit, practice ends when either one is reached.</p>}
+          {state.mode === 'timed' && <p className="builder-help mt-4">If you set both a timer and problem limit, practice ends when either one is reached.</p>}
         </fieldset>
       </div>}
     </div>

@@ -28,8 +28,8 @@ const faqItems = [
     a: 'Yes. You can choose any combination of multiplication facts from 1 through 12.',
   },
   {
-    q: 'Can I set a timer or number of questions?',
-    a: 'Yes. Practice can be untimed or timed, and you can choose a question limit.',
+    q: 'Can I set a timer or number of problems?',
+    a: 'Yes. Practice can be untimed or timed, and you can choose a problem limit.',
   },
   {
     q: 'Can I use the same link with multiple students?',
@@ -41,13 +41,13 @@ const faqItems = [
   },
 ];
 ---
-<BaseLayout title="Create Custom Math Practice | Math Practice Online" description="Create custom math practice, choose the skill, number of questions, and timer, then share one link. No teacher or student account required." canonical={`${SITE_URL}/create/`}>
+<BaseLayout title="Create Custom Math Practice | Math Practice Online" description="Create custom math practice, choose the skill, number of problems, and timer, then share one link. No teacher or student account required." canonical={`${SITE_URL}/create/`}>
   <SiteHeader />
   <main class="px-4 py-10 sm:px-6 sm:py-14">
     <div class="mx-auto max-w-3xl">
       <header class="mb-8 text-center">
         <h1 class="text-3xl font-extrabold tracking-tight text-[#1E293B] sm:text-4xl">Create Custom Math Practice</h1>
-        <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-[#334155] sm:text-lg">Choose a skill, set the number of questions or timer, and copy a link students can open immediately. No sign-up required.</p>
+        <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-[#334155] sm:text-lg">Choose a skill, set the number of problems or timer, and copy a link students can open immediately. No sign-up required.</p>
       </header>
 
       <CreatePracticeBuilder client:load />
@@ -55,7 +55,7 @@ const faqItems = [
       <div class="mt-14 space-y-12">
         <section aria-labelledby="no-account-heading">
           <h2 id="no-account-heading" class="text-xl font-bold text-[#1E293B] mb-3">Create Math Practice Without an Account</h2>
-          <p class="text-base text-body leading-relaxed">Create custom math practice for a student without setting up a teacher or student account. Choose the skill, set a question limit or timer, and copy a link that opens directly into practice—no roster or classroom setup required.</p>
+          <p class="text-base text-body leading-relaxed">Create custom math practice for students without setting up teacher or student accounts. Choose the skill, set a problem limit or timer, and copy a link that opens directly into practice—no roster or classroom setup required.</p>
         </section>
 
         <section aria-labelledby="what-heading">
