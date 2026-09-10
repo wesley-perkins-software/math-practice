@@ -95,7 +95,7 @@ export default function CreatePracticeBuilder() {
                 <input type="radio" name="practice-type" value={entry.id} checked={state.practiceType === entry.id} onChange={() => chooseType(entry.id)} />
                 <span className="flex flex-col">
                   <span>{entry.displayName}</span>
-                  {PRACTICE_TYPE_DESCRIPTIONS[entry.id] && <span className="mt-0.5 text-sm font-normal text-[#475569]">{PRACTICE_TYPE_DESCRIPTIONS[entry.id]}</span>}
+                  {PRACTICE_TYPE_DESCRIPTIONS[entry.id] && <span className="mt-0.5 text-sm font-normal text-[#334155]">{PRACTICE_TYPE_DESCRIPTIONS[entry.id]}</span>}
                 </span>
               </label>)}
             </div>

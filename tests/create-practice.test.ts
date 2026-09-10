@@ -1,7 +1,10 @@
+import { readFileSync } from 'node:fs';
 import { assert, test } from './harness';
 import { DEFAULT_CREATE_PRACTICE_STATE, absolutePracticeUrl, deriveCreatePractice, selectCreatePracticeType, type CreatePracticeState } from '../src/engine/createPractice';
 import { PRACTICE_CATEGORY_IDS, PRACTICE_TYPE_REGISTRY } from '../src/engine/practiceTypes';
 import { formatSharedPracticeHeading } from '../src/engine/sharedPractice';
+
+const source = (path: string) => readFileSync(path, 'utf8');
 
 const select = (id: Parameters<typeof selectCreatePracticeType>[1]) => selectCreatePracticeType(DEFAULT_CREATE_PRACTICE_STATE, id);
 const derive = (state: CreatePracticeState) => {
@@ -94,5 +97,14 @@ export const tests = [
     assert.deepEqual(formatSharedPracticeHeading(oneDivisor.definition).details.slice(0, 1), ['Divide by 9']);
     const twoDivisors = derive({ ...select('division-facts'), skillOptions: { divisors: [9, 11] } });
     assert.deepEqual(formatSharedPracticeHeading(twoDivisors.definition).details.slice(0, 1), ['Divide by 9 and 11']);
+  }),
+  test('the creator intro copy addresses multiple students, and Preview practice opens the same derived URL in a new tab', () => {
+    const page = source('src/pages/create.astro');
+    assert.ok(page.includes('students can open'), 'intro copy should say "students", not "your student"');
+    assert.equal(page.includes('your student can open'), false);
+    const builder = source('src/components/CreatePracticeBuilder.tsx');
+    assert.ok(builder.includes('href={relativeUrl}'), 'Preview practice must read the same derived relativeUrl used for Copy, not a second URL');
+    assert.ok(builder.includes('target="_blank"'));
+    assert.ok(builder.includes('rel="noopener noreferrer"'));
   }),
 ];
