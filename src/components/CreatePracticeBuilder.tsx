@@ -3,6 +3,7 @@ import { DEFAULT_CREATE_PRACTICE_STATE, absolutePracticeUrl, deriveCreatePractic
 import { PRACTICE_CATEGORY_IDS, PRACTICE_TYPE_REGISTRY, type PracticeCategoryId, type PracticeTypeId } from '@/engine/practiceTypes';
 import { formatDuration, formatSharedPracticeHeading } from '@/engine/sharedPractice';
 import type { PracticeMode, QuestionCount, TimerDuration } from '@/engine/types';
+import { deriveSafePracticeDimensions, trackCreatePracticeEvent } from '@/lib/createPracticeAnalytics';
 
 const CATEGORY_NAMES: Record<PracticeCategoryId, string> = { addition: 'Addition', subtraction: 'Subtraction', multiplication: 'Multiplication', division: 'Division' };
 const COUNTS: readonly (QuestionCount | undefined)[] = [undefined, 10, 20, 30, 50];
@@ -77,7 +78,16 @@ export default function CreatePracticeBuilder() {
   useEffect(() => { if (copyStatus !== 'copied') return; const timer = window.setTimeout(() => setCopyStatus('idle'), 2500); return () => clearTimeout(timer); }, [copyStatus]);
 
   const update = (changes: Partial<CreatePracticeState>) => setState((current) => ({ ...current, ...changes }));
-  const chooseType = (id: PracticeTypeId) => setState((current) => selectCreatePracticeType(current, id));
+  const chooseType = (id: PracticeTypeId) => {
+    if (state.practiceType === id) return;
+    const next = selectCreatePracticeType(state, id);
+    const normalized = deriveCreatePractice(next);
+    if (normalized.success) {
+      const { practice_type, category } = deriveSafePracticeDimensions(normalized.definition);
+      trackCreatePracticeEvent('create_practice_type_select', { practice_type, category });
+    }
+    setState(next);
+  };
   const setSelection = (key: 'facts' | 'divisors', values: number[]) => update({ skillOptions: { [key]: values } });
 
   const hasSkillOptions = state.practiceType === 'multiplication-facts' || state.practiceType === 'division-facts';
@@ -129,8 +139,12 @@ export default function CreatePracticeBuilder() {
       <h2 id="practice-summary-title" className="mt-1 text-2xl font-extrabold text-[#1E293B] sm:text-3xl">{heading.title}</h2>
       <p className="mt-2 text-base font-medium text-[#334155] sm:text-lg">{heading.details.join(' · ')}</p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <button type="button" className="builder-primary" onClick={async () => setCopyStatus(await copyText(shareUrl, urlInput.current) ? 'copied' : 'failed')}>{copyStatus === 'copied' ? 'Copied ✓' : 'Copy Practice Link'}</button>
-        <a className="builder-text-button" href={relativeUrl} target="_blank" rel="noopener noreferrer">Preview practice →</a>
+        <button type="button" className="builder-primary" onClick={async () => {
+          const copied = await copyText(shareUrl, urlInput.current);
+          setCopyStatus(copied ? 'copied' : 'failed');
+          if (copied) trackCreatePracticeEvent('create_practice_copy_link', deriveSafePracticeDimensions(derived.definition));
+        }}>{copyStatus === 'copied' ? 'Copied ✓' : 'Copy Practice Link'}</button>
+        <a className="builder-text-button" href={relativeUrl} target="_blank" rel="noopener noreferrer" onClick={() => trackCreatePracticeEvent('create_practice_preview', deriveSafePracticeDimensions(derived.definition))}>Preview practice →</a>
       </div>
       <p className={`mt-3 min-h-6 text-sm font-semibold ${copyStatus === 'failed' ? 'text-red-700' : 'text-emerald-700'}`} role="status" aria-live="polite">{copyStatus === 'copied' ? 'Copied!' : copyStatus === 'failed' ? 'Could not copy automatically. Select and copy the link below.' : ''}</p>
       <div className="mt-4">

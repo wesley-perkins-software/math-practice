@@ -29,9 +29,13 @@ interface Props {
   questionCount?: QuestionCount;
   /** Shared assignments retain base progress identity but opt out of streak mechanics and use focused results. */
   sessionPresentation?: 'canonical' | 'shared';
+  /** Narrow lifecycle seam used by the shared runner; callbacks never receive problems or answers. */
+  onFirstAcceptedAnswer?: () => void;
+  onSessionComplete?: (result: SessionResult) => void;
+  onReplay?: () => void;
 }
 
-export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical' }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical', onFirstAcceptedAnswer, onSessionComplete, onReplay }: Props) {
   const isTimed = config.mode === 'timed';
   const trackStreaks = sessionPresentation === 'canonical';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
@@ -73,6 +77,9 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   const completionShownRef = useRef(false);
   const persistedResultRef = useRef<string | null>(null);
   const logicalCompletionTimeRef = useRef<number | null>(null);
+  const interactionTrackedRef = useRef(false);
+  const lifecycleRef = useRef({ onFirstAcceptedAnswer, onSessionComplete, onReplay });
+  lifecycleRef.current = { onFirstAcceptedAnswer, onSessionComplete, onReplay };
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
@@ -158,6 +165,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     completionShownRef.current = false;
     persistedResultRef.current = null;
     logicalCompletionTimeRef.current = null;
+    interactionTrackedRef.current = false;
     timerStartedRef.current = false;
     setTimerStarted(false);
     setSecondsRemaining(duration);
@@ -275,6 +283,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         is_personal_best: isTimed && updated.personalBestScore > prevPersonalBest,
         is_new_streak_record: newStreakRecord,
       });
+      lifecycleRef.current.onSessionComplete?.(result);
     }
   }, [phase, result, config.storageKey, config.label, isTimed]);
 
@@ -290,6 +299,10 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     const submission = recordCompletedQuestion(sessionBoundaryRef.current, questionCount);
     sessionBoundaryRef.current = submission.state;
     if (!submission.accepted) return;
+    if (!interactionTrackedRef.current) {
+      interactionTrackedRef.current = true;
+      lifecycleRef.current.onFirstAcceptedAnswer?.();
+    }
 
     // Start the timer on the first answer submission
     if (isTimed && !timerStartedRef.current) {
@@ -360,6 +373,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   }
 
   function handleRestart() {
+    lifecycleRef.current.onReplay?.();
     trackEvent('play_again', {
       operation: config.operation,
       practice_label: config.label ?? config.storageKey,
