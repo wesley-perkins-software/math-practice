@@ -47,26 +47,26 @@ const faqItems = [
     <div class="mx-auto max-w-3xl">
       <header class="mb-8 text-center">
         <h1 class="text-3xl font-extrabold tracking-tight text-[#1E293B] sm:text-4xl">Create Custom Math Practice</h1>
-        <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-[#475569] sm:text-lg">Choose a skill, set the number of questions or timer, and copy a link your student can open immediately. No sign-up required.</p>
+        <p class="mx-auto mt-3 max-w-2xl text-base leading-relaxed text-[#334155] sm:text-lg">Choose a skill, set the number of questions or timer, and copy a link your student can open immediately. No sign-up required.</p>
       </header>
 
       <CreatePracticeBuilder client:load />
 
       <div class="mt-14 space-y-12">
         <section aria-labelledby="no-account-heading">
-          <h2 id="no-account-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Create Math Practice Without an Account</h2>
-          <p class="text-sm text-body leading-relaxed">Create custom math practice for a student without setting up a teacher or student account. Choose the skill, set a question limit or timer, and copy a link that opens directly into practice—no roster or classroom setup required.</p>
+          <h2 id="no-account-heading" class="text-xl font-bold text-[#1E293B] mb-3">Create Math Practice Without an Account</h2>
+          <p class="text-base text-body leading-relaxed">Create custom math practice for a student without setting up a teacher or student account. Choose the skill, set a question limit or timer, and copy a link that opens directly into practice—no roster or classroom setup required.</p>
         </section>
 
         <section aria-labelledby="what-heading">
-          <h2 id="what-heading" class="text-lg font-semibold text-[#1E293B] mb-4">What Can I Create?</h2>
+          <h2 id="what-heading" class="text-xl font-bold text-[#1E293B] mb-4">What Can I Create?</h2>
           <div class="grid gap-5 sm:grid-cols-2">
             {PRACTICE_CATEGORY_IDS.map((category) => (
               <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
-                <h3 class="text-sm font-semibold text-[#1E293B] mb-2">
+                <h3 class="text-base font-semibold text-[#1E293B] mb-2">
                   <a href={CATEGORY_HREFS[category]} class="hover:text-[#4F46E5] hover:underline">{CATEGORY_NAMES[category]}</a>
                 </h3>
-                <ul class="space-y-1 text-sm text-body leading-relaxed">
+                <ul class="space-y-1 text-base text-body leading-relaxed">
                   {PRACTICE_TYPE_REGISTRY.filter((entry) => entry.category === category).map((entry) => (
                     <li>{entry.displayName}</li>
                   ))}
@@ -77,12 +77,12 @@ const faqItems = [
         </section>
 
         <section aria-labelledby="faq-heading">
-          <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+          <h2 id="faq-heading" class="text-xl font-bold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
           <div class="flex flex-col gap-4">
             {faqItems.map(({ q, a }) => (
               <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
-                <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
-                <p class="text-sm text-body leading-relaxed">{a}</p>
+                <h3 class="text-base font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+                <p class="text-base text-body leading-relaxed">{a}</p>
               </div>
             ))}
           </div>

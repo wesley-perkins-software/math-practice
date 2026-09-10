@@ -9,9 +9,9 @@ const COUNTS: readonly (QuestionCount | undefined)[] = [undefined, 10, 20, 30, 5
 const DURATIONS: readonly TimerDuration[] = [30, 60, 120, 300];
 
 const PRACTICE_TYPE_DESCRIPTIONS: Partial<Record<PracticeTypeId, string>> = {
-  'multiplication-facts': 'Practice multiplication facts from 1–12.',
-  'division-facts': 'Practice division facts with divisors 1–12.',
-  'division-remainders': 'Practice division problems that may have a remainder.',
+  'multiplication-facts': 'Multiplication facts from 1–12.',
+  'division-facts': 'Divide by numbers 1–12.',
+  'division-remainders': 'Division problems that may have a remainder.',
 };
 
 function SelectionGrid({ kind, values, onChange }: { kind: 'facts' | 'divisors'; values: readonly number[]; onChange: (values: number[]) => void }) {
@@ -89,13 +89,13 @@ export default function CreatePracticeBuilder() {
         <p className="builder-help">Pick one skill. You can change it at any time.</p>
         <div className="mt-5 space-y-5">
           {PRACTICE_CATEGORY_IDS.map((category) => <div key={category}>
-            <h3 className="mb-2 text-xs font-semibold text-[#64748B]">{CATEGORY_NAMES[category]}</h3>
+            <h3 className="mb-2 text-xs font-semibold text-[#475569]">{CATEGORY_NAMES[category]}</h3>
             <div className="grid gap-2 sm:grid-cols-2">
               {PRACTICE_TYPE_REGISTRY.filter((entry) => entry.category === category).map((entry) => <label key={entry.id} className="builder-type-option">
                 <input type="radio" name="practice-type" value={entry.id} checked={state.practiceType === entry.id} onChange={() => chooseType(entry.id)} />
                 <span className="flex flex-col">
                   <span>{entry.displayName}</span>
-                  {PRACTICE_TYPE_DESCRIPTIONS[entry.id] && <span className="mt-0.5 text-xs font-normal text-[#64748B]">{PRACTICE_TYPE_DESCRIPTIONS[entry.id]}</span>}
+                  {PRACTICE_TYPE_DESCRIPTIONS[entry.id] && <span className="mt-0.5 text-sm font-normal text-[#475569]">{PRACTICE_TYPE_DESCRIPTIONS[entry.id]}</span>}
                 </span>
               </label>)}
             </div>
@@ -126,16 +126,16 @@ export default function CreatePracticeBuilder() {
 
     {derived.success && (() => { const heading = formatSharedPracticeHeading(derived.definition); return <section className="builder-summary" aria-labelledby="practice-summary-title">
       <p className="text-xs font-bold uppercase tracking-wide text-[#4F46E5]">Your practice</p>
-      <h2 id="practice-summary-title" className="mt-1 text-2xl font-extrabold text-[#1E293B]">{heading.title}</h2>
-      <p className="mt-2 font-medium text-[#475569]">{heading.details.join(' · ')}</p>
+      <h2 id="practice-summary-title" className="mt-1 text-2xl font-extrabold text-[#1E293B] sm:text-3xl">{heading.title}</h2>
+      <p className="mt-2 text-base font-medium text-[#334155] sm:text-lg">{heading.details.join(' · ')}</p>
       <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-center">
         <button type="button" className="builder-primary" onClick={async () => setCopyStatus(await copyText(shareUrl, urlInput.current) ? 'copied' : 'failed')}>{copyStatus === 'copied' ? 'Copied ✓' : 'Copy Practice Link'}</button>
-        <a className="builder-text-button" href={relativeUrl}>Preview practice →</a>
+        <a className="builder-text-button" href={relativeUrl} target="_blank" rel="noopener noreferrer">Preview practice →</a>
       </div>
       <p className={`mt-3 min-h-6 text-sm font-semibold ${copyStatus === 'failed' ? 'text-red-700' : 'text-emerald-700'}`} role="status" aria-live="polite">{copyStatus === 'copied' ? 'Copied!' : copyStatus === 'failed' ? 'Could not copy automatically. Select and copy the link below.' : ''}</p>
       <div className="mt-4">
         <button type="button" className="builder-text-button -ml-3" aria-expanded={showLink} onClick={() => setShowLink((v) => !v)}>{showLink ? 'Hide practice link' : 'Show practice link'}</button>
-        <label className={showLink ? 'mt-2 block text-sm font-semibold text-[#334155]' : 'sr-only'}>
+        <label className={showLink ? 'mt-2 block text-sm font-semibold text-[#1E293B]' : 'sr-only'}>
           Practice link
           <input ref={urlInput} className={showLink ? 'builder-url' : 'builder-url builder-url-hidden'} readOnly value={shareUrl} onFocus={(e) => e.currentTarget.select()} />
         </label>

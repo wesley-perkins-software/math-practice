@@ -66,9 +66,33 @@ export const tests = [
   }),
   test('builder preview uses the runner formatter for skill and session wording', () => {
     const multiplication = derive({ ...select('multiplication-facts'), skillOptions: { facts: [6,7,8] } });
-    assert.deepEqual(formatSharedPracticeHeading(multiplication.definition), { title: 'Multiplication Facts', details: ['6, 7, 8 facts', '20 questions', 'Untimed'] });
+    assert.deepEqual(formatSharedPracticeHeading(multiplication.definition), { title: 'Multiplication Facts', details: ['6, 7, and 8 facts', '20 questions', 'Untimed'] });
     const division = derive({ ...select('division-facts'), skillOptions: { divisors: [6,7,8] }, mode: 'timed', durationSeconds: 120 });
-    assert.deepEqual(formatSharedPracticeHeading(division.definition), { title: 'Division Facts', details: ['Divide by 6, 7, 8', '2 minutes', 'Up to 20 questions'] });
+    assert.deepEqual(formatSharedPracticeHeading(division.definition), { title: 'Division Facts', details: ['Divide by 6, 7, and 8', '2 minutes', 'Up to 20 questions'] });
     assert.deepEqual(formatSharedPracticeHeading(derive({ ...select('addition-2digit-regrouping'), questionCount: 30 }).definition), { title: '2-Digit Addition With Regrouping', details: ['30 questions', 'Untimed'] });
+  }),
+  test('full 1-12 selections summarize as "All facts"/"All divisors" on the creator instead of listing every number', () => {
+    const allFacts = derive(select('multiplication-facts'));
+    assert.deepEqual(formatSharedPracticeHeading(allFacts.definition), { title: 'Multiplication Facts', details: ['All facts', '20 questions', 'Untimed'] });
+    const allDivisors = derive(select('division-facts'));
+    assert.deepEqual(formatSharedPracticeHeading(allDivisors.definition), { title: 'Division Facts', details: ['All divisors', '20 questions', 'Untimed'] });
+  }),
+  test('the runner formatter omits the full-selection detail entirely since the H1 already names the skill', () => {
+    const allFacts = derive(select('multiplication-facts'));
+    assert.deepEqual(formatSharedPracticeHeading(allFacts.definition, { fullSelectionDetail: 'omit' }), { title: 'Multiplication Facts', details: ['20 questions', 'Untimed'] });
+    const allDivisors = derive(select('division-facts'));
+    assert.deepEqual(formatSharedPracticeHeading(allDivisors.definition, { fullSelectionDetail: 'omit' }), { title: 'Division Facts', details: ['20 questions', 'Untimed'] });
+    const narrowed = derive({ ...select('multiplication-facts'), skillOptions: { facts: [6] } });
+    assert.deepEqual(formatSharedPracticeHeading(narrowed.definition, { fullSelectionDetail: 'omit' }), { title: 'Multiplication Facts', details: ['6 facts', '20 questions', 'Untimed'] }, 'a real narrowing is never omitted, even with fullSelectionDetail: omit');
+  }),
+  test('single and two-value fact/divisor selections use natural wording, not a bare comma list', () => {
+    const oneFact = derive({ ...select('multiplication-facts'), skillOptions: { facts: [6] } });
+    assert.deepEqual(formatSharedPracticeHeading(oneFact.definition).details.slice(0, 1), ['6 facts']);
+    const twoFacts = derive({ ...select('multiplication-facts'), skillOptions: { facts: [6, 8] } });
+    assert.deepEqual(formatSharedPracticeHeading(twoFacts.definition).details.slice(0, 1), ['6 and 8 facts']);
+    const oneDivisor = derive({ ...select('division-facts'), skillOptions: { divisors: [9] } });
+    assert.deepEqual(formatSharedPracticeHeading(oneDivisor.definition).details.slice(0, 1), ['Divide by 9']);
+    const twoDivisors = derive({ ...select('division-facts'), skillOptions: { divisors: [9, 11] } });
+    assert.deepEqual(formatSharedPracticeHeading(twoDivisors.definition).details.slice(0, 1), ['Divide by 9 and 11']);
   }),
 ];

@@ -15,16 +15,16 @@ export default function SharedPracticeRunner() {
   if (state.status === 'invalid') return (
     <section className="max-w-xl mx-auto bg-white border border-[#E4E1F5] rounded-2xl p-6 sm:p-8 text-center shadow-sm">
       <h1 className="text-2xl font-bold text-[#1E293B]">This practice link is invalid or no longer supported.</h1>
-      <p className="mt-3 text-[#475569]">Check that the full link was copied correctly.</p>
+      <p className="mt-3 text-base text-[#334155]">Check that the full link was copied correctly.</p>
       <a className="inline-flex mt-6 rounded-lg bg-[#4F46E5] px-4 py-2.5 text-white font-semibold hover:bg-[#4338CA]" href="/">Browse math practice</a>
     </section>
   );
   const { config, questionCount, heading } = state.practice;
   return (
     <section aria-labelledby="shared-practice-title">
-      <header className="mx-auto mb-5 max-w-3xl px-2 text-center">
-        <h1 id="shared-practice-title" className="text-2xl sm:text-3xl font-bold leading-tight text-[#1E293B]">{heading.title}</h1>
-        <ul aria-label="Assignment details" className="mt-2 flex flex-wrap justify-center gap-x-2 gap-y-1 text-sm sm:text-base font-medium text-[#475569]">
+      <header className="mx-auto mb-3 max-w-3xl px-2 text-center">
+        <h1 id="shared-practice-title" className="text-xl sm:text-2xl font-bold leading-tight text-[#1E293B]">{heading.title}</h1>
+        <ul aria-label="Assignment details" className="mt-1 flex flex-wrap justify-center gap-x-2 gap-y-1 text-sm font-medium text-[#334155]">
           {heading.details.map((detail, index) => <li key={detail}>{index > 0 && <span aria-hidden="true" className="mr-2">·</span>}{detail}</li>)}
         </ul>
       </header>
