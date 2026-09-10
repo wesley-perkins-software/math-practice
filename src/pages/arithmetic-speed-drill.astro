@@ -16,23 +16,23 @@ const links = [
 const faqItems = [
   {
     q: 'What is the Arithmetic Speed Drill?',
-    a: 'The Arithmetic Speed Drill is a 60-second test of arithmetic speed. Choose which operations to include — addition, subtraction, multiplication, division, or any combination — with numbers 1–12. Problems clear almost instantly after each answer. Your score is how many you answer correctly in 60 seconds.',
+    a: 'A 60-second test of arithmetic fact fluency. Choose addition, subtraction, multiplication, division, or any combination, with numbers 1–12, and answer as many facts as you can before time runs out.',
   },
   {
-    q: 'Who is the Speed Drill for?',
-    a: 'Anyone who wants to measure or improve how fast they can recall arithmetic facts. It\'s best for students who already know their facts and want to build speed. Students still learning their facts will benefit more from untimed practice on the individual operation pages first.',
+    q: 'How is my score calculated?',
+    a: 'Your score is the number of problems you answer correctly before the 60-second timer runs out. Wrong answers don\'t subtract from your score — they simply don\'t count toward it.',
   },
   {
-    q: 'Why would I choose fewer than all 4 operations?',
-    a: 'Focusing on one or two operations lets you target your weakest area. If division always slows you down, drill division alone for a session. Once your score on that operation improves, switch back to the full mixed drill.',
+    q: 'Can I practice only one operation?',
+    a: 'Yes. Deselect the operations you don\'t want before starting — at least one must stay selected. Drilling a single operation is a good way to target your weakest area.',
   },
   {
-    q: 'What is a good score?',
-    a: 'There is no universal target — every student starts from a different baseline. Focus on improving your own personal best over time rather than comparing to others. If facts feel automatic, you\'ll naturally move faster. If you notice a specific operation slowing you down, drill that one in isolation.',
+    q: 'Does the drill save my Personal Best?',
+    a: 'Yes. Your Personal Best is saved automatically in your browser — no account or login required — and shown at the start of each session and on your results.',
   },
   {
-    q: 'Does it save my score?',
-    a: 'Yes. Your personal best is saved automatically in your browser — no account or login required. Your best score displays at the start of each session.',
+    q: 'Should I practice untimed before using the Speed Drill?',
+    a: 'If you\'re still building recall, untimed practice can help you learn the facts before adding time pressure. Try the multiplication or division facts pages first, then come back to the drill.',
   },
 ];
 ---
@@ -71,39 +71,30 @@ const faqItems = [
   <SpeedDrillSetup slot="widget" client:load />
 
   <Fragment slot="quick-answer">
-    <p>60 seconds. Choose your operations, then go. The drill moves as fast as you do — answers clear almost instantly so nothing slows you down.</p>
+    <p>Your score is the number of problems you answer correctly before time runs out.</p>
   </Fragment>
 
-  <Fragment slot="intro">
-    <p>All facts up to 12×12. Your score is how many you answer correctly — try to beat your personal best each session.</p>
-  </Fragment>
   <div slot="how-it-works" class="mt-12 space-y-10">
-    <!-- What you'll practice -->
+    <!-- How it works -->
     <section aria-labelledby="hiw-heading">
-      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-4">What You'll Practice</h2>
-      <div class="bg-white border border-[#E2E8F0] rounded-2xl px-5 py-5">
-        <ul class="text-sm text-body leading-relaxed space-y-1.5">
-          <li>• Choose any combination of the 4 operations — or mix all of them</li>
-          <li>• All facts from 1×1 through 12×12 (and their addition/subtraction equivalents)</li>
-          <li>• Near-instant transitions — the fastest drill on the site</li>
-          <li>• Score = number of correct answers in 60 seconds</li>
-          <li>• Personal best tracked automatically in your browser</li>
-        </ul>
-      </div>
+      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How the Arithmetic Speed Drill Works</h2>
+      <p class="text-sm text-body leading-relaxed">
+        Choose one or more operations, then answer as many arithmetic facts as you can in 60 seconds. Addition and subtraction use numbers 1–12, while multiplication covers facts through 12 × 12 with matching division facts. Mix operations or drill just one.
+      </p>
     </section>
 
     <!-- Tips -->
     <section aria-labelledby="tips-heading">
-      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">How to Improve Your Score</h2>
-      <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-body leading-relaxed space-y-3">
+      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Improve Your Score</h2>
+      <div class="text-sm text-body leading-relaxed space-y-3">
         <p>
-          <strong>Find your weak operation.</strong> If division always slows you down, drill division alone for a session using the operation selector. Targeted drilling on your weakest operation is the fastest path to a higher score.
+          <strong>Start with your weakest operation.</strong> Deselect the others and drill it alone for a session — targeted practice on the operation that slows you down is the fastest path to a higher score.
         </p>
         <p>
-          <strong>Build the facts first.</strong> If you're still working to recall facts reliably, spend time on untimed practice — <a href="/multiplication/facts" class="text-[#4F46E5] font-medium hover:underline">multiplication facts</a>, <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">division facts</a> — before pushing for speed.
+          <strong>Build accuracy before speed.</strong> Wrong answers don't add to your score, so a calm, accurate pace beats frantic guessing. If facts still feel effortful, spend time on untimed practice — <a href="/multiplication/facts" class="text-[#4F46E5] font-medium hover:underline">multiplication facts</a> or <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">division facts</a> — before pushing for speed.
         </p>
         <p>
-          <strong>Don't sacrifice accuracy for speed.</strong> Wrong answers don't count — only correct answers add to your score. A calm, accurate pace beats frantic guessing every time.
+          <strong>Repeat and compare.</strong> Run the drill again periodically and check your result against your own Personal Best rather than a fixed target — everyone starts from a different baseline.
         </p>
       </div>
     </section>

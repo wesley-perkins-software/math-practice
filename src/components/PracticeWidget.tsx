@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from 'react';
-import type { PracticeConfig, Problem, SessionResult, PageStats } from '@/engine/types';
+import type { PracticeConfig, Problem, SessionResult, PageStats, QuestionCount } from '@/engine/types';
 import type { TimerDuration } from '@/engine/types';
 import { generateProblem } from '@/engine/generator';
-import { scoreAnswer, buildSessionResult } from '@/engine/scorer';
-import { loadStats, saveStats, updateStatsAfterSession, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
+import { scoreAnswer, buildSessionResult, buildTimedSessionResult } from '@/engine/scorer';
+import { loadStats, saveStats, updateStatsAfterSession, updateStatsAfterUntimedAnswer, appendSessionLog, resetCurrentStreak, resetPersonalBestScore, DURATION_PREF_KEY } from '@/engine/storage';
 import { DEFAULT_STATS } from '@/engine/storage';
+import { expirePracticeTimer, finishAnswerFeedback, recordCompletedQuestion, startPracticeSession } from '@/engine/session';
 import { trackEvent } from '@/lib/analytics';
 
 import WrittenProblemInput from './WrittenProblemInput';
@@ -24,10 +25,19 @@ interface Props {
   variant?: 'classic' | 'prototype';
   /** Use black instead of muted grey for inactive statistics on dark-text pages. */
   darkText?: boolean;
+  /** Optional session boundary; omitted preserves endless untimed/timer-only behavior. */
+  questionCount?: QuestionCount;
+  /** Shared assignments retain base progress identity but opt out of streak mechanics and use focused results. */
+  sessionPresentation?: 'canonical' | 'shared';
+  /** Narrow lifecycle seam used by the shared runner; callbacks never receive problems or answers. */
+  onFirstAcceptedAnswer?: () => void;
+  onSessionComplete?: (result: SessionResult) => void;
+  onReplay?: () => void;
 }
 
-export default function PracticeWidget({ config, variant = 'classic', darkText = false }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical', onFirstAcceptedAnswer, onSessionComplete, onReplay }: Props) {
   const isTimed = config.mode === 'timed';
+  const trackStreaks = sessionPresentation === 'canonical';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
 
   // Session state
@@ -63,6 +73,13 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
 
   const transitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const timerIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const sessionBoundaryRef = useRef(startPracticeSession());
+  const completionShownRef = useRef(false);
+  const persistedResultRef = useRef<string | null>(null);
+  const logicalCompletionTimeRef = useRef<number | null>(null);
+  const interactionTrackedRef = useRef(false);
+  const lifecycleRef = useRef({ onFirstAcceptedAnswer, onSessionComplete, onReplay });
+  lifecycleRef.current = { onFirstAcceptedAnswer, onSessionComplete, onReplay };
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
@@ -106,7 +123,9 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   }, [config.storageKey]);
 
   function savePendingUntimedSession() {
-    if (isTimed || totalAnsweredRef.current === 0) return;
+    // A finite session has its own explicit boundary; do not turn tab hiding
+    // into a partial completion or reset its in-progress answer count.
+    if (isTimed || questionCount !== undefined || totalAnsweredRef.current === 0) return;
     const elapsed = sessionStartTimeRef.current > 0
       ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
       : 0;
@@ -141,6 +160,12 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     savePendingUntimedSession();
 
     totalAnsweredRef.current = 0;
+    correctRef.current = 0;
+    sessionBoundaryRef.current = startPracticeSession();
+    completionShownRef.current = false;
+    persistedResultRef.current = null;
+    logicalCompletionTimeRef.current = null;
+    interactionTrackedRef.current = false;
     timerStartedRef.current = false;
     setTimerStarted(false);
     setSecondsRemaining(duration);
@@ -168,20 +193,28 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     });
   }
 
-  function endSession() {
+  function endSession(completionReason?: SessionResult['completionReason']) {
+    if (completionShownRef.current) return;
+    completionShownRef.current = true;
     if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
-    // Timed sessions report the CONFIGURED duration, not wall-clock elapsed
-    // time: the countdown interval isn't a perfectly precise 1000ms metronome
-    // (scheduling/rendering jitter), so Date.now() - sessionStartTime can land
-    // a little past the nominal duration (e.g. 61s for a 60s drill) even
-    // though the drill correctly ran for exactly `duration` countdown ticks.
-    // The countdown itself — and therefore scoring — is untouched; this only
-    // fixes what gets reported.
-    const elapsed = isTimed
-      ? durationRef.current
-      : Math.round((Date.now() - sessionStartTimeRef.current) / 1000);
-    setResult(buildSessionResult(correctRef.current, totalAnsweredRef.current, elapsed));
+    const completedResult = isTimed
+      ? buildTimedSessionResult(
+          correctRef.current,
+          totalAnsweredRef.current,
+          sessionStartTimeRef.current,
+          logicalCompletionTimeRef.current ?? Date.now(),
+          durationRef.current,
+          completionReason ?? 'time-limit',
+          questionCount,
+        )
+      : buildSessionResult(
+          correctRef.current,
+          totalAnsweredRef.current,
+          Math.round((Date.now() - sessionStartTimeRef.current) / 1000),
+          questionCount === undefined ? {} : { completionReason: 'question-limit', questionTarget: questionCount },
+        );
+    setResult(completedResult);
     setPhase('complete');
   }
 
@@ -191,7 +224,9 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     timerIntervalRef.current = setInterval(() => {
       setSecondsRemaining((s) => {
         if (s <= 1) {
-          endSession();
+          const expiration = expirePracticeTimer(sessionBoundaryRef.current);
+          sessionBoundaryRef.current = expiration.state;
+          if (expiration.shouldComplete) endSession(expiration.state.completionReason);
           return 0;
         }
         return s - 1;
@@ -207,10 +242,17 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   // Save stats after session — always read fresh from storage to avoid stale-closure bug
   useEffect(() => {
     if (phase === 'complete' && result) {
+      if (persistedResultRef.current === result.timestamp) return;
+      persistedResultRef.current = result.timestamp;
       const current = loadStats(config.storageKey);
       const prevLongestStreak = current.longestStreak;
       const prevPersonalBest = current.personalBestScore;
-      const updated = updateStatsAfterSession(current, result, isTimed);
+      const sessionUpdated = updateStatsAfterSession(current, result, isTimed);
+      // Untimed answers are recorded as they happen. Finishing a finite
+      // untimed session must not add those attempts for a second time.
+      const updated = isTimed
+        ? sessionUpdated
+        : { ...sessionUpdated, totalProblemsAttempted: current.totalProblemsAttempted };
       saveStats(config.storageKey, updated);
       setStats(updated);
       const newStreakRecord = !isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0;
@@ -222,9 +264,14 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         total: result.total,
         score: result.score,
         durationSeconds: result.durationSeconds,
+        ...(result.elapsedSeconds === undefined ? {} : { elapsedSeconds: result.elapsedSeconds }),
+        ...(result.timeLimitSeconds === undefined ? {} : { timeLimitSeconds: result.timeLimitSeconds }),
+        ...(result.completionReason === undefined ? {} : { completionReason: result.completionReason }),
+        ...(result.questionTarget === undefined ? {} : { questionTarget: result.questionTarget }),
         isTimed,
         timestamp: result.timestamp,
       });
+      if (!isTimed) totalAnsweredRef.current = 0;
       trackEvent('practice_session_complete', {
         operation: config.operation,
         practice_label: config.label ?? config.storageKey,
@@ -236,6 +283,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         is_personal_best: isTimed && updated.personalBestScore > prevPersonalBest,
         is_new_streak_record: newStreakRecord,
       });
+      lifecycleRef.current.onSessionComplete?.(result);
     }
   }, [phase, result, config.storageKey, config.label, isTimed]);
 
@@ -248,6 +296,14 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   function handleAnswer(answer: number, remainder?: number) {
     if (!problem || phase !== 'active') return;
 
+    const submission = recordCompletedQuestion(sessionBoundaryRef.current, questionCount);
+    sessionBoundaryRef.current = submission.state;
+    if (!submission.accepted) return;
+    if (!interactionTrackedRef.current) {
+      interactionTrackedRef.current = true;
+      lifecycleRef.current.onFirstAcceptedAnswer?.();
+    }
+
     // Start the timer on the first answer submission
     if (isTimed && !timerStartedRef.current) {
       timerStartedRef.current = true;
@@ -257,7 +313,8 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       sessionStartTimeRef.current = now;
     }
 
-    totalAnsweredRef.current += 1;
+    totalAnsweredRef.current = submission.state.completedQuestions;
+    if (submission.state.questionCompletionPending) logicalCompletionTimeRef.current = Date.now();
     const isCorrect = scoreAnswer(problem, answer, remainder);
 
     trackEvent('answer_submit', {
@@ -272,28 +329,21 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       // Sessions never end via timer, so tracking totalProblemsAttempted here ensures
       // the progress dashboard reflects activity even before a session is formally closed.
       const currentStats = loadStats(config.storageKey);
-      const newCurrentStreak = isCorrect ? currentStats.currentStreak + 1 : 0;
-      const newLongestStreak = Math.max(currentStats.longestStreak, newCurrentStreak);
-      const updatedStats = {
-        ...currentStats,
-        currentStreak: newCurrentStreak,
-        longestStreak: newLongestStreak,
-        totalProblemsAttempted: currentStats.totalProblemsAttempted + 1,
-        lastSessionDate: (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; })(),
-      };
+      const updatedStats = updateStatsAfterUntimedAnswer(currentStats, isCorrect, trackStreaks);
       saveStats(config.storageKey, updatedStats);
       setStats(updatedStats);
       const STREAK_MILESTONES = [5, 10, 25, 50];
-      if (isCorrect && STREAK_MILESTONES.includes(newCurrentStreak)) {
+      if (trackStreaks && isCorrect && STREAK_MILESTONES.includes(updatedStats.currentStreak)) {
         trackEvent('streak_milestone', {
           operation: config.operation,
           practice_label: config.label ?? config.storageKey,
-          streak_count: newCurrentStreak,
+          streak_count: updatedStats.currentStreak,
         });
       }
     }
 
     if (isCorrect) {
+      correctRef.current += 1;
       setCorrect((c) => c + 1);
       setFeedbackCorrectRemainder(undefined);
       setFeedbackState('correct');
@@ -310,13 +360,20 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     // Clear any pending transition timer
     if (transitionTimerRef.current) clearTimeout(transitionTimerRef.current);
     transitionTimerRef.current = setTimeout(() => {
-      setProblemIndex((i) => i + 1);
-      setProblem(generateProblem(config));
-      setFeedbackState('hidden');
+      const transition = finishAnswerFeedback(sessionBoundaryRef.current);
+      sessionBoundaryRef.current = transition.state;
+      if (transition.shouldComplete) {
+        endSession(transition.state.completionReason);
+      } else if (transition.shouldGenerateNext) {
+        setProblemIndex((i) => i + 1);
+        setProblem(generateProblem(config));
+        setFeedbackState('hidden');
+      }
     }, FEEDBACK_DELAY_MS);
   }
 
   function handleRestart() {
+    lifecycleRef.current.onReplay?.();
     trackEvent('play_again', {
       operation: config.operation,
       practice_label: config.label ?? config.storageKey,
@@ -540,7 +597,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
               />
             )}
 
-            {!isTimed && (
+            {!isTimed && trackStreaks && (
               <div className={`flex items-center justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
                 {/* Streak: motivational session info, not footer metadata — a
                     genuinely larger number carries this, not decoration. The
@@ -638,7 +695,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
               </div>
             )}
 
-            {isTimed && (
+            {isTimed && trackStreaks && (
               <div className={`flex items-end justify-between w-full ${isPrototype ? 'font-practice pt-1' : ''}`}>
                 {/* Personal Best: the timed counterpart to the untimed
                     Streak stat above — same label-above-value shape, compact
@@ -705,6 +762,8 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
             isNewStreakRecord={isNewStreakRecord}
             onRestart={handleRestart}
             variant={variant}
+            presentation={sessionPresentation}
+            questionCount={questionCount}
           />
         )}
       </div>

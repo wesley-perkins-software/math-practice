@@ -20,14 +20,34 @@
  * using the same three width tiers as before:
  *   <640px (`sm`)         -> menu trigger, dropdown panel with nested
  *                            per-operation disclosures (mobile/narrow tablet)
- *   640-1024px (`sm`-`lg`) -> same trigger/panel treatment (more headroom,
+ *   640-1320px (`sm`-1320)  -> same trigger/panel treatment (more headroom,
  *                            same panel works unchanged)
- *   >=1024px (`lg`)        -> full inline row; each operation is its own
+ *   >=1320px               -> full inline row; each operation is its own
  *                            dropdown, Times Tables/Divide By nest a second
  *                            flyout for the 1-12 grid
  * Tablet landscape can land on either tier depending on the exact device
- * width (many sit right at/near 1024px) — verified at validation time
- * rather than adding a dedicated breakpoint.
+ * width — verified at validation time rather than adding a dedicated
+ * breakpoint.
+ *
+ * Static-link count grew from 3 to 4 ("Create Classroom Practice") with no
+ * spare room left in the row: the pre-existing 7 items already consumed the
+ * full max-w-5xl (1024px) content width with zero slack at every desktop
+ * width, so an 8th item measurably overflowed in the 1024-1100px band.
+ * Widening the header's own container to max-w-7xl (1280px) + raising the
+ * split to `xl` (1280px) fit the shorter "Create Practice" label tried
+ * first, but re-measuring against the final, longer "Create Classroom
+ * Practice" label (logo + all 8 items + gaps = ~1216px, +48px header padding
+ * = ~1264px minimum) left only ~16px of margin at 1280px — closer to
+ * another zero-slack fit than real breathing room. Container/breakpoint
+ * moved together to a content-driven custom value, `max-w-[1320px]` /
+ * `min-[1320px]:*`, giving ~56px of real slack (manifesting as extra gap
+ * between the logo and the first nav item, since the row's own two flex
+ * children — logo, nav — are pushed to opposite ends by `justify-between`;
+ * the nav's own content never actually touches the container's edge).
+ * 1320 is also deliberately clear of 1366px, one of the most common laptop
+ * viewport widths, so those screens land solidly inside the full-row tier
+ * rather than near a boundary. Page/body/footer content elsewhere keeps its
+ * own separate max-w-5xl, unaffected.
  *
  * All interactivity here is plain `<details>/<summary>` + vanilla script,
  * matching the file's original convention — no React/hydration cost for a
@@ -47,6 +67,7 @@ const { paddingY = 'py-2.5' } = Astro.props;
 const staticLinks = [
   { href: '/arithmetic-speed-drill', label: 'Speed Drill' },
   { href: '/math-worksheets', label: 'Worksheets' },
+  { href: '/create/', label: 'Create Classroom Practice' },
   { href: '/progress', label: 'My Progress' },
 ];
 
@@ -54,14 +75,14 @@ const chevron = 'M6 9l6 6 6-6';
 ---
 
 <header class="bg-[#1E1B4B] sticky top-0 z-20 shadow-[0_1px_0_0_#312E81]">
-  <div class={`max-w-5xl mx-auto px-4 sm:px-6 ${paddingY} flex items-center justify-between`}>
+  <div class={`max-w-[1320px] mx-auto px-4 sm:px-6 ${paddingY} flex items-center justify-between`}>
     <a href="/" class="flex items-center gap-2 group shrink-0">
       <span class="w-7 h-7 rounded-lg bg-[#4F46E5] flex items-center justify-center select-none group-hover:bg-[#6366F1] transition-colors shrink-0"><svg viewBox="0 0 24 24" width="14" height="14" fill="white" aria-hidden="true"><path d="M10 3H14V10H21V14H14V21H10V14H3V10H10Z"/></svg></span>
       <span class="text-base font-bold text-white tracking-tight whitespace-nowrap">Math Practice Online</span>
     </a>
 
-    <!-- Desktop nav: only at widths measured to fit all 7 items on one line without wrapping (lg / 1024px+). -->
-    <nav aria-label="Primary" class="hidden lg:flex items-center gap-1">
+    <!-- Desktop nav: only at widths measured to fit all 8 items on one line with real breathing room (1320px+, paired with the header's own max-w-[1320px] container — see the header comment history for the measurement behind this number). -->
+    <nav aria-label="Primary" class="hidden min-[1320px]:flex items-center gap-1">
       {OPERATION_ORDER.map((op) => {
         const menu = OPERATION_MENUS[op];
         const label = menu.hub.label.replace(' Practice', '');
@@ -95,8 +116,8 @@ const chevron = 'M6 9l6 6 6-6';
       ))}
     </nav>
 
-    <!-- Menu trigger: renders below `lg` (1024px), including phones (<640px) -->
-    <details class="relative block lg:hidden" data-site-nav-menu>
+    <!-- Menu trigger: renders below 1320px, including phones (<640px) -->
+    <details class="relative block min-[1320px]:hidden" data-site-nav-menu>
       <summary class="list-none flex items-center justify-center w-10 h-10 rounded-lg text-[#C7D2FE] hover:text-white hover:bg-white/10 transition-all cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60">
         <span class="sr-only">Menu</span>
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" width="22" height="22" aria-hidden="true">

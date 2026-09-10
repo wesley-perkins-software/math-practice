@@ -1,6 +1,8 @@
 export type Operation = 'addition' | 'subtraction' | 'multiplication' | 'division' | 'mixed';
 export type PracticeMode = 'untimed' | 'timed';
 export type TimerDuration = 30 | 60 | 120 | 300;
+/** Supported finite session sizes. Omission means the session is unbounded. */
+export type QuestionCount = 10 | 20 | 30 | 50;
 
 export interface DigitRange {
   min: number;
@@ -38,6 +40,10 @@ export interface PracticeConfig {
   factsMode?: boolean;
   /** Upper bound for facts mode. Default 12. */
   maxFactor?: number;
+  /** Trusted runtime-only constraints for shared V2 multiplication practice. */
+  selectedFacts?: readonly number[];
+  /** Trusted runtime-only constraints for shared V2 exact-division practice. */
+  selectedDivisors?: readonly number[];
   /** Division: generate problems with remainders */
   withRemainder?: boolean;
   /** Override the delay (ms) before advancing after a correct answer (default: 600) */
@@ -61,7 +67,16 @@ export interface Problem {
 export interface SessionResult {
   correct: number;
   total: number;
+  /** Actual session length. Kept for session-log/storage compatibility. */
   durationSeconds: number;
+  /** Actual elapsed practice time for a timed session, measured from its established timer start. */
+  elapsedSeconds?: number;
+  /** Configured countdown limit; unlike elapsedSeconds, this is assignment configuration. */
+  timeLimitSeconds?: number;
+  /** Runtime boundary that won the session's idempotent completion guard. */
+  completionReason?: 'time-limit' | 'question-limit';
+  /** Configured accepted-answer target for a finite session. */
+  questionTarget?: QuestionCount;
   /** 0–100 integer percent correct */
   score: number;
   /** ISO 8601 */
@@ -91,6 +106,10 @@ export interface SessionLogEntry {
   /** 0–100 percent correct */
   score: number;
   durationSeconds: number;
+  elapsedSeconds?: number;
+  timeLimitSeconds?: number;
+  completionReason?: 'time-limit' | 'question-limit';
+  questionTarget?: QuestionCount;
   isTimed: boolean;
   /** ISO 8601 */
   timestamp: string;

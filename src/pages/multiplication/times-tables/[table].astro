@@ -5,6 +5,7 @@ import InternalLinks from '@/components/InternalLinks';
 import LocalChooser from '@/components/LocalChooser.astro';
 import { ORGANIZATION_ID } from '@/config/site';
 import { getTimesTableFact } from '@/data/generated-practice/timesTables';
+import { buildCreatePracticePrefillHref } from '@/engine/createPracticePrefill';
 import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
@@ -118,6 +119,7 @@ const faqItems = [
 const links = [
   { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
   { href: '/multiplication/facts', label: 'Mixed Facts Practice', description: 'All 144 facts from 1–12 in random order' },
+  { href: buildCreatePracticePrefillHref('multiplication-facts', [tableNumber]), label: 'Create Custom Practice', description: `Combine the ${tableNumber} times table with other facts or build a custom practice set` },
   // Mature pages use neutral wording rather than implying that numerical
   // order is a required learning progression.
   fact

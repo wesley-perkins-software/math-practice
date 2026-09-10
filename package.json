@@ -11,7 +11,9 @@
     "validate:divide-by": "node --experimental-strip-types src/data/generated-practice/divideBy.ts",
     "test:generator-regrouping": "node --experimental-strip-types src/engine/generator.regrouping.test.ts",
     "test:generator-regrouping-subtraction": "node --experimental-strip-types src/engine/generator.regrouping-subtraction.test.ts",
-    "test:regrouping-migration": "node --experimental-strip-types scripts/test-regrouping-migration.ts"
+    "test:regrouping-migration": "node --experimental-strip-types scripts/test-regrouping-migration.ts",
+    "test": "node scripts/run-tests.mjs",
+    "test:build-contract": "node scripts/test-build-contract.mjs"
   },
   "dependencies": {
     "@astrojs/react": "^5.0.2",
