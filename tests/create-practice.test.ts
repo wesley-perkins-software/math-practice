@@ -69,24 +69,24 @@ export const tests = [
   }),
   test('builder preview uses the runner formatter for skill and session wording', () => {
     const multiplication = derive({ ...select('multiplication-facts'), skillOptions: { facts: [6,7,8] } });
-    assert.deepEqual(formatSharedPracticeHeading(multiplication.definition), { title: 'Multiplication Facts', details: ['6, 7, and 8 facts', '20 questions', 'Untimed'] });
+    assert.deepEqual(formatSharedPracticeHeading(multiplication.definition), { title: 'Multiplication Facts', details: ['6, 7, and 8 facts', '20 problems', 'Untimed'] });
     const division = derive({ ...select('division-facts'), skillOptions: { divisors: [6,7,8] }, mode: 'timed', durationSeconds: 120 });
-    assert.deepEqual(formatSharedPracticeHeading(division.definition), { title: 'Division Facts', details: ['Divide by 6, 7, and 8', '2 minutes', 'Up to 20 questions'] });
-    assert.deepEqual(formatSharedPracticeHeading(derive({ ...select('addition-2digit-regrouping'), questionCount: 30 }).definition), { title: '2-Digit Addition With Regrouping', details: ['30 questions', 'Untimed'] });
+    assert.deepEqual(formatSharedPracticeHeading(division.definition), { title: 'Division Facts', details: ['Divide by 6, 7, and 8', '2 minutes', 'Up to 20 problems'] });
+    assert.deepEqual(formatSharedPracticeHeading(derive({ ...select('addition-2digit-regrouping'), questionCount: 30 }).definition), { title: '2-Digit Addition With Regrouping', details: ['30 problems', 'Untimed'] });
   }),
   test('full 1-12 selections summarize as "All facts"/"All divisors" on the creator instead of listing every number', () => {
     const allFacts = derive(select('multiplication-facts'));
-    assert.deepEqual(formatSharedPracticeHeading(allFacts.definition), { title: 'Multiplication Facts', details: ['All facts', '20 questions', 'Untimed'] });
+    assert.deepEqual(formatSharedPracticeHeading(allFacts.definition), { title: 'Multiplication Facts', details: ['All facts', '20 problems', 'Untimed'] });
     const allDivisors = derive(select('division-facts'));
-    assert.deepEqual(formatSharedPracticeHeading(allDivisors.definition), { title: 'Division Facts', details: ['All divisors', '20 questions', 'Untimed'] });
+    assert.deepEqual(formatSharedPracticeHeading(allDivisors.definition), { title: 'Division Facts', details: ['All divisors', '20 problems', 'Untimed'] });
   }),
   test('the runner formatter omits the full-selection detail entirely since the H1 already names the skill', () => {
     const allFacts = derive(select('multiplication-facts'));
-    assert.deepEqual(formatSharedPracticeHeading(allFacts.definition, { fullSelectionDetail: 'omit' }), { title: 'Multiplication Facts', details: ['20 questions', 'Untimed'] });
+    assert.deepEqual(formatSharedPracticeHeading(allFacts.definition, { fullSelectionDetail: 'omit' }), { title: 'Multiplication Facts', details: ['20 problems', 'Untimed'] });
     const allDivisors = derive(select('division-facts'));
-    assert.deepEqual(formatSharedPracticeHeading(allDivisors.definition, { fullSelectionDetail: 'omit' }), { title: 'Division Facts', details: ['20 questions', 'Untimed'] });
+    assert.deepEqual(formatSharedPracticeHeading(allDivisors.definition, { fullSelectionDetail: 'omit' }), { title: 'Division Facts', details: ['20 problems', 'Untimed'] });
     const narrowed = derive({ ...select('multiplication-facts'), skillOptions: { facts: [6] } });
-    assert.deepEqual(formatSharedPracticeHeading(narrowed.definition, { fullSelectionDetail: 'omit' }), { title: 'Multiplication Facts', details: ['6 facts', '20 questions', 'Untimed'] }, 'a real narrowing is never omitted, even with fullSelectionDetail: omit');
+    assert.deepEqual(formatSharedPracticeHeading(narrowed.definition, { fullSelectionDetail: 'omit' }), { title: 'Multiplication Facts', details: ['6 facts', '20 problems', 'Untimed'] }, 'a real narrowing is never omitted, even with fullSelectionDetail: omit');
   }),
   test('single and two-value fact/divisor selections use natural wording, not a bare comma list', () => {
     const oneFact = derive({ ...select('multiplication-facts'), skillOptions: { facts: [6] } });
@@ -101,8 +101,18 @@ export const tests = [
   test('the creator intro copy addresses multiple students, and Preview practice opens the same derived URL in a new tab', () => {
     const page = source('src/pages/create.astro');
     assert.ok(page.includes('students can open'), 'intro copy should say "students", not "your student"');
-    assert.equal(page.includes('your student can open'), false);
+    assert.ok(page.includes('Create custom math practice for students without setting up teacher or student accounts.'));
+    assert.equal(page.includes('for a student'), false);
     const builder = source('src/components/CreatePracticeBuilder.tsx');
+    assert.ok(builder.includes('legend="Problem limit"'));
+    assert.ok(builder.includes("[10, 20, 30, 50, undefined]"));
+    assert.ok(builder.includes("(v ? `${v}` : 'No limit')"));
+    assert.equal(builder.includes('Question limit'), false);
+    assert.equal(builder.includes("if (values.length === 1) return"), false, 'the final selection may be cleared');
+    assert.ok(builder.includes('>Select all</button>'));
+    assert.ok(builder.includes('>Clear all</button>'));
+    assert.ok(builder.includes('Choose at least one'));
+    assert.ok(builder.includes('disabled>Copy Practice Link</button>'));
     assert.ok(builder.includes('href={relativeUrl}'), 'Preview practice must read the same derived relativeUrl used for Copy, not a second URL');
     assert.ok(builder.includes('target="_blank"'));
     assert.ok(builder.includes('rel="noopener noreferrer"'));

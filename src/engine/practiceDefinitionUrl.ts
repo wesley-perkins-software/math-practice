@@ -12,6 +12,14 @@ const SKILL_PARAMETER: Readonly<Record<string, 'facts' | 'divisors' | undefined>
   'division-facts': 'divisors',
 });
 
+// Public definitions are tiny (at most 12 selected values). Reject excessive
+// transport input before doing list work; URLSearchParams inputs receive the
+// same per-field and parameter-count checks as raw query strings.
+const MAX_QUERY_LENGTH = 4096;
+const MAX_PARAMETER_LENGTH = 256;
+const MAX_PARAMETERS = 8;
+const MAX_SELECTION_VALUES = 12;
+
 const failure = (field: string, reason: string): PracticeDefinitionValidationResult =>
   ({ success: false, error: { field, reason } });
 
@@ -22,9 +30,12 @@ function parseInteger(value: string): number | undefined {
 /** Strictly decodes URL grammar, then delegates every domain rule to the V2 validator. */
 export function parsePracticeDefinitionV2Query(query: string | URLSearchParams): PracticeDefinitionValidationResult {
   try {
+    if (typeof query === 'string' && query.length > MAX_QUERY_LENGTH) return failure('definition', 'Query is too long');
     const params = typeof query === 'string' ? new URLSearchParams(query) : query;
     const values = new Map<string, string>();
     for (const [key, value] of params) {
+      if (values.size >= MAX_PARAMETERS) return failure('definition', 'Query has too many parameters');
+      if (key.length > MAX_PARAMETER_LENGTH || value.length > MAX_PARAMETER_LENGTH) return failure('definition', 'Query parameter is too long');
       if (values.has(key)) return failure(key, `Duplicate parameter: ${key}`);
       if (value === '') return failure(key, `Empty parameter: ${key}`);
       values.set(key, value);
@@ -43,6 +54,9 @@ export function parsePracticeDefinitionV2Query(query: string | URLSearchParams):
     if (skillParameter) {
       const raw = values.get(skillParameter);
       if (raw === undefined) return failure('skillOptions', `${skillParameter} is required`);
+      if (raw.split(',', MAX_SELECTION_VALUES + 1).length > MAX_SELECTION_VALUES) {
+        return failure('skillOptions', `${skillParameter} has too many values`);
+      }
       const parsed = raw.split(',').map(parseInteger);
       if (parsed.some((item) => item === undefined)) return failure('skillOptions', `${skillParameter} must be comma-separated integers`);
       skillOptions = { [skillParameter]: parsed };

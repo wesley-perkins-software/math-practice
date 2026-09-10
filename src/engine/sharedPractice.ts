@@ -41,11 +41,11 @@ export function formatSharedPracticeHeading(definition: PracticeDefinitionV2, op
   const session = definition.sessionOptions;
   const count = session.questionCount;
   if (session.mode === 'untimed') {
-    if (count) details.push(`${count} questions`);
+    if (count) details.push(`${count} problems`);
     details.push('Untimed');
   } else {
     details.push(formatDuration(session.durationSeconds));
-    if (count) details.push(`Up to ${count} questions`);
+    if (count) details.push(`Up to ${count} problems`);
   }
   return Object.freeze({ title: entry.displayName, details: Object.freeze(details) });
 }

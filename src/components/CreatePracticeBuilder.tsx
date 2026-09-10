@@ -6,7 +6,7 @@ import type { PracticeMode, QuestionCount, TimerDuration } from '@/engine/types'
 import { deriveSafePracticeDimensions, trackCreatePracticeEvent } from '@/lib/createPracticeAnalytics';
 
 const CATEGORY_NAMES: Record<PracticeCategoryId, string> = { addition: 'Addition', subtraction: 'Subtraction', multiplication: 'Multiplication', division: 'Division' };
-const COUNTS: readonly (QuestionCount | undefined)[] = [undefined, 10, 20, 30, 50];
+const COUNTS: readonly (QuestionCount | undefined)[] = [10, 20, 30, 50, undefined];
 const DURATIONS: readonly TimerDuration[] = [30, 60, 120, 300];
 
 const PRACTICE_TYPE_DESCRIPTIONS: Partial<Record<PracticeTypeId, string>> = {
@@ -19,35 +19,39 @@ function SelectionGrid({ kind, values, onChange }: { kind: 'facts' | 'divisors';
   const noun = kind === 'facts' ? 'facts' : 'numbers';
   const toggle = (value: number) => {
     if (values.includes(value)) {
-      if (values.length === 1) return;
       onChange(values.filter((item) => item !== value));
     } else onChange([...values, value]);
   };
   return <fieldset>
     <legend className="builder-heading">{kind === 'facts' ? 'Choose the facts' : 'Choose what to divide by'}</legend>
     <div className="flex flex-wrap items-start justify-between gap-3">
-      <p className="builder-help">Select one or more {noun}. At least one must stay selected.</p>
-      <button type="button" className="builder-text-button" onClick={() => onChange(Array.from({ length: 12 }, (_, i) => i + 1))}>Select all</button>
+      <p className="builder-help">Select one or more {noun}.</p>
+      <div className="flex gap-1">
+        <button type="button" className="builder-text-button" onClick={() => onChange(Array.from({ length: 12 }, (_, i) => i + 1))}>Select all</button>
+        <button type="button" className="builder-text-button" onClick={() => onChange([])}>Clear all</button>
+      </div>
     </div>
     <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-6">
       {Array.from({ length: 12 }, (_, i) => i + 1).map((value) => <button key={value} type="button" aria-pressed={values.includes(value)} onClick={() => toggle(value)} className="builder-number-button">
         {kind === 'facts' ? value : `÷ ${value}`}<span className="sr-only"> {values.includes(value) ? 'selected' : 'not selected'}</span>
       </button>)}
     </div>
+    {values.length === 0 && <p className="mt-3 text-sm font-semibold text-red-700" role="alert">Choose at least one {kind === 'facts' ? 'fact' : 'divisor'}.</p>}
   </fieldset>;
 }
 
-function SegmentedGroup<T extends string | number | undefined>({ legend, name, options, value, labelFor, onChange }: {
+function SegmentedGroup<T extends string | number | undefined>({ legend, name, options, value, labelFor, onChange, compact = false }: {
   legend: string;
   name: string;
   options: readonly T[];
   value: T;
   labelFor: (option: T) => string;
   onChange: (option: T) => void;
+  compact?: boolean;
 }) {
   return <fieldset>
     <legend className="builder-label">{legend}</legend>
-    <div className="builder-segmented mt-2">
+    <div className={`builder-segmented mt-2 ${compact ? 'builder-segmented-compact' : ''}`}>
       {options.map((option) => <label key={String(option)} className="builder-segment-option">
         <input type="radio" name={name} className="sr-only peer" checked={value === option} onChange={() => onChange(option)} />
         <span className="builder-segment">{labelFor(option)}</span>
@@ -124,12 +128,12 @@ export default function CreatePracticeBuilder() {
           <legend className="builder-heading">Practice settings</legend>
           <div className="mt-4 grid gap-5 sm:grid-cols-2">
             <SegmentedGroup legend="Mode" name="mode" options={['untimed', 'timed'] as const} value={state.mode} labelFor={(v) => (v === 'untimed' ? 'Untimed' : 'Timed')} onChange={(v) => update({ mode: v as PracticeMode })} />
-            <SegmentedGroup legend="Question limit" name="question-count" options={COUNTS} value={state.questionCount} labelFor={(v) => (v ? `${v}` : 'Endless')} onChange={(v) => update({ questionCount: v as QuestionCount | undefined })} />
+            <SegmentedGroup legend="Problem limit" name="question-count" options={COUNTS} value={state.questionCount} labelFor={(v) => (v ? `${v}` : 'No limit')} onChange={(v) => update({ questionCount: v as QuestionCount | undefined })} compact />
           </div>
           {state.mode === 'timed' && <div className="mt-5">
             <SegmentedGroup legend="Timer" name="duration" options={DURATIONS} value={state.durationSeconds} labelFor={(v) => formatDuration(v)} onChange={(v) => update({ durationSeconds: v as TimerDuration })} />
           </div>}
-          {state.mode === 'timed' && <p className="builder-help mt-4">If you set both a timer and question limit, practice ends when either one is reached.</p>}
+          {state.mode === 'timed' && <p className="builder-help mt-4">If you set both a timer and problem limit, practice ends when either one is reached.</p>}
         </fieldset>
       </div>}
     </div>
@@ -155,5 +159,11 @@ export default function CreatePracticeBuilder() {
         </label>
       </div>
     </section>; })()}
+    {state.practiceType && !derived.success && <section className="builder-summary" aria-labelledby="practice-summary-title">
+      <p className="text-xs font-bold uppercase tracking-wide text-[#4F46E5]">Your practice</p>
+      <h2 id="practice-summary-title" className="mt-1 text-2xl font-extrabold text-[#1E293B] sm:text-3xl">Choose at least one value</h2>
+      <p className="mt-2 text-base font-medium text-red-700">Select a fact or divisor to create this practice.</p>
+      <button type="button" className="builder-primary mt-5" disabled>Copy Practice Link</button>
+    </section>}
   </div>;
 }
