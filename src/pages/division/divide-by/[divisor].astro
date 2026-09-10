@@ -5,6 +5,7 @@ import InternalLinks from '@/components/InternalLinks';
 import LocalChooser from '@/components/LocalChooser.astro';
 import { ORGANIZATION_ID } from '@/config/site';
 import { getDivideByFact } from '@/data/generated-practice/divideBy';
+import { buildCreatePracticePrefillHref } from '@/engine/createPracticePrefill';
 import '@/styles/practice-surface-prototype.css';
 
 const SITE = 'https://mathpracticeonline.com';
@@ -140,6 +141,7 @@ const matureFaqItems = fact && divisor <= 5 ? [
 const faqItems = matureFaqItems ?? legacyFaqItems;
 
 const links = [
+  { href: buildCreatePracticePrefillHref('division-facts', [divisor]), label: 'Create Custom Practice', description: `Start with divide-by-${divisor}, then add any other divisors you want` },
   { href: '/division/facts', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
   { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
   ...(fact ? [{ href: `/multiplication/times-tables/${divisor}`, label: `${divisor} Times Table Practice`, description: 'The multiplication facts these division problems come from' }] : []),

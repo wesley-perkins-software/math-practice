@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { DEFAULT_CREATE_PRACTICE_STATE, absolutePracticeUrl, deriveCreatePractice, selectCreatePracticeType, type CreatePracticeState } from '@/engine/createPractice';
+import { parseCreatePracticePrefill } from '@/engine/createPracticePrefill';
 import { PRACTICE_CATEGORY_IDS, PRACTICE_TYPE_REGISTRY, type PracticeCategoryId, type PracticeTypeId } from '@/engine/practiceTypes';
 import { formatDuration, formatSharedPracticeHeading } from '@/engine/sharedPractice';
 import type { PracticeMode, QuestionCount, TimerDuration } from '@/engine/types';
@@ -68,8 +69,19 @@ async function copyText(text: string, fallback: HTMLInputElement | null): Promis
   }
 }
 
+// Reads the URL once, at initial mount, to optionally seed the builder with a
+// practice type and selection (e.g. from a Times Table or Divide By page).
+// This is initial state only: it never reruns, never rewrites the URL as the
+// user edits, and — because it builds state directly rather than going
+// through chooseType() — never fires the create_practice_type_select event,
+// which represents an actual user click, not a programmatic default.
+function initialCreatePracticeState(): CreatePracticeState {
+  if (typeof window === 'undefined') return DEFAULT_CREATE_PRACTICE_STATE;
+  return parseCreatePracticePrefill(window.location.search) ?? DEFAULT_CREATE_PRACTICE_STATE;
+}
+
 export default function CreatePracticeBuilder() {
-  const [state, setState] = useState<CreatePracticeState>(DEFAULT_CREATE_PRACTICE_STATE);
+  const [state, setState] = useState<CreatePracticeState>(initialCreatePracticeState);
   const [origin, setOrigin] = useState('');
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle');
   const [showLink, setShowLink] = useState(false);
