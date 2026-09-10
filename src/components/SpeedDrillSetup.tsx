@@ -56,8 +56,10 @@ export default function SpeedDrillSetup() {
   return (
     <div className="bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[length:var(--practice-card-max-w)] mx-auto overflow-hidden font-practice">
       <div className="px-[length:var(--practice-card-px)] pt-[length:var(--practice-card-pt)] pb-[length:var(--practice-card-pb)]">
-        <p className="text-sm font-semibold text-[#211D4F] mb-4">Choose operations:</p>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+        {/* Plain heading, not a fieldset legend — sits with the panel's own
+            padding like any other in-card text, never touching the border. */}
+        <p className="text-sm font-semibold text-[#211D4F] mb-2.5">Choose operations</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-4">
           {ALL_OPS.map(({ op, label, symbol }) => {
             const checked = selectedOps.has(op);
             return (
@@ -65,26 +67,27 @@ export default function SpeedDrillSetup() {
                 key={op}
                 onClick={() => toggleOp(op)}
                 aria-pressed={checked}
-                className={`relative flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 transition-all font-bold text-sm cursor-pointer ${
+                className={`flex items-center justify-center gap-1.5 py-3 px-2 rounded-lg border transition-all cursor-pointer ${
                   checked
                     ? 'border-[#4F46E5] bg-[#F5F3FF] text-[#4F46E5]'
                     : 'border-[#E4E1F5] bg-white text-[#6B6690] hover:border-[#C7D2FE] hover:text-[#4A4570]'
                 }`}
               >
+                <span className="text-xl font-extrabold leading-none">{symbol}</span>
+                <span className="text-xs font-semibold leading-none">{label}</span>
                 {/* Non-color confirmation that this operation is selected —
                     the border/bg/text color change above remains the primary
-                    signal; this is a small secondary cue so selection state
-                    doesn't rely on color alone. */}
+                    signal; this is a small, subtle secondary cue so selection
+                    state doesn't rely on color alone. Inline (not absolutely
+                    positioned) so it never crowds the label on a compact tile. */}
                 {checked && (
                   <span
                     aria-hidden="true"
-                    className="absolute top-1 right-1 flex items-center justify-center w-3.5 h-3.5 rounded-full bg-[#4F46E5] text-white text-[8px] leading-none"
+                    className="flex items-center justify-center w-3 h-3 rounded-full bg-[#4F46E5] text-white text-[7px] leading-none shrink-0"
                   >
                     ✓
                   </span>
                 )}
-                <span className="text-xl leading-none">{symbol}</span>
-                <span className="text-xs font-semibold">{label}</span>
               </button>
             );
           })}
