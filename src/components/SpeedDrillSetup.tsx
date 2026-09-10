@@ -65,12 +65,24 @@ export default function SpeedDrillSetup() {
                 key={op}
                 onClick={() => toggleOp(op)}
                 aria-pressed={checked}
-                className={`flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 transition-all font-bold text-sm cursor-pointer ${
+                className={`relative flex flex-col items-center gap-1.5 py-3 px-2 rounded-xl border-2 transition-all font-bold text-sm cursor-pointer ${
                   checked
                     ? 'border-[#4F46E5] bg-[#F5F3FF] text-[#4F46E5]'
                     : 'border-[#E4E1F5] bg-white text-[#6B6690] hover:border-[#C7D2FE] hover:text-[#4A4570]'
                 }`}
               >
+                {/* Non-color confirmation that this operation is selected —
+                    the border/bg/text color change above remains the primary
+                    signal; this is a small secondary cue so selection state
+                    doesn't rely on color alone. */}
+                {checked && (
+                  <span
+                    aria-hidden="true"
+                    className="absolute top-1 right-1 flex items-center justify-center w-3.5 h-3.5 rounded-full bg-[#4F46E5] text-white text-[8px] leading-none"
+                  >
+                    ✓
+                  </span>
+                )}
                 <span className="text-xl leading-none">{symbol}</span>
                 <span className="text-xs font-semibold">{label}</span>
               </button>
@@ -81,7 +93,7 @@ export default function SpeedDrillSetup() {
           onClick={start}
           className="w-full py-3.5 px-6 bg-[#4F46E5] hover:bg-[#3E35C7] active:shadow-none active:translate-y-[2px] text-white font-bold rounded-xl transition-all shadow-[0_3px_0_0_#3730A3,0_4px_12px_rgba(79,70,229,0.30)] hover:shadow-[0_3px_0_0_#312E81,0_6px_16px_rgba(79,70,229,0.40)]"
         >
-          Start Drill →
+          Start 60-Second Drill
         </button>
       </div>
     </div>
