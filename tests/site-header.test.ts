@@ -4,13 +4,16 @@ import { assert, test } from './harness';
 const source = readFileSync('src/components/SiteHeader.astro', 'utf8');
 
 export const tests = [
-  test('Create Practice is added to the single staticLinks source shared by desktop and mobile', () => {
+  test('Create Classroom Practice is added to the single staticLinks source shared by desktop and mobile, ordered before My Progress', () => {
     const staticLinksBlock = source.slice(source.indexOf('const staticLinks'), source.indexOf('];', source.indexOf('const staticLinks')));
-    assert.ok(staticLinksBlock.includes("{ href: '/create/', label: 'Create Practice' }"));
+    assert.ok(staticLinksBlock.includes("{ href: '/create/', label: 'Create Classroom Practice' }"));
     for (const existing of ["{ href: '/arithmetic-speed-drill', label: 'Speed Drill' }", "{ href: '/math-worksheets', label: 'Worksheets' }", "{ href: '/progress', label: 'My Progress' }"]) {
       assert.ok(staticLinksBlock.includes(existing), existing);
     }
     assert.equal((staticLinksBlock.match(/href: '\/create\/'/g) ?? []).length, 1);
+    // Order: Speed Drill, Worksheets, Create Classroom Practice, My Progress.
+    assert.ok(staticLinksBlock.indexOf("label: 'Worksheets'") < staticLinksBlock.indexOf('Create Classroom Practice'));
+    assert.ok(staticLinksBlock.indexOf('Create Classroom Practice') < staticLinksBlock.indexOf("label: 'My Progress'"));
   }),
   test('header container is widened to max-w-7xl, independent of page content width', () => {
     assert.ok(source.includes('max-w-7xl mx-auto px-4 sm:px-6'));
