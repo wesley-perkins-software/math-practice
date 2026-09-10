@@ -53,7 +53,7 @@ Fractions, decimals, place value, rounding, number sense, percentages, measureme
 
 ## V2 URL and runner contract
 
-The flat transport is `/practice/?v=2&skill=multiplication-facts&facts=6,7,8&mode=untimed&questions=20`. Canonical parameter order is `v`, `skill`, the applicable `facts` or `divisors`, `mode`, timed-only `duration`, then optional `questions`. `v`, `skill`, and `mode` are required. Multiplication facts requires `facts`; division facts requires `divisors`; other registered types accept no skill-specific parameter. Timed sessions require `duration`; question count is optional in either mode.
+The flat transport is `/practice/?v=2&skill=multiplication-facts&facts=6,7,8&mode=untimed&problems=20`. Canonical parameter order is `v`, `skill`, the applicable `facts` or `divisors`, `mode`, timed-only `duration`, then optional `problems`. `v`, `skill`, and `mode` are required. Multiplication facts requires `facts`; division facts requires `divisors`; other registered types accept no skill-specific parameter. Timed sessions require `duration`; problem count is optional in either mode.
 
 The codec rejects unknown/duplicate parameters, empty values, non-ASCII or noncanonical integer syntax, whitespace, and malformed scalar/list syntax before constructing a candidate. It applies small transport bounds because a definition can contain at most 12 selected values. Percent encoding is decoded exactly once by `URLSearchParams`; an encoded comma is therefore a valid list separator, while encoded whitespace or plus signs remain invalid. The existing strict V2 validator remains authoritative for types, ranges, combinations, duplicate selections, and ascending selection normalization. The URL never represents trusted runtime identity or generator internals.
 
