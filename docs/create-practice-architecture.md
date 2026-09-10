@@ -76,4 +76,6 @@ Deferred: multi-skill assignments, accounts, rosters, teacher dashboards, gradin
 3. `/create/` builder
 4. Full arithmetic integration
 5. Discoverability
-6. Analytics
+6. Analytics (implemented)
+
+Create Practice analytics reuse the site's fail-open GA4 event seam and are aggregate-only. The creator page is measured by the existing path-only `page_view`; conversion and valid shared-runner events carry only registry-backed practice/category values, four finite session-mode buckets, optional bounded duration/question values, and single/multiple/all selection breadth. They never carry full URLs, query strings, selected fact/divisor lists, problems, answers, storage/session/assignment identifiers, or exact performance. All dimensions come from a normalized, validated V2 definition.
