@@ -3,7 +3,6 @@ import { trackEvent } from './analytics';
 
 type EventParams = {
   daily_review_view: { grade: DailyReviewGradeId };
-  daily_review_grade_select: { grade: DailyReviewGradeId };
   daily_review_start: { grade: DailyReviewGradeId };
   daily_review_complete: { grade: DailyReviewGradeId; accuracy_pct: number };
 };

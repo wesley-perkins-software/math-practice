@@ -9,7 +9,6 @@ import {
   isDailyReviewGradeId,
   loadDailyReviewPrefs,
   markDailyReviewCompleted,
-  saveDailyReviewLastSelection,
   todayDateKey,
   type DailyReviewGradeId,
 } from '../src/engine/dailyReview';
@@ -213,15 +212,12 @@ export const tests = [
     }
   }),
 
-  test('switching the last-selected grade preserves every grade\'s own completion state', () => {
+  test('completing one grade after another preserves each grade\'s own completion state', () => {
     setupStorage();
     markDailyReviewCompleted('g3', '2026-09-11');
-    saveDailyReviewLastSelection('g4');
-    assert.equal(loadDailyReviewPrefs().lastSelection, 'g4');
-    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'switching selection must not clear a previously completed grade');
-    assert.equal(isDailyReviewCompletedToday('g4', '2026-09-11'), false);
-    saveDailyReviewLastSelection('g3');
-    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'switching back must still show the earlier completion');
+    markDailyReviewCompleted('g4', '2026-09-11');
+    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'completing another grade must not clear an earlier completion');
+    assert.ok(isDailyReviewCompletedToday('g4', '2026-09-11'));
   }),
 
   test('a new day naturally presents every grade as incomplete again', () => {
@@ -233,7 +229,15 @@ export const tests = [
   test('loadDailyReviewPrefs defaults sensibly when nothing has been stored yet', () => {
     setupStorage();
     const prefs = loadDailyReviewPrefs();
-    assert.equal(prefs.lastSelection, 'g3');
     assert.deepEqual(prefs.completedDateBySelection, {});
+  }),
+
+  test('a legacy stored record with a stray lastSelection field still loads its completion data', () => {
+    const storage = setupStorage();
+    storage.setItem('mp_daily_review_prefs', JSON.stringify({
+      version: 1,
+      data: { lastSelection: 'g4', completedDateBySelection: { g3: '2026-09-11' } },
+    }));
+    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'legacy lastSelection field must not break reading completedDateBySelection');
   }),
 ];

@@ -200,8 +200,12 @@ export function generateDailyReviewProblems(
 // completion state. This is deliberately separate from the ordinary
 // PageStats each grade's storageKey already accumulates via storage.ts.
 
+// `lastSelection` was dropped once grade identity moved from client state
+// into the route (/daily-review/{grade}/): the validator no longer requires
+// or writes it, but a record persisted before this change may still carry it
+// as an inert extra field — that's fine, `isDailyReviewPrefs` only checks the
+// fields it still reads, so no migration/version bump is needed.
 export interface DailyReviewPrefs {
-  lastSelection: DailyReviewGradeId;
   completedDateBySelection: Partial<Record<DailyReviewGradeId, string>>;
 }
 
@@ -210,7 +214,6 @@ const DAILY_REVIEW_PREFS_KEY = 'mp_daily_review_prefs';
 function isDailyReviewPrefs(value: unknown): value is DailyReviewPrefs {
   if (typeof value !== 'object' || value === null) return false;
   const record = value as Record<string, unknown>;
-  if (!isDailyReviewGradeId(record.lastSelection)) return false;
   const completed = record.completedDateBySelection;
   if (typeof completed !== 'object' || completed === null) return false;
   return Object.entries(completed as Record<string, unknown>).every(
@@ -220,15 +223,10 @@ function isDailyReviewPrefs(value: unknown): value is DailyReviewPrefs {
 
 const dailyReviewPrefsAdapter = createVersionedRecordAdapter<DailyReviewPrefs>(isDailyReviewPrefs);
 
-const DEFAULT_DAILY_REVIEW_PREFS: DailyReviewPrefs = { lastSelection: 'g3', completedDateBySelection: {} };
+const DEFAULT_DAILY_REVIEW_PREFS: DailyReviewPrefs = { completedDateBySelection: {} };
 
 export function loadDailyReviewPrefs(): DailyReviewPrefs {
   return dailyReviewPrefsAdapter.read(DAILY_REVIEW_PREFS_KEY) ?? { ...DEFAULT_DAILY_REVIEW_PREFS, completedDateBySelection: {} };
-}
-
-export function saveDailyReviewLastSelection(gradeId: DailyReviewGradeId): void {
-  const current = loadDailyReviewPrefs();
-  dailyReviewPrefsAdapter.write(DAILY_REVIEW_PREFS_KEY, { ...current, lastSelection: gradeId });
 }
 
 export function markDailyReviewCompleted(gradeId: DailyReviewGradeId, dateKey: string): void {

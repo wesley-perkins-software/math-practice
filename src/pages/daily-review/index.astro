@@ -1,9 +1,11 @@
 ---
-import PracticeLayout from '@/layouts/PracticeLayout.astro';
-import DailyReviewWidget from '@/components/DailyReviewWidget';
+import HubLayout from '@/layouts/HubLayout.astro';
 import InternalLinks from '@/components/InternalLinks';
 import { ORGANIZATION_ID, SITE_URL } from '@/config/site';
-import '@/styles/practice-surface-prototype.css';
+import { DAILY_REVIEW_GRADE_SUBTITLES } from '@/engine/dailyReview';
+import { DAILY_REVIEW_GRADE_PAGES } from '@/data/dailyReviewGradePages';
+
+const grades = DAILY_REVIEW_GRADE_PAGES.map((g) => ({ slug: g.slug, label: g.label, subtitle: DAILY_REVIEW_GRADE_SUBTITLES[g.gradeId] }));
 
 const links = [
   { href: '/create/', label: 'Create Classroom Practice', description: 'Choose the exact skills and session settings' },
@@ -15,7 +17,7 @@ const links = [
 const faqItems = [
   {
     q: 'What is the Daily Math Review?',
-    a: 'A ready-made 10-question arithmetic warm-up that changes every day. Pick a grade and start practicing right in your browser — no account, no setup, and no choices to make beyond your grade level.',
+    a: 'A ready-made 10-question arithmetic warm-up that changes every day. Pick a grade and start practicing right in your browser — no account, no setup, and nothing to configure.',
   },
   {
     q: 'Does the Daily Review change every day?',
@@ -36,14 +38,20 @@ const faqItems = [
 ];
 ---
 
-<PracticeLayout
+<HubLayout
   title="Daily Math Review — Free K-5 Daily Math Practice | Math Practice Online"
-  description="A new, ready-made 10-question arithmetic warm-up every day for Kindergarten through Grade 5. No setup, no login — just pick a grade and start."
+  description="A new, ready-made 10-question arithmetic warm-up every day for Kindergarten through Grade 5. No setup, no login — choose a grade and start."
   canonical={`${SITE_URL}/daily-review`}
-  pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Daily Math Review' }]}
 >
   <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+        { "@type": "ListItem", "position": 2, "name": "Daily Math Review" },
+      ]
+    })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "FAQPage",
@@ -55,40 +63,65 @@ const faqItems = [
     })} />
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
-      "@type": "LearningResource",
+      "@type": "CollectionPage",
       "name": "Daily Math Review",
       "description": "A deterministic 10-question daily arithmetic warm-up for Kindergarten through Grade 5, with no login required.",
       "url": `${SITE_URL}/daily-review`,
-      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
-      "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
+      "hasPart": grades.map((g) => ({
+        "@type": "LearningResource",
+        "name": `${g.label} Daily Math Review`,
+        "url": `${SITE_URL}/daily-review/${g.slug}`,
+      })),
       "provider": { "@id": ORGANIZATION_ID }
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">Daily Math Review</h1>
+  <main class="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+    <!-- Breadcrumb -->
+    <nav aria-label="Breadcrumb" class="mb-5 text-sm text-[#6B7280] flex items-center flex-wrap gap-1">
+      <a href="/" class="hover:text-[#4F46E5] transition-colors">Home</a>
+      <span aria-hidden="true" class="text-[#C7D2FE]/40">›</span>
+      <span class="text-[#6B7280]">Daily Math Review</span>
+    </nav>
 
-  <Fragment slot="widget">
-    <p class="mt-1 mb-4 text-sm text-body max-w-xl">A new 10-question arithmetic warm-up every day. Choose your grade and start.</p>
-    <DailyReviewWidget client:load />
-  </Fragment>
+    <!-- H1 + intro -->
+    <h1 class="text-3xl font-bold text-[#1E293B]">Daily Math Review</h1>
+    <p class="mt-3 mb-8 text-body text-base leading-relaxed max-w-xl">
+      Choose a grade for today's ready-made 10-question arithmetic warm-up. No setup, no login — just pick a grade and start.
+    </p>
 
-  <Fragment slot="quick-answer">
-    <p>A new 10-question arithmetic warm-up every day — choose a grade, no setup required.</p>
-  </Fragment>
+    <!-- Grade destinations -->
+    <section aria-labelledby="grades-heading">
+      <h2 id="grades-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Choose a Grade</h2>
+      <div class="grid gap-3 sm:grid-cols-2">
+        {grades.map((g) => (
+          <a
+            href={`/daily-review/${g.slug}/`}
+            class="flex items-center justify-between gap-3 bg-white border border-[#E2E8F0] rounded-2xl p-5 hover:border-[#4F46E5] hover:shadow-md transition-all group"
+          >
+            <div>
+              <div class="font-semibold text-[#1E293B] group-hover:text-[#4F46E5] transition-colors">{g.label}</div>
+              <p class="text-sm text-body mt-1 leading-relaxed">{g.subtitle}</p>
+            </div>
+            <span class="text-[#A5B4FC] group-hover:text-[#4F46E5] transition-colors text-lg leading-none" aria-hidden="true">→</span>
+          </a>
+        ))}
+      </div>
+    </section>
 
-  <div slot="how-it-works" class="mt-12 space-y-10">
-    <section aria-labelledby="hiw-heading">
-      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How the Daily Review Works</h2>
+    <!-- How it works -->
+    <section class="mt-12" aria-labelledby="hiw-heading">
+      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How Daily Review Works</h2>
       <p class="text-sm text-body leading-relaxed">
-        Each grade's 10-question set is generated automatically from today's date, so it's the same for everyone practicing that grade today — and different again tomorrow. There's nothing to configure: choose a grade and the review starts immediately. Kindergarten through Grade 2 focus on addition and subtraction; Grade 3 introduces multiplication and division facts; Grade 4 adds more multiplication and division practice; Grade 5 uses harder multiplication facts and division with remainders. Daily Review is currently an arithmetic warm-up — it doesn't cover every math topic taught at each grade.
+        Each grade's 10-question set is generated automatically from today's date, so it's the same for everyone practicing that grade today — and different again tomorrow. There's nothing to configure: open a grade's page and the review starts immediately. Kindergarten through Grade 2 focus on addition and subtraction; Grade 3 introduces multiplication and division facts; Grade 4 adds more multiplication and division practice; Grade 5 uses harder multiplication facts and division with remainders. Daily Review is currently an arithmetic warm-up — it doesn't cover every math topic taught at each grade.
       </p>
     </section>
 
-    <section aria-labelledby="teacher-heading">
+    <section class="mt-10" aria-labelledby="teacher-heading">
       <h2 id="teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Using Daily Review in the Classroom</h2>
       <div class="text-sm text-body leading-relaxed space-y-3">
         <p>
-          <strong>A ready-made interactive warm-up.</strong> Open today's review, pick a grade, and project it at the start of class — no setup, no login, and the same 10 problems for every student practicing that grade today.
+          <strong>A ready-made interactive warm-up.</strong> Pick a grade and project its page at the start of class — no setup, no login, and the same 10 problems for every student practicing that grade today.
         </p>
         <p>
           Need something different? <a href="/create/" class="text-[#4F46E5] font-medium hover:underline">Create Classroom Practice</a> lets you choose the exact skills and session settings; the <a href="/arithmetic-speed-drill/" class="text-[#4F46E5] font-medium hover:underline">Arithmetic Speed Drill</a> is timed fluency practice; and <a href="/math-worksheets/" class="text-[#4F46E5] font-medium hover:underline">Math Worksheets</a> is the place for printable, independent practice. Daily Review is the ready-made option when you don't want to configure anything.
@@ -96,7 +129,13 @@ const faqItems = [
       </div>
     </section>
 
-    <section aria-labelledby="faq-heading">
+    <!-- Related links -->
+    <section class="mt-12">
+      <InternalLinks client:load links={links} />
+    </section>
+
+    <!-- FAQ -->
+    <section class="mt-12" aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
       <div class="flex flex-col gap-4">
         {faqItems.map(({ q, a }) => (
@@ -107,7 +146,5 @@ const faqItems = [
         ))}
       </div>
     </section>
-
-    <InternalLinks links={links} />
-  </div>
-</PracticeLayout>
+  </main>
+</HubLayout>
