@@ -9,11 +9,11 @@ import '@/styles/practice-surface-prototype.css';
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
-  { href: '/division/facts', label: 'Division Facts Practice', description: 'Exact division fundamentals' },
-  { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Single-divisor focus' },
-  { href: '/division/divide-by/12', label: 'Divide by 12 Practice', description: 'Challenge one divisor' },
-  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Printable long division practice' },
-  { href: '/arithmetic-speed-drill', label: 'Arithmetic Speed Drill', description: 'Mixed timed arithmetic practice' },
+  { href: '/division/facts/', label: 'Division Facts Practice', description: 'Exact division fundamentals' },
+  { href: '/division/divide-by/1/', label: 'Divide by 1 Practice', description: 'Single-divisor focus' },
+  { href: '/division/divide-by/12/', label: 'Divide by 12 Practice', description: 'Challenge one divisor' },
+  { href: '/math-worksheets/division-worksheets/', label: 'Division Worksheets', description: 'Printable long division practice' },
+  { href: '/arithmetic-speed-drill/', label: 'Arithmetic Speed Drill', description: 'Mixed timed arithmetic practice' },
 ];
 
 const faqItems = [
@@ -45,7 +45,7 @@ const faqItems = [
   description="Practice division with remainders by entering quotient and remainder. Build the understanding needed for long division, Grade 3–4 problem solving, and real-world math."
   canonical={`${SITE}/division/remainders`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division' }, { label: 'Remainders' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division/' }, { label: 'Remainders' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -80,7 +80,7 @@ const faqItems = [
 
   <DivisionPracticeHub slot="widget" active="remainders" client:load />
 
-  <LocalChooser slot="local-chooser" operation="division" current="/division/remainders" />
+  <LocalChooser slot="local-chooser" operation="division" current="/division/remainders/" />
 
   <Fragment slot="intro">
     <p>This page is for third and fourth graders who've mastered exact division facts and are ready to handle numbers that don't divide evenly, as well as parents and teachers checking whether a child understands what a remainder represents, not just how to compute it. Enter both the quotient and remainder for each problem to build the accuracy and conceptual grounding needed for long division and multi-step word problems.</p>
@@ -120,13 +120,13 @@ const faqItems = [
       <h2 id="remainders-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
       <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-body leading-relaxed space-y-3">
         <p>
-          Make sure <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">exact division facts</a> are fluent before introducing remainders. Students who aren't sure whether 54÷6=9 will struggle to figure out where 55÷6 lands — the remainder process requires fact recall as a starting point.
+          Make sure <a href="/division/facts/" class="text-[#4F46E5] font-medium hover:underline">exact division facts</a> are fluent before introducing remainders. Students who aren't sure whether 54÷6=9 will struggle to figure out where 55÷6 lands — the remainder process requires fact recall as a starting point.
         </p>
         <p>
           Use real-world examples to make remainders concrete: "If 29 students need to form groups of 6, how many full groups form and how many students are left over?" This frames the quotient and remainder as meaningful quantities, not just numbers to write.
         </p>
         <p>
-          Once students are confident here, use the <a href="/math-worksheets/division-worksheets" class="text-[#4F46E5] font-medium hover:underline">division with remainders worksheet</a>, which displays problems in the standard long division bracket format — the same notation students use for written work in school.
+          Once students are confident here, use the <a href="/math-worksheets/division-worksheets/" class="text-[#4F46E5] font-medium hover:underline">division with remainders worksheet</a>, which displays problems in the standard long division bracket format — the same notation students use for written work in school.
         </p>
       </div>
     </section>
@@ -144,7 +144,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="mt-12 text-sm text-body">Ready to put it all together? Try the <a href="/arithmetic-speed-drill" class="text-[#4F46E5] font-semibold hover:underline">Arithmetic Speed Drill</a> for mixed, timed practice across every operation →</p>
+    <p class="mt-12 text-sm text-body">Ready to put it all together? Try the <a href="/arithmetic-speed-drill/" class="text-[#4F46E5] font-semibold hover:underline">Arithmetic Speed Drill</a> for mixed, timed practice across every operation →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

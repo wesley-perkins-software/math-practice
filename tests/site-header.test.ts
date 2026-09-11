@@ -7,7 +7,7 @@ export const tests = [
   test('Create Classroom Practice is added to the single staticLinks source shared by desktop and mobile, ordered before My Progress', () => {
     const staticLinksBlock = source.slice(source.indexOf('const staticLinks'), source.indexOf('];', source.indexOf('const staticLinks')));
     assert.ok(staticLinksBlock.includes("{ href: '/create/', label: 'Create Classroom Practice' }"));
-    for (const existing of ["{ href: '/arithmetic-speed-drill', label: 'Speed Drill' }", "{ href: '/math-worksheets', label: 'Worksheets' }", "{ href: '/progress', label: 'My Progress' }"]) {
+    for (const existing of ["{ href: '/arithmetic-speed-drill/', label: 'Speed Drill' }", "{ href: '/math-worksheets/', label: 'Worksheets' }", "{ href: '/progress/', label: 'My Progress' }"]) {
       assert.ok(staticLinksBlock.includes(existing), existing);
     }
     assert.equal((staticLinksBlock.match(/href: '\/create\/'/g) ?? []).length, 1);

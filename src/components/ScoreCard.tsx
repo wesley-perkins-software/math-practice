@@ -141,7 +141,7 @@ export default function ScoreCard({ result, stats, isTimed, preSessionScore, pre
           my full progress →" to a quieter, tertiary label now that Play
           Again is the only button-styled action on the screen. */}
       <a
-        href="/progress"
+        href="/progress/"
         className={`text-xs font-medium transition-colors text-center w-full block ${isPrototype ? 'text-[#4F46E5] hover:text-[#3E35C7]' : 'text-[#4F46E5] hover:text-[#3730A3]'}`}
       >
         View progress

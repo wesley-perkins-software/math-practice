@@ -9,11 +9,11 @@ import '@/styles/practice-surface-prototype.css';
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
-  { href: '/subtraction', label: 'All Subtraction Levels', description: 'Choose a difficulty or compare all levels' },
-  { href: '/subtraction/2-digit-without-regrouping', label: '2-Digit Subtraction (Without Regrouping)', description: 'Next step: two-digit problems without regrouping' },
-  { href: '/subtraction/2-digit-with-regrouping', label: '2-Digit Subtraction With Regrouping', description: 'Practice regrouping (borrowing)' },
-  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Build inverse-operation fluency' },
-  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style practice with instant feedback' },
+  { href: '/subtraction/', label: 'All Subtraction Levels', description: 'Choose a difficulty or compare all levels' },
+  { href: '/subtraction/2-digit-without-regrouping/', label: '2-Digit Subtraction (Without Regrouping)', description: 'Next step: two-digit problems without regrouping' },
+  { href: '/subtraction/2-digit-with-regrouping/', label: '2-Digit Subtraction With Regrouping', description: 'Practice regrouping (borrowing)' },
+  { href: '/addition/1-digit/', label: '1-Digit Addition', description: 'Build inverse-operation fluency' },
+  { href: '/math-worksheets/subtraction-worksheets/', label: 'Subtraction Worksheets', description: 'Worksheet-style practice with instant feedback' },
 ];
 
 const faqItems = [
@@ -41,7 +41,7 @@ const faqItems = [
   description="Practice 1-digit subtraction facts online with instant feedback, streak tracking, and timed drills. Build early elementary subtraction fluency and confidence."
   canonical={`${SITE}/subtraction/1-digit`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '1-Digit Subtraction' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction/' }, { label: '1-Digit Subtraction' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -76,7 +76,7 @@ const faqItems = [
 
   <SubtractionPracticeHub slot="widget" active="1-digit" variant="prototype" client:load />
 
-  <LocalChooser slot="local-chooser" operation="subtraction" current="/subtraction/1-digit" />
+  <LocalChooser slot="local-chooser" operation="subtraction" current="/subtraction/1-digit/" />
 
   <Fragment slot="intro">
     <p>This page is for kindergartners and first graders building single-digit subtraction fluency, as well as parents and teachers checking recall speed. Problems are drawn from single-digit facts with differences from 0 to 8, including take-away and comparison-style subtraction, so students see both meanings of subtraction rather than only counting down.</p>
@@ -138,7 +138,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-body">Once these facts feel automatic, move on to <a href="/subtraction/2-digit-without-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction without regrouping</a> →</p>
+    <p class="text-sm text-body">Once these facts feel automatic, move on to <a href="/subtraction/2-digit-without-regrouping/" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction without regrouping</a> →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />
