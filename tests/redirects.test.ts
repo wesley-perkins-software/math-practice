@@ -40,6 +40,14 @@ export const tests = [
       assert.ok(match![1].endsWith('/'), `${file}.astro redirects to a non-canonical path: ${match![1]}`);
     }
   }),
+  test('the bare /multiplication-practice legacy route (historically labeled a "hub" per docs/seo/SEO_AEO_GEO_AUDIT.md) redirects to the multiplication hub, matching the division-practice/ -> division/ pattern', () => {
+    assert.ok(
+      redirectLines.includes('/multiplication-practice/ /multiplication/ 301!'),
+      'public/_redirects must send /multiplication-practice/ to the hub, not to /multiplication/facts/',
+    );
+    const source = readFileSync('src/pages/multiplication-practice/index.astro', 'utf8');
+    assert.ok(source.includes("Astro.redirect('/multiplication/', 301)"));
+  }),
   test('division-practice legacy fallback pages meta-refresh and canonicalize to trailing-slash destinations', () => {
     for (const file of ['divide-by', 'facts', 'index', 'remainders']) {
       const source = readFileSync(`src/pages/division-practice/${file}.astro`, 'utf8');
