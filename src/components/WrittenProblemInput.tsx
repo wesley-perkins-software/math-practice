@@ -88,7 +88,7 @@ export default function WrittenProblemInput({
   }
 
   function handleDigit(d: string) {
-    if (value.length >= 3) return;
+    if (value.length >= 4) return;
     setValue((v) => v + d);
   }
 
@@ -167,7 +167,7 @@ export default function WrittenProblemInput({
             type="text"
             inputMode="none"
             value={value}
-            onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 3))}
+            onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 4))}
             onKeyDown={handleKeyDown}
             disabled={disabled}
             aria-label="Your answer"
@@ -258,7 +258,7 @@ export default function WrittenProblemInput({
           type="text"
           inputMode="none"
           value={value}
-          onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 3))}
+          onChange={(e) => setValue(e.target.value.replace(/\D/g, '').slice(0, 4))}
           onKeyDown={handleKeyDown}
           disabled={disabled}
           aria-label="Your answer"

@@ -1,0 +1,117 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import DailyReviewWidget from '@/components/DailyReviewWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID, SITE_URL } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
+
+const links = [
+  { href: '/create/', label: 'Create Classroom Practice', description: 'Choose the exact skills and session settings' },
+  { href: '/arithmetic-speed-drill/', label: 'Arithmetic Speed Drill', description: 'Timed fluency practice' },
+  { href: '/math-worksheets/', label: 'Math Worksheets', description: 'Printable practice sheets' },
+  { href: '/for-teachers/', label: 'For Teachers', description: 'Classroom warm-up and practice ideas' },
+];
+
+const faqItems = [
+  {
+    q: 'What is the Daily Math Review?',
+    a: 'A ready-made 10-question math warm-up that changes every day. Pick a grade and start — no account, no setup, and no choices to make beyond your grade level.',
+  },
+  {
+    q: 'Does the Daily Review change every day?',
+    a: 'Yes. Each grade gets a new set of 10 problems every calendar day, generated automatically so the same date and grade always produce the same set.',
+  },
+  {
+    q: 'Is the Daily Review the same for everyone?',
+    a: 'For a given date and grade, yes — everyone practicing that grade on that day sees the same 10 problems, based on your device\'s local date. This makes it easy for a whole class to work from the same set.',
+  },
+  {
+    q: 'Which grade levels are available?',
+    a: 'Kindergarten through Grade 5. Kindergarten covers early addition and subtraction with numbers to 10; Grades 1–2 focus on addition and subtraction; Grades 3–5 add multiplication and division, with Grade 5 introducing division with remainders and larger numbers.',
+  },
+  {
+    q: 'Can I print today\'s Daily Review?',
+    a: 'Yes. Use Print Review for a blank worksheet version of today\'s exact 10 problems, or Print Answer Key for the same problems with answers shown.',
+  },
+  {
+    q: 'Do students need an account?',
+    a: 'No. The Daily Review works entirely in your browser with no login. Completing today\'s review is remembered locally on your device so you can see it\'s done and replay it if you\'d like.',
+  },
+];
+---
+
+<PracticeLayout
+  title="Daily Math Review — Free K-5 Daily Math Practice | Math Practice Online"
+  description="A new, ready-made 10-question math warm-up every day for Kindergarten through Grade 5. No setup, no login — just pick a grade and start. Printable review and answer key included."
+  canonical={`${SITE_URL}/daily-review`}
+  pilotLayout
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Daily Math Review' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Daily Math Review",
+      "description": "A deterministic 10-question daily math warm-up for Kindergarten through Grade 5, with no login required.",
+      "url": `${SITE_URL}/daily-review`,
+      "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
+      "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
+      "provider": { "@id": ORGANIZATION_ID }
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">Daily Math Review</h1>
+
+  <DailyReviewWidget slot="widget" client:load />
+
+  <Fragment slot="quick-answer">
+    <p>A new 10-question math warm-up every day — pick your grade, no setup required.</p>
+  </Fragment>
+
+  <div slot="how-it-works" class="mt-12 space-y-10">
+    <section aria-labelledby="hiw-heading">
+      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How the Daily Review Works</h2>
+      <p class="text-sm text-body leading-relaxed">
+        Each grade's 10-question set is generated automatically from today's date, so it's the same for everyone practicing that grade today — and different again tomorrow. There's nothing to configure: choose a grade and the review starts immediately. Kindergarten through Grade 2 focus on addition and subtraction; Grade 3 introduces multiplication and division facts; Grade 4 adds larger multiplication; Grade 5 includes division with remainders and multi-digit arithmetic.
+      </p>
+    </section>
+
+    <section aria-labelledby="teacher-heading">
+      <h2 id="teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Using Daily Review in the Classroom</h2>
+      <div class="text-sm text-body leading-relaxed space-y-3">
+        <p>
+          <strong>A ready-made warm-up.</strong> Project today's review at the start of class or hand out the printed version — the same 10 problems work for both.
+        </p>
+        <p>
+          <strong>Print for independent work.</strong> Use Print Review for a blank worksheet and Print Answer Key to check work afterward — both use today's exact problems, never a different set.
+        </p>
+        <p>
+          Looking for a specific skill or a custom session instead? <a href="/create/" class="text-[#4F46E5] font-medium hover:underline">Create Classroom Practice</a> lets you choose the exact skills and settings; Daily Review is the ready-made option when you don't want to configure anything.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <InternalLinks links={links} />
+  </div>
+</PracticeLayout>
