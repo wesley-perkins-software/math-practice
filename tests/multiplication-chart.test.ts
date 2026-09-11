@@ -49,8 +49,36 @@ export const tests = [
   test('every intended page links to the multiplication chart with a canonical trailing-slash href', () => {
     for (const page of LINKING_PAGES) {
       const s = source(page);
-      assert.ok(s.includes("'/multiplication-chart/'"), `${page} should link to /multiplication-chart/`);
+      assert.ok(
+        s.includes("'/multiplication-chart/'") || s.includes('"/multiplication-chart/"'),
+        `${page} should link to /multiplication-chart/`
+      );
     }
+  }),
+  test('the multiplication hub promotes the chart with a featured callout, not just a Related Practice card', () => {
+    const s = source('src/pages/multiplication/index.astro');
+    assert.ok(s.includes('id="chart-callout-heading"'), 'expected a dedicated chart callout section');
+    assert.ok(s.includes('Multiplication Chart 1–12'), 'expected the callout label');
+    assert.ok(s.includes('href="/multiplication-chart/"'), 'callout must link to the canonical chart URL');
+  }),
+  test('the times tables hub has a prominent chart callout below the table grid, ahead of Recommended Learning Order', () => {
+    const s = source('src/pages/multiplication/times-tables/index.astro');
+    assert.ok(s.includes('id="chart-callout-heading"'), 'expected a dedicated chart callout section');
+    assert.ok(s.includes('Need the full picture? Open the Multiplication Chart'), 'expected the callout label');
+    assert.ok(s.includes('href="/multiplication-chart/"'), 'callout must link to the canonical chart URL');
+    assert.ok(
+      s.indexOf('id="tables-grid-heading"') < s.indexOf('id="chart-callout-heading"'),
+      'the chart callout should appear after the 1–12 table grid, so the primary table selector stays first'
+    );
+    assert.ok(
+      s.indexOf('id="chart-callout-heading"') < s.indexOf('id="order-heading"'),
+      'the chart callout should appear before Recommended Learning Order'
+    );
+  }),
+  test('the multiplication facts page has a light contextual chart callout distinct from its Related Practice list', () => {
+    const s = source('src/pages/multiplication/facts.astro');
+    assert.ok(s.includes('View the Multiplication Chart'), 'expected the lighter contextual callout copy');
+    assert.ok(s.includes("href=\"/multiplication-chart/\""), 'callout must link to the canonical chart URL');
   }),
   test('the chart page links out to Times Tables, Facts, Create Practice, and Divide By', () => {
     const s = source('src/pages/multiplication-chart/index.astro');
