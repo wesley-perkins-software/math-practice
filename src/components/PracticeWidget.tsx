@@ -29,13 +29,20 @@ interface Props {
   questionCount?: QuestionCount;
   /** Shared assignments retain base progress identity but opt out of streak mechanics and use focused results. */
   sessionPresentation?: 'canonical' | 'shared';
+  /**
+   * Prebuilt deterministic problem sequence (e.g. Daily Review). When
+   * supplied, the widget indexes into this array instead of calling
+   * `generateProblem` — no random generation path is exercised for this
+   * session at all. Callers that omit this prop are unaffected.
+   */
+  problems?: Problem[];
   /** Narrow lifecycle seam used by the shared runner; callbacks never receive problems or answers. */
   onFirstAcceptedAnswer?: () => void;
   onSessionComplete?: (result: SessionResult) => void;
   onReplay?: () => void;
 }
 
-export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical', onFirstAcceptedAnswer, onSessionComplete, onReplay }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical', problems, onFirstAcceptedAnswer, onSessionComplete, onReplay }: Props) {
   const isTimed = config.mode === 'timed';
   const trackStreaks = sessionPresentation === 'canonical';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
@@ -94,6 +101,15 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   const durationRef = useRef(duration);
   durationRef.current = duration;
 
+  // When `problems` is supplied, index into it instead of generating —
+  // clamped defensively so an index at or beyond the array's length (which
+  // should never happen given Daily Review always matches questionCount to
+  // problems.length) still returns the last problem rather than crashing.
+  function getProblemAt(index: number): Problem {
+    if (!problems || problems.length === 0) return generateProblem(config);
+    return problems[Math.min(index, problems.length - 1)]!;
+  }
+
   // Clear reset confirmation when difficulty changes
   useEffect(() => {
     setResetPending(false);
@@ -112,7 +128,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   useEffect(() => {
     setStats(loadStats(config.storageKey));
     if (phaseRef.current === 'active') {
-      setProblem(generateProblem(config));
+      setProblem(getProblemAt(problemIndex));
       setFeedbackState('hidden');
     } else {
       // idle on mount, or complete when switching difficulty — auto-start immediately
@@ -180,7 +196,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       setSessionStartTime(now);
       sessionStartTimeRef.current = now;
     }
-    setProblem(generateProblem(config));
+    setProblem(getProblemAt(0));
     setProblemIndex(0);
     setCorrect(0);
     setFeedbackState('hidden');
@@ -366,7 +382,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         endSession(transition.state.completionReason);
       } else if (transition.shouldGenerateNext) {
         setProblemIndex((i) => i + 1);
-        setProblem(generateProblem(config));
+        setProblem(getProblemAt(totalAnsweredRef.current));
         setFeedbackState('hidden');
       }
     }, FEEDBACK_DELAY_MS);
@@ -549,14 +565,14 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
                 onSubmit={(q, r) => handleAnswer(q, r)}
                 disabled={feedbackState !== 'hidden'}
                 feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-                showRemainder={Boolean(config.withRemainder)}
+                showRemainder={problem.remainder !== undefined}
                 feedbackContent={(
                   <div className="h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto flex items-center justify-center w-full">
                     <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} variant={variant} />
                   </div>
                 )}
               />
-            ) : config.withRemainder ? (
+            ) : problem.remainder !== undefined ? (
               <RemainderProblemInput
                 problem={problem}
                 onSubmit={(q, r) => handleAnswer(q, r)}
