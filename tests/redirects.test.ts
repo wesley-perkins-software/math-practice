@@ -59,4 +59,24 @@ export const tests = [
       assert.ok(source.includes('noindex'), `${file}.astro must stay noindex`);
     }
   }),
+  test('the family-named legacy aliases /multiplication-practice/times-tables/ and /division-practice/divide-by/ redirect to their family hubs, not the 1 leaf', () => {
+    assert.ok(
+      redirectLines.includes('/multiplication-practice/times-tables/ /multiplication/times-tables/ 301!'),
+      'public/_redirects must send /multiplication-practice/times-tables/ to the times-tables hub, not /multiplication/times-tables/1/',
+    );
+    assert.ok(
+      redirectLines.includes('/division-practice/divide-by/ /division/divide-by/ 301!'),
+      'public/_redirects must send /division-practice/divide-by/ to the divide-by hub, not /division/divide-by/1/',
+    );
+    const timesTablesSource = readFileSync('src/pages/multiplication-practice/times-tables.astro', 'utf8');
+    assert.ok(
+      timesTablesSource.includes("Astro.redirect('/multiplication/times-tables/', 301)"),
+      'multiplication-practice/times-tables.astro must fall back to the times-tables hub, not the 1 leaf',
+    );
+    const divideBySource = readFileSync('src/pages/division-practice/divide-by.astro', 'utf8');
+    assert.ok(
+      divideBySource.includes('url=/division/divide-by/"') && divideBySource.includes('href="https://mathpracticeonline.com/division/divide-by/"'),
+      'division-practice/divide-by.astro must meta-refresh and canonicalize to the divide-by hub, not the 1 leaf',
+    );
+  }),
 ];
