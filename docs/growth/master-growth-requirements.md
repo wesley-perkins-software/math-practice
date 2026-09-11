@@ -115,7 +115,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Follow-up (2026-09-11):** contextual discoverability of the chart was strengthened across the multiplication cluster — promoted from a plain Related Practice link to a featured callout on `multiplication/index.astro`, a compact top-of-page callout on `multiplication/times-tables/index.astro`, and a light inline callout on `multiplication/facts.astro`.
 
 ### GROWTH-002 — Close the Divide-By 6–12 FAQ/intro maturity gap
-- **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Product Quality
+- **Tier:** A · **Status:** Complete · **Mechanism:** Acquisition, Product Quality
 - **Confirmed repository gap:** `src/pages/division/divide-by/[divisor].astro` gates `matureFaqItems` on `fact && divisor <= 5`; divisors 6–12 render the older `legacyFaqItems` and a generic fallback intro instead of a hand-tailored one, despite the underlying fact bank (`divideBy.ts`) having all 12 divisors fully reviewed.
 - **External evidence:** research's inference that Divide-By leaves need the same treatment as Times Tables is only partly right — this is the precise, narrow place where that's true.
 - **Strategic rationale:** targeted arithmetic-cluster strengthening — closes a real content-consistency gap using data that already exists; no new data authoring needed beyond intro prose for 7 divisors.
@@ -123,8 +123,8 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Dependencies:** none
 - **Exact scope:** `src/pages/division/divide-by/[divisor].astro` only.
 - **Implementation requirements:**
-  - [ ] Extend `EXPANDED_INTRO` with hand-written entries for divisors 7–12, parallel in style/length to the existing 1–6 entries (not the generic wrapper template).
-  - [ ] Remove the `divisor <= 5` gate on `matureFaqItems` so all 12 divisors render the mature FAQ shape; verify none of its fields are actually divisor-range-specific in content (they are not, per source read — the gate was incidental to rollout order, not a content limitation).
+  - [x] Extend `EXPANDED_INTRO` with hand-written entries for divisors 7–12, parallel in style/length to the existing 1–6 entries (not the generic wrapper template).
+  - [x] Remove the `divisor <= 5` gate on `matureFaqItems` so all 12 divisors render the mature FAQ shape; verify none of its fields are actually divisor-range-specific in content (they are not, per source read — the gate was incidental to rollout order, not a content limitation).
 - **Content requirements:** 6 new intro paragraphs (divisors 7–12), matching the 40–70 word target already used elsewhere on the site.
 - **Non-goals / DO NOT TOUCH:** do not touch Times Table leaves (already uniform across all 12); do not add a new fact-bank field.
 - **Testing requirements:** add a test asserting all 12 divisors render the mature FAQ item shape and a non-generic intro.
@@ -133,6 +133,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Measurement interval:** 4–8 weeks.
 - **Continue condition:** ship as-is; low risk.
 - **Stop / rethink condition:** none expected.
+- **Completion note:** divisors 7–12 now have hand-written expanded intros (matching divisor 6's bespoke style rather than the generic template), and the `divisor <= 5` gate on `matureFaqItems` is removed so all 12 Divide By leaves render the mature FAQ structure.
 
 ### GROWTH-003 — Add a per-table/per-divisor fact-reference list
 - **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Product Quality
