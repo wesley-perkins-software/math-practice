@@ -84,7 +84,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Stop / rethink condition:** none expected.
 
 ### GROWTH-006 — Ship the interactive + printable Multiplication Chart (`/multiplication-chart/`)
-- **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition + Authority
+- **Tier:** A · **Status:** Complete · **Mechanism:** Acquisition + Authority
 - **Confirmed repository gap:** no route, component, or content for a multiplication chart exists anywhere in `src/`.
 - **External evidence:** research identifies this as the strongest link-earning opportunity — SERPs saturated with static PDF libraries (e.g. DadsWorksheets' 133 variants) but weak on modern interactive + printable canonical pages; strong, evergreen, high-volume demand.
 - **Strategic rationale:** the single highest-confidence new-page bet in this backlog. Targeted as one of the next major builds after only the GSC baseline and the divide-by index — near-term (within the next few weeks of active work), not a project that waits until late in a 90-day window, and not held behind smaller cleanup tasks.
@@ -92,11 +92,11 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Dependencies:** none. (Re-evaluated: a per-table/per-divisor fact *list* — GROWTH-003 — and a full interactive 12×12 *matrix* with row/column highlighting, keyboard navigation, touch interaction, print layout, and a blank variant are different UI complexity classes, not the same rendering concern. The only thing they share is trivial fact computation (`i*j` for `i,j` in 1–12), which does not warrant a shared UI abstraction. GROWTH-003 is not a prerequisite and this item may proceed without it — see GROWTH-003's own card for its now-independent justification.)
 - **Exact scope:** new route `src/pages/multiplication-chart.astro` (or `/multiplication-chart/index.astro`); new interactive grid component; print stylesheet additions.
 - **Implementation requirements:**
-  - [ ] 1–12 interactive grid with row/column highlighting on hover/focus/touch.
-  - [ ] Full keyboard accessibility (arrow-key or tab navigation across cells, visible focus states).
-  - [ ] Static, readable fallback markup (works with JS disabled / for crawlers).
-  - [ ] Print-friendly CSS layout; black-and-white print variant; blank/fill-in variant.
-  - [ ] Canonical, title, meta description, breadcrumb.
+  - [x] 1–12 interactive grid with row/column highlighting on hover/focus/touch.
+  - [x] Full keyboard accessibility (arrow-key or tab navigation across cells, visible focus states).
+  - [x] Static, readable fallback markup (works with JS disabled / for crawlers).
+  - [x] Print-friendly CSS layout; black-and-white print variant; blank/fill-in variant.
+  - [x] Canonical, title, meta description, breadcrumb.
 - **Content requirements:** concise answer-first intro ("What is a multiplication chart / how to read it"), 4–6 item FAQ.
 - **Engine requirements:** build a purpose-built interactive grid component. It may share a trivial fact-computation helper with GROWTH-003 if convenient, but must not be blocked on or forced to reuse GROWTH-003's UI — keep the two components separate.
 - **Design requirements:** premium, calm visual treatment consistent with the site's existing polish (Speed Drill / Times Table leaves as the bar); mobile-first since teachers will project and print from varied devices.
@@ -110,6 +110,8 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Measurement interval:** check indexing status within 2 weeks; impressions/clicks at 4 and 12 weeks.
 - **Continue condition:** indexed and accumulating impressions within expected timeframe → continue investing in internal links/promotion.
 - **Stop / rethink condition (Chart-specific only):** if no meaningful impressions or referring links after ~90 days post-indexing, do not build additional chart variants (bigger grids, more print styles). This condition is scoped to the Chart alone — it is not evidence against Daily/Mixed Review (GROWTH-009) or any other unrelated asset, which has its own independent success/stop criteria.
+- **Completion note:** shipped as `src/pages/multiplication-chart/index.astro`, with the 12×12 interactive grid in `src/components/MultiplicationChart.tsx` (a single React island whose static SSR output is the no-JS/crawler fallback — one `<table>` markup, not a duplicated server/client pair) and pure `getProduct`/`moveSelection` helpers in `src/engine/multiplicationChart.ts`. Interaction model: persistent click/tap/focus selection with a transient mouse-hover preview, row/column header click-to-band, single roving-tabindex Tab stop into the matrix with clamped arrow-key movement and Escape/"Clear highlight" to reset. Mobile uses a horizontally scrollable table with sticky header row/column rather than shrinking cell size. Filled/Blank toggle is client-side-only component state (no new route). Printing uses a page-scoped `@page { size: landscape }` override (does not touch `global.css`'s portrait rule used by the worksheet generator) and prints whichever mode is currently selected on screen. Added `LearningResource` + `FAQPage` JSON-LD (`BreadcrumbList` via `PracticeLayout`); linked in from `multiplication/index.astro`, `multiplication/facts.astro`, `multiplication/times-tables/index.astro`, `multiplication/times-tables/[table].astro`, and `division/divide-by/index.astro`, and linked out to Times Tables, Facts, Create Practice, and Divide By. Test coverage added in `tests/multiplication-chart.test.ts` (pure-function unit tests plus route/link existence assertions) and `scripts/test-build-contract.mjs` (dist output, canonical, title, meta description, sitemap inclusion, no separate blank-chart route). `npx tsc --noEmit`, `npm test` (176 passed), `npm run build`, and `npm run test:build-contract` all pass; manual QA covered desktop/tablet/mobile rendering, hover/click/keyboard/touch interaction, and blank-mode accessibility.
+- **Follow-up fix (2026-09-11):** real print output was initially wrong — the full webpage (H1, intro, How to Use, Related Practice, FAQ) printed alongside a duplicated print-only title, spilling the chart across 3 pages. Fixed by wrapping the non-chart slots (`h1`, `intro`, `how-it-works`) in `.no-print` containers, moving the print-only title into `MultiplicationChart.tsx` itself (so it can read `blank` state and show "Multiplication Chart 1–12" vs. "Blank Chart 1–12" without duplicating the on-screen H1), adding `break-inside: avoid`/`page-break-inside: avoid` on the chart container, and resetting `html` background to white for print. Verified via Chromium's real print/pagination pipeline (Playwright `page.pdf()`, not CSS-media emulation alone): both Filled and Blank states render as exactly one landscape page at both US Letter (792×612pt) and A4 (842.9×595.9pt), full 12×12 grid visible, no web chrome, no clipping. Also clarified on-page copy (intro, "How to Use," and the Blank Chart FAQ answer) that Blank Chart is for on-screen self-quizzing or printing as a fill-in worksheet by hand — there are no editable cells.
 
 ### GROWTH-002 — Close the Divide-By 6–12 FAQ/intro maturity gap
 - **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Product Quality
@@ -304,7 +306,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 
 1. **GROWTH-001** *(Tier A — execute)* — Search Console baseline: multiplication/times-table cluster (validation, no code) — pending, deferred to desktop
 2. **GROWTH-004** *(Tier A — execute)* — Add `/division/divide-by/index.astro` divisor grid — **Complete**
-3. **GROWTH-006** *(Tier A — execute)* — Multiplication Chart (`/multiplication-chart/`)
+3. **GROWTH-006** *(Tier A — execute)* — Multiplication Chart (`/multiplication-chart/`) — **Complete**
 4. **GROWTH-002** *(Tier A — execute)* — Close Divide-By 6–12 FAQ/intro maturity gap
 5. **GROWTH-003** *(Tier A — execute)* — Add a per-table/per-divisor fact-reference list
 6. **GROWTH-009** *(Tier A — execute)* — Daily/Mixed Review warm-up tool (queued after the Chart for bandwidth, not evidence)
@@ -319,7 +321,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 
 1. GROWTH-001 *(Tier A)* — pending, deferred to desktop
 2. GROWTH-004 *(Tier A)* — **Complete**
-3. GROWTH-006 *(Tier A)*
+3. GROWTH-006 *(Tier A)* — **Complete**
 4. GROWTH-002 *(Tier A)*
 5. GROWTH-003 *(Tier A)*
 6. GROWTH-009 *(Tier A — queued after GROWTH-006 for bandwidth, not evidence)*
