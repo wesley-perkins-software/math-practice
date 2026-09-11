@@ -43,6 +43,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 
 ### GROWTH-001 — Establish Search Console baseline for the multiplication/times-table cluster
 - **Tier:** A · **Status:** Ready · **Mechanism:** none (validation gate)
+- **Status note (2026-09-11):** attempted on mobile and deferred — the Search Console mobile UI makes reliably collecting the page/query baseline impractical. No change to scope, success criteria, or strategic priority; the data pull is still required before the GROWTH-006 launch comparison, and will be completed on desktop.
 - **Confirmed repository gap:** no GSC baseline currently referenced anywhere in the repo/docs for this cluster.
 - **External evidence:** research flags times-table SERPs as "penetrable" but all volume/position figures are directional, not measured.
 - **Strategic rationale:** protects existing rankings — do not rewrite metadata/content on pages that may already rank well, and gives a pre-Chart-launch baseline to compare against post-launch.
@@ -61,7 +62,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Stop / rethink condition:** n/a.
 
 ### GROWTH-004 — Add `/division/divide-by/index.astro` divisor grid
-- **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Distribution
+- **Tier:** A · **Status:** Complete · **Mechanism:** Acquisition, Distribution
 - **Confirmed repository gap:** `multiplication/times-tables/index.astro` exists and links to all 12 tables; no equivalent exists for division (confirmed absent via `Glob`).
 - **External evidence:** research's internal-link audit implicitly assumes symmetry between the two families; repo inspection found the asymmetry directly.
 - **Strategic rationale:** brings `/division/divide-by/[n]` from crawl depth 4 (the single deepest page family on the site) to depth 3, matching multiplication, and gives a natural link target for the future Chart's division-side cross-links.
@@ -69,9 +70,10 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Dependencies:** none
 - **Exact scope:** new `src/pages/division/divide-by/index.astro` (mirror `multiplication/times-tables/index.astro`); one new link from `src/pages/division/index.astro`.
 - **Implementation requirements:**
-  - [ ] Create the index page with a 1–12 grid linking to each `/division/divide-by/[n]/`.
-  - [ ] Add breadcrumb + `BreadcrumbList`/`LearningResource` JSON-LD matching the times-tables index pattern.
-  - [ ] Link it from `division/index.astro`.
+  - [x] Create the index page with a 1–12 grid linking to each `/division/divide-by/[n]/`.
+  - [x] Add breadcrumb + `BreadcrumbList`/`LearningResource` JSON-LD matching the times-tables index pattern.
+  - [x] Link it from `division/index.astro`.
+- **Completion note:** shipped as `src/pages/division/divide-by/index.astro`; `division/index.astro`'s "Divide by 1–12" mode and a new "All Divide By Practice" related link now point at the index; the divide-by leaf's breadcrumb JSON-LD gained a matching "Divide By" middle entry; route-existence and sitemap-inclusion coverage added to `tests/routes-components.test.ts` and `scripts/test-build-contract.mjs`.
 - **Internal-link requirements:** reduces crawl depth of all 12 divide-by leaves by one hop.
 - **Non-goals / DO NOT TOUCH:** do not change the multiplication times-tables index; do not touch leaf page content here (see GROWTH-002).
 - **Testing requirements:** extend `tests/routes-components.test.ts`-style route-existence assertions; add to `scripts/test-build-contract.mjs` sitemap inclusion checks.
@@ -176,7 +178,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Stop / rethink condition:** if actual usage post-launch contradicts the hypothesis (low classroom adoption, low repeat sessions), adjust before any further expansion of this feature. This is evaluated entirely on its own metrics — a disappointing Chart outcome is not evidence against this item, and vice versa.
 
 ### GROWTH-005A — Normalize internal trailing-slash links
-- **Tier:** A · **Status:** Ready · **Mechanism:** Authority, Product Quality (crawl hygiene)
+- **Tier:** A · **Status:** Complete · **Mechanism:** Authority, Product Quality (crawl hygiene)
 - **Confirmed repository gap:** `HubLayout.astro`/`PracticeLayout.astro`/`index.astro` footer and nav links (e.g. `/addition`, `/multiplication`, `/arithmetic-speed-drill`, `/1st-grade-math-practice`) omit trailing slashes while every canonical tag (`BaseLayout.astro`) forces one — a live, concrete mismatch. `astro.config.mjs` has no `trailingSlash` setting to normalize this at the framework level.
 - **External evidence:** research explicitly calls out checking "trailing-slash consistency" as a technical-SEO item.
 - **Strategic rationale:** small, safe, confirmed inconsistency; low cost to fix, avoids an unnecessary redirect hop on every internal nav click.
@@ -184,8 +186,9 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Dependencies:** none
 - **Exact scope:** `src/layouts/HubLayout.astro`, `src/layouts/PracticeLayout.astro`, `src/pages/index.astro`, `src/pages/404.astro` (the four files that hand-duplicate header/footer chrome).
 - **Implementation requirements:**
-  - [ ] Add trailing slashes to all internal `href`s in these four files' nav/footer blocks.
-  - [ ] Confirm `SiteHeader.astro`'s data-driven links (`practiceNav.ts`) are already consistent (spot-checked, not fully audited in this backlog — verify during implementation).
+  - [x] Add trailing slashes to all internal `href`s in these four files' nav/footer blocks.
+  - [x] Confirm `SiteHeader.astro`'s data-driven links (`practiceNav.ts`) are already consistent (spot-checked, not fully audited in this backlog — verify during implementation).
+- **Completion note:** canonical trailing-slash internal links normalized repo-wide; legacy redirect precedence fixed with forced Netlify `301!` redirects where static-page collisions had prevented the intended redirect from firing; one-hop final canonical destinations enforced (no redirect chains); regression coverage added (`tests/redirects.test.ts`, `tests/internal-link-canonicalization.test.ts`).
 - **Non-goals / DO NOT TOUCH:** do not set a global `trailingSlash` config option in `astro.config.mjs` without separately verifying it doesn't change build output shape for existing routes; this item is scoped to link text only.
 - **Testing requirements:** `scripts/test-build-contract.mjs` or a lightweight grep-based test confirming no bare (non-slashed) internal hrefs remain in the four files.
 - **Success metrics:** none directly measurable; hygiene item.
@@ -299,13 +302,13 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 
 ## The Next 10 Requirements (execution order)
 
-1. **GROWTH-001** *(Tier A — execute)* — Search Console baseline: multiplication/times-table cluster (validation, no code)
-2. **GROWTH-004** *(Tier A — execute)* — Add `/division/divide-by/index.astro` divisor grid
+1. **GROWTH-001** *(Tier A — execute)* — Search Console baseline: multiplication/times-table cluster (validation, no code) — pending, deferred to desktop
+2. **GROWTH-004** *(Tier A — execute)* — Add `/division/divide-by/index.astro` divisor grid — **Complete**
 3. **GROWTH-006** *(Tier A — execute)* — Multiplication Chart (`/multiplication-chart/`)
 4. **GROWTH-002** *(Tier A — execute)* — Close Divide-By 6–12 FAQ/intro maturity gap
 5. **GROWTH-003** *(Tier A — execute)* — Add a per-table/per-divisor fact-reference list
 6. **GROWTH-009** *(Tier A — execute)* — Daily/Mixed Review warm-up tool (queued after the Chart for bandwidth, not evidence)
-7. **GROWTH-005A** *(Tier A — execute)* — Normalize internal trailing-slash links
+7. **GROWTH-005A** *(Tier A — execute)* — Normalize internal trailing-slash links — **Complete, shipped early (ahead of its sequenced position)**
 8. **GROWTH-007** *(Tier A — execute)* — Contact mechanism + accessibility statement
 9. **GROWTH-008** *(Tier A — execute)* — Wire Create funnel + GSC dashboards into ongoing measurement
 10. **GROWTH-B1** *(Tier B — validate first)* — Operation-specific Speed Drill, only if GSC justifies it
@@ -314,13 +317,13 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 
 ## Master Execution Order
 
-1. GROWTH-001 *(Tier A)*
-2. GROWTH-004 *(Tier A)*
+1. GROWTH-001 *(Tier A)* — pending, deferred to desktop
+2. GROWTH-004 *(Tier A)* — **Complete**
 3. GROWTH-006 *(Tier A)*
 4. GROWTH-002 *(Tier A)*
 5. GROWTH-003 *(Tier A)*
 6. GROWTH-009 *(Tier A — queued after GROWTH-006 for bandwidth, not evidence)*
-7. GROWTH-005A *(Tier A)*
+7. GROWTH-005A *(Tier A)* — **Complete, shipped early**
 8. GROWTH-007 *(Tier A)*
 9. GROWTH-008 *(Tier A)*
 10. GROWTH-005B *(Tier B — validation check only, Rich Results Test pass)*
@@ -331,7 +334,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 
 ## 30 / 90 / 365-Day View
 
-- **Next 30 days:** GROWTH-001 (baseline) and GROWTH-004 (tiny structural fix) complete quickly; substantial, and ideally complete, progress on **GROWTH-006 (Multiplication Chart)** — this is a near-term build, not a later-quarter one. GROWTH-002 (Divide-By 6–12 maturity fix) can run in parallel given its small, independent scope.
+- **Next 30 days:** GROWTH-004 (tiny structural fix) shipped; GROWTH-005A (trailing-slash hygiene) also shipped in this pass, ahead of its originally sequenced position, since it was low-risk and ready; GROWTH-001 (baseline) remains pending — attempted on mobile, deferred until desktop access is available; substantial, and ideally complete, progress on **GROWTH-006 (Multiplication Chart)** — this is a near-term build, not a later-quarter one. GROWTH-002 (Divide-By 6–12 maturity fix) can run in parallel given its small, independent scope.
 - **Next 90 days:** GROWTH-006 shipped and past its first impressions checkpoint; GROWTH-003 (fact-reference list) shipped; **GROWTH-009 (Daily/Mixed Review)** underway or shipped depending on scope — its own product/architecture validation, not Chart performance, gates its start; GROWTH-B1 (operation-specific Speed Drill) validated via GSC and built only if justified; GROWTH-005A/007/008 (hygiene, trust, measurement) fit in alongside this window since none of them block or are blocked by the above.
 - **Next 12 months:** arithmetic-fluency leadership consolidated (Chart + Times Table/Divide-By maturity + Daily Review as the default classroom habit); GROWTH-B4 (UK MTC simulator) executed in **spring 2027** if validated by then; GROWTH-B3 (grade-page widget) executed if validated; re-baseline GSC/GA4 and decide on a second topical pillar (fractions or further arithmetic depth) only after the above compounds.
 

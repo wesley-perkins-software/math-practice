@@ -1,0 +1,89 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
+
+const SITE = 'https://mathpracticeonline.com';
+
+const divisors = Array.from({ length: 12 }, (_, i) => i + 1);
+
+// Quick strategy summary per divisor for the grid cards
+const STRATEGY: Record<number, string> = {
+  1: 'Any number ÷ 1 = itself. Zero memorization needed.',
+  2: 'Half the number. 14÷2 = 7.',
+  3: 'Split into three equal groups. 21÷3 = 7.',
+  4: 'Halve twice. 24÷4: 24→12→6.',
+  5: 'Always divides numbers ending in 0 or 5 evenly. 35÷5 = 7.',
+  6: 'Halve, then divide by 3 (or the reverse). 42÷6 = 7.',
+  7: 'No shortcut — lean on the matching times table fact.',
+  8: 'Halve three times. 56÷8: 56→28→14→7.',
+  9: 'Digits of the dividend often sum to a multiple of 9.',
+  10: 'Drop a zero. 70÷10 = 7.',
+  11: 'For 2-digit dividends, repeat the digit in reverse: 77÷11=7.',
+  12: 'Divide by 10 rule then adjust, or use the 12 times table in reverse.',
+};
+
+const relatedLinks = [
+  { href: '/division/facts/', label: 'Mixed Division Facts', description: 'All fact families from 1÷1 through 144÷12 in random order' },
+  { href: '/division/remainders/', label: 'Division with Remainders', description: 'Practice division problems where the quotient is not exact' },
+  { href: '/multiplication/times-tables/', label: 'Times Tables', description: 'The inverse operation — strong multiplication makes division easier' },
+  { href: '/math-worksheets/division-worksheets/', label: 'Division Worksheets', description: 'Print randomized division problems' },
+];
+---
+
+<PracticeLayout
+  title="Divide By 1–12 — Practice Every Division Fact Family | Math Practice Online"
+  description="Practice dividing by each number from 1 to 12 with focused, divisor-by-divisor drills. Free online division practice with instant feedback. Grade 3–4."
+  canonical={`${SITE}/division/divide-by`}
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Division', href: '/division/' },
+    { label: 'Divide By' },
+  ]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Divide By 1–12 Practice",
+      "description": "Free online practice for dividing by each number 1 through 12. Focused divisor-by-divisor drills with instant feedback for grades 3–4.",
+      "url": `${SITE}/division/divide-by`,
+      "educationalLevel": ["Grade 3", "Grade 4"],
+      "teaches": "Division fact families 1 through 12",
+      "provider": { "@id": ORGANIZATION_ID }
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Divide by 1–12</h1>
+  <div slot="intro">
+    <p>Practice dividing by each number from 1 through 12. Each divisor has its own focused drill covering all 12 exact facts in random order — the fastest way to build automatic recall. Choose a divisor below to start.</p>
+  </div>
+
+  <Fragment slot="links">
+    <!-- Divisor grid -->
+    <section aria-labelledby="divisors-grid-heading" class="mt-2">
+      <h2 id="divisors-grid-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Choose a Divisor</h2>
+      <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
+        {divisors.map((n) => (
+          <a
+            href={`/division/divide-by/${n}/`}
+            class="flex flex-col items-center bg-white border border-[#E2E8F0] rounded-2xl p-4 hover:border-[#4F46E5] hover:shadow-md transition-all group"
+          >
+            <span class="text-2xl font-black text-[#4F46E5] leading-none mb-1">÷{n}</span>
+            <span class="text-xs font-semibold text-[#1E293B] group-hover:text-[#4F46E5] transition-colors mb-2">Divide by {n}</span>
+            <span class="text-[10px] text-[#6B7280] text-center leading-tight">{STRATEGY[n]}</span>
+          </a>
+        ))}
+      </div>
+    </section>
+  </Fragment>
+
+  <Fragment slot="how-it-works">
+
+    <!-- Related links -->
+    <section class="mt-12">
+      <InternalLinks client:load links={relatedLinks} />
+    </section>
+
+  </Fragment>
+</PracticeLayout>
