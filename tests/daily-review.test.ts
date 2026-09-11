@@ -101,42 +101,45 @@ export const tests = [
     }
   }),
 
-  test('grade 4 widened multiplication genuinely produces a 1-digit × 2-digit shape across many dates', () => {
-    let sawWidened = false;
+  test('grade 4 multiplication stays within the established 1–12 facts pool (no widened 1-digit × 2-digit shape)', () => {
     for (let day = 1; day <= 28; day++) {
       const problems = generateDailyReviewProblems(`2026-01-${String(day).padStart(2, '0')}`, 'g4').filter((p) => p.operation === 'multiplication');
       assert.equal(problems.length, 3);
       for (const p of problems) {
         assert.equal(p.operandA * p.operandB, p.correctAnswer);
-        if (p.operandB > 12) {
-          sawWidened = true;
-          assert.ok(p.operandA >= 1 && p.operandA <= 9, `widened operandA ${p.operandA}`);
-          assert.ok(p.operandB >= 10 && p.operandB <= 99, `widened operandB ${p.operandB}`);
-        } else {
-          assert.ok(p.operandA >= 1 && p.operandA <= 12 && p.operandB >= 1 && p.operandB <= 12, 'facts-mode slot must stay within the 1–12 pool');
-        }
+        assert.ok(p.operandA >= 1 && p.operandA <= 12 && p.operandB >= 1 && p.operandB <= 12, `facts-mode slot must stay within the established 1–12 pool: ${p.operandA} × ${p.operandB}`);
       }
     }
-    assert.ok(sawWidened, 'the widened 1-digit × 2-digit slot should surface a >12 operand across a month of dates');
   }),
 
-  test('grade 5 multiplication includes a genuinely-harder facts pool (4–12) and a 2-digit × 2-digit widened slot across many dates', () => {
-    let sawWidened = false;
+  test('grade 5 multiplication uses a genuinely-harder facts pool (4–12) via the established selectedFacts mechanism, never a widened 2-digit shape', () => {
+    let sawHarderFact = false;
     for (let day = 1; day <= 28; day++) {
       const problems = generateDailyReviewProblems(`2026-02-${String(day).padStart(2, '0')}`, 'g5').filter((p) => p.operation === 'multiplication');
       assert.equal(problems.length, 3);
       for (const p of problems) {
         assert.equal(p.operandA * p.operandB, p.correctAnswer);
-        if (p.operandB > 12 || p.operandA > 12) {
-          sawWidened = true;
-          assert.ok(p.operandA >= 10 && p.operandA <= 99, `widened operandA ${p.operandA}`);
-          assert.ok(p.operandB >= 10 && p.operandB <= 99, `widened operandB ${p.operandB}`);
-        } else {
-          assert.ok(p.operandA >= 4 && p.operandA <= 12, `harder-facts operandA ${p.operandA} must come from the selectedFacts pool, not fall back to 1–12`);
+        assert.ok(p.operandA >= 4 && p.operandA <= 12, `harder-facts operandA ${p.operandA} must come from the selectedFacts pool, never widened beyond 12`);
+        assert.ok(p.operandB >= 1 && p.operandB <= 12, `operandB ${p.operandB} must stay within the established 1–12 pool`);
+        if (p.operandA >= 4) sawHarderFact = true;
+      }
+    }
+    assert.ok(sawHarderFact, 'the harder-facts pool should be exercised across a month of dates');
+  }),
+
+  test('no grade ever emits a problem shape outside formats already established elsewhere on the site', () => {
+    for (const gradeId of DAILY_REVIEW_GRADE_IDS) {
+      for (const dateKey of ['2026-03-01', '2026-03-15', '2026-03-28']) {
+        for (const problem of generateDailyReviewProblems(dateKey, gradeId)) {
+          if (problem.operation === 'addition' || problem.operation === 'subtraction') {
+            assert.ok(problem.operandA <= 99 && problem.operandB <= 99, `${gradeId}: ${problem.operandA} ${problem.operation} ${problem.operandB} exceeds the established 2-digit range`);
+          }
+          if (problem.operation === 'multiplication') {
+            assert.ok(problem.operandA <= 12 && problem.operandB <= 12, `${gradeId}: ${problem.operandA} × ${problem.operandB} exceeds the established 1–12 facts pool`);
+          }
         }
       }
     }
-    assert.ok(sawWidened, 'the 2-digit × 2-digit widened slot should surface a >12 operand across a month of dates');
   }),
 
   test('grade 5 division mixes two remainder problems and one exact problem, each internally consistent', () => {

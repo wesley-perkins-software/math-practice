@@ -8,14 +8,14 @@ import '@/styles/practice-surface-prototype.css';
 const links = [
   { href: '/create/', label: 'Create Classroom Practice', description: 'Choose the exact skills and session settings' },
   { href: '/arithmetic-speed-drill/', label: 'Arithmetic Speed Drill', description: 'Timed fluency practice' },
-  { href: '/math-worksheets/', label: 'Math Worksheets', description: 'Printable practice sheets' },
+  { href: '/math-worksheets/', label: 'Math Worksheets', description: 'Printable independent practice' },
   { href: '/for-teachers/', label: 'For Teachers', description: 'Classroom warm-up and practice ideas' },
 ];
 
 const faqItems = [
   {
     q: 'What is the Daily Math Review?',
-    a: 'A ready-made 10-question math warm-up that changes every day. Pick a grade and start — no account, no setup, and no choices to make beyond your grade level.',
+    a: 'A ready-made 10-question arithmetic warm-up that changes every day. Pick a grade and start practicing right in your browser — no account, no setup, and no choices to make beyond your grade level.',
   },
   {
     q: 'Does the Daily Review change every day?',
@@ -27,11 +27,7 @@ const faqItems = [
   },
   {
     q: 'Which grade levels are available?',
-    a: 'Kindergarten through Grade 5. Kindergarten covers early addition and subtraction with numbers to 10; Grades 1–2 focus on addition and subtraction; Grades 3–5 add multiplication and division, with Grade 5 introducing division with remainders and larger numbers.',
-  },
-  {
-    q: 'Can I print today\'s Daily Review?',
-    a: 'Yes. Use Print Review for a blank worksheet version of today\'s exact 10 problems, or Print Answer Key for the same problems with answers shown.',
+    a: 'Kindergarten through Grade 5. Kindergarten covers early addition and subtraction with numbers to 10; Grades 1–2 focus on addition and subtraction facts; Grades 3–5 add multiplication and division facts, with Grade 5 using harder fact combinations and division with remainders.',
   },
   {
     q: 'Do students need an account?',
@@ -42,7 +38,7 @@ const faqItems = [
 
 <PracticeLayout
   title="Daily Math Review — Free K-5 Daily Math Practice | Math Practice Online"
-  description="A new, ready-made 10-question math warm-up every day for Kindergarten through Grade 5. No setup, no login — just pick a grade and start. Printable review and answer key included."
+  description="A new, ready-made 10-question arithmetic warm-up every day for Kindergarten through Grade 5. No setup, no login — just pick a grade and start."
   canonical={`${SITE_URL}/daily-review`}
   pilotLayout
   breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Daily Math Review' }]}
@@ -61,7 +57,7 @@ const faqItems = [
       "@context": "https://schema.org",
       "@type": "LearningResource",
       "name": "Daily Math Review",
-      "description": "A deterministic 10-question daily math warm-up for Kindergarten through Grade 5, with no login required.",
+      "description": "A deterministic 10-question daily arithmetic warm-up for Kindergarten through Grade 5, with no login required.",
       "url": `${SITE_URL}/daily-review`,
       "educationalLevel": ["Kindergarten", "Grade 1", "Grade 2", "Grade 3", "Grade 4", "Grade 5"],
       "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
@@ -71,17 +67,20 @@ const faqItems = [
 
   <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">Daily Math Review</h1>
 
-  <DailyReviewWidget slot="widget" client:load />
+  <Fragment slot="widget">
+    <p class="mt-1 mb-4 text-sm text-body max-w-xl">A new 10-question arithmetic warm-up every day. Choose your grade and start.</p>
+    <DailyReviewWidget client:load />
+  </Fragment>
 
   <Fragment slot="quick-answer">
-    <p>A new 10-question math warm-up every day — pick your grade, no setup required.</p>
+    <p>A new 10-question arithmetic warm-up every day — choose a grade, no setup required.</p>
   </Fragment>
 
   <div slot="how-it-works" class="mt-12 space-y-10">
     <section aria-labelledby="hiw-heading">
       <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How the Daily Review Works</h2>
       <p class="text-sm text-body leading-relaxed">
-        Each grade's 10-question set is generated automatically from today's date, so it's the same for everyone practicing that grade today — and different again tomorrow. There's nothing to configure: choose a grade and the review starts immediately. Kindergarten through Grade 2 focus on addition and subtraction; Grade 3 introduces multiplication and division facts; Grade 4 adds larger multiplication; Grade 5 includes division with remainders and multi-digit arithmetic.
+        Each grade's 10-question set is generated automatically from today's date, so it's the same for everyone practicing that grade today — and different again tomorrow. There's nothing to configure: choose a grade and the review starts immediately. Kindergarten through Grade 2 focus on addition and subtraction; Grade 3 introduces multiplication and division facts; Grade 4 adds more multiplication and division practice; Grade 5 uses harder multiplication facts and division with remainders. Daily Review is currently an arithmetic warm-up — it doesn't cover every math topic taught at each grade.
       </p>
     </section>
 
@@ -89,13 +88,10 @@ const faqItems = [
       <h2 id="teacher-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Using Daily Review in the Classroom</h2>
       <div class="text-sm text-body leading-relaxed space-y-3">
         <p>
-          <strong>A ready-made warm-up.</strong> Project today's review at the start of class or hand out the printed version — the same 10 problems work for both.
+          <strong>A ready-made interactive warm-up.</strong> Open today's review, pick a grade, and project it at the start of class — no setup, no login, and the same 10 problems for every student practicing that grade today.
         </p>
         <p>
-          <strong>Print for independent work.</strong> Use Print Review for a blank worksheet and Print Answer Key to check work afterward — both use today's exact problems, never a different set.
-        </p>
-        <p>
-          Looking for a specific skill or a custom session instead? <a href="/create/" class="text-[#4F46E5] font-medium hover:underline">Create Classroom Practice</a> lets you choose the exact skills and settings; Daily Review is the ready-made option when you don't want to configure anything.
+          Need something different? <a href="/create/" class="text-[#4F46E5] font-medium hover:underline">Create Classroom Practice</a> lets you choose the exact skills and session settings; the <a href="/arithmetic-speed-drill/" class="text-[#4F46E5] font-medium hover:underline">Arithmetic Speed Drill</a> is timed fluency practice; and <a href="/math-worksheets/" class="text-[#4F46E5] font-medium hover:underline">Math Worksheets</a> is the place for printable, independent practice. Daily Review is the ready-made option when you don't want to configure anything.
         </p>
       </div>
     </section>

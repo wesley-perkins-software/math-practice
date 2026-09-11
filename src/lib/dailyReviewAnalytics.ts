@@ -6,11 +6,10 @@ type EventParams = {
   daily_review_grade_select: { grade: DailyReviewGradeId };
   daily_review_start: { grade: DailyReviewGradeId };
   daily_review_complete: { grade: DailyReviewGradeId; accuracy_pct: number };
-  daily_review_print: { grade: DailyReviewGradeId; mode: 'review' | 'answer_key' };
 };
 export type DailyReviewAnalyticsEvent = keyof EventParams;
 
-const ALLOWED_KEYS = new Set(['grade', 'accuracy_pct', 'mode']);
+const ALLOWED_KEYS = new Set(['grade', 'accuracy_pct']);
 
 /** Runtime allowlisting complements the event map so even untyped callers cannot leak arbitrary data — same pattern as createPracticeAnalytics.ts. Never send seeds, generated problems, answers, or learner-identifying data. */
 export function safeDailyReviewEventPayload(params: object): Record<string, string | number | boolean> {

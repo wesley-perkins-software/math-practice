@@ -9,7 +9,7 @@ import { createVersionedRecordAdapter } from './storage';
  * underlying engine, applied one layer up at the quota/config layer a future
  * change to tier definitions would otherwise silently mutate.
  */
-export const DAILY_REVIEW_MIX_VERSION = 1 as const;
+export const DAILY_REVIEW_MIX_VERSION = 2 as const;
 
 export type DailyReviewGradeId = 'k' | 'g1' | 'g2' | 'g3' | 'g4' | 'g5';
 
@@ -28,14 +28,24 @@ export const DAILY_REVIEW_GRADE_LABELS: Record<DailyReviewGradeId, string> = {
   g5: 'Grade 5',
 };
 
+/** Compact label for the pill-row grade selector (K, 1, 2, 3, 4, 5). */
+export const DAILY_REVIEW_GRADE_SHORT_LABELS: Record<DailyReviewGradeId, string> = {
+  k: 'K',
+  g1: '1',
+  g2: '2',
+  g3: '3',
+  g4: '4',
+  g5: '5',
+};
+
 /** Short explanatory copy shown beside the grade choice — kept narrow and honest, never implying broader curriculum coverage than the generator produces. */
 export const DAILY_REVIEW_GRADE_SUBTITLES: Record<DailyReviewGradeId, string> = {
   k: 'Numbers to 10',
   g1: 'Addition & subtraction within 20',
   g2: 'Two-digit addition & subtraction',
   g3: 'Adds multiplication & division facts',
-  g4: 'Facts fluency & multi-digit multiplication',
-  g5: 'Multi-digit arithmetic & division with remainders',
+  g4: 'Multiplication & division facts fluency',
+  g5: 'Harder facts & division with remainders',
 };
 
 interface QuotaSlot {
@@ -83,23 +93,40 @@ const DAILY_REVIEW_GRADES: Record<DailyReviewGradeId, DailyReviewGrade> = {
       { count: 2, config: slotConfig('daily-review-g3', { operation: 'division', operandA: { min: 1, max: 12 }, operandB: { min: 1, max: 12 }, factsMode: true, maxFactor: 12 }) },
     ],
   },
+  // Grade 4 was previously differentiated from Grade 3 with a widened
+  // 1-digit x 2-digit multiplication slot (factsMode:false). Removed after
+  // launch QA: that operand shape does not exist on any other reachable
+  // production practice page, and Daily Review should only remix arithmetic
+  // shapes the site already does elsewhere, not introduce a new one.
+  // Differentiation from Grade 3 now comes entirely from question count
+  // (heavier facts weighting) rather than a new problem shape — honest
+  // overlap with Grade 3 is preferred over a shape the rest of the site
+  // doesn't support.
   g4: {
     storageKey: 'daily-review-g4',
     quota: [
       { count: 2, config: slotConfig('daily-review-g4', { operation: 'addition', operandA: { min: 10, max: 99 }, operandB: { min: 10, max: 99 } }) },
       { count: 2, config: slotConfig('daily-review-g4', { operation: 'subtraction', operandA: { min: 10, max: 99 }, operandB: { min: 10, max: 99 } }) },
-      { count: 2, config: slotConfig('daily-review-g4', { operation: 'multiplication', operandA: { min: 1, max: 12 }, operandB: { min: 1, max: 12 }, factsMode: true, maxFactor: 12 }) },
-      { count: 1, config: slotConfig('daily-review-g4', { operation: 'multiplication', operandA: { min: 1, max: 9 }, operandB: { min: 10, max: 99 }, factsMode: false }) },
+      { count: 3, config: slotConfig('daily-review-g4', { operation: 'multiplication', operandA: { min: 1, max: 12 }, operandB: { min: 1, max: 12 }, factsMode: true, maxFactor: 12 }) },
       { count: 3, config: slotConfig('daily-review-g4', { operation: 'division', operandA: { min: 1, max: 12 }, operandB: { min: 1, max: 12 }, factsMode: true, maxFactor: 12 }) },
     ],
   },
+  // Grade 5 previously used 3-digit addition/subtraction and 2-digit x
+  // 2-digit multiplication to look harder. Both were removed after launch
+  // QA — neither operand shape exists on any other reachable production
+  // practice page, and the 4-digit answers they produced required widening
+  // WrittenProblemInput's answer cap for a shape no shipped page needs.
+  // Grade 5 differentiation now comes entirely from mechanisms the site
+  // already ships elsewhere: a harder multiplication fact pool via the
+  // established `selectedFacts` mechanism (already used by the Create
+  // Practice / shared /practice/ builder), and division with remainders
+  // (the existing, fully-shipped Division with Remainders page).
   g5: {
     storageKey: 'daily-review-g5',
     quota: [
-      { count: 2, config: slotConfig('daily-review-g5', { operation: 'addition', operandA: { min: 100, max: 999 }, operandB: { min: 100, max: 999 } }) },
-      { count: 2, config: slotConfig('daily-review-g5', { operation: 'subtraction', operandA: { min: 100, max: 999 }, operandB: { min: 100, max: 999 } }) },
-      { count: 2, config: slotConfig('daily-review-g5', { operation: 'multiplication', factsMode: true, maxFactor: 12, selectedFacts: [4, 5, 6, 7, 8, 9, 10, 11, 12], operandA: { min: 1, max: 12 }, operandB: { min: 1, max: 12 } }) },
-      { count: 1, config: slotConfig('daily-review-g5', { operation: 'multiplication', operandA: { min: 10, max: 99 }, operandB: { min: 10, max: 99 }, factsMode: false }) },
+      { count: 2, config: slotConfig('daily-review-g5', { operation: 'addition', operandA: { min: 10, max: 99 }, operandB: { min: 10, max: 99 } }) },
+      { count: 2, config: slotConfig('daily-review-g5', { operation: 'subtraction', operandA: { min: 10, max: 99 }, operandB: { min: 10, max: 99 } }) },
+      { count: 3, config: slotConfig('daily-review-g5', { operation: 'multiplication', operandA: { min: 1, max: 12 }, operandB: { min: 1, max: 12 }, factsMode: true, maxFactor: 12, selectedFacts: [4, 5, 6, 7, 8, 9, 10, 11, 12] }) },
       { count: 2, config: slotConfig('daily-review-g5', { operation: 'division', withRemainder: true, operandA: { min: 1, max: 12 }, operandB: { min: 2, max: 12 } }) },
       { count: 1, config: slotConfig('daily-review-g5', { operation: 'division', operandA: { min: 1, max: 12 }, operandB: { min: 1, max: 12 }, factsMode: true, maxFactor: 12 }) },
     ],
