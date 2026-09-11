@@ -61,14 +61,18 @@ export const tests = [
     assert.ok(s.includes('Multiplication Chart 1–12'), 'expected the callout label');
     assert.ok(s.includes('href="/multiplication-chart/"'), 'callout must link to the canonical chart URL');
   }),
-  test('the times tables hub has a prominent, near-top chart callout ahead of the table grid', () => {
+  test('the times tables hub has a prominent chart callout below the table grid, ahead of Recommended Learning Order', () => {
     const s = source('src/pages/multiplication/times-tables/index.astro');
     assert.ok(s.includes('id="chart-callout-heading"'), 'expected a dedicated chart callout section');
     assert.ok(s.includes('Need the full picture? Open the Multiplication Chart'), 'expected the callout label');
     assert.ok(s.includes('href="/multiplication-chart/"'), 'callout must link to the canonical chart URL');
     assert.ok(
-      s.indexOf('id="chart-callout-heading"') < s.indexOf('id="tables-grid-heading"'),
-      'the chart callout should appear before the 1–12 table grid, not push it down'
+      s.indexOf('id="tables-grid-heading"') < s.indexOf('id="chart-callout-heading"'),
+      'the chart callout should appear after the 1–12 table grid, so the primary table selector stays first'
+    );
+    assert.ok(
+      s.indexOf('id="chart-callout-heading"') < s.indexOf('id="order-heading"'),
+      'the chart callout should appear before Recommended Learning Order'
     );
   }),
   test('the multiplication facts page has a light contextual chart callout distinct from its Related Practice list', () => {
