@@ -78,7 +78,7 @@ export const tests = [
     }
   }),
 
-  test('kindergarten stays within Numbers-to-10 scope and never generates multiplication/division', () => {
+  test('kindergarten stays within Numbers-up-to-10 scope and never generates multiplication/division', () => {
     const problems = generateDailyReviewProblems(DATE, 'k');
     for (const problem of problems) {
       assert.ok(problem.operation === 'addition' || problem.operation === 'subtraction', problem.operation);
@@ -86,6 +86,24 @@ export const tests = [
       assert.ok(problem.operandB >= 0 && problem.operandB <= 10, String(problem.operandB));
       assert.ok(problem.correctAnswer >= 0 && problem.correctAnswer <= 20, String(problem.correctAnswer));
     }
+  }),
+
+  test('kindergarten allows zero but never exceeds 2 zero-operand problems in a 10-question set, across many dates', () => {
+    let sawZeroOperandProblem = false;
+    let sawFullQuota = false;
+    for (let day = 1; day <= 31; day++) {
+      const dateKey = `2026-04-${String(day).padStart(2, '0')}`;
+      if (Number.isNaN(new Date(dateKey).getTime())) continue;
+      const problems = generateDailyReviewProblems(dateKey, 'k');
+      assert.equal(problems.length, 10, dateKey);
+      assert.deepEqual(countByOperation(problems), EXPECTED_QUOTA.k, dateKey);
+      const zeroOperandCount = problems.filter((p) => p.operandA === 0 || p.operandB === 0).length;
+      assert.ok(zeroOperandCount <= 2, `${dateKey}: expected at most 2 zero-operand problems, got ${zeroOperandCount}`);
+      if (zeroOperandCount > 0) sawZeroOperandProblem = true;
+      if (zeroOperandCount === 2) sawFullQuota = true;
+    }
+    assert.ok(sawZeroOperandProblem, 'zero must remain a valid Kindergarten operand, not suppressed entirely');
+    assert.ok(sawFullQuota, 'the 2-problem cap should actually be reached on at least one sampled date');
   }),
 
   test('grade 3/4 division facts are always exact (no remainder) with divisor/quotient within 1–12', () => {
@@ -169,6 +187,15 @@ export const tests = [
 
     const differentMixVersion = generateDailyReviewProblems(DATE, 'g3', DAILY_REVIEW_MIX_VERSION + 1);
     assert.notDeepEqual(first.map(tuple), differentMixVersion.map(tuple));
+  }),
+
+  test('kindergarten\'s zero-operand retry loop stays deterministic: same date reproduces the same set, different dates diverge', () => {
+    const firstK = generateDailyReviewProblems(DATE, 'k');
+    const secondK = generateDailyReviewProblems(DATE, 'k');
+    assert.deepEqual(firstK.map(tuple), secondK.map(tuple));
+
+    const differentDateK = generateDailyReviewProblems('2026-09-12', 'k');
+    assert.notDeepEqual(firstK.map(tuple), differentDateK.map(tuple));
   }),
 
   test('the deterministic shuffle never changes the underlying operation-count quota', () => {

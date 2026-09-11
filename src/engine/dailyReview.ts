@@ -9,7 +9,7 @@ import { createVersionedRecordAdapter } from './storage';
  * underlying engine, applied one layer up at the quota/config layer a future
  * change to tier definitions would otherwise silently mutate.
  */
-export const DAILY_REVIEW_MIX_VERSION = 2 as const;
+export const DAILY_REVIEW_MIX_VERSION = 3 as const;
 
 export type DailyReviewGradeId = 'k' | 'g1' | 'g2' | 'g3' | 'g4' | 'g5';
 
@@ -40,7 +40,7 @@ export const DAILY_REVIEW_GRADE_SHORT_LABELS: Record<DailyReviewGradeId, string>
 
 /** Short explanatory copy shown beside the grade choice — kept narrow and honest, never implying broader curriculum coverage than the generator produces. */
 export const DAILY_REVIEW_GRADE_SUBTITLES: Record<DailyReviewGradeId, string> = {
-  k: 'Numbers to 10',
+  k: 'Numbers up to 10',
   g1: 'Addition & subtraction within 20',
   g2: 'Two-digit addition & subtraction',
   g3: 'Adds multiplication & division facts',
@@ -167,6 +167,20 @@ function deterministicShuffle<T>(items: T[], random: RandomSource): T[] {
   return arr;
 }
 
+// Kindergarten is the only grade whose ranges (addition 0–5, subtraction
+// 0–10) can draw 0 as an operand — every other grade's minimums are >= 1.
+// Zero is a legitimate part of early number sense and is never excluded, but
+// left unconstrained a day's 10-question set can draw far more zero-operand
+// problems than is useful (observed up to 7/10 across a year of sample
+// dates). This caps how many of Kindergarten's own candidates are *accepted*
+// after the fact — it does not touch generateProblem or any other grade.
+const KINDERGARTEN_MAX_ZERO_OPERAND_PROBLEMS = 2;
+const ZERO_OPERAND_RETRY_ATTEMPTS = 20;
+
+function isZeroOperandProblem(problem: Problem): boolean {
+  return problem.operandA === 0 || problem.operandB === 0;
+}
+
 /**
  * The single source of truth for a Daily Review session: exactly 10
  * problems, an explicit per-grade operation quota (never generic
@@ -186,9 +200,23 @@ export function generateDailyReviewProblems(
   const history = createGenerationHistory();
 
   const problems: Problem[] = [];
+  let zeroOperandCount = 0;
   for (const slot of grade.quota) {
     for (let i = 0; i < slot.count; i++) {
-      problems.push(generateProblem(slot.config, { random, history }));
+      let problem = generateProblem(slot.config, { random, history });
+      if (gradeId === 'k') {
+        let attempts = 0;
+        while (
+          isZeroOperandProblem(problem) &&
+          zeroOperandCount >= KINDERGARTEN_MAX_ZERO_OPERAND_PROBLEMS &&
+          attempts < ZERO_OPERAND_RETRY_ATTEMPTS
+        ) {
+          problem = generateProblem(slot.config, { random, history });
+          attempts++;
+        }
+        if (isZeroOperandProblem(problem)) zeroOperandCount++;
+      }
+      problems.push(problem);
     }
   }
   return deterministicShuffle(problems, random);

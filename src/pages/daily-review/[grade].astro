@@ -10,10 +10,10 @@ export function getStaticPaths() {
   return DAILY_REVIEW_GRADE_PAGES.map((page) => ({ params: { grade: page.slug }, props: page }));
 }
 
-const { slug, gradeId, label, educationalLevel, intro, practices, practicePageHref } = Astro.props as DailyReviewGradePage;
+const { slug, gradeId, label, educationalLevel, intro, explanation, practicePageHref } = Astro.props as DailyReviewGradePage;
 
 const title = `${label} Daily Math Review — Free 10-Question Practice | Math Practice Online`;
-const description = `A new 10-question ${label} arithmetic warm-up every day. No setup, no login — start today's review now.`;
+const description = `${intro} Today's set stays the same all day and changes tomorrow. No setup, no login required.`;
 
 const otherGrades = DAILY_REVIEW_GRADE_PAGES.filter((page) => page.slug !== slug);
 
@@ -52,23 +52,19 @@ const links = [
     <DailyReviewWidget client:load gradeId={gradeId} />
   </Fragment>
 
-  <nav slot="local-chooser" aria-label="Other Daily Reviews" class="mt-6 text-sm text-body">
-    <span class="font-semibold text-[#1E293B]">Other Daily Reviews:</span>{' '}
-    {otherGrades.map((page, i) => (
-      <>
-        {i > 0 && <span aria-hidden="true"> · </span>}
-        <a href={`/daily-review/${page.slug}/`} class="text-[#4F46E5] hover:underline">{page.label}</a>
-      </>
-    ))}
-  </nav>
+  <Fragment slot="local-chooser">
+    <p class="mt-6 text-sm text-body max-w-xl">{explanation}</p>
+
+    <nav aria-label="Other Daily Reviews" class="mt-4 text-sm text-body">
+      <span class="font-semibold text-[#1E293B]">Other Daily Reviews:</span>{' '}
+      {otherGrades.map((page, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true"> · </span>}
+          <a href={`/daily-review/${page.slug}/`} class="text-[#4F46E5] hover:underline">{page.label}</a>
+        </>
+      ))}
+    </nav>
+  </Fragment>
 
   <InternalLinks slot="links" links={links} />
-
-  <Fragment slot="quick-answer">
-    <p>{practices}</p>
-  </Fragment>
-
-  <Fragment slot="intro">
-    <p>Daily Review is a ready-made warm-up, not full curriculum coverage — a new deterministic set of 10 problems every day, the same for everyone practicing {label} today. Want a different grade? Visit the <a href="/daily-review/" class="text-[#4F46E5] font-medium hover:underline">Daily Review hub</a> to choose one.</p>
-  </Fragment>
 </PracticeLayout>
