@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import MultiplicationPracticeHub from '@/components/MultiplicationPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 import LocalChooser from '@/components/LocalChooser.astro';
+import FactReferenceList from '@/components/FactReferenceList.astro';
 import { ORGANIZATION_ID } from '@/config/site';
 import { getTimesTableFact } from '@/data/generated-practice/timesTables';
 import { buildCreatePracticePrefillHref } from '@/engine/createPracticePrefill';
@@ -91,13 +92,10 @@ const darkText = Boolean(fact);
 const bodyTextClass = 'text-body';
 const listTextClass = 'text-body';
 
-// Build the full times table list for the FAQ answer
-const tableList = Array.from({ length: 12 }, (_, i) => `${tableNumber}×${i + 1}=${tableNumber * (i + 1)}`).join(', ');
-
 const faqItems = [
   {
     q: `What is the ${tableNumber} times table?`,
-    a: `The ${tableNumber} times table lists the products of ${tableNumber} multiplied by 1 through 12: ${tableList}.`,
+    a: `The ${tableNumber} times table lists the products of ${tableNumber} multiplied by 1 through 12. The complete 1–12 fact list is shown in the ${tableNumber} Times Table Facts reference section on this page.`,
   },
   {
     q: `What grade do students learn the ${tableNumber} times table?`,
@@ -234,6 +232,13 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
         <li class="flex items-start gap-2"><span class="text-[#4F46E5] font-bold mt-0.5">✓</span> Scores and best streak saved in your browser automatically</li>
       </ul>
     </section>
+
+    <FactReferenceList
+      id="table-facts-heading"
+      heading={`${tableNumber} Times Table Facts`}
+      operation="multiplication"
+      base={tableNumber}
+    />
 
     <!-- Strategy -->
     <section aria-labelledby="strategy-heading">
