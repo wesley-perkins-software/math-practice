@@ -142,6 +142,18 @@ export function todayDateKey(now: Date = new Date()): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
+/**
+ * Milliseconds from `now` until the visitor's next local midnight. Built from
+ * calendar components (`getFullYear`/`getMonth`/`getDate` + 1), not a fixed
+ * 24-hour offset, so the browser's own Date implementation absorbs DST and
+ * variable-length local days rather than this function assuming every day is
+ * exactly 24 hours.
+ */
+export function millisecondsUntilNextLocalMidnight(now: Date = new Date()): number {
+  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+  return nextMidnight.getTime() - now.getTime();
+}
+
 function hashString(input: string): number {
   // FNV-1a — small, dependency-free, stable across runs for the same string.
   let hash = 0x811c9dc5;
