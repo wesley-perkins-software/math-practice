@@ -39,7 +39,7 @@
 
 ## Tier A — Execute (exact order)
 
-Ordering rationale: the primary objective is new traffic, and the Multiplication Chart is the single strongest confirmed acquisition/link-magnet asset in this backlog — it is not delayed behind cleanup work that doesn't serve it. Only the minimum validation and structural work that plausibly supports or de-risks the Chart precedes it; narrower cleanup, trust, and measurement work follows it.
+Ordering rationale (acquisition-first): traffic-producing assets first, cleanup second, expansion after evidence. The flow is (1) a one-time measurement baseline, (2) the one truly tiny structural fix that's obviously worth doing regardless of what else ships, (3) the Multiplication Chart — the single strongest confirmed acquisition/link-magnet asset in this backlog, targeted as one of the very next major builds rather than a later 90-day project, (4) targeted arithmetic-cluster strengthening that reuses existing content investments, (5) Daily/Mixed Review — a separate, independently-justified acquisition + distribution + retention bet, queued after the Chart for sequencing reasons only, not because its priority depends on the Chart's results, and only then (6) narrower hygiene/trust/measurement work that is useful but not itself a traffic driver.
 
 ### GROWTH-001 — Establish Search Console baseline for the multiplication/times-table cluster
 - **Tier:** A · **Status:** Ready · **Mechanism:** none (validation gate)
@@ -81,34 +81,13 @@ Ordering rationale: the primary objective is new traffic, and the Multiplication
 - **Continue condition:** ship as-is; low risk, additive only.
 - **Stop / rethink condition:** none expected.
 
-### GROWTH-003 — Add a shared per-table/per-divisor fact-reference architecture
-- **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Product Quality
-- **Confirmed repository gap:** no page renders a visible list of all 12 facts for a given table/divisor — the full list only exists buried inside one FAQ answer's prose (`tableList`/`sampleFacts` strings in `[table].astro`/`[divisor].astro`).
-- **External evidence:** research names a clean, extractable reference table as valuable for both users and AI answer engines, ahead of (and feeding into) the full Multiplication Chart.
-- **Strategic rationale:** sequenced immediately before the Chart because both are the same underlying rendering concern — a bounded N×M fact grid with row/column semantics. Building the shared primitive once here means GROWTH-006 consumes it rather than re-solving grid rendering from scratch, and all 24 leaves get an immediate content upgrade in the same pass.
-- **Confidence:** High · **Traffic upside:** Medium · **Execution score:** Strong · **Engineering effort:** Low–Medium · **Design effort:** Low · **Time to impact:** Weeks
-- **Dependencies:** none (but GROWTH-006 depends on this)
-- **Exact scope:** new component (e.g. `src/components/FactReferenceStrip.tsx` or `.astro`); consumed by `[table].astro` and `[divisor].astro`.
-- **Implementation requirements:**
-  - [ ] Build a component taking a base number (table or divisor) and rendering a compact 12-row fact list (`N×1=… … N×12=…` or `N÷N=1 … 12N÷N=12`).
-  - [ ] Wire it into both leaf templates, replacing the prose-buried fact list currently used only in one FAQ answer.
-  - [ ] Keep styling consistent with existing leaf-page card patterns (`PracticeLayout` content slots).
-- **Design requirements:** compact, scannable, mobile-safe (12 rows or a 3×4/4×3 grid).
-- **Non-goals / DO NOT TOUCH:** not a substitute for the full Chart's highlight/print/blank-variant features; do not add print/PDF here.
-- **Testing requirements:** unit test for the component's fact generation given a base number 1–12.
-- **Visual QA:** all 12 tables and 12 divisors, mobile and desktop.
-- **Success metrics:** feeds into GROWTH-006's build velocity; no standalone traffic metric expected.
-- **Measurement interval:** n/a (infrastructure item).
-- **Continue condition:** ship as-is once GROWTH-006 confirms the primitive fits its needs.
-- **Stop / rethink condition:** if the Chart's needs turn out to require a fundamentally different rendering approach, don't force reuse — but expect this to fit given both are 1–12 grids.
-
 ### GROWTH-006 — Ship the interactive + printable Multiplication Chart (`/multiplication-chart/`)
 - **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition + Authority
 - **Confirmed repository gap:** no route, component, or content for a multiplication chart exists anywhere in `src/`.
 - **External evidence:** research identifies this as the strongest link-earning opportunity — SERPs saturated with static PDF libraries (e.g. DadsWorksheets' 133 variants) but weak on modern interactive + printable canonical pages; strong, evergreen, high-volume demand.
-- **Strategic rationale:** the single highest-confidence new-page bet in this backlog. Sequenced as the first major build after only the minimum foundation (GSC baseline, divide-by index, shared fact-grid primitive) that plausibly supports or de-risks it — not held behind smaller cleanup tasks.
+- **Strategic rationale:** the single highest-confidence new-page bet in this backlog. Targeted as one of the next major builds after only the GSC baseline and the divide-by index — near-term (within the next few weeks of active work), not a project that waits until late in a 90-day window, and not held behind smaller cleanup tasks.
 - **Confidence:** High · **Traffic upside:** High · **Execution score:** Exceptional · **Engineering effort:** Medium · **Design effort:** Medium · **Time to impact:** Months
-- **Dependencies:** GROWTH-003
+- **Dependencies:** none. (Re-evaluated: a per-table/per-divisor fact *list* — GROWTH-003 — and a full interactive 12×12 *matrix* with row/column highlighting, keyboard navigation, touch interaction, print layout, and a blank variant are different UI complexity classes, not the same rendering concern. The only thing they share is trivial fact computation (`i*j` for `i,j` in 1–12), which does not warrant a shared UI abstraction. GROWTH-003 is not a prerequisite and this item may proceed without it — see GROWTH-003's own card for its now-independent justification.)
 - **Exact scope:** new route `src/pages/multiplication-chart.astro` (or `/multiplication-chart/index.astro`); new interactive grid component; print stylesheet additions.
 - **Implementation requirements:**
   - [ ] 1–12 interactive grid with row/column highlighting on hover/focus/touch.
@@ -117,7 +96,7 @@ Ordering rationale: the primary objective is new traffic, and the Multiplication
   - [ ] Print-friendly CSS layout; black-and-white print variant; blank/fill-in variant.
   - [ ] Canonical, title, meta description, breadcrumb.
 - **Content requirements:** concise answer-first intro ("What is a multiplication chart / how to read it"), 4–6 item FAQ.
-- **Engine requirements:** reuse the GROWTH-003 fact-grid primitive rather than a new bespoke grid.
+- **Engine requirements:** build a purpose-built interactive grid component. It may share a trivial fact-computation helper with GROWTH-003 if convenient, but must not be blocked on or forced to reuse GROWTH-003's UI — keep the two components separate.
 - **Design requirements:** premium, calm visual treatment consistent with the site's existing polish (Speed Drill / Times Table leaves as the bar); mobile-first since teachers will project and print from varied devices.
 - **SEO / infrastructure requirements:** include in sitemap (automatic per the exclusion-filter default — confirm via `scripts/test-build-contract.mjs`); `LearningResource` + `FAQPage` + `BreadcrumbList` JSON-LD.
 - **Internal-link requirements:** link from `multiplication/index.astro`, `multiplication/facts.astro`, every Times Table leaf, and (new) the divide-by index (GROWTH-004) — reciprocal linking both directions.
@@ -128,13 +107,13 @@ Ordering rationale: the primary objective is new traffic, and the Multiplication
 - **Success metrics:** GSC impressions/clicks/position for "multiplication chart"/"times table chart"/"printable multiplication chart" queries; referring-domains growth (if available); GA4 landing-page new users.
 - **Measurement interval:** check indexing status within 2 weeks; impressions/clicks at 4 and 12 weeks.
 - **Continue condition:** indexed and accumulating impressions within expected timeframe → continue investing in internal links/promotion.
-- **Stop / rethink condition:** if no meaningful impressions or referring links after ~90 days post-indexing, do not build additional chart variants (bigger grids, more print styles) — reassess before starting Daily/Mixed Review (GROWTH-B2) instead of doubling down here.
+- **Stop / rethink condition (Chart-specific only):** if no meaningful impressions or referring links after ~90 days post-indexing, do not build additional chart variants (bigger grids, more print styles). This condition is scoped to the Chart alone — it is not evidence against Daily/Mixed Review (GROWTH-009) or any other unrelated asset, which has its own independent success/stop criteria.
 
 ### GROWTH-002 — Close the Divide-By 6–12 FAQ/intro maturity gap
 - **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Product Quality
 - **Confirmed repository gap:** `src/pages/division/divide-by/[divisor].astro` gates `matureFaqItems` on `fact && divisor <= 5`; divisors 6–12 render the older `legacyFaqItems` and a generic fallback intro instead of a hand-tailored one, despite the underlying fact bank (`divideBy.ts`) having all 12 divisors fully reviewed.
 - **External evidence:** research's inference that Divide-By leaves need the same treatment as Times Tables is only partly right — this is the precise, narrow place where that's true.
-- **Strategic rationale:** closes a real content-consistency gap using data that already exists; no new data authoring needed beyond intro prose for 7 divisors.
+- **Strategic rationale:** targeted arithmetic-cluster strengthening — closes a real content-consistency gap using data that already exists; no new data authoring needed beyond intro prose for 7 divisors.
 - **Confidence:** High · **Traffic upside:** Low–Medium · **Execution score:** Strong · **Engineering effort:** Low · **Design effort:** None · **Time to impact:** Weeks
 - **Dependencies:** none
 - **Exact scope:** `src/pages/division/divide-by/[divisor].astro` only.
@@ -149,6 +128,52 @@ Ordering rationale: the primary objective is new traffic, and the Multiplication
 - **Measurement interval:** 4–8 weeks.
 - **Continue condition:** ship as-is; low risk.
 - **Stop / rethink condition:** none expected.
+
+### GROWTH-003 — Add a per-table/per-divisor fact-reference list
+- **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Product Quality
+- **Confirmed repository gap:** no page renders a visible list of all 12 facts for a given table/divisor — the full list only exists buried inside one FAQ answer's prose (`tableList`/`sampleFacts` strings in `[table].astro`/`[divisor].astro`).
+- **External evidence:** research names a clean, extractable reference table as valuable for both users and AI answer engines.
+- **Strategic rationale (revised):** independently worthwhile as a content upgrade to all 24 already-mature leaves — not, as previously drafted, a shared architecture the Multiplication Chart depends on. A 12-row fact list (`N×1=… … N×12=…`) and a full interactive 12×12 matrix with highlighting/keyboard nav/touch/print/blank-variant are genuinely different UI complexity classes; forcing them into one abstraction would be premature. This item stands on its own acquisition/product-quality merit and can ship independently of, and in any order relative to, GROWTH-006.
+- **Confidence:** High · **Traffic upside:** Medium · **Execution score:** Strong · **Engineering effort:** Low–Medium · **Design effort:** Low · **Time to impact:** Weeks
+- **Dependencies:** none
+- **Exact scope:** new small component (e.g. `src/components/FactReferenceList.tsx` or `.astro`); consumed by `[table].astro` and `[divisor].astro`.
+- **Implementation requirements:**
+  - [ ] Build a component taking a base number (table or divisor) and rendering a compact 12-row fact list (`N×1=… … N×12=…` or `N÷N=1 … 12N÷N=12`).
+  - [ ] Wire it into both leaf templates, replacing the prose-buried fact list currently used only in one FAQ answer.
+  - [ ] Keep styling consistent with existing leaf-page card patterns (`PracticeLayout` content slots).
+- **Design requirements:** compact, scannable, mobile-safe (12 rows or a 3×4/4×3 grid).
+- **Non-goals / DO NOT TOUCH:** not a substitute for the full Chart's highlight/print/blank-variant features; do not add print/PDF here; do not build this as a shared primitive with GROWTH-006 — keep the components separate.
+- **Testing requirements:** unit test for the component's fact generation given a base number 1–12.
+- **Visual QA:** all 12 tables and 12 divisors, mobile and desktop.
+- **Success metrics:** none traffic-direct beyond the leaf pages' existing GROWTH-001 baseline; framed as a content-depth/product-quality improvement.
+- **Measurement interval:** n/a (small content/infra item).
+- **Continue condition:** ship as-is.
+- **Stop / rethink condition:** none expected.
+
+### GROWTH-009 — Daily/Mixed Review warm-up tool (queued after the Multiplication Chart)
+- **Tier:** A · **Status:** Ready (queued — see sequencing note) · **Mechanism:** Acquisition + Distribution + Retention
+- **Confirmed repository state:** no route/component/preset exists for this concept anywhere in `src/`. Full engine reuse is available: `PracticeConfig`, the shared generator, `PracticeWidget`, `storage.ts` — the same primitives every other practice page already uses.
+- **External evidence:** research independently identifies a credible SERP gap (paid Teachers Pay Teachers products and blog posts dominate "daily math practice"/"math warm up"/"bell ringer math"/"spiral review"; no dominant free interactive tool).
+- **Strategic rationale:** this is promoted to Tier A because its evidence stands on its own — it is a different growth bet from the Multiplication Chart (Acquisition + Distribution + Retention / classroom-habit formation, vs. the Chart's Acquisition + Authority / natural-link angle), independently justified by the research's SERP-gap finding, not by the Chart's performance. It is sequenced *after* the Chart in execution order for engineering-bandwidth reasons only (it is the single largest build in the near-term roadmap, ~1–2 weeks) — **not** because Chart underperformance would invalidate it, and **not** gated on the Chart's GSC/link-earning results. If the Chart is delayed for its own reasons, this item does not need to wait indefinitely; it only needs the Chart's implementation effort to clear first.
+- **Confidence:** Medium-High · **Traffic upside:** High (if the SERP-gap thesis holds) · **Execution score:** Excellent · **Engineering effort:** Medium · **Design effort:** Medium · **Time to impact:** Months
+- **Dependencies:** none (sequenced after GROWTH-006 for engineering bandwidth, not as a technical or evidentiary dependency)
+- **Exact scope:** new route (e.g. `/daily-math-practice/` or `/math-warm-up/`); new deterministic mixed-set config; reused `PracticeWidget`/generator/storage.
+- **Implementation requirements (own product/architecture validation still applies before implementation — this is about scope, not about waiting on the Chart):**
+  - [ ] Confirm the deterministic mixed-set/config approach (grade-level selection, mixed operations) against the existing `PracticeConfig` shape.
+  - [ ] Decide projector-mode and printable-companion scope up front (per the owner's preference for a polished launch, not a deliberately weak MVP), even though the internal build order below stages the work.
+- **Staged build sequence internally (an internal build order, not a phased public launch):**
+  1. Deterministic mixed-set config (reuse `PracticeConfig`/generator).
+  2. Page + widget integration (reuse `PracticeWidget`).
+  3. Projector/warm-up mode (large-type, whole-class display).
+  4. Printable companion.
+  5. Internal linking from hubs, grade pages, and For Teachers.
+- **Non-goals / DO NOT TOUCH:** do not ship a deliberately weak MVP; do not gate this item's priority on GROWTH-006's GSC results.
+- **Testing requirements:** unit tests for the deterministic mixed-set generation; route-existence/build-contract assertions once shipped.
+- **Visual QA:** desktop/tablet/mobile, projector-mode legibility at distance, print preview.
+- **Success metrics (its own, independent of the Chart):** GSC impressions/clicks for "daily math practice"/"math warm up"/"bell ringer math"/"spiral review" queries; GA4 classroom-session/repeat-visit patterns; projector-mode and print-companion usage.
+- **Measurement interval:** 4 and 12 weeks post-ship.
+- **Continue condition:** ship as-is once its own product/architecture validation is complete; do not hold for Chart performance data.
+- **Stop / rethink condition:** if actual usage post-launch contradicts the hypothesis (low classroom adoption, low repeat sessions), adjust before any further expansion of this feature. This is evaluated entirely on its own metrics — a disappointing Chart outcome is not evidence against this item, and vice versa.
 
 ### GROWTH-005A — Normalize internal trailing-slash links
 - **Tier:** A · **Status:** Ready · **Mechanism:** Authority, Product Quality (crawl hygiene)
@@ -226,21 +251,6 @@ Ordering rationale: the primary objective is new traffic, and the Multiplication
 - **Dependencies:** GROWTH-001-style query-mix check specifically on `/arithmetic-speed-drill/`.
 - **Stop / rethink condition:** if GSC shows `/arithmetic-speed-drill/` already earns operation-specific-test impressions, skip this permanently.
 
-### GROWTH-B2 — Daily/Mixed Review warm-up tool
-- **Tier:** B · **Status:** Needs validation (sequencing, not evidence) · **Mechanism:** Acquisition + Distribution + Retention
-- **Confirmed repository state:** no route/component/preset exists for this concept anywhere in `src/`. Full engine reuse is available: `PracticeConfig`, the shared generator, `PracticeWidget`, `storage.ts` — the same primitives every other practice page already uses.
-- **External evidence:** research identifies a credible SERP gap (paid Teachers Pay Teachers products and blog posts dominate; no dominant free interactive tool).
-- **Why Tier B and not Tier A:** the gap in evidence isn't "does this work" — it's sequencing. This is the single largest build in the near-term roadmap (~1–2 weeks) and should follow the Multiplication Chart (GROWTH-006), not precede or run in parallel with it, so the Chart's link-earning signal lands before committing to the next large build.
-- **What promotes this from "queued" to "in progress":** GROWTH-006 shipping and reaching at least its 4-week impressions checkpoint without requiring rework.
-- **Staged build sequence internally (do not ship a deliberately weak MVP — this is an internal build order, not a phased public launch):**
-  1. Deterministic mixed-set config (reuse `PracticeConfig`/generator).
-  2. Page + widget integration (reuse `PracticeWidget`).
-  3. Projector/warm-up mode (large-type, whole-class display).
-  4. Printable companion.
-  5. Internal linking from hubs, grade pages, and For Teachers.
-- **Confidence:** Medium-High · **Traffic upside:** High (if the SERP-gap thesis holds) · **Engineering effort:** Medium
-- **Stop / rethink condition:** if actual usage post-launch contradicts the hypothesis (low classroom adoption, low repeat sessions), adjust before any further expansion of this feature rather than doubling down.
-
 ### GROWTH-B3 — Grade pages: embed a quick mixed-practice widget
 - **Tier:** B · **Status:** Needs validation · **Mechanism:** Product Quality, secondary Acquisition
 - **Confirmed repository gap:** no grade page (`1st`–`5th-grade-math-practice.astro`) embeds a practice widget (`slot="widget"` is never used on any of them) — confirmed real, but this is a different gap than "thin content" (grade pages already have substantial unique copy).
@@ -251,10 +261,10 @@ Ordering rationale: the primary objective is new traffic, and the Multiplication
 ### GROWTH-B4 — UK Multiplication Tables Check (MTC) simulator
 - **Tier:** B · **Status:** Needs validation (timing-gated) · **Mechanism:** Acquisition (seasonal)
 - **Confirmed repository state:** no MTC-specific content/config exists.
-- **External evidence:** statutory UK Year-4 check; 25 questions, tables 2–12 weighted toward 6/7/8/9/12, 6-second-per-question timing; 2026 window opens 1 June.
-- **What promotes this to active work:** proximity to the June 2026 window (build in spring, not off-season) and/or confirmed non-trivial UK traffic share in GA4 geography reports.
+- **External evidence:** statutory UK Year-4 check; 25 questions, tables 2–12 weighted toward 6/7/8/9/12, 6-second-per-question timing. The 2026 window (1–12 June, catch-up 15–19 June) has already passed as of this document's writing (current date: September 2026); the next relevant window is **June 2027**.
+- **What promotes this to active work:** proximity to the June 2027 window (build in **spring 2027**, not off-season) and/or confirmed non-trivial UK traffic share in GA4 geography reports.
 - **If promoted:** engine reuse is straightforward — a 25-question, divisor-weighted timed preset, close to existing `PracticeConfig` shapes.
-- **Confidence:** Medium · **Traffic upside:** Medium, seasonal · **Stop / rethink condition:** do not build off-season without a clear spring ship date.
+- **Confidence:** Medium · **Traffic upside:** Medium, seasonal · **Stop / rethink condition:** do not build off-season without a clear spring 2027 ship date.
 
 ---
 
@@ -282,50 +292,52 @@ Ordering rationale: the primary objective is new traffic, and the Multiplication
 7. **Operation-specific Speed Drill pages as an immediate, unconditional build** — kept in Tier B pending GSC validation, consistent with the research's own "MAYBE" and the real cannibalization risk against the canonical mixed Speed Drill.
 8. **FAQPage schema as a rich-result play** — content is retained for users/AEO only; not justified by rich results (Google deprecated FAQ rich results May–Aug 2026, matching research). No new FAQ schema work is scoped for that reason anywhere in this backlog.
 9. **"Fix" BreadcrumbList emitted alongside a hidden visual breadcrumb, as an unconditional Tier A task** — moved to Tier B (GROWTH-005B) pending actual evidence of a problem; implementing this without evidence would itself be SEO busywork.
+10. **Treating GROWTH-003 as a hard prerequisite for the Multiplication Chart** — re-evaluated on this revision. A 12-row per-table/per-divisor fact list and a full interactive 12×12 matrix with highlighting/keyboard nav/touch/print/blank-variant are different UI complexity classes; the only shared element (trivial `i*j` fact computation) doesn't justify a shared architecture. GROWTH-003 now stands as its own independently-justified item; GROWTH-006 has no dependency on it.
+11. **Gating Daily/Mixed Review's priority on Multiplication Chart performance** — re-evaluated on this revision. These are different growth bets (Chart: Acquisition + Authority / link-earning; Daily Review: Acquisition + Distribution + Retention / classroom-habit formation), and the research's SERP-gap finding for Daily Review is independent evidence, not contingent on the Chart's results. Daily/Mixed Review (GROWTH-009) is promoted to Tier A; it is sequenced after the Chart only for engineering-bandwidth reasons.
 
 ---
 
 ## The Next 10 Requirements (execution order)
 
-1. GROWTH-001 — Search Console baseline: multiplication/times-table cluster (validation, no code)
-2. GROWTH-004 — Add `/division/divide-by/index.astro` divisor grid
-3. GROWTH-003 — Shared per-table/per-divisor fact-reference architecture
-4. GROWTH-006 — Multiplication Chart (`/multiplication-chart/`)
-5. GROWTH-002 — Close Divide-By 6–12 FAQ/intro maturity gap
-6. GROWTH-005A — Normalize internal trailing-slash links
-7. GROWTH-007 — Contact mechanism + accessibility statement
-8. GROWTH-008 — Wire Create funnel + GSC dashboards into ongoing measurement
-9. GROWTH-B1 (validate first) — Operation-specific Speed Drill, only if GSC justifies it
-10. GROWTH-B2 — Daily/Mixed Review warm-up tool (staged build, sequenced after the Chart)
+1. **GROWTH-001** *(Tier A — execute)* — Search Console baseline: multiplication/times-table cluster (validation, no code)
+2. **GROWTH-004** *(Tier A — execute)* — Add `/division/divide-by/index.astro` divisor grid
+3. **GROWTH-006** *(Tier A — execute)* — Multiplication Chart (`/multiplication-chart/`)
+4. **GROWTH-002** *(Tier A — execute)* — Close Divide-By 6–12 FAQ/intro maturity gap
+5. **GROWTH-003** *(Tier A — execute)* — Add a per-table/per-divisor fact-reference list
+6. **GROWTH-009** *(Tier A — execute)* — Daily/Mixed Review warm-up tool (queued after the Chart for bandwidth, not evidence)
+7. **GROWTH-005A** *(Tier A — execute)* — Normalize internal trailing-slash links
+8. **GROWTH-007** *(Tier A — execute)* — Contact mechanism + accessibility statement
+9. **GROWTH-008** *(Tier A — execute)* — Wire Create funnel + GSC dashboards into ongoing measurement
+10. **GROWTH-B1** *(Tier B — validate first)* — Operation-specific Speed Drill, only if GSC justifies it
 
-*(GROWTH-005B is intentionally not in this list — it is a validation-only Tier B item with no default action.)*
+*(GROWTH-005B, GROWTH-B3, and GROWTH-B4 are intentionally not in this list — all three are validation/timing-gated Tier B items with no default action yet.)*
 
 ## Master Execution Order
 
-1. GROWTH-001
-2. GROWTH-004
-3. GROWTH-003
-4. GROWTH-006
-5. GROWTH-002
-6. GROWTH-005A
-7. GROWTH-007
-8. GROWTH-008
-9. GROWTH-005B (validation check only — Rich Results Test pass)
-10. GROWTH-B1 (validation, then build only if justified)
-11. GROWTH-B2 (staged build, per its internal sequence)
-12. GROWTH-B3 (validation-gated)
-13. GROWTH-B4 (timing-gated, spring 2026)
+1. GROWTH-001 *(Tier A)*
+2. GROWTH-004 *(Tier A)*
+3. GROWTH-006 *(Tier A)*
+4. GROWTH-002 *(Tier A)*
+5. GROWTH-003 *(Tier A)*
+6. GROWTH-009 *(Tier A — queued after GROWTH-006 for bandwidth, not evidence)*
+7. GROWTH-005A *(Tier A)*
+8. GROWTH-007 *(Tier A)*
+9. GROWTH-008 *(Tier A)*
+10. GROWTH-005B *(Tier B — validation check only, Rich Results Test pass)*
+11. GROWTH-B1 *(Tier B — validation, then build only if justified)*
+12. GROWTH-B3 *(Tier B — validation-gated)*
+13. GROWTH-B4 *(Tier B — timing-gated, spring 2027)*
 14. Tier C items — not scheduled; revisit only after the above compounds and a fresh GSC/GA4 review.
 
 ## 30 / 90 / 365-Day View
 
-- **Next 30 days:** GROWTH-001, 004, 003, 002, 005A, 007, 008 (all Tier A except the Chart, which needs slightly more design/build time and is tracked into the 90-day window below).
-- **Next 90 days:** GROWTH-006 (Multiplication Chart) ships and reaches its first impressions checkpoint; GROWTH-B1 validation (and build, only if justified); GROWTH-B2 staging begins.
-- **Next 12 months:** GROWTH-B2 ships fully; GROWTH-B3/B4 executed if validated; re-baseline GSC/GA4 and decide on a second topical pillar (fractions or further arithmetic depth) only after the above compounds.
+- **Next 30 days:** GROWTH-001 (baseline) and GROWTH-004 (tiny structural fix) complete quickly; substantial, and ideally complete, progress on **GROWTH-006 (Multiplication Chart)** — this is a near-term build, not a later-quarter one. GROWTH-002 (Divide-By 6–12 maturity fix) can run in parallel given its small, independent scope.
+- **Next 90 days:** GROWTH-006 shipped and past its first impressions checkpoint; GROWTH-003 (fact-reference list) shipped; **GROWTH-009 (Daily/Mixed Review)** underway or shipped depending on scope — its own product/architecture validation, not Chart performance, gates its start; GROWTH-B1 (operation-specific Speed Drill) validated via GSC and built only if justified; GROWTH-005A/007/008 (hygiene, trust, measurement) fit in alongside this window since none of them block or are blocked by the above.
+- **Next 12 months:** arithmetic-fluency leadership consolidated (Chart + Times Table/Divide-By maturity + Daily Review as the default classroom habit); GROWTH-B4 (UK MTC simulator) executed in **spring 2027** if validated by then; GROWTH-B3 (grade-page widget) executed if validated; re-baseline GSC/GA4 and decide on a second topical pillar (fractions or further arithmetic depth) only after the above compounds.
 
 ## Measurement Plan (lean)
 
-- **Google Search Console:** landing-page clicks/impressions/CTR/avg. position for the times-table cluster (GROWTH-001 baseline), `/create/`, and — post-launch — `/multiplication-chart/` and `/division/divide-by/index/`; query-mix check on `/arithmetic-speed-drill/` before building GROWTH-B1; periodic cannibalization check between `/multiplication/facts/` and individual leaves.
-- **GA4:** `create_practice_*` and `shared_practice_*` event volumes (already instrumented — GROWTH-008 just dashboards them); new-users-by-landing-page; practice starts/completions.
+- **Google Search Console:** landing-page clicks/impressions/CTR/avg. position for the times-table cluster (GROWTH-001 baseline), `/create/`, and — post-launch — `/multiplication-chart/`, `/division/divide-by/index/`, and (once shipped) the Daily/Mixed Review page; query-mix check on `/arithmetic-speed-drill/` before building GROWTH-B1; periodic cannibalization check between `/multiplication/facts/` and individual leaves.
+- **GA4:** `create_practice_*` and `shared_practice_*` event volumes (already instrumented — GROWTH-008 just dashboards them); new-users-by-landing-page; practice starts/completions; Daily/Mixed Review classroom-session and repeat-visit patterns once shipped.
 - **Bing Webmaster Tools:** index-coverage spot check for `/multiplication-chart/` and the new divide-by index once shipped.
-- **Stop conditions (summary):** if the times-table leaves already rank top 3–5 in GSC, skip further leaf metadata work and reallocate effort toward the Chart's promotion instead; if the Chart earns no meaningful impressions or referring links within ~90 days of indexing, do not build chart variants — reassess before committing further to Daily/Mixed Review; if `/arithmetic-speed-drill/` already earns operation-specific-test impressions, skip GROWTH-B1 permanently; if GROWTH-B2's actual usage contradicts the SERP-gap hypothesis, adjust before further expansion.
+- **Stop conditions (summary — each asset's own, not transferable to unrelated assets):** if the times-table leaves already rank top 3–5 in GSC, skip further leaf metadata work and reallocate effort toward the Chart's promotion instead; if the Chart earns no meaningful impressions or referring links within ~90 days of indexing, do not build additional chart variants — this affects only future chart work, **not** Daily/Mixed Review's priority or continuation; if `/arithmetic-speed-drill/` already earns operation-specific-test impressions, skip GROWTH-B1 permanently; if Daily/Mixed Review's actual usage contradicts the SERP-gap hypothesis, adjust that item specifically before further expansion — this does not retroactively count against the Chart or any other shipped asset.
