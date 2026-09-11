@@ -1,0 +1,27 @@
+---
+import { getMultiplicationFacts, getDivisionFacts } from '@/engine/factReference';
+
+interface Props {
+  id: string;
+  heading: string;
+  operation: 'multiplication' | 'division';
+  base: number;
+  class?: string;
+}
+
+const { id, heading, operation, base, class: className = '' } = Astro.props;
+const facts = operation === 'multiplication' ? getMultiplicationFacts(base) : getDivisionFacts(base);
+---
+
+<section class={className} aria-labelledby={id}>
+  <h2 id={id} class="text-lg font-semibold text-[#1E293B] mb-3">{heading}</h2>
+  <div class="bg-white border border-[#E2E8F0] rounded-xl p-4">
+    <ul class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+      {facts.map(({ display }) => (
+        <li class="font-mono text-sm font-semibold text-[#1E1B4B] text-center bg-[#F5F3FF]/60 rounded-lg py-2 px-1 whitespace-nowrap">
+          {display}
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

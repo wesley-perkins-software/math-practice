@@ -3,6 +3,7 @@ import PracticeLayout from '@/layouts/PracticeLayout.astro';
 import DivisionPracticeHub from '@/components/DivisionPracticeHub';
 import InternalLinks from '@/components/InternalLinks';
 import LocalChooser from '@/components/LocalChooser.astro';
+import FactReferenceList from '@/components/FactReferenceList.astro';
 import { ORGANIZATION_ID } from '@/config/site';
 import { getDivideByFact } from '@/data/generated-practice/divideBy';
 import { buildCreatePracticePrefillHref } from '@/engine/createPracticePrefill';
@@ -237,6 +238,14 @@ const links = [
         )}
       </div>
     </section>
+
+    <FactReferenceList
+      class="mt-12"
+      id={`div-by-${divisor}-facts-heading`}
+      heading={`Divide by ${divisor} Facts`}
+      operation="division"
+      base={divisor}
+    />
 
     {fact && (
       <section class="mt-12" aria-labelledby={`div-by-${divisor}-strategy-heading`}>

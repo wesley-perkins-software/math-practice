@@ -136,7 +136,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Completion note:** divisors 7–12 now have hand-written expanded intros (matching divisor 6's bespoke style rather than the generic template), and the `divisor <= 5` gate on `matureFaqItems` is removed so all 12 Divide By leaves render the mature FAQ structure.
 
 ### GROWTH-003 — Add a per-table/per-divisor fact-reference list
-- **Tier:** A · **Status:** Ready · **Mechanism:** Acquisition, Product Quality
+- **Tier:** A · **Status:** Complete · **Mechanism:** Acquisition, Product Quality
 - **Confirmed repository gap:** no page renders a visible list of all 12 facts for a given table/divisor — the full list only exists buried inside one FAQ answer's prose (`tableList`/`sampleFacts` strings in `[table].astro`/`[divisor].astro`).
 - **External evidence:** research names a clean, extractable reference table as valuable for both users and AI answer engines.
 - **Strategic rationale (revised):** independently worthwhile as a content upgrade to all 24 already-mature leaves — not, as previously drafted, a shared architecture the Multiplication Chart depends on. A 12-row fact list (`N×1=… … N×12=…`) and a full interactive 12×12 matrix with highlighting/keyboard nav/touch/print/blank-variant are genuinely different UI complexity classes; forcing them into one abstraction would be premature. This item stands on its own acquisition/product-quality merit and can ship independently of, and in any order relative to, GROWTH-006.
@@ -144,9 +144,9 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Dependencies:** none
 - **Exact scope:** new small component (e.g. `src/components/FactReferenceList.tsx` or `.astro`); consumed by `[table].astro` and `[divisor].astro`.
 - **Implementation requirements:**
-  - [ ] Build a component taking a base number (table or divisor) and rendering a compact 12-row fact list (`N×1=… … N×12=…` or `N÷N=1 … 12N÷N=12`).
-  - [ ] Wire it into both leaf templates, replacing the prose-buried fact list currently used only in one FAQ answer.
-  - [ ] Keep styling consistent with existing leaf-page card patterns (`PracticeLayout` content slots).
+  - [x] Build a component taking a base number (table or divisor) and rendering a compact 12-row fact list (`N×1=… … N×12=…` or `N÷N=1 … 12N÷N=12`).
+  - [x] Wire it into both leaf templates, replacing the prose-buried fact list currently used only in one FAQ answer.
+  - [x] Keep styling consistent with existing leaf-page card patterns (`PracticeLayout` content slots).
 - **Design requirements:** compact, scannable, mobile-safe (12 rows or a 3×4/4×3 grid).
 - **Non-goals / DO NOT TOUCH:** not a substitute for the full Chart's highlight/print/blank-variant features; do not add print/PDF here; do not build this as a shared primitive with GROWTH-006 — keep the components separate.
 - **Testing requirements:** unit test for the component's fact generation given a base number 1–12.
@@ -155,6 +155,7 @@ Ordering rationale (acquisition-first): traffic-producing assets first, cleanup 
 - **Measurement interval:** n/a (small content/infra item).
 - **Continue condition:** ship as-is.
 - **Stop / rethink condition:** none expected.
+- **Completion note:** shipped a shared, static `FactReferenceList.astro` component (backed by a tiny pure `factReference.ts` helper) that renders the full 12-fact family in a mobile-safe 2-column/desktop 4-column grid, with no coupling to `MultiplicationChart.tsx`/`multiplicationChart.ts`. Wired into all 12 Times Table leaves (`[table].astro`) and all 12 Divide By leaves (`[divisor].astro`), placed as a supporting reference section below the primary practice content and above the strategy/guidance sections. The Times Table leaf's redundant FAQ prose that previously spelled out all 12 products (`tableList`) was simplified to reference the new visible section instead; Divide By's equivalent (`sampleFacts`) was left untouched since it already lives in a dead legacy-FAQ branch and the live FAQ content does not duplicate the full list.
 
 ### GROWTH-009 — Daily/Mixed Review warm-up tool (queued after the Multiplication Chart)
 - **Tier:** A · **Status:** Ready (queued — see sequencing note) · **Mechanism:** Acquisition + Distribution + Retention
