@@ -270,10 +270,10 @@ export default function ProgressDashboard() {
         <p className="text-black mt-2 text-base">Complete a session on any practice page to see your stats here.</p>
         <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-sm mx-auto">
           {[
-            { label: 'Addition', href: '/addition', color: 'bg-emerald-50 text-black border-emerald-200' },
-            { label: 'Subtraction', href: '/subtraction', color: 'bg-sky-50 text-black border-sky-200' },
-            { label: 'Multiplication', href: '/multiplication', color: 'bg-violet-50 text-black border-violet-200' },
-            { label: 'Division', href: '/division/facts', color: 'bg-orange-50 text-black border-orange-200' },
+            { label: 'Addition', href: '/addition/', color: 'bg-emerald-50 text-black border-emerald-200' },
+            { label: 'Subtraction', href: '/subtraction/', color: 'bg-sky-50 text-black border-sky-200' },
+            { label: 'Multiplication', href: '/multiplication/', color: 'bg-violet-50 text-black border-violet-200' },
+            { label: 'Division', href: '/division/facts/', color: 'bg-orange-50 text-black border-orange-200' },
           ].map((op) => (
             <a
               key={op.href}

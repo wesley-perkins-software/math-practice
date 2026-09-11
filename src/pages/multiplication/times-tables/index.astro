@@ -24,10 +24,10 @@ const STRATEGY: Record<number, string> = {
 };
 
 const relatedLinks = [
-  { href: '/multiplication/facts', label: 'Mixed Multiplication Facts', description: 'All 144 facts from 1–12 in random order' },
-  { href: '/division/facts', label: 'Division Facts', description: 'The inverse — practice ÷ alongside ×' },
-  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Print randomized multiplication problems' },
-  { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication practice modes' },
+  { href: '/multiplication/facts/', label: 'Mixed Multiplication Facts', description: 'All 144 facts from 1–12 in random order' },
+  { href: '/division/facts/', label: 'Division Facts', description: 'The inverse — practice ÷ alongside ×' },
+  { href: '/math-worksheets/multiplication-worksheets/', label: 'Multiplication Worksheets', description: 'Print randomized multiplication problems' },
+  { href: '/multiplication/', label: 'Multiplication Hub', description: 'All multiplication practice modes' },
 ];
 
 const faqItems = [
@@ -60,7 +60,7 @@ const faqItems = [
   canonical={`${SITE}/multiplication/times-tables`}
   breadcrumb={[
     { label: 'Home', href: '/' },
-    { label: 'Multiplication', href: '/multiplication' },
+    { label: 'Multiplication', href: '/multiplication/' },
     { label: 'Times Tables' },
   ]}
 >
@@ -98,7 +98,7 @@ const faqItems = [
       <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
         {tables.map((n) => (
           <a
-            href={`/multiplication/times-tables/${n}`}
+            href={`/multiplication/times-tables/${n}/`}
             class="flex flex-col items-center bg-white border border-[#E2E8F0] rounded-2xl p-4 hover:border-[#059669] hover:shadow-md transition-all group"
           >
             <span class="text-2xl font-black text-[#059669] leading-none mb-1">{n}×</span>

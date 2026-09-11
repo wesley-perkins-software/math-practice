@@ -47,34 +47,34 @@ export type OperationMenuEntry =
 
 export const OPERATION_MENUS: Record<Operation, OperationMenu> = {
   addition: {
-    hub: { label: 'Addition Practice', href: '/addition' },
+    hub: { label: 'Addition Practice', href: '/addition/' },
     items: [
-      { label: '1-Digit', href: '/addition/1-digit' },
-      { label: '2-Digit Without Regrouping', href: '/addition/2-digit-without-regrouping' },
-      { label: '2-Digit With Regrouping', href: '/addition/2-digit-with-regrouping' },
+      { label: '1-Digit', href: '/addition/1-digit/' },
+      { label: '2-Digit Without Regrouping', href: '/addition/2-digit-without-regrouping/' },
+      { label: '2-Digit With Regrouping', href: '/addition/2-digit-with-regrouping/' },
     ],
   },
   subtraction: {
-    hub: { label: 'Subtraction Practice', href: '/subtraction' },
+    hub: { label: 'Subtraction Practice', href: '/subtraction/' },
     items: [
-      { label: '1-Digit', href: '/subtraction/1-digit' },
-      { label: '2-Digit Without Regrouping', href: '/subtraction/2-digit-without-regrouping' },
-      { label: '2-Digit With Regrouping', href: '/subtraction/2-digit-with-regrouping' },
+      { label: '1-Digit', href: '/subtraction/1-digit/' },
+      { label: '2-Digit Without Regrouping', href: '/subtraction/2-digit-without-regrouping/' },
+      { label: '2-Digit With Regrouping', href: '/subtraction/2-digit-with-regrouping/' },
     ],
   },
   multiplication: {
-    hub: { label: 'Multiplication Practice', href: '/multiplication' },
+    hub: { label: 'Multiplication Practice', href: '/multiplication/' },
     items: [
-      { label: 'Multiplication Facts', href: '/multiplication/facts' },
+      { label: 'Multiplication Facts', href: '/multiplication/facts/' },
     ],
     // Matches the Multiplication hub's own order: Times Tables, then Facts.
     grid: { label: 'Times Tables', basePath: '/multiplication/times-tables', max: 12, position: 'before' },
   },
   division: {
-    hub: { label: 'Division Practice', href: '/division' },
+    hub: { label: 'Division Practice', href: '/division/' },
     items: [
-      { label: 'Division Facts', href: '/division/facts' },
-      { label: 'Division With Remainders', href: '/division/remainders' },
+      { label: 'Division Facts', href: '/division/facts/' },
+      { label: 'Division With Remainders', href: '/division/remainders/' },
     ],
     // Matches the Division hub's own order: Divide By, then Facts, then Remainders.
     grid: { label: 'Divide By', basePath: '/division/divide-by', max: 12, position: 'before' },
@@ -98,6 +98,6 @@ export function operationMenuEntries(menu: OperationMenu): OperationMenuEntry[] 
 export function numberGridLinks(basePath: string, max: number): { n: number; href: string }[] {
   return Array.from({ length: max }, (_, i) => {
     const n = i + 1;
-    return { n, href: `${basePath}/${n}` };
+    return { n, href: `${basePath}/${n}/` };
   });
 }

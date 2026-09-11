@@ -9,11 +9,11 @@ import '@/styles/practice-surface-prototype.css';
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
-  { href: '/addition', label: 'All Addition Levels', description: 'Choose a difficulty or compare all levels' },
-  { href: '/addition/2-digit-without-regrouping', label: '2-Digit Addition (Without Regrouping)', description: 'Next step: move into two-digit problems' },
-  { href: '/addition/2-digit-with-regrouping', label: '2-Digit Addition With Regrouping', description: 'Practice regrouping (carrying)' },
-  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Build inverse-operation fluency' },
-  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style practice with instant feedback' },
+  { href: '/addition/', label: 'All Addition Levels', description: 'Choose a difficulty or compare all levels' },
+  { href: '/addition/2-digit-without-regrouping/', label: '2-Digit Addition (Without Regrouping)', description: 'Next step: move into two-digit problems' },
+  { href: '/addition/2-digit-with-regrouping/', label: '2-Digit Addition With Regrouping', description: 'Practice regrouping (carrying)' },
+  { href: '/subtraction/1-digit/', label: '1-Digit Subtraction', description: 'Build inverse-operation fluency' },
+  { href: '/math-worksheets/addition-worksheets/', label: 'Addition Worksheets', description: 'Worksheet-style practice with instant feedback' },
 ];
 
 const faqItems = [
@@ -41,7 +41,7 @@ const faqItems = [
   description="Practice 1-digit addition problems online with instant feedback and streak tracking. Build fast, accurate single-digit addition fluency."
   canonical={`${SITE}/addition/1-digit`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '1-Digit Addition' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition/' }, { label: '1-Digit Addition' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -76,7 +76,7 @@ const faqItems = [
 
   <AdditionPracticeHub slot="widget" active="1-digit" variant="prototype" client:load />
 
-  <LocalChooser slot="local-chooser" operation="addition" current="/addition/1-digit" />
+  <LocalChooser slot="local-chooser" operation="addition" current="/addition/1-digit/" />
 
   <Fragment slot="intro">
     <p>This page is built for kindergartners and first graders working toward fluent single-digit addition, as well as parents and teachers looking for a quick way to check a child's recall speed. Problems are drawn from all 81 addition facts, with extra repetition on sums greater than 9, the facts most students find hardest to recall instantly.</p>
@@ -138,7 +138,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-body">Once these facts feel automatic, move on to <a href="/addition/2-digit-without-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition without regrouping</a> →</p>
+    <p class="text-sm text-body">Once these facts feel automatic, move on to <a href="/addition/2-digit-without-regrouping/" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition without regrouping</a> →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

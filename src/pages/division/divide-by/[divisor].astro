@@ -142,12 +142,12 @@ const faqItems = matureFaqItems ?? legacyFaqItems;
 
 const links = [
   { href: buildCreatePracticePrefillHref('division-facts', [divisor]), label: 'Create Custom Practice', description: `Start with divide-by-${divisor}, then add any other divisors you want` },
-  { href: '/division/facts', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
-  { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
-  ...(fact ? [{ href: `/multiplication/times-tables/${divisor}`, label: `${divisor} Times Table Practice`, description: 'The multiplication facts these division problems come from' }] : []),
+  { href: '/division/facts/', label: 'Mixed Division Facts', description: 'All divisors — full fact drill' },
+  { href: '/division/remainders/', label: 'Division with Remainders', description: 'Quotient plus remainder skill' },
+  ...(fact ? [{ href: `/multiplication/times-tables/${divisor}/`, label: `${divisor} Times Table Practice`, description: 'The multiplication facts these division problems come from' }] : []),
   // Neutral wording avoids implying a required instructional sequence.
-  ...(prevDivisor ? [{ href: `/division/divide-by/${prevDivisor}`, label: `Divide by ${prevDivisor} Practice`, description: fact ? `Practice dividing by ${prevDivisor}` : `Previous fact family` }] : []),
-  ...(nextDivisor ? [{ href: `/division/divide-by/${nextDivisor}`, label: `Divide by ${nextDivisor} Practice`, description: fact ? `Practice dividing by ${nextDivisor}` : `Next fact family` }] : []),
+  ...(prevDivisor ? [{ href: `/division/divide-by/${prevDivisor}/`, label: `Divide by ${prevDivisor} Practice`, description: fact ? `Practice dividing by ${prevDivisor}` : `Previous fact family` }] : []),
+  ...(nextDivisor ? [{ href: `/division/divide-by/${nextDivisor}/`, label: `Divide by ${nextDivisor} Practice`, description: fact ? `Practice dividing by ${nextDivisor}` : `Next fact family` }] : []),
 ];
 ---
 
@@ -156,7 +156,7 @@ const links = [
   description={description}
   canonical={`${SITE}/division/divide-by/${divisor}`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division' }, { label: `Divide by ${divisor}` }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division/' }, { label: `Divide by ${divisor}` }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -202,7 +202,7 @@ const links = [
   <LocalChooser
     slot="local-chooser"
     operation="division"
-    current={`/division/divide-by/${divisor}`}
+    current={`/division/divide-by/${divisor}/`}
     showGrid
     gridCurrent={divisor}
   />
@@ -256,7 +256,7 @@ const links = [
               Connect each divide by {divisor} fact explicitly to its multiplication partner. Ask: "What times {divisor} equals {divisor * 7}?" — then confirm: "So {divisor * 7} ÷ {divisor} = 7." This bidirectional thinking builds the fact family connection that makes both operations stick.
             </p>
             <p>
-              Once ÷{divisor} facts are automatic,{nextDivisor ? ` move to <a href="/division/divide-by/${nextDivisor}" class="text-[#4F46E5] font-medium hover:underline">divide by ${nextDivisor}</a> or return to` : ' return to'} <a href="/division/facts" class="text-[#4F46E5] font-medium hover:underline">mixed division facts</a> to consolidate fluency across all divisors.
+              Once ÷{divisor} facts are automatic,{nextDivisor ? ` move to <a href="/division/divide-by/${nextDivisor}/" class="text-[#4F46E5] font-medium hover:underline">divide by ${nextDivisor}</a> or return to` : ' return to'} <a href="/division/facts/" class="text-[#4F46E5] font-medium hover:underline">mixed division facts</a> to consolidate fluency across all divisors.
             </p>
           </>
         )}

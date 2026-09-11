@@ -1,19 +1,26 @@
+# Every rule below targets a path that also has a generated static page
+# (from astro.config.mjs `redirects`, or a hand-written legacy page in
+# src/pages/{multiplication,division}-practice/). Netlify only applies a
+# non-forced redirect when no static file matches the request path, so the
+# trailing "!" (force) is required here — without it, Netlify silently
+# serves the static noindex/meta-refresh fallback page instead of issuing
+# the intended 301.
 /sitemap.xml /sitemap-index.xml 301
-/addition-practice/ /addition/ 301
-/subtraction-practice/ /subtraction/ 301
-/timed-drills/ /arithmetic-speed-drill/ 301
-/math-drills/ /arithmetic-speed-drill/ 301
-/speed-drill/ /arithmetic-speed-drill/ 301
-/multiplication-practice/ /multiplication/facts/ 301
-/multiplication-practice/1-12/ /multiplication/facts/ 301
-/multiplication-practice/facts/ /multiplication/facts/ 301
-/multiplication-practice/mixed/ /multiplication/facts/ 301
-/multiplication-practice/times-tables/ /multiplication/times-tables/1/ 301
-/division-practice/ /division/ 301
-/division-practice/facts/ /division/facts/ 301
-/division-practice/divide-by/ /division/divide-by/1/ 301
-/division-practice/remainders/ /division/remainders/ 301
-/addition/2-digit-no-carrying/ /addition/2-digit-without-regrouping/ 301
-/addition/2-digit-with-carrying/ /addition/2-digit-with-regrouping/ 301
-/subtraction/2-digit-no-borrowing/ /subtraction/2-digit-without-regrouping/ 301
-/subtraction/2-digit-with-borrowing/ /subtraction/2-digit-with-regrouping/ 301
+/addition-practice/ /addition/ 301!
+/subtraction-practice/ /subtraction/ 301!
+/timed-drills/ /arithmetic-speed-drill/ 301!
+/math-drills/ /arithmetic-speed-drill/ 301!
+/speed-drill/ /arithmetic-speed-drill/ 301!
+/multiplication-practice/ /multiplication/ 301!
+/multiplication-practice/1-12/ /multiplication/facts/ 301!
+/multiplication-practice/facts/ /multiplication/facts/ 301!
+/multiplication-practice/mixed/ /multiplication/facts/ 301!
+/multiplication-practice/times-tables/ /multiplication/times-tables/1/ 301!
+/division-practice/ /division/ 301!
+/division-practice/facts/ /division/facts/ 301!
+/division-practice/divide-by/ /division/divide-by/1/ 301!
+/division-practice/remainders/ /division/remainders/ 301!
+/addition/2-digit-no-carrying/ /addition/2-digit-without-regrouping/ 301!
+/addition/2-digit-with-carrying/ /addition/2-digit-with-regrouping/ 301!
+/subtraction/2-digit-no-borrowing/ /subtraction/2-digit-without-regrouping/ 301!
+/subtraction/2-digit-with-borrowing/ /subtraction/2-digit-with-regrouping/ 301!
