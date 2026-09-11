@@ -51,6 +51,11 @@ export default function MultiplicationChart() {
 
   return (
     <div>
+      <div className="hidden print:block mb-3">
+        <p className="text-lg font-bold text-black">{blank ? 'Blank Multiplication Chart 1–12' : 'Multiplication Chart 1–12'}</p>
+        <p className="text-xs text-black">mathpracticeonline.com</p>
+      </div>
+
       <div className="no-print flex flex-wrap items-center justify-between gap-3 mb-4">
         <div role="group" aria-label="Chart display mode" className="inline-flex rounded-xl border border-[#E0E7FF] bg-white p-1">
           <button

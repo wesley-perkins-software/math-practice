@@ -65,4 +65,28 @@ export const tests = [
     assert.ok(s.includes('"@type": "LearningResource"'));
     assert.ok(s.includes('"@type": "FAQPage"'));
   }),
+  test('normal webpage chrome (H1, intro, how-it-works) is marked print-hidden so only the chart prints', () => {
+    const s = source('src/pages/multiplication-chart/index.astro');
+    assert.ok(s.includes('<div slot="h1" class="no-print">'), 'H1 wrapper must carry no-print');
+    assert.ok(s.includes('<div slot="intro" class="no-print">'), 'intro wrapper must carry no-print');
+    assert.ok(s.includes('<div slot="how-it-works" class="no-print">'), 'how-it-works wrapper must carry no-print');
+  }),
+  test('the print-only chart title lives once in the component (reacting to blank state), not duplicated in the page', () => {
+    const page = source('src/pages/multiplication-chart/index.astro');
+    const component = source('src/components/MultiplicationChart.tsx');
+    assert.equal(page.includes('hidden print:block'), false, 'the page must not hard-code its own print-only header block alongside the component’s');
+    assert.ok(component.includes("'Blank Multiplication Chart 1–12'"));
+    assert.ok(component.includes("'Multiplication Chart 1–12'"));
+    assert.equal((component.match(/hidden print:block/g) || []).length, 1, 'exactly one print-only header block should exist');
+  }),
+  test('the chart container avoids breaking across a printed page', () => {
+    const s = source('src/pages/multiplication-chart/index.astro');
+    assert.ok(s.includes('page-break-inside: avoid'));
+    assert.ok(s.includes('break-inside: avoid'));
+  }),
+  test('Blank Chart copy clarifies it is for on-screen quizzing or printing, not typing into cells', () => {
+    const s = source('src/pages/multiplication-chart/index.astro');
+    assert.ok(s.includes('quiz yourself on screen'), 'intro/how-to-use/FAQ copy should clarify Blank Chart is not an editable field');
+    assert.ok(s.includes('no typing boxes'), 'FAQ should explicitly rule out editable input fields in the chart');
+  }),
 ];

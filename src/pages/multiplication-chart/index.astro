@@ -28,11 +28,11 @@ const faqItems = [
   },
   {
     q: 'Is there a blank multiplication chart for practice?',
-    a: 'Yes. Switch to Blank Chart above to hide every product while keeping the row and column headers visible, so you can fill in the answers yourself or quiz someone else.',
+    a: 'Yes. Switch to Blank Chart above to hide every product while keeping the row and column headers visible. Use it to quiz yourself on screen, or print it as a fill-in worksheet to complete by hand — there are no typing boxes in the chart itself.',
   },
   {
     q: 'Can I print this multiplication chart in black and white?',
-    a: 'Yes. The chart prints cleanly in black and white with clear cell borders and bold headers. Switch to Blank Chart before printing if you want a fill-in worksheet instead of a reference sheet.',
+    a: 'Yes. Printing produces a single clean page with just the chart — no menus or webpage text — in black and white with clear cell borders and bold headers. Switch to Blank Chart first if you want a fill-in worksheet instead of a reference sheet.',
   },
   {
     q: 'What is the difference between a multiplication chart and a times table?',
@@ -73,24 +73,22 @@ const faqItems = [
     })} />
   </Fragment>
 
-  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Chart (1–12)</h1>
+  <div slot="h1" class="no-print">
+    <h1 class="text-3xl font-bold text-[#1E293B]">Multiplication Chart (1–12)</h1>
+  </div>
 
-  <div slot="intro">
-    <p>A multiplication chart shows the product of every pair of numbers from 1 to 12 in one 12×12 grid. Find a factor along the top row and another down the left column — the cell where they meet is their product. Use the interactive chart below to highlight rows and columns, switch to a blank version for practice, or print a copy for your desk or classroom.</p>
+  <div slot="intro" class="no-print">
+    <p>A multiplication chart shows the product of every pair of numbers from 1 to 12 in one 12×12 grid. Find a factor along the top row and another down the left column — the cell where they meet is their product. Use the interactive chart below to highlight rows and columns, switch to Blank Chart to quiz yourself on screen or print a fill-in worksheet, or print the filled chart for your desk or classroom.</p>
   </div>
 
   <div slot="widget">
-    <div class="hidden print:block mb-3">
-      <p class="text-lg font-bold text-black">Multiplication Chart 1–12</p>
-      <p class="text-xs text-black">mathpracticeonline.com</p>
-    </div>
     <MultiplicationChart client:load />
   </div>
 
-  <Fragment slot="how-it-works">
+  <div slot="how-it-works" class="no-print">
     <section aria-labelledby="how-to-use-heading" class="mt-10 max-w-xl">
       <h2 id="how-to-use-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Use This Multiplication Chart</h2>
-      <p class="text-sm text-body leading-relaxed">Click, tap, or use the arrow keys to move around the chart — the matching row, column, and product highlight together so you can see the fact in context. Click a row or column number to highlight that whole times table at once. Toggle to the blank chart to practice filling in the products yourself, and print either version straight from this page.</p>
+      <p class="text-sm text-body leading-relaxed">Click, tap, or use the arrow keys to move around the chart — the matching row, column, and product highlight together so you can see the fact in context. Click a row or column number to highlight that whole times table at once. Switch to Blank Chart to quiz yourself on screen or print it as a fill-in worksheet, and print either version straight from this page.</p>
     </section>
 
     <section class="mt-10" aria-labelledby="related-heading">
@@ -108,7 +106,7 @@ const faqItems = [
         ))}
       </div>
     </section>
-  </Fragment>
+  </div>
 </PracticeLayout>
 
 <style is:global>
@@ -124,9 +122,15 @@ const faqItems = [
   }
 
   @media print {
+    html {
+      background: white !important;
+    }
+
     .multiplication-chart-scroll {
       overflow: visible !important;
       border-color: #000 !important;
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }
 
     .multiplication-chart-scroll table {
