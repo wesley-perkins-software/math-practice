@@ -1,0 +1,141 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import MultiplicationChart from '@/components/MultiplicationChart';
+import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
+
+const SITE = 'https://mathpracticeonline.com';
+
+const relatedLinks = [
+  { href: '/multiplication/times-tables/', label: 'Times Tables', description: 'Practice one multiplication table at a time' },
+  { href: '/multiplication/facts/', label: 'Multiplication Facts', description: 'All 144 facts from 1×1 to 12×12 in random order' },
+  { href: '/create/', label: 'Create Classroom Practice', description: 'Build a custom practice set to share with students' },
+  { href: '/division/divide-by/', label: 'Divide By Practice', description: 'The inverse operation — divisor-by-divisor drills' },
+];
+
+const faqItems = [
+  {
+    q: 'What is a multiplication chart used for?',
+    a: 'A multiplication chart shows the product of every pair of numbers from 1 to 12 at a glance. It helps students look up facts they haven’t memorized yet, spot patterns like doubling and skip counting, and check their work during practice.',
+  },
+  {
+    q: 'How do I read a multiplication chart?',
+    a: 'Find one factor along the top row and the other factor down the left column. Trace across and down until the two meet — that cell is their product. For example, the row for 7 and the column for 8 meet at 56, so 7 × 8 = 56.',
+  },
+  {
+    q: 'What is the fastest way to learn multiplication facts with a chart?',
+    a: 'Use the chart to look up unfamiliar facts while practicing, rather than memorizing it top to bottom. Highlighting a row or column at a time helps you notice patterns — like the 5s always ending in 0 or 5 — which makes recall faster than rote repetition.',
+  },
+  {
+    q: 'Is there a blank multiplication chart for practice?',
+    a: 'Yes. Switch to Blank Chart above to hide every product while keeping the row and column headers visible, so you can fill in the answers yourself or quiz someone else.',
+  },
+  {
+    q: 'Can I print this multiplication chart in black and white?',
+    a: 'Yes. The chart prints cleanly in black and white with clear cell borders and bold headers. Switch to Blank Chart before printing if you want a fill-in worksheet instead of a reference sheet.',
+  },
+  {
+    q: 'What is the difference between a multiplication chart and a times table?',
+    a: 'A times table lists the multiples of a single number (like the 7 times table: 7, 14, 21…). A multiplication chart combines all twelve times tables into one 12×12 grid, so you can look up any fact from 1×1 to 12×12 in one place.',
+  },
+];
+---
+
+<PracticeLayout
+  title="Multiplication Chart 1–12 — Free Interactive & Printable | Math Practice Online"
+  description="Free interactive multiplication chart from 1 to 12. Highlight rows and columns, switch to a blank fill-in version, and print a clean black-and-white times table chart."
+  canonical={`${SITE}/multiplication-chart`}
+  breadcrumb={[
+    { label: 'Home', href: '/' },
+    { label: 'Multiplication', href: '/multiplication/' },
+    { label: 'Multiplication Chart' },
+  ]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Multiplication Chart 1–12",
+      "description": "A free interactive and printable multiplication chart covering every product from 1×1 through 12×12, with row/column highlighting and a blank fill-in mode.",
+      "url": `${SITE}/multiplication-chart`,
+      "educationalLevel": ["Grade 2", "Grade 3", "Grade 4"],
+      "teaches": "Multiplication facts and products from 1×1 to 12×12",
+      "provider": { "@id": ORGANIZATION_ID }
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-3xl font-bold text-[#1E293B]">Multiplication Chart (1–12)</h1>
+
+  <div slot="intro">
+    <p>A multiplication chart shows the product of every pair of numbers from 1 to 12 in one 12×12 grid. Find a factor along the top row and another down the left column — the cell where they meet is their product. Use the interactive chart below to highlight rows and columns, switch to a blank version for practice, or print a copy for your desk or classroom.</p>
+  </div>
+
+  <div slot="widget">
+    <div class="hidden print:block mb-3">
+      <p class="text-lg font-bold text-black">Multiplication Chart 1–12</p>
+      <p class="text-xs text-black">mathpracticeonline.com</p>
+    </div>
+    <MultiplicationChart client:load />
+  </div>
+
+  <Fragment slot="how-it-works">
+    <section aria-labelledby="how-to-use-heading" class="mt-10 max-w-xl">
+      <h2 id="how-to-use-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How to Use This Multiplication Chart</h2>
+      <p class="text-sm text-body leading-relaxed">Click, tap, or use the arrow keys to move around the chart — the matching row, column, and product highlight together so you can see the fact in context. Click a row or column number to highlight that whole times table at once. Toggle to the blank chart to practice filling in the products yourself, and print either version straight from this page.</p>
+    </section>
+
+    <section class="mt-10" aria-labelledby="related-heading">
+      <InternalLinks title="Related Practice" links={relatedLinks} />
+    </section>
+
+    <section class="mt-10" aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+  </Fragment>
+</PracticeLayout>
+
+<style is:global>
+  /*
+   * Page-local print override: the chart needs landscape width for its 13
+   * columns. This only affects printing of this document (each Astro page
+   * is its own HTML file) — it does not change global.css's portrait @page
+   * rule used by the worksheet generator on other pages.
+   */
+  @page {
+    size: landscape;
+    margin: 10mm;
+  }
+
+  @media print {
+    .multiplication-chart-scroll {
+      overflow: visible !important;
+      border-color: #000 !important;
+    }
+
+    .multiplication-chart-scroll table {
+      width: 100% !important;
+    }
+
+    .multiplication-chart-scroll th,
+    .multiplication-chart-scroll td {
+      border-color: #000 !important;
+    }
+  }
+</style>
