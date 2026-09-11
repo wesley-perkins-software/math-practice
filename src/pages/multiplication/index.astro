@@ -23,7 +23,6 @@ const modes = [
 ];
 
 const relatedLinks = [
-  { href: '/multiplication-chart/', label: 'Multiplication Chart', description: 'Interactive, printable 1–12 chart with row/column highlighting' },
   { href: '/multiplication/times-tables/', label: 'All Times Tables', description: 'Browse every times table, 1 through 12, in one place' },
   { href: '/division/facts/', label: 'Division Facts Practice', description: 'Use your times-table facts to solve division' },
   { href: '/3rd-grade-math-practice/', label: '3rd Grade Math Practice Online', description: 'See what most 3rd graders practice next' },
@@ -127,6 +126,23 @@ const faqItems = [
           </a>
         ))}
       </div>
+    </section>
+
+    <!-- Multiplication chart callout: a reference tool, not a third practice mode -->
+    <section class="mt-6" aria-labelledby="chart-callout-heading">
+      <a
+        href="/multiplication-chart/"
+        class="flex items-center gap-4 bg-white border border-dashed border-[#C7D2FE] rounded-2xl px-5 py-4 hover:border-solid hover:border-[#4F46E5] hover:shadow-md transition-all group"
+      >
+        <div class="w-11 h-11 rounded-xl bg-[#EEF2FF] flex items-center justify-center shrink-0" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#4F46E5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p id="chart-callout-heading" class="text-sm font-semibold text-[#1E1B4B] group-hover:text-[#4F46E5] transition-colors">Multiplication Chart 1–12</p>
+          <p class="text-sm text-[#6B7280] mt-0.5">A printable reference — highlight rows and columns, or switch to a blank quiz sheet.</p>
+        </div>
+        <span class="text-[#A5B4FC] group-hover:text-[#4F46E5] transition-colors text-lg leading-none shrink-0" aria-hidden="true">→</span>
+      </a>
     </section>
 
     <!-- Grade progression -->
