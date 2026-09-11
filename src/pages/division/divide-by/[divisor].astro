@@ -33,6 +33,12 @@ const EXPANDED_INTRO: Partial<Record<number, string>> = {
   4: `This page mixes up all twelve divide-by-4 facts in random order. ${fact?.introClause}`,
   5: `This page mixes up all twelve divide-by-5 facts in random order. ${fact?.introClause}`,
   6: `This page mixes up all twelve divide-by-6 facts in random order, so you get comfortable with them no matter what order they come in. If a fact doesn't come to mind right away, the strategy section below shows two reliable ways to work it out.`,
+  7: `This page mixes up all twelve divide-by-7 facts in random order. There's no shortcut pattern for 7 the way there is for some other divisors, so the fastest route is recalling the matching 7 times table fact. Mixing up the order here helps that recall become automatic rather than memorized as a fixed sequence.`,
+  8: `This page mixes up all twelve divide-by-8 facts in random order. Most answers come straight from the 8 times table, but since 8 is 2×2×2, halving the number three times in a row is a handy backup whenever a fact doesn't come to mind right away.`,
+  9: `This page mixes up all twelve divide-by-9 facts in random order. Every answer matches a 9 times table fact asked in reverse, and the strategy section below shows how a nearby 10s fact can help rebuild one that isn't remembered yet.`,
+  10: `This page mixes up all twelve divide-by-10 facts in random order. Because every number here is an exact multiple of 10, the answers line up neatly with place value — recognizing how many groups of ten make up the number is usually enough to answer quickly.`,
+  11: `This page mixes up all twelve divide-by-11 facts in random order. The 11 times table's repeated digits make the first several facts easy to spot, but the strategy section below covers the full set, including the facts with quotients of 10, 11, and 12.`,
+  12: `This page mixes up all twelve divide-by-12 facts in random order. Each answer matches a 12 times table fact asked backward, and splitting 12 into 10 groups plus 2 groups is a reliable way to rebuild a fact if it doesn't come to mind right away.`,
 };
 const expandedIntro = EXPANDED_INTRO[divisor]
   ?? (fact ? `This page mixes up all twelve divide-by-${divisor} facts in random order. ${fact.introClause}` : '');
@@ -113,7 +119,7 @@ const legacyFaqItems = [
     : []),
 ];
 
-const matureFaqItems = fact && divisor <= 5 ? [
+const matureFaqItems = fact ? [
   {
     q: `What does divide by ${divisor} mean?`,
     a: divisor === 1
