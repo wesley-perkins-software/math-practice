@@ -9,11 +9,11 @@ import '@/styles/practice-surface-prototype.css';
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
-  { href: '/subtraction', label: 'All Subtraction Levels', description: 'Compare levels or start from the beginning' },
-  { href: '/subtraction/1-digit', label: '1-Digit Subtraction', description: 'Review subtraction fact fluency first' },
-  { href: '/subtraction/2-digit-with-regrouping', label: '2-Digit Subtraction With Regrouping', description: 'Progress to regrouping subtraction' },
-  { href: '/addition/2-digit-without-regrouping', label: '2-Digit Addition (Without Regrouping)', description: 'Practice the inverse two-digit skill' },
-  { href: '/math-worksheets/subtraction-worksheets', label: 'Subtraction Worksheets', description: 'Worksheet-style practice with instant feedback' },
+  { href: '/subtraction/', label: 'All Subtraction Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/subtraction/1-digit/', label: '1-Digit Subtraction', description: 'Review subtraction fact fluency first' },
+  { href: '/subtraction/2-digit-with-regrouping/', label: '2-Digit Subtraction With Regrouping', description: 'Progress to regrouping subtraction' },
+  { href: '/addition/2-digit-without-regrouping/', label: '2-Digit Addition (Without Regrouping)', description: 'Practice the inverse two-digit skill' },
+  { href: '/math-worksheets/subtraction-worksheets/', label: 'Subtraction Worksheets', description: 'Worksheet-style practice with instant feedback' },
 ];
 
 const faqItems = [
@@ -41,7 +41,7 @@ const faqItems = [
   description="Practice 2-digit subtraction without regrouping online. Build place-value accuracy with subtraction problems that do not require borrowing. Instant feedback and streak tracking."
   canonical={`${SITE}/subtraction/2-digit-without-regrouping`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction' }, { label: '2-Digit Subtraction Without Regrouping' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Subtraction', href: '/subtraction/' }, { label: '2-Digit Subtraction Without Regrouping' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -76,7 +76,7 @@ const faqItems = [
 
   <SubtractionPracticeHub slot="widget" active="2-digit-without-regrouping" variant="prototype" client:load />
 
-  <LocalChooser slot="local-chooser" operation="subtraction" current="/subtraction/2-digit-without-regrouping" />
+  <LocalChooser slot="local-chooser" operation="subtraction" current="/subtraction/2-digit-without-regrouping/" />
 
   <Fragment slot="intro">
     <p>This page is for first and second graders who've mastered single-digit subtraction and are learning multi-digit subtraction for the first time, plus parents and teachers checking whether a child can subtract each column independently. Every problem here is built so the top digit is always at least as large as the bottom digit in each column, isolating column subtraction from the separate skill of regrouping.</p>
@@ -144,7 +144,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-body">Ready for regrouping? Try <a href="/subtraction/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction with regrouping</a> next →</p>
+    <p class="text-sm text-body">Ready for regrouping? Try <a href="/subtraction/2-digit-with-regrouping/" class="text-[#4F46E5] font-semibold hover:underline">two-digit subtraction with regrouping</a> next →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

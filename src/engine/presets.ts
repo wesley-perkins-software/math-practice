@@ -5,7 +5,7 @@ import type { PracticeConfig } from './types';
 export const ADDITION_1_DIGIT: PracticeConfig = {
   storageKey: 'add-1d',
   label: '1-Digit Addition',
-  path: '/addition/1-digit',
+  path: '/addition/1-digit/',
   operation: 'addition',
   mode: 'untimed',
   timerDuration: 60,
@@ -16,7 +16,7 @@ export const ADDITION_1_DIGIT: PracticeConfig = {
 export const ADDITION_2_DIGIT: PracticeConfig = {
   storageKey: 'add-2d',
   label: '2-Digit Addition (Without Regrouping)',
-  path: '/addition/2-digit-without-regrouping',
+  path: '/addition/2-digit-without-regrouping/',
   operation: 'addition',
   mode: 'untimed',
   timerDuration: 60,
@@ -28,7 +28,7 @@ export const ADDITION_2_DIGIT: PracticeConfig = {
 export const ADDITION_2_DIGIT_CARRYING: PracticeConfig = {
   storageKey: 'add-2d-carry',
   label: '2-Digit Addition (With Regrouping)',
-  path: '/addition/2-digit-with-regrouping',
+  path: '/addition/2-digit-with-regrouping/',
   operation: 'addition',
   mode: 'untimed',
   timerDuration: 60,
@@ -44,7 +44,7 @@ export const ADDITION_2_DIGIT_CARRYING: PracticeConfig = {
 export const ADDITION_GENERAL: PracticeConfig = {
   storageKey: 'add-general',
   label: 'Addition Practice',
-  path: '/addition',
+  path: '/addition/',
   operation: 'addition',
   mode: 'untimed',
   timerDuration: 60,
@@ -58,7 +58,7 @@ export const ADDITION_GENERAL: PracticeConfig = {
 export const SUBTRACTION_1_DIGIT: PracticeConfig = {
   storageKey: 'sub-1d',
   label: '1-Digit Subtraction',
-  path: '/subtraction/1-digit',
+  path: '/subtraction/1-digit/',
   operation: 'subtraction',
   mode: 'untimed',
   timerDuration: 60,
@@ -70,7 +70,7 @@ export const SUBTRACTION_1_DIGIT: PracticeConfig = {
 export const SUBTRACTION_2_DIGIT: PracticeConfig = {
   storageKey: 'sub-2d',
   label: '2-Digit Subtraction (Without Regrouping)',
-  path: '/subtraction/2-digit-without-regrouping',
+  path: '/subtraction/2-digit-without-regrouping/',
   operation: 'subtraction',
   mode: 'untimed',
   timerDuration: 60,
@@ -82,7 +82,7 @@ export const SUBTRACTION_2_DIGIT: PracticeConfig = {
 export const SUBTRACTION_2_DIGIT_BORROWING: PracticeConfig = {
   storageKey: 'sub-2d-borrow',
   label: '2-Digit Subtraction (With Regrouping)',
-  path: '/subtraction/2-digit-with-regrouping',
+  path: '/subtraction/2-digit-with-regrouping/',
   operation: 'subtraction',
   mode: 'untimed',
   timerDuration: 60,
@@ -94,7 +94,7 @@ export const SUBTRACTION_2_DIGIT_BORROWING: PracticeConfig = {
 export const SUBTRACTION_GENERAL: PracticeConfig = {
   storageKey: 'sub-general',
   label: 'Subtraction Practice',
-  path: '/subtraction',
+  path: '/subtraction/',
   operation: 'subtraction',
   mode: 'untimed',
   timerDuration: 60,
@@ -108,7 +108,7 @@ export const SUBTRACTION_GENERAL: PracticeConfig = {
 export const MULTIPLICATION_FACTS: PracticeConfig = {
   storageKey: 'mult-facts',
   label: 'Multiplication Facts',
-  path: '/multiplication',
+  path: '/multiplication/',
   operation: 'multiplication',
   mode: 'untimed',
   timerDuration: 60,
@@ -121,7 +121,7 @@ export const MULTIPLICATION_FACTS: PracticeConfig = {
 export const MULTIPLICATION_1_12: PracticeConfig = {
   storageKey: 'mult-1-12',
   label: 'Single-Digit Multiplication',
-  path: '/multiplication',
+  path: '/multiplication/',
   operation: 'multiplication',
   mode: 'untimed',
   timerDuration: 60,
@@ -136,7 +136,7 @@ export function multiplyTableConfig(n: number): PracticeConfig {
   return {
     storageKey: `mult-table-${n}`,
     label: `${n} Times Table`,
-    path: `/multiplication/times-tables/${n}`,
+    path: `/multiplication/times-tables/${n}/`,
     operation: 'multiplication',
     mode: 'untimed',
     timerDuration: 60,
@@ -148,7 +148,7 @@ export function multiplyTableConfig(n: number): PracticeConfig {
 export const MULTIPLICATION_GENERAL: PracticeConfig = {
   storageKey: 'mult-general',
   label: 'Harder Facts',
-  path: '/multiplication/facts',
+  path: '/multiplication/facts/',
   operation: 'multiplication',
   mode: 'untimed',
   timerDuration: 60,
@@ -165,7 +165,7 @@ export function divideByConfig(n: number): PracticeConfig {
   return {
     storageKey: `div-by-${n}`,
     label: `Divide by ${n}`,
-    path: `/division/divide-by/${n}`,
+    path: `/division/divide-by/${n}/`,
     operation: 'division',
     mode: 'untimed',
     timerDuration: 60,
@@ -179,7 +179,7 @@ export function divideByConfig(n: number): PracticeConfig {
 export const DIVISION_FACTS: PracticeConfig = {
   storageKey: 'div-facts',
   label: 'Division Facts',
-  path: '/division/facts',
+  path: '/division/facts/',
   operation: 'division',
   mode: 'untimed',
   timerDuration: 60,
@@ -192,7 +192,7 @@ export const DIVISION_FACTS: PracticeConfig = {
 export const DIVISION_GENERAL: PracticeConfig = {
   storageKey: 'div-general',
   label: 'Easy Division Facts',
-  path: '/division/facts',
+  path: '/division/facts/',
   operation: 'division',
   mode: 'untimed',
   timerDuration: 60,
@@ -205,7 +205,7 @@ export const DIVISION_GENERAL: PracticeConfig = {
 export const DIVISION_REMAINDERS: PracticeConfig = {
   storageKey: 'div-remainders',
   label: 'Division with Remainders',
-  path: '/division/remainders',
+  path: '/division/remainders/',
   operation: 'division',
   mode: 'untimed',
   timerDuration: 60,
@@ -220,7 +220,7 @@ export const DIVISION_REMAINDERS: PracticeConfig = {
 export const MIXED_PRACTICE: PracticeConfig = {
   storageKey: 'mixed-general',
   label: 'Mixed Practice',
-  path: '/math-facts',
+  path: '/math-facts/',
   operation: 'mixed',
   mode: 'untimed',
   timerDuration: 60,
@@ -233,7 +233,7 @@ export const MIXED_PRACTICE: PracticeConfig = {
 export const MATH_DRILLS: PracticeConfig = {
   storageKey: 'math-drills',
   label: 'Math Drills',
-  path: '/math-facts',
+  path: '/math-facts/',
   operation: 'mixed',
   mode: 'timed',
   timerDuration: 120,
@@ -247,7 +247,7 @@ export const MATH_DRILLS: PracticeConfig = {
 export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
   storageKey: 'speed-drill',
   label: 'Arithmetic Speed Drill',
-  path: '/arithmetic-speed-drill',
+  path: '/arithmetic-speed-drill/',
   operation: 'mixed',
   mode: 'timed',
   timerDuration: 60,
@@ -263,7 +263,7 @@ export const ARITHMETIC_SPEED_DRILL: PracticeConfig = {
 export const MATH_PRACTICE_GENERAL: PracticeConfig = {
   storageKey: 'math-practice',
   label: 'Math Practice Online',
-  path: '/math-facts',
+  path: '/math-facts/',
   operation: 'mixed',
   mode: 'untimed',
   timerDuration: 60,

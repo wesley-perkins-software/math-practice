@@ -11,7 +11,7 @@ import type { PracticeConfig } from '@/engine/types';
 type Difficulty = '1-digit' | '2-digit-without-regrouping' | '2-digit-with-regrouping';
 
 const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeConfig; href: string }[] = [
-  { id: '1-digit', label: '1-Digit', config: SUBTRACTION_1_DIGIT, href: '/subtraction/1-digit' },
+  { id: '1-digit', label: '1-Digit', config: SUBTRACTION_1_DIGIT, href: '/subtraction/1-digit/' },
   {
     id: '2-digit-without-regrouping',
     label: (
@@ -21,7 +21,7 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
       </>
     ),
     config: SUBTRACTION_2_DIGIT,
-    href: '/subtraction/2-digit-without-regrouping',
+    href: '/subtraction/2-digit-without-regrouping/',
   },
   {
     id: '2-digit-with-regrouping',
@@ -32,7 +32,7 @@ const DIFFICULTIES: { id: Difficulty; label: React.ReactNode; config: PracticeCo
       </>
     ),
     config: SUBTRACTION_2_DIGIT_BORROWING,
-    href: '/subtraction/2-digit-with-regrouping',
+    href: '/subtraction/2-digit-with-regrouping/',
   },
 ];
 

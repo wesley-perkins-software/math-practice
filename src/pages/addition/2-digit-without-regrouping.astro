@@ -9,11 +9,11 @@ import '@/styles/practice-surface-prototype.css';
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
-  { href: '/addition', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
-  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Review single-digit addition fluency first' },
-  { href: '/addition/2-digit-with-regrouping', label: '2-Digit Addition With Regrouping', description: 'Next step: add regrouping to the mix' },
-  { href: '/subtraction/2-digit-without-regrouping', label: '2-Digit Subtraction (Without Regrouping)', description: 'Pair two-digit addition and subtraction' },
-  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style practice with instant feedback' },
+  { href: '/addition/', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/addition/1-digit/', label: '1-Digit Addition', description: 'Review single-digit addition fluency first' },
+  { href: '/addition/2-digit-with-regrouping/', label: '2-Digit Addition With Regrouping', description: 'Next step: add regrouping to the mix' },
+  { href: '/subtraction/2-digit-without-regrouping/', label: '2-Digit Subtraction (Without Regrouping)', description: 'Pair two-digit addition and subtraction' },
+  { href: '/math-worksheets/addition-worksheets/', label: 'Addition Worksheets', description: 'Worksheet-style practice with instant feedback' },
 ];
 
 const faqItems = [
@@ -41,7 +41,7 @@ const faqItems = [
   description="Practice 2-digit addition without regrouping. Every problem avoids carrying so students can master place value and multi-digit setup first."
   canonical={`${SITE}/addition/2-digit-without-regrouping`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition Without Regrouping' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition/' }, { label: '2-Digit Addition Without Regrouping' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -76,7 +76,7 @@ const faqItems = [
 
   <AdditionPracticeHub slot="widget" active="2-digit-without-regrouping" variant="prototype" client:load />
 
-  <LocalChooser slot="local-chooser" operation="addition" current="/addition/2-digit-without-regrouping" />
+  <LocalChooser slot="local-chooser" operation="addition" current="/addition/2-digit-without-regrouping/" />
 
   <Fragment slot="intro">
     <p>This page is for first and second graders who already know their single-digit addition facts and are learning to add multi-digit numbers for the first time, plus parents and teachers checking whether a child can align columns correctly. Every problem here is built so no column ever sums to 10 or more, isolating place-value alignment from the separate skill of regrouping.</p>
@@ -141,7 +141,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-body">Ready for regrouping? Try <a href="/addition/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition with regrouping</a> next →</p>
+    <p class="text-sm text-body">Ready for regrouping? Try <a href="/addition/2-digit-with-regrouping/" class="text-[#4F46E5] font-semibold hover:underline">two-digit addition with regrouping</a> next →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

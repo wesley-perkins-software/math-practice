@@ -117,8 +117,8 @@ const faqItems = [
 ];
 
 const links = [
-  { href: '/multiplication', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
-  { href: '/multiplication/facts', label: 'Mixed Facts Practice', description: 'All 144 facts from 1–12 in random order' },
+  { href: '/multiplication/', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
+  { href: '/multiplication/facts/', label: 'Mixed Facts Practice', description: 'All 144 facts from 1–12 in random order' },
   { href: buildCreatePracticePrefillHref('multiplication-facts', [tableNumber]), label: 'Create Custom Practice', description: `Combine the ${tableNumber} times table with other facts or build a custom practice set` },
   // Mature pages use neutral wording rather than implying that numerical
   // order is a required learning progression.
@@ -133,11 +133,11 @@ const links = [
         label: tableNumber < 12 ? `Next: ${tableNumber + 1} Times Table` : 'Back to 1 Times Table',
         description: 'Continue table-by-table practice',
       },
-  { href: '/division/facts', label: 'Division Facts', description: 'The inverse operation of multiplication' },
+  { href: '/division/facts/', label: 'Division Facts', description: 'The inverse operation of multiplication' },
   ...(fact
-    ? [{ href: `/division/divide-by/${tableNumber}`, label: `Divide by ${tableNumber} Practice`, description: 'The same 12 facts, practiced as division instead of multiplication' }]
+    ? [{ href: `/division/divide-by/${tableNumber}/`, label: `Divide by ${tableNumber} Practice`, description: 'The same 12 facts, practiced as division instead of multiplication' }]
     : []),
-  { href: '/math-worksheets/multiplication-worksheets', label: 'Multiplication Worksheets', description: 'Worksheet-style timed practice' },
+  { href: '/math-worksheets/multiplication-worksheets/', label: 'Multiplication Worksheets', description: 'Worksheet-style timed practice' },
 ];
 
 const pageTitle = `${tableNumber} Times Table Practice | Multiplication Table ${tableNumber} | Math Practice Online`;
@@ -154,8 +154,8 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
   pilotLayout
   breadcrumb={[
     { label: 'Home', href: '/' },
-    { label: 'Multiplication', href: '/multiplication' },
-    { label: 'Times Tables', href: '/multiplication/times-tables' },
+    { label: 'Multiplication', href: '/multiplication/' },
+    { label: 'Times Tables', href: '/multiplication/times-tables/' },
     { label: `${tableNumber} Times Table` },
   ]}
   breadcrumbVisual={false}
@@ -201,7 +201,7 @@ const introSupport = `This page drills ${tableNumber}×1 through ${tableNumber}�
   <LocalChooser
     slot="local-chooser"
     operation="multiplication"
-    current={`/multiplication/times-tables/${tableNumber}`}
+    current={`/multiplication/times-tables/${tableNumber}/`}
     showGrid
     gridCurrent={tableNumber}
   />

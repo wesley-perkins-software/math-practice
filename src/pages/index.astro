@@ -43,7 +43,7 @@ const faqItems: { q: string; a: string }[] = [
 
 const operations = [
   {
-    href: '/addition',
+    href: '/addition/',
     label: 'Addition Practice',
     symbol: '+',
     iconSvg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="white" aria-hidden="true"><path d="M10 3H14V10H21V14H14V21H10V14H3V10H10Z"/></svg>`,
@@ -53,7 +53,7 @@ const operations = [
     practices: ['1-Digit Addition', '2-Digit Addition (Without Regrouping)', '2-Digit Addition (With Regrouping)'],
   },
   {
-    href: '/subtraction',
+    href: '/subtraction/',
     label: 'Subtraction Practice',
     symbol: '−',
     iconSvg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="white" aria-hidden="true"><rect x="3" y="10" width="18" height="4"/></svg>`,
@@ -63,7 +63,7 @@ const operations = [
     practices: ['1-Digit Subtraction', '2-Digit Subtraction (Without Regrouping)', '2-Digit Subtraction (With Regrouping)'],
   },
   {
-    href: '/multiplication',
+    href: '/multiplication/',
     label: 'Multiplication Practice',
     symbol: '×',
     iconSvg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="white" aria-hidden="true"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>`,
@@ -73,7 +73,7 @@ const operations = [
     practices: ['Times Tables 1–12', 'Multiplication Facts'],
   },
   {
-    href: '/division',
+    href: '/division/',
     label: 'Division Practice',
     symbol: '÷',
     iconSvg: `<svg viewBox="0 0 24 24" width="28" height="28" fill="white" aria-hidden="true"><circle cx="12" cy="5" r="2.5"/><rect x="3" y="11" width="18" height="2"/><circle cx="12" cy="19" r="2.5"/></svg>`,
@@ -306,7 +306,7 @@ const operations = [
             <p class="text-[#374151] text-sm leading-relaxed">
               Scores, streaks, and session history are saved automatically in the browser — no account needed.
               Students can check their
-              <a href="/progress" class="text-[#4F46E5] font-semibold hover:underline">Progress page</a>
+              <a href="/progress/" class="text-[#4F46E5] font-semibold hover:underline">Progress page</a>
               anytime to see their accuracy and speed improve over time.
             </p>
           </div>
@@ -336,13 +336,13 @@ const operations = [
               The perfect starting point for kindergarteners and 1st graders. Students build number sense with single-digit facts within 10 and 20 — the foundation of all arithmetic that follows.
             </p>
             <div class="flex flex-col gap-2">
-              <a href="/addition/1-digit" class="text-sm font-semibold text-[#2563EB] hover:underline flex items-center gap-1">
+              <a href="/addition/1-digit/" class="text-sm font-semibold text-[#2563EB] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> 1-Digit Addition
               </a>
-              <a href="/subtraction/1-digit" class="text-sm font-semibold text-[#2563EB] hover:underline flex items-center gap-1">
+              <a href="/subtraction/1-digit/" class="text-sm font-semibold text-[#2563EB] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> 1-Digit Subtraction
               </a>
-              <a href="/1st-grade-math-practice" class="text-sm font-semibold text-[#2563EB] hover:underline flex items-center gap-1 mt-1 border-t border-[#EFF6FF] pt-2">
+              <a href="/1st-grade-math-practice/" class="text-sm font-semibold text-[#2563EB] hover:underline flex items-center gap-1 mt-1 border-t border-[#EFF6FF] pt-2">
                 <span aria-hidden="true">→</span> All 1st Grade Practice
               </a>
             </div>
@@ -359,32 +359,32 @@ const operations = [
               A big year for math growth. Students tackle 2-digit addition and subtraction with regrouping, then begin multiplication facts and times tables. This is where arithmetic fluency really starts to click.
             </p>
             <div class="flex flex-col gap-2">
-              <a href="/addition/2-digit-without-regrouping" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+              <a href="/addition/2-digit-without-regrouping/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> 2-Digit Addition (Without Regrouping)
               </a>
-              <a href="/addition/2-digit-with-regrouping" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+              <a href="/addition/2-digit-with-regrouping/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> 2-Digit Addition With Regrouping
               </a>
-              <a href="/subtraction/2-digit-without-regrouping" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+              <a href="/subtraction/2-digit-without-regrouping/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> 2-Digit Subtraction (Without Regrouping)
               </a>
-              <a href="/subtraction/2-digit-with-regrouping" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+              <a href="/subtraction/2-digit-with-regrouping/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> 2-Digit Subtraction With Regrouping
               </a>
-              <a href="/multiplication/times-tables/1" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+              <a href="/multiplication/times-tables/1/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Times Tables 1–12
               </a>
-              <a href="/multiplication/facts" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+              <a href="/multiplication/facts/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Multiplication Facts
               </a>
-              <a href="/division/divide-by/1" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+              <a href="/division/divide-by/1/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Divide by 1-12
               </a>
               <div class="flex flex-col gap-2 mt-1 border-t border-[#F5F3FF] pt-2">
-                <a href="/2nd-grade-math-practice" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+                <a href="/2nd-grade-math-practice/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                   <span aria-hidden="true">→</span> All 2nd Grade Practice
                 </a>
-                <a href="/3rd-grade-math-practice" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
+                <a href="/3rd-grade-math-practice/" class="text-sm font-semibold text-[#7C3AED] hover:underline flex items-center gap-1">
                   <span aria-hidden="true">→</span> All 3rd Grade Practice
                 </a>
               </div>
@@ -402,29 +402,29 @@ const operations = [
               Students polish multiplication and division skills, tackle remainders, and build the speed and confidence they need heading into middle school. Great for timed practice and test prep.
             </p>
             <div class="flex flex-col gap-2">
-              <a href="/multiplication/times-tables/1" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+              <a href="/multiplication/times-tables/1/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Times Tables 1–12
               </a>
-              <a href="/multiplication/facts" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+              <a href="/multiplication/facts/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Multiplication Facts
               </a>
-              <a href="/division/divide-by/1" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+              <a href="/division/divide-by/1/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Divide by 1-12
               </a>
-              <a href="/division/facts" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+              <a href="/division/facts/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Division Facts
               </a>
-              <a href="/division/remainders" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+              <a href="/division/remainders/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Division with Remainders
               </a>
-              <a href="/arithmetic-speed-drill" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+              <a href="/arithmetic-speed-drill/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                 <span aria-hidden="true">→</span> Arithmetic Speed Drill
               </a>
               <div class="flex flex-col gap-2 mt-1 border-t border-[#ECFDF5] pt-2">
-                <a href="/4th-grade-math-practice" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+                <a href="/4th-grade-math-practice/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                   <span aria-hidden="true">→</span> All 4th Grade Practice
                 </a>
-                <a href="/5th-grade-math-practice" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
+                <a href="/5th-grade-math-practice/" class="text-sm font-semibold text-[#059669] hover:underline flex items-center gap-1">
                   <span aria-hidden="true">→</span> All 5th Grade Practice
                 </a>
               </div>
@@ -459,14 +459,14 @@ const operations = [
               <a href="/create/" class="text-sm font-bold text-[#4F46E5] flex items-center gap-1 hover:gap-2 transition-all">
                 Create Classroom Practice <span aria-hidden="true">→</span>
               </a>
-              <a href="/for-teachers" class="text-sm font-semibold text-[#4F46E5]/80 flex items-center gap-1 hover:gap-2 hover:text-[#4F46E5] transition-all">
+              <a href="/for-teachers/" class="text-sm font-semibold text-[#4F46E5]/80 flex items-center gap-1 hover:gap-2 hover:text-[#4F46E5] transition-all">
                 Classroom guide <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
           <!-- For Parents -->
           <a
-            href="/for-parents"
+            href="/for-parents/"
             class="flex flex-col bg-[#EFF6FF] rounded-2xl p-7 ring-1 ring-[#BFDBFE] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)] transition-all group"
           >
             <div class="w-10 h-10 rounded-xl bg-[#2563EB] flex items-center justify-center mb-4 shrink-0">
@@ -504,7 +504,7 @@ const operations = [
             </div>
           </div>
           <a
-            href="/arithmetic-speed-drill"
+            href="/arithmetic-speed-drill/"
             class="shrink-0 inline-flex items-center gap-2 bg-[#4F46E5] hover:bg-[#4338CA] text-white font-bold px-6 py-3 rounded-xl transition-colors text-sm"
           >
             Start Drill <span aria-hidden="true">→</span>
@@ -530,11 +530,11 @@ const operations = [
               <span class="text-sm font-bold text-[#1E1B4B]">Addition</span>
             </div>
             <ul class="flex flex-col gap-2.5">
-              <li><a href="/addition/1-digit" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">1-Digit Addition</a></li>
-              <li><a href="/addition/2-digit-without-regrouping" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">2-Digit (Without Regrouping)</a></li>
-              <li><a href="/addition/2-digit-with-regrouping" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">2-Digit With Regrouping</a></li>
-              <li><a href="/addition" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">All Addition Practice</a></li>
-              <li><a href="/math-worksheets/addition-worksheets" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">Addition Worksheets</a></li>
+              <li><a href="/addition/1-digit/" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">1-Digit Addition</a></li>
+              <li><a href="/addition/2-digit-without-regrouping/" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">2-Digit (Without Regrouping)</a></li>
+              <li><a href="/addition/2-digit-with-regrouping/" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">2-Digit With Regrouping</a></li>
+              <li><a href="/addition/" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">All Addition Practice</a></li>
+              <li><a href="/math-worksheets/addition-worksheets/" class="text-sm text-[#2563EB] hover:text-[#1D4ED8] hover:underline leading-tight">Addition Worksheets</a></li>
             </ul>
           </div>
           <!-- Subtraction -->
@@ -544,11 +544,11 @@ const operations = [
               <span class="text-sm font-bold text-[#1E1B4B]">Subtraction</span>
             </div>
             <ul class="flex flex-col gap-2.5">
-              <li><a href="/subtraction/1-digit" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">1-Digit Subtraction</a></li>
-              <li><a href="/subtraction/2-digit-without-regrouping" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">2-Digit (Without Regrouping)</a></li>
-              <li><a href="/subtraction/2-digit-with-regrouping" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">2-Digit Subtraction With Regrouping</a></li>
-              <li><a href="/subtraction" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">All Subtraction Practice</a></li>
-              <li><a href="/math-worksheets/subtraction-worksheets" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">Subtraction Worksheets</a></li>
+              <li><a href="/subtraction/1-digit/" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">1-Digit Subtraction</a></li>
+              <li><a href="/subtraction/2-digit-without-regrouping/" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">2-Digit (Without Regrouping)</a></li>
+              <li><a href="/subtraction/2-digit-with-regrouping/" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">2-Digit Subtraction With Regrouping</a></li>
+              <li><a href="/subtraction/" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">All Subtraction Practice</a></li>
+              <li><a href="/math-worksheets/subtraction-worksheets/" class="text-sm text-[#7C3AED] hover:text-[#6D28D9] hover:underline leading-tight">Subtraction Worksheets</a></li>
             </ul>
           </div>
           <!-- Multiplication -->
@@ -558,10 +558,10 @@ const operations = [
               <span class="text-sm font-bold text-[#1E1B4B]">Multiplication</span>
             </div>
             <ul class="flex flex-col gap-2.5">
-              <li><a href="/multiplication/times-tables" class="text-sm text-[#059669] hover:text-[#047857] hover:underline leading-tight">Times Tables (1–12)</a></li>
-              <li><a href="/multiplication/facts" class="text-sm text-[#059669] hover:text-[#047857] hover:underline leading-tight">Mixed Multiplication Facts</a></li>
+              <li><a href="/multiplication/times-tables/" class="text-sm text-[#059669] hover:text-[#047857] hover:underline leading-tight">Times Tables (1–12)</a></li>
+              <li><a href="/multiplication/facts/" class="text-sm text-[#059669] hover:text-[#047857] hover:underline leading-tight">Mixed Multiplication Facts</a></li>
               <li><a href="/multiplication/" class="text-sm text-[#059669] hover:text-[#047857] hover:underline leading-tight">All Multiplication Practice</a></li>
-              <li><a href="/math-worksheets/multiplication-worksheets" class="text-sm text-[#059669] hover:text-[#047857] hover:underline leading-tight">Multiplication Worksheets</a></li>
+              <li><a href="/math-worksheets/multiplication-worksheets/" class="text-sm text-[#059669] hover:text-[#047857] hover:underline leading-tight">Multiplication Worksheets</a></li>
             </ul>
           </div>
           <!-- Division -->
@@ -571,22 +571,22 @@ const operations = [
               <span class="text-sm font-bold text-[#1E1B4B]">Division</span>
             </div>
             <ul class="flex flex-col gap-2.5">
-              <li><a href="/division/divide-by/1" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Divide by 1 Through 12</a></li>
-              <li><a href="/division/facts" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Division Facts</a></li>
-              <li><a href="/division/remainders" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Division with Remainders</a></li>
-              <li><a href="/division" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">All Division Practice</a></li>
-              <li><a href="/math-worksheets/division-worksheets" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Division Worksheets</a></li>
+              <li><a href="/division/divide-by/1/" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Divide by 1 Through 12</a></li>
+              <li><a href="/division/facts/" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Division Facts</a></li>
+              <li><a href="/division/remainders/" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Division with Remainders</a></li>
+              <li><a href="/division/" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">All Division Practice</a></li>
+              <li><a href="/math-worksheets/division-worksheets/" class="text-sm text-[#D97706] hover:text-[#B45309] hover:underline leading-tight">Division Worksheets</a></li>
             </ul>
           </div>
         </div>
         <!-- Additional pages -->
         <div class="mt-10 pt-8 border-t border-[#E0E7FF] flex flex-wrap gap-3">
-          <a href="/arithmetic-speed-drill" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Arithmetic Speed Drill</a>
-          <a href="/math-worksheets" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Math Worksheets</a>
-          <a href="/math-facts" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Math Facts</a>
-          <a href="/for-teachers" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">For Teachers</a>
-          <a href="/for-parents" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">For Parents</a>
-          <a href="/progress" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">My Progress</a>
+          <a href="/arithmetic-speed-drill/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Arithmetic Speed Drill</a>
+          <a href="/math-worksheets/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Math Worksheets</a>
+          <a href="/math-facts/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">Math Facts</a>
+          <a href="/for-teachers/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">For Teachers</a>
+          <a href="/for-parents/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">For Parents</a>
+          <a href="/progress/" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white ring-1 ring-[#E0E7FF] text-sm text-[#4338CA] font-medium hover:ring-[#4F46E5] transition-all">My Progress</a>
         </div>
       </div>
     </section>
@@ -603,7 +603,7 @@ const operations = [
               <dt class="text-base font-semibold text-[#1E1B4B]">{q}</dt>
               <dd class="mt-2 text-sm text-[#374151] leading-relaxed">
                 {q === 'Are there timed practice modes?' ? (
-                  <>Yes. The <a href="/arithmetic-speed-drill" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a> is a 60-second challenge — great for students building fluency and for teachers running classroom warm-ups. Choose any combination of operations and see how many facts you can answer correctly.</>
+                  <>Yes. The <a href="/arithmetic-speed-drill/" class="text-[#4F46E5] hover:underline">Arithmetic Speed Drill</a> is a 60-second challenge — great for students building fluency and for teachers running classroom warm-ups. Choose any combination of operations and see how many facts you can answer correctly.</>
                 ) : a}
               </dd>
             </div>
@@ -616,24 +616,24 @@ const operations = [
   <footer class="border-t-2 border-[#E0E7FF] bg-[#EEF2FF]">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 py-8">
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1]">
-        <a href="/addition" class="hover:text-[#3730A3] transition-colors">Addition</a>
-        <a href="/subtraction" class="hover:text-[#3730A3] transition-colors">Subtraction</a>
-        <a href="/multiplication" class="hover:text-[#3730A3] transition-colors">Multiplication</a>
-        <a href="/division" class="hover:text-[#3730A3] transition-colors">Division</a>
-        <a href="/arithmetic-speed-drill" class="hover:text-[#3730A3] transition-colors">Speed Drill</a>
-        <a href="/math-worksheets" class="hover:text-[#3730A3] transition-colors">Worksheets</a>
+        <a href="/addition/" class="hover:text-[#3730A3] transition-colors">Addition</a>
+        <a href="/subtraction/" class="hover:text-[#3730A3] transition-colors">Subtraction</a>
+        <a href="/multiplication/" class="hover:text-[#3730A3] transition-colors">Multiplication</a>
+        <a href="/division/" class="hover:text-[#3730A3] transition-colors">Division</a>
+        <a href="/arithmetic-speed-drill/" class="hover:text-[#3730A3] transition-colors">Speed Drill</a>
+        <a href="/math-worksheets/" class="hover:text-[#3730A3] transition-colors">Worksheets</a>
         <a href="/create/" class="hover:text-[#3730A3] transition-colors">Create Practice</a>
-        <a href="/progress" class="hover:text-[#3730A3] transition-colors">My Progress</a>
+        <a href="/progress/" class="hover:text-[#3730A3] transition-colors">My Progress</a>
       </div>
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1] mt-2">
-        <a href="/math-facts" class="hover:text-[#3730A3] transition-colors">Math Facts</a>
-        <a href="/for-parents" class="hover:text-[#3730A3] transition-colors">For Parents</a>
-        <a href="/for-teachers" class="hover:text-[#3730A3] transition-colors">For Teachers</a>
+        <a href="/math-facts/" class="hover:text-[#3730A3] transition-colors">Math Facts</a>
+        <a href="/for-parents/" class="hover:text-[#3730A3] transition-colors">For Parents</a>
+        <a href="/for-teachers/" class="hover:text-[#3730A3] transition-colors">For Teachers</a>
       </div>
       <div class="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#6366F1] mt-2">
-        <a href="/about" class="hover:text-[#3730A3] transition-colors">About</a>
-        <a href="/privacy" class="hover:text-[#3730A3] transition-colors">Privacy Policy</a>
-        <a href="/terms" class="hover:text-[#3730A3] transition-colors">Terms of Service</a>
+        <a href="/about/" class="hover:text-[#3730A3] transition-colors">About</a>
+        <a href="/privacy/" class="hover:text-[#3730A3] transition-colors">Privacy Policy</a>
+        <a href="/terms/" class="hover:text-[#3730A3] transition-colors">Terms of Service</a>
       </div>
       <p class="text-xs text-[#6B7280] mt-4">© {new Date().getFullYear()} Math Practice Online. Free arithmetic practice for students, parents &amp; teachers.</p>
     </div>

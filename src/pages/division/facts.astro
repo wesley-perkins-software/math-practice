@@ -10,11 +10,11 @@ const SITE = 'https://mathpracticeonline.com';
 
 const links = [
   { href: '/create/', label: 'Create Custom Practice', description: 'Choose exactly which divisors to practice and share a practice link' },
-  { href: '/division/divide-by/1', label: 'Divide by 1 Practice', description: 'Start with the simplest fact family' },
-  { href: '/division/divide-by/6', label: 'Divide by 6 Practice', description: 'Target one of the trickier divisors' },
-  { href: '/division/remainders', label: 'Division with Remainders', description: 'Quotient plus remainder' },
-  { href: '/math-worksheets/division-worksheets', label: 'Division Worksheets', description: 'Printable division practice' },
-  { href: '/division', label: 'Division Practice Hub', description: 'All division modes in one place' },
+  { href: '/division/divide-by/1/', label: 'Divide by 1 Practice', description: 'Start with the simplest fact family' },
+  { href: '/division/divide-by/6/', label: 'Divide by 6 Practice', description: 'Target one of the trickier divisors' },
+  { href: '/division/remainders/', label: 'Division with Remainders', description: 'Quotient plus remainder' },
+  { href: '/math-worksheets/division-worksheets/', label: 'Division Worksheets', description: 'Printable division practice' },
+  { href: '/division/', label: 'Division Practice Hub', description: 'All division modes in one place' },
 ];
 
 const faqItems = [
@@ -46,7 +46,7 @@ const faqItems = [
   description="Practice basic division facts 1÷1 through 144÷12 with instant feedback. Build speed, accuracy, and confidence with mixed division fact drills. No signup required."
   canonical={`${SITE}/division/facts`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division' }, { label: 'Facts' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Division', href: '/division/' }, { label: 'Facts' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -84,7 +84,7 @@ const faqItems = [
 
   <DivisionPracticeHub slot="widget" active="facts" client:load />
 
-  <LocalChooser slot="local-chooser" operation="division" current="/division/facts" />
+  <LocalChooser slot="local-chooser" operation="division" current="/division/facts/" />
 
   <Fragment slot="how-it-works">
     <section class="mt-12" aria-labelledby="facts-progression-heading">
@@ -120,13 +120,13 @@ const faqItems = [
       <h2 id="facts-tips-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Tips for Parents and Teachers</h2>
       <div class="bg-[#EEF2FF] rounded-2xl px-5 py-5 text-sm text-body leading-relaxed space-y-3">
         <p>
-          Practice one divisor at a time if students feel overwhelmed by mixed facts. Use <a href="/division/divide-by/2" class="text-[#4F46E5] font-medium hover:underline">divide by 2</a>, <a href="/division/divide-by/5" class="text-[#4F46E5] font-medium hover:underline">divide by 5</a>, and <a href="/division/divide-by/10" class="text-[#4F46E5] font-medium hover:underline">divide by 10</a> first — these tend to click quickly and build early confidence.
+          Practice one divisor at a time if students feel overwhelmed by mixed facts. Use <a href="/division/divide-by/2/" class="text-[#4F46E5] font-medium hover:underline">divide by 2</a>, <a href="/division/divide-by/5/" class="text-[#4F46E5] font-medium hover:underline">divide by 5</a>, and <a href="/division/divide-by/10/" class="text-[#4F46E5] font-medium hover:underline">divide by 10</a> first — these tend to click quickly and build early confidence.
         </p>
         <p>
           Reinforce the connection between multiplication and division. For every multiplication fact students know, they also know two division facts. Point this out explicitly: "If 6×9=54, that gives us both 54÷6=9 and 54÷9=6."
         </p>
         <p>
-          Once facts feel fluent here, move to <a href="/division/remainders" class="text-[#4F46E5] font-medium hover:underline">division with remainders</a> to extend understanding to non-exact division. Print a <a href="/math-worksheets/division-worksheets" class="text-[#4F46E5] font-medium hover:underline">division worksheet</a> for offline practice between sessions.
+          Once facts feel fluent here, move to <a href="/division/remainders/" class="text-[#4F46E5] font-medium hover:underline">division with remainders</a> to extend understanding to non-exact division. Print a <a href="/math-worksheets/division-worksheets/" class="text-[#4F46E5] font-medium hover:underline">division worksheet</a> for offline practice between sessions.
         </p>
       </div>
     </section>
@@ -144,7 +144,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="mt-12 text-sm text-body">Comfortable with exact division? Try <a href="/division/remainders" class="text-[#4F46E5] font-semibold hover:underline">division with remainders</a> next →</p>
+    <p class="mt-12 text-sm text-body">Comfortable with exact division? Try <a href="/division/remainders/" class="text-[#4F46E5] font-semibold hover:underline">division with remainders</a> next →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />

@@ -9,11 +9,11 @@ import '@/styles/practice-surface-prototype.css';
 const SITE = 'https://mathpracticeonline.com';
 
 const links = [
-  { href: '/addition', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
-  { href: '/addition/2-digit-without-regrouping', label: '2-Digit Addition (Without Regrouping)', description: 'Review before tackling regrouping' },
-  { href: '/addition/1-digit', label: '1-Digit Addition', description: 'Reinforce the addition facts behind regrouping' },
-  { href: '/subtraction/2-digit-with-regrouping', label: '2-Digit Subtraction With Regrouping', description: 'The inverse skill: regrouping in subtraction' },
-  { href: '/math-worksheets/addition-worksheets', label: 'Addition Worksheets', description: 'Worksheet-style regrouping practice with instant feedback' },
+  { href: '/addition/', label: 'All Addition Levels', description: 'Compare levels or start from the beginning' },
+  { href: '/addition/2-digit-without-regrouping/', label: '2-Digit Addition (Without Regrouping)', description: 'Review before tackling regrouping' },
+  { href: '/addition/1-digit/', label: '1-Digit Addition', description: 'Reinforce the addition facts behind regrouping' },
+  { href: '/subtraction/2-digit-with-regrouping/', label: '2-Digit Subtraction With Regrouping', description: 'The inverse skill: regrouping in subtraction' },
+  { href: '/math-worksheets/addition-worksheets/', label: 'Addition Worksheets', description: 'Worksheet-style regrouping practice with instant feedback' },
 ];
 
 const faqItems = [
@@ -41,7 +41,7 @@ const faqItems = [
   description="Practice 2-digit addition with regrouping. Every problem requires carrying a ten from the ones column, building advanced multi-digit addition accuracy with instant feedback and streak tracking."
   canonical={`${SITE}/addition/2-digit-with-regrouping`}
   pilotLayout
-  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition' }, { label: '2-Digit Addition With Regrouping' }]}
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Addition', href: '/addition/' }, { label: '2-Digit Addition With Regrouping' }]}
   breadcrumbVisual={false}
 >
   <Fragment slot="head">
@@ -102,7 +102,7 @@ const faqItems = [
 
   <AdditionPracticeHub slot="widget" active="2-digit-with-regrouping" variant="prototype" client:load />
 
-  <LocalChooser slot="local-chooser" operation="addition" current="/addition/2-digit-with-regrouping" />
+  <LocalChooser slot="local-chooser" operation="addition" current="/addition/2-digit-with-regrouping/" />
 
   <Fragment slot="intro">
     <p>This page is for second and third graders who've already mastered two-digit addition without regrouping and single-digit facts, plus parents and teachers checking whether a child understands regrouping conceptually rather than just following steps. Every problem here forces at least one regroup, so there's no way to get through it without exchanging 10 ones for 1 ten in the tens column.</p>
@@ -170,7 +170,7 @@ const faqItems = [
     </section>
 
     <!-- Next step -->
-    <p class="text-sm text-body">Comfortable with regrouping? Try <a href="/subtraction/2-digit-with-regrouping" class="text-[#4F46E5] font-semibold hover:underline">2-digit subtraction with regrouping</a>, the inverse skill →</p>
+    <p class="text-sm text-body">Comfortable with regrouping? Try <a href="/subtraction/2-digit-with-regrouping/" class="text-[#4F46E5] font-semibold hover:underline">2-digit subtraction with regrouping</a>, the inverse skill →</p>
 
     <!-- Internal Links -->
     <InternalLinks links={links} />
