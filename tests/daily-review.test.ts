@@ -9,7 +9,7 @@ import {
   isDailyReviewGradeId,
   loadDailyReviewPrefs,
   markDailyReviewCompleted,
-  saveDailyReviewLastSelection,
+  millisecondsUntilNextLocalMidnight,
   todayDateKey,
   type DailyReviewGradeId,
 } from '../src/engine/dailyReview';
@@ -79,7 +79,7 @@ export const tests = [
     }
   }),
 
-  test('kindergarten stays within Numbers-to-10 scope and never generates multiplication/division', () => {
+  test('kindergarten stays within Numbers-up-to-10 scope and never generates multiplication/division', () => {
     const problems = generateDailyReviewProblems(DATE, 'k');
     for (const problem of problems) {
       assert.ok(problem.operation === 'addition' || problem.operation === 'subtraction', problem.operation);
@@ -87,6 +87,24 @@ export const tests = [
       assert.ok(problem.operandB >= 0 && problem.operandB <= 10, String(problem.operandB));
       assert.ok(problem.correctAnswer >= 0 && problem.correctAnswer <= 20, String(problem.correctAnswer));
     }
+  }),
+
+  test('kindergarten allows zero but never exceeds 2 zero-operand problems in a 10-question set, across many dates', () => {
+    let sawZeroOperandProblem = false;
+    let sawFullQuota = false;
+    for (let day = 1; day <= 31; day++) {
+      const dateKey = `2026-04-${String(day).padStart(2, '0')}`;
+      if (Number.isNaN(new Date(dateKey).getTime())) continue;
+      const problems = generateDailyReviewProblems(dateKey, 'k');
+      assert.equal(problems.length, 10, dateKey);
+      assert.deepEqual(countByOperation(problems), EXPECTED_QUOTA.k, dateKey);
+      const zeroOperandCount = problems.filter((p) => p.operandA === 0 || p.operandB === 0).length;
+      assert.ok(zeroOperandCount <= 2, `${dateKey}: expected at most 2 zero-operand problems, got ${zeroOperandCount}`);
+      if (zeroOperandCount > 0) sawZeroOperandProblem = true;
+      if (zeroOperandCount === 2) sawFullQuota = true;
+    }
+    assert.ok(sawZeroOperandProblem, 'zero must remain a valid Kindergarten operand, not suppressed entirely');
+    assert.ok(sawFullQuota, 'the 2-problem cap should actually be reached on at least one sampled date');
   }),
 
   test('grade 3/4 division facts are always exact (no remainder) with divisor/quotient within 1–12', () => {
@@ -172,6 +190,15 @@ export const tests = [
     assert.notDeepEqual(first.map(tuple), differentMixVersion.map(tuple));
   }),
 
+  test('kindergarten\'s zero-operand retry loop stays deterministic: same date reproduces the same set, different dates diverge', () => {
+    const firstK = generateDailyReviewProblems(DATE, 'k');
+    const secondK = generateDailyReviewProblems(DATE, 'k');
+    assert.deepEqual(firstK.map(tuple), secondK.map(tuple));
+
+    const differentDateK = generateDailyReviewProblems('2026-09-12', 'k');
+    assert.notDeepEqual(firstK.map(tuple), differentDateK.map(tuple));
+  }),
+
   test('the deterministic shuffle never changes the underlying operation-count quota', () => {
     for (const gradeId of DAILY_REVIEW_GRADE_IDS) {
       for (const dateKey of ['2026-01-01', '2026-06-15', '2026-12-31']) {
@@ -191,6 +218,49 @@ export const tests = [
   test('todayDateKey formats a local date as YYYY-MM-DD', () => {
     assert.equal(todayDateKey(new Date(2026, 8, 11)), '2026-09-11');
     assert.equal(todayDateKey(new Date(2026, 0, 5)), '2026-01-05');
+  }),
+
+  test('todayDateKey is built from local calendar components, not a UTC-based ISO slice', () => {
+    // A local-components implementation and a UTC/ISO implementation only
+    // ever disagree near a local-midnight boundary that itself differs from
+    // UTC midnight — which depends on the process's own timezone, so pin it
+    // explicitly rather than relying on the test runner's default (which may
+    // already be UTC, masking the bug this test exists to catch). 11pm
+    // Eastern on Sept 11 is already Sept 12 in UTC, so a UTC/ISO
+    // implementation would wrongly report the 12th.
+    const originalTz = process.env.TZ;
+    try {
+      process.env.TZ = 'America/New_York';
+      const localElevenPm = new Date(2026, 8, 11, 23, 0, 0, 0);
+      assert.equal(todayDateKey(localElevenPm), '2026-09-11');
+      assert.notEqual(todayDateKey(localElevenPm), localElevenPm.toISOString().slice(0, 10));
+    } finally {
+      if (originalTz === undefined) delete process.env.TZ; else process.env.TZ = originalTz;
+    }
+  }),
+
+  test('todayDateKey resolves the same UTC instant to different local dates in different timezones', () => {
+    // Sept 12 04:30 UTC is already Sept 12 local in New York (UTC-4) but
+    // still Sept 11 local in Los Angeles (UTC-7) — a genuine timezone-
+    // boundary case, not just two zones that happen to agree.
+    const instant = new Date(Date.UTC(2026, 8, 12, 4, 30));
+    const originalTz = process.env.TZ;
+    try {
+      process.env.TZ = 'America/New_York';
+      assert.equal(todayDateKey(new Date(instant.getTime())), '2026-09-12', 'New York local date');
+      process.env.TZ = 'America/Los_Angeles';
+      assert.equal(todayDateKey(new Date(instant.getTime())), '2026-09-11', 'Los Angeles local date');
+    } finally {
+      if (originalTz === undefined) delete process.env.TZ; else process.env.TZ = originalTz;
+    }
+  }),
+
+  test('millisecondsUntilNextLocalMidnight measures to the next local calendar day, via calendar construction not a fixed 24h offset', () => {
+    assert.equal(millisecondsUntilNextLocalMidnight(new Date(2026, 8, 11, 23, 59, 0, 0)), 60_000);
+    assert.equal(millisecondsUntilNextLocalMidnight(new Date(2026, 8, 11, 0, 0, 0, 0)), 24 * 60 * 60 * 1000);
+    assert.equal(millisecondsUntilNextLocalMidnight(new Date(2026, 8, 11, 12, 0, 0, 0)), 12 * 60 * 60 * 1000);
+    // Crossing a month/year boundary must roll over correctly via Date's own calendar normalization.
+    assert.equal(millisecondsUntilNextLocalMidnight(new Date(2025, 11, 31, 23, 0, 0, 0)), 60 * 60 * 1000);
   }),
 
   test('isDailyReviewGradeId validates against the six supported IDs only', () => {
@@ -213,15 +283,12 @@ export const tests = [
     }
   }),
 
-  test('switching the last-selected grade preserves every grade\'s own completion state', () => {
+  test('completing one grade after another preserves each grade\'s own completion state', () => {
     setupStorage();
     markDailyReviewCompleted('g3', '2026-09-11');
-    saveDailyReviewLastSelection('g4');
-    assert.equal(loadDailyReviewPrefs().lastSelection, 'g4');
-    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'switching selection must not clear a previously completed grade');
-    assert.equal(isDailyReviewCompletedToday('g4', '2026-09-11'), false);
-    saveDailyReviewLastSelection('g3');
-    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'switching back must still show the earlier completion');
+    markDailyReviewCompleted('g4', '2026-09-11');
+    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'completing another grade must not clear an earlier completion');
+    assert.ok(isDailyReviewCompletedToday('g4', '2026-09-11'));
   }),
 
   test('a new day naturally presents every grade as incomplete again', () => {
@@ -233,7 +300,15 @@ export const tests = [
   test('loadDailyReviewPrefs defaults sensibly when nothing has been stored yet', () => {
     setupStorage();
     const prefs = loadDailyReviewPrefs();
-    assert.equal(prefs.lastSelection, 'g3');
     assert.deepEqual(prefs.completedDateBySelection, {});
+  }),
+
+  test('a legacy stored record with a stray lastSelection field still loads its completion data', () => {
+    const storage = setupStorage();
+    storage.setItem('mp_daily_review_prefs', JSON.stringify({
+      version: 1,
+      data: { lastSelection: 'g4', completedDateBySelection: { g3: '2026-09-11' } },
+    }));
+    assert.ok(isDailyReviewCompletedToday('g3', '2026-09-11'), 'legacy lastSelection field must not break reading completedDateBySelection');
   }),
 ];

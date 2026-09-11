@@ -9,7 +9,7 @@ import { createVersionedRecordAdapter } from './storage';
  * underlying engine, applied one layer up at the quota/config layer a future
  * change to tier definitions would otherwise silently mutate.
  */
-export const DAILY_REVIEW_MIX_VERSION = 2 as const;
+export const DAILY_REVIEW_MIX_VERSION = 3 as const;
 
 export type DailyReviewGradeId = 'k' | 'g1' | 'g2' | 'g3' | 'g4' | 'g5';
 
@@ -40,7 +40,7 @@ export const DAILY_REVIEW_GRADE_SHORT_LABELS: Record<DailyReviewGradeId, string>
 
 /** Short explanatory copy shown beside the grade choice — kept narrow and honest, never implying broader curriculum coverage than the generator produces. */
 export const DAILY_REVIEW_GRADE_SUBTITLES: Record<DailyReviewGradeId, string> = {
-  k: 'Numbers to 10',
+  k: 'Numbers up to 10',
   g1: 'Addition & subtraction within 20',
   g2: 'Two-digit addition & subtraction',
   g3: 'Adds multiplication & division facts',
@@ -142,6 +142,18 @@ export function todayDateKey(now: Date = new Date()): string {
   return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 }
 
+/**
+ * Milliseconds from `now` until the visitor's next local midnight. Built from
+ * calendar components (`getFullYear`/`getMonth`/`getDate` + 1), not a fixed
+ * 24-hour offset, so the browser's own Date implementation absorbs DST and
+ * variable-length local days rather than this function assuming every day is
+ * exactly 24 hours.
+ */
+export function millisecondsUntilNextLocalMidnight(now: Date = new Date()): number {
+  const nextMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0, 0);
+  return nextMidnight.getTime() - now.getTime();
+}
+
 function hashString(input: string): number {
   // FNV-1a — small, dependency-free, stable across runs for the same string.
   let hash = 0x811c9dc5;
@@ -167,6 +179,20 @@ function deterministicShuffle<T>(items: T[], random: RandomSource): T[] {
   return arr;
 }
 
+// Kindergarten is the only grade whose ranges (addition 0–5, subtraction
+// 0–10) can draw 0 as an operand — every other grade's minimums are >= 1.
+// Zero is a legitimate part of early number sense and is never excluded, but
+// left unconstrained a day's 10-question set can draw far more zero-operand
+// problems than is useful (observed up to 7/10 across a year of sample
+// dates). This caps how many of Kindergarten's own candidates are *accepted*
+// after the fact — it does not touch generateProblem or any other grade.
+const KINDERGARTEN_MAX_ZERO_OPERAND_PROBLEMS = 2;
+const ZERO_OPERAND_RETRY_ATTEMPTS = 20;
+
+function isZeroOperandProblem(problem: Problem): boolean {
+  return problem.operandA === 0 || problem.operandB === 0;
+}
+
 /**
  * The single source of truth for a Daily Review session: exactly 10
  * problems, an explicit per-grade operation quota (never generic
@@ -186,9 +212,23 @@ export function generateDailyReviewProblems(
   const history = createGenerationHistory();
 
   const problems: Problem[] = [];
+  let zeroOperandCount = 0;
   for (const slot of grade.quota) {
     for (let i = 0; i < slot.count; i++) {
-      problems.push(generateProblem(slot.config, { random, history }));
+      let problem = generateProblem(slot.config, { random, history });
+      if (gradeId === 'k') {
+        let attempts = 0;
+        while (
+          isZeroOperandProblem(problem) &&
+          zeroOperandCount >= KINDERGARTEN_MAX_ZERO_OPERAND_PROBLEMS &&
+          attempts < ZERO_OPERAND_RETRY_ATTEMPTS
+        ) {
+          problem = generateProblem(slot.config, { random, history });
+          attempts++;
+        }
+        if (isZeroOperandProblem(problem)) zeroOperandCount++;
+      }
+      problems.push(problem);
     }
   }
   return deterministicShuffle(problems, random);
@@ -200,8 +240,12 @@ export function generateDailyReviewProblems(
 // completion state. This is deliberately separate from the ordinary
 // PageStats each grade's storageKey already accumulates via storage.ts.
 
+// `lastSelection` was dropped once grade identity moved from client state
+// into the route (/daily-review/{grade}/): the validator no longer requires
+// or writes it, but a record persisted before this change may still carry it
+// as an inert extra field — that's fine, `isDailyReviewPrefs` only checks the
+// fields it still reads, so no migration/version bump is needed.
 export interface DailyReviewPrefs {
-  lastSelection: DailyReviewGradeId;
   completedDateBySelection: Partial<Record<DailyReviewGradeId, string>>;
 }
 
@@ -210,7 +254,6 @@ const DAILY_REVIEW_PREFS_KEY = 'mp_daily_review_prefs';
 function isDailyReviewPrefs(value: unknown): value is DailyReviewPrefs {
   if (typeof value !== 'object' || value === null) return false;
   const record = value as Record<string, unknown>;
-  if (!isDailyReviewGradeId(record.lastSelection)) return false;
   const completed = record.completedDateBySelection;
   if (typeof completed !== 'object' || completed === null) return false;
   return Object.entries(completed as Record<string, unknown>).every(
@@ -220,15 +263,10 @@ function isDailyReviewPrefs(value: unknown): value is DailyReviewPrefs {
 
 const dailyReviewPrefsAdapter = createVersionedRecordAdapter<DailyReviewPrefs>(isDailyReviewPrefs);
 
-const DEFAULT_DAILY_REVIEW_PREFS: DailyReviewPrefs = { lastSelection: 'g3', completedDateBySelection: {} };
+const DEFAULT_DAILY_REVIEW_PREFS: DailyReviewPrefs = { completedDateBySelection: {} };
 
 export function loadDailyReviewPrefs(): DailyReviewPrefs {
   return dailyReviewPrefsAdapter.read(DAILY_REVIEW_PREFS_KEY) ?? { ...DEFAULT_DAILY_REVIEW_PREFS, completedDateBySelection: {} };
-}
-
-export function saveDailyReviewLastSelection(gradeId: DailyReviewGradeId): void {
-  const current = loadDailyReviewPrefs();
-  dailyReviewPrefsAdapter.write(DAILY_REVIEW_PREFS_KEY, { ...current, lastSelection: gradeId });
 }
 
 export function markDailyReviewCompleted(gradeId: DailyReviewGradeId, dateKey: string): void {

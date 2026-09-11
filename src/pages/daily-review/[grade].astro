@@ -1,0 +1,70 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import DailyReviewWidget from '@/components/DailyReviewWidget';
+import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID, SITE_URL } from '@/config/site';
+import { DAILY_REVIEW_GRADE_PAGES, type DailyReviewGradePage } from '@/data/dailyReviewGradePages';
+import '@/styles/practice-surface-prototype.css';
+
+export function getStaticPaths() {
+  return DAILY_REVIEW_GRADE_PAGES.map((page) => ({ params: { grade: page.slug }, props: page }));
+}
+
+const { slug, gradeId, label, educationalLevel, intro, explanation, practicePageHref } = Astro.props as DailyReviewGradePage;
+
+const title = `${label} Daily Math Review — Free 10-Question Practice | Math Practice Online`;
+const description = `${intro} Today's set stays the same all day and changes tomorrow. No setup, no login required.`;
+
+const otherGrades = DAILY_REVIEW_GRADE_PAGES.filter((page) => page.slug !== slug);
+
+const links = [
+  ...(practicePageHref ? [{ href: practicePageHref, label: `${label} Math Practice`, description: 'More practice at this grade level' }] : []),
+  { href: '/create/', label: 'Create Classroom Practice', description: 'Choose the exact skills and session settings' },
+  { href: '/arithmetic-speed-drill/', label: 'Arithmetic Speed Drill', description: 'Timed fluency practice' },
+  { href: '/math-worksheets/', label: 'Math Worksheets', description: 'Printable independent practice' },
+];
+---
+
+<PracticeLayout
+  title={title}
+  description={description}
+  canonical={`${SITE_URL}/daily-review/${slug}`}
+  pilotLayout
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Daily Math Review', href: '/daily-review/' }, { label: `${label} Daily Math Review` }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": `${label} Daily Math Review`,
+      "description": description,
+      "url": `${SITE_URL}/daily-review/${slug}`,
+      "educationalLevel": [educationalLevel],
+      "teaches": ["Addition", "Subtraction", "Multiplication", "Division"],
+      "provider": { "@id": ORGANIZATION_ID }
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">{label} Daily Math Review</h1>
+
+  <Fragment slot="widget">
+    <p class="mt-1 mb-4 text-sm text-body max-w-xl">{intro}</p>
+    <DailyReviewWidget client:load gradeId={gradeId} />
+  </Fragment>
+
+  <Fragment slot="local-chooser">
+    <p class="mt-6 text-sm text-body max-w-xl">{explanation}</p>
+
+    <nav aria-label="Other Daily Reviews" class="mt-4 text-sm text-body">
+      <span class="font-semibold text-[#1E293B]">Other Daily Reviews:</span>{' '}
+      {otherGrades.map((page, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true"> · </span>}
+          <a href={`/daily-review/${page.slug}/`} class="text-[#4F46E5] hover:underline">{page.label}</a>
+        </>
+      ))}
+    </nav>
+  </Fragment>
+
+  <InternalLinks slot="links" links={links} />
+</PracticeLayout>
