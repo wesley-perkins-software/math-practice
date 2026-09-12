@@ -26,15 +26,40 @@ export const tests = [
     assert.ok(globalCss.includes('min-width: calc(var(--dividend-digits, 2) * 1ch + 6mm) !important;'));
   }),
 
-  test('long division notation and structure are unchanged (divisor, bracketed dividend, quotient+remainder)', () => {
+  test('the division-bracket figure (divisor, bracketed dividend, quotient+remainder) is unchanged in structure', () => {
     assert.ok(source.includes('long-division-divisor'));
     assert.ok(source.includes('long-division-dividend'));
     assert.ok(source.includes('R{problem.remainder}'));
   }),
 
-  test('answer keys reuse the same WorksheetProblem/LongDivisionProblem renderers as blank worksheets (no duplicated markup)', () => {
-    assert.equal((source.match(/function LongDivisionProblem/g) ?? []).length, 1);
+  test('answer keys reuse the same WorksheetProblem/DivisionProblem renderers as blank worksheets (no duplicated markup)', () => {
+    assert.equal((source.match(/function DivisionProblem/g) ?? []).length, 1);
     assert.equal((source.match(/function WorksheetProblem/g) ?? []).length, 1);
     assert.ok(source.includes('showAnswer'));
+  }),
+
+  test('every division worksheet problem — basic facts included, not just with-remainder — routes through the division-bracket renderer', () => {
+    assert.ok(source.includes("if (problem.operation === 'division')"), 'dispatch must key off the operation, not just remainder presence, so exact facts get the bracket too');
+    assert.ok(source.includes('return <DivisionProblem problem={problem} showAnswer={showAnswer} />;'));
+    assert.equal(source.includes("if (problem.remainder !== undefined) {\n    return <DivisionProblem"), false, 'must not still gate the bracket renderer on remainder presence alone');
+  }),
+
+  test('the remainder badge only renders for actual with-remainder problems, and its own class carries the smaller print size (not a fragile :last-child selector)', () => {
+    assert.ok(source.includes('{hasRemainder && <span className="long-division-remainder'), 'basic facts (no remainder) must not render an "R" badge');
+    assert.ok(globalCss.includes('.long-division-answer .long-division-remainder {'));
+    assert.equal(globalCss.includes('.long-division-answer span:last-child {'), false, ':last-child would wrongly shrink a remainder-less quotient, which is now the only child');
+  }),
+
+  test('basic division facts no longer render through the generic stacked WorksheetProblem path with a visible ÷ operator', () => {
+    // The generic stacked layout (OP_SYMBOL, "×"/"−"/"+"/"÷" operator span) is reached only
+    // for addition/subtraction/multiplication now that division always early-returns above it.
+    const dispatchIdx = source.indexOf("if (problem.operation === 'division')");
+    const symbolIdx = source.indexOf('const symbol = OP_SYMBOL[problem.operation]');
+    assert.ok(dispatchIdx > -1 && symbolIdx > -1 && dispatchIdx < symbolIdx, 'division must be routed away before the shared stacked-operator markup is reached');
+  }),
+
+  test('the division-bracket print sizing applies to any division config (facts or remainders), not only withRemainder', () => {
+    assert.ok(source.includes("selectedConfig?.operation === 'division'"));
+    assert.equal(source.includes('Boolean(selectedConfig?.withRemainder)'), false, 'basic division facts must also get the bracket print-sizing class, not just remainder configs');
   }),
 ];

@@ -228,7 +228,7 @@
     flex-shrink: 0 !important;
   }
 
-  /* Long division: pin content to top of cell so student work space falls below */
+  /* Division bracket (basic facts and with-remainder alike): pin content to top of cell so student work space falls below */
   .worksheet-area.long-division-mode .worksheet-problem {
     justify-content: flex-start !important;
     padding-top: 8mm !important;
@@ -255,7 +255,7 @@
     margin-bottom: 1mm !important;
   }
 
-  .worksheet-area.long-division-mode .long-division-answer span:last-child {
+  .worksheet-area.long-division-mode .long-division-answer .long-division-remainder {
     font-size: 12pt !important;
   }
 
