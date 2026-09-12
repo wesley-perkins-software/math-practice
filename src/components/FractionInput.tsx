@@ -20,15 +20,22 @@ const MAX_DIGITS = 2;
 /**
  * Stacked numerator/denominator input, modeled on RemainderProblemInput's
  * proven two-slot pattern (hidden real <input> for keyboard capture + a
- * styled <span> per slot + the shared NumberPad for touch entry) rather than
- * a new interface — no shared AnswerInput abstraction exists in this
- * codebase to implement instead.
+ * styled visible representation + the shared NumberPad for touch entry) —
+ * no shared AnswerInput abstraction exists in this codebase to implement
+ * instead. Shares the practice surface's own design tokens
+ * (practice-surface-prototype.css: --practice-operand-size,
+ * --practice-answer-min-h, --practice-caret-h) and the same answer-box
+ * treatment WrittenProblemInput uses, so a fraction reads as mathematics —
+ * two individually-editable digit slots joined by a fraction bar — rather
+ * than as a boxed form control.
  *
  * A denominator of zero can never be composed: the only way "0" alone could
  * form is a leading zero, which is blocked at the digit-entry level (not a
  * blanket rule against any digit sequence containing zero) — multi-digit
  * denominators like "10" or "12" are unaffected. Numerator zero is a valid,
- * submittable value.
+ * submittable value. A fixed (non-editable) denominator is rendered as
+ * plain muted text — never a bordered/focusable box — so it reads
+ * unambiguously as "given," not "fill this in."
  */
 export default function FractionInput({
   denominatorEditable = true,
@@ -43,7 +50,6 @@ export default function FractionInput({
   const [activeSlot, setActiveSlot] = useState<Slot>('numerator');
   const [numeratorValue, setNumeratorValue] = useState('');
   const [denominatorValue, setDenominatorValue] = useState(initialDenominator);
-  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastSubmitAtRef = useRef(0);
 
@@ -135,39 +141,48 @@ export default function FractionInput({
 
   function renderSlot(slot: Slot, value: string, editable: boolean) {
     const isActive = activeSlot === slot;
-    return (
-      <div
-        className={`flex justify-center ${editable ? 'cursor-pointer' : ''}`}
-        onClick={() => editable && switchSlot(slot)}
-      >
-        <span
-          className={`text-5xl md:text-6xl font-bold tabular-nums inline-flex items-center pb-0.5 border-b-2 font-['JetBrains_Mono'] min-w-[1.5em] justify-center ${
-            !editable
-              ? 'text-[#1E1B4B] border-transparent'
-              : isActive
-                ? 'text-[#1E1B4B] border-[#4F46E5]'
-                : 'text-[#A5B4FC] border-[#E0E7FF]'
-          }`}
-        >
-          {editable && value.length === 0 ? (
-            <span className="inline-flex items-center">
-              <span aria-hidden="true" className="opacity-0 select-none">0</span>
-              {isActive && <span className="ml-0.5 animate-[cursor-blink_1s_step-end_infinite] text-[#4F46E5] font-light">|</span>}
-            </span>
-          ) : (
-            value
-          )}
+
+    if (!editable) {
+      // Fixed value: plain muted text, never a box — reads as "given," not "fill this in."
+      return (
+        <span className="block font-bold leading-none tabular-nums whitespace-nowrap text-[length:var(--practice-operand-size)] text-[#8983B8]">
+          {value}
         </span>
-      </div>
+      );
+    }
+
+    const isPlaceholder = value.length === 0;
+    return (
+      <span
+        onClick={(e) => {
+          e.stopPropagation();
+          switchSlot(slot);
+        }}
+        className={`inline-flex items-center justify-center min-h-[length:var(--practice-answer-min-h)] min-w-[2.75em] rounded-xl border-[1.5px] px-3 cursor-text transition-colors duration-150 ${
+          isActive ? 'border-[#4F46E5] bg-[#F5F3FF] shadow-[0_0_0_3px_rgba(79,70,229,0.14)]' : 'border-[#8983B8] bg-transparent'
+        }`}
+      >
+        {isPlaceholder ? (
+          <span className="text-[length:var(--practice-operand-size)] font-bold text-[#D7D3EE] inline-flex items-center leading-none">
+            <span aria-hidden="true" className="opacity-0 select-none">0</span>
+            {isActive && (
+              <span
+                aria-hidden="true"
+                className="ml-1.5 w-[3px] h-[length:var(--practice-caret-h)] rounded-full bg-[#4F46E5] animate-[cursor-blink_1s_step-end_infinite]"
+              />
+            )}
+          </span>
+        ) : (
+          <span className="text-[length:var(--practice-operand-size)] font-bold text-[#211D4F] leading-none tabular-nums">{value}</span>
+        )}
+      </span>
     );
   }
 
   return (
-    <div className="flex flex-col items-center gap-2 w-full">
+    <div className="flex flex-col items-center gap-3 w-full">
       <div
-        className={`select-none w-fit mx-auto rounded-2xl px-2 py-1 -mx-2 -my-1 transition-shadow duration-200 ease-out ${
-          isFocused ? 'ring-2 ring-[#4F46E5]/40 ring-offset-4 ring-offset-white' : ''
-        }`}
+        className="font-practice inline-flex flex-col items-center select-none cursor-text"
         aria-label={ariaLabel}
         onClick={() => inputRef.current?.focus()}
       >
@@ -189,18 +204,16 @@ export default function FractionInput({
           disabled={disabled}
           aria-label={activeSlot === 'numerator' ? 'Enter numerator' : 'Enter denominator'}
           className="sr-only"
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
         />
 
         {renderSlot('numerator', numeratorValue, true)}
-        <div className="border-t-[3px] border-[#1E1B4B] my-1.5 w-full" />
+        <div className="border-t-4 border-[#211D4F] w-full my-1.5" aria-hidden="true" />
         {renderSlot('denominator', denominatorValue, denominatorEditable)}
       </div>
 
       {feedbackContent}
 
-      <NumberPad onDigit={handleDigit} onBackspace={handleBackspace} onSubmit={handleSubmit} disabled={disabled} />
+      <NumberPad onDigit={handleDigit} onBackspace={handleBackspace} onSubmit={handleSubmit} disabled={disabled} variant="prototype" />
     </div>
   );
 }

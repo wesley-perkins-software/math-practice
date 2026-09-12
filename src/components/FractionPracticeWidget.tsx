@@ -7,6 +7,7 @@ import { buildSessionResult } from '@/engine/scorer';
 import { loadStats, saveStats, updateStatsAfterUntimedAnswer, appendSessionLog } from '@/engine/storage';
 import { recordCompletedQuestion, finishAnswerFeedback, startPracticeSession, type PracticeSessionState } from '@/engine/session';
 import FractionInput from './FractionInput';
+import FractionDisplay from './FractionDisplay';
 import FractionBar from './FractionBar';
 import ScoreCard from './ScoreCard';
 
@@ -53,6 +54,9 @@ export default function FractionPracticeWidget({ skill, storageKey, label, quest
   const [result, setResult] = useState<SessionResult | null>(null);
   const [stats, setStats] = useState<PageStats>(() => loadStats(storageKey));
   const [preSessionScore, setPreSessionScore] = useState<number>(() => loadStats(storageKey).lastSessionScore);
+  // Symbolic-first: the fraction-bar model is opt-in scaffolding, not
+  // permanent chrome, and defaults closed again for every new problem.
+  const [modelOpen, setModelOpen] = useState(false);
 
   const sessionBoundaryRef = useRef<PracticeSessionState>(startPracticeSession());
   const sessionStartTimeRef = useRef<number>(Date.now());
@@ -130,6 +134,7 @@ export default function FractionPracticeWidget({ skill, storageKey, label, quest
       } else if (transition.shouldGenerateNext) {
         setProblemIndex((i) => i + 1);
         setFeedbackState('hidden');
+        setModelOpen(false);
       }
     }, FEEDBACK_DELAY_MS);
   }
@@ -147,62 +152,134 @@ export default function FractionPracticeWidget({ skill, storageKey, label, quest
     setCorrect(0);
     setProblemIndex(0);
     setFeedbackState('hidden');
+    setModelOpen(false);
     setPhase('active');
   }
 
   if (!problems) return null; // avoids a hydration mismatch between server render and the client's own unseeded generation
 
   const problem = problems[Math.min(problemIndex, problems.length - 1)]!;
-  const barDenominator = Math.max(2, Math.min(12, problem.prompt.denominator));
+  const isEquivalent = problem.skill === 'equivalent-fractions';
+  const targetDenominator = problem.policy.kind === 'FIXED_DENOMINATOR_REQUIRED' ? problem.policy.targetDenominator : undefined;
+
+  const feedback = (
+    <div className="h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto flex items-center justify-center w-full">
+      {feedbackState !== 'hidden' && (
+        <div
+          aria-live="polite"
+          aria-atomic="true"
+          className={`font-practice w-full flex items-center justify-center gap-2 text-[length:var(--practice-feedback-text)] font-bold px-4 py-[length:var(--practice-feedback-py)] rounded-xl animate-[fadeIn_0.15s_ease-out] ${
+            feedbackState === 'correct' ? 'bg-[#047857] text-white' : 'bg-[#DC2626] text-white'
+          }`}
+        >
+          {feedbackState === 'correct' ? (
+            <>
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 shrink-0" aria-hidden="true"><path d="M20 6 9 17l-5-5" /></svg>
+              <span>Correct!</span>
+            </>
+          ) : (
+            <span>
+              The answer was{' '}
+              <span className="tabular-nums">{feedbackCorrectAnswer?.numerator}/{feedbackCorrectAnswer?.denominator}</span>
+            </span>
+          )}
+        </div>
+      )}
+    </div>
+  );
 
   return (
-    <div className="bg-white rounded-3xl shadow-[0_4px_24px_rgba(79,70,229,0.10)] ring-1 ring-[#E0E7FF] w-full max-w-lg mx-auto overflow-hidden">
-      <div className="h-1 w-full bg-gradient-to-r from-[#4F46E5] via-[#7C3AED] to-[#2563EB]" />
-      <div className="px-4 py-4 md:px-6 md:py-5">
+    <div data-practice-instrument className="bg-white rounded-2xl border border-[#E4E1F5] w-full max-w-[length:var(--practice-card-max-w)] mx-auto overflow-hidden">
+      <div className="px-[length:var(--practice-card-px)] pt-[length:var(--practice-card-pt)] pb-[length:var(--practice-card-pb)]">
         {phase === 'active' && (
-          <div className="flex flex-col items-center gap-4">
-            <FractionBar numerator={problem.prompt.numerator} denominator={barDenominator} />
+          <div className="flex flex-col items-center gap-[length:var(--practice-stack-gap)]">
+            {/* The math problem is the dominant element: a symbolic stacked-fraction
+                expression, not inline slash notation, and (for Simplify) no bar by
+                default — the visual model is opt-in scaffolding below, never
+                permanent chrome above the prompt. */}
+            {isEquivalent ? (
+              <div className="flex flex-col items-center w-full">
+                <FractionDisplay numerator={problem.prompt.numerator} denominator={problem.prompt.denominator} />
+                <span className="font-practice font-bold text-[#211D4F] text-[length:var(--practice-operator-size)] leading-none my-2" aria-hidden="true">=</span>
+                <FractionInput
+                  key={problem.id}
+                  denominatorEditable={false}
+                  fixedDenominator={targetDenominator}
+                  onSubmit={handleAnswer}
+                  disabled={feedbackState !== 'hidden'}
+                  feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                  ariaLabel={promptDescription(problem)}
+                  feedbackContent={feedback}
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col items-center w-full">
+                <span className="font-practice text-sm font-semibold text-[#6B6690] mb-1">Simplify</span>
+                <FractionDisplay numerator={problem.prompt.numerator} denominator={problem.prompt.denominator} />
+                <div className="mt-3 w-full flex flex-col items-center">
+                  <FractionInput
+                    key={problem.id}
+                    denominatorEditable={true}
+                    onSubmit={handleAnswer}
+                    disabled={feedbackState !== 'hidden'}
+                    feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                    ariaLabel={promptDescription(problem)}
+                    feedbackContent={feedback}
+                  />
+                </div>
+              </div>
+            )}
 
-            <p className="text-center text-[#1E1B4B] font-semibold text-base md:text-lg">
-              {problem.skill === 'equivalent-fractions'
-                ? `${problem.prompt.numerator}/${problem.prompt.denominator} = ?/${problem.policy.kind === 'FIXED_DENOMINATOR_REQUIRED' ? problem.policy.targetDenominator : ''}`
-                : `Simplify ${problem.prompt.numerator}/${problem.prompt.denominator}`}
-            </p>
+            {/* Optional model: closed by default, never larger or more visually
+                important than the symbolic problem above it. Opens without
+                shifting anything above it — only adds content below. */}
+            <div className="w-full flex flex-col items-center">
+              <button
+                type="button"
+                onClick={() => setModelOpen((open) => !open)}
+                aria-expanded={modelOpen}
+                className="font-practice text-sm font-semibold text-[#4F46E5] hover:text-[#3E35C7] transition-colors py-1 px-2 -mx-2 rounded focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4F46E5]/50"
+              >
+                {modelOpen ? 'Hide model' : 'Show model'}
+              </button>
 
-            <FractionInput
-              key={problem.id}
-              denominatorEditable={problem.skill !== 'equivalent-fractions'}
-              fixedDenominator={problem.policy.kind === 'FIXED_DENOMINATOR_REQUIRED' ? problem.policy.targetDenominator : undefined}
-              onSubmit={handleAnswer}
-              disabled={feedbackState !== 'hidden'}
-              feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
-              ariaLabel={promptDescription(problem)}
-              feedbackContent={
-                <div className="min-h-[1.75rem] flex items-center justify-center w-full">
-                  {feedbackState !== 'hidden' && (
-                    <div
-                      aria-live="polite"
-                      aria-atomic="true"
-                      className={`text-base font-semibold px-5 py-2 rounded-xl animate-[fadeIn_0.15s_ease-out] ${
-                        feedbackState === 'correct'
-                          ? 'bg-[#ECFDF5] text-[#065F46] border border-[#6EE7B7] shadow-[0_0_0_3px_rgba(16,185,129,0.15)]'
-                          : 'bg-[#FEF2F2] text-[#991B1B] border border-[#FCA5A5] shadow-[0_0_0_3px_rgba(239,68,68,0.12)]'
-                      }`}
-                    >
-                      {feedbackState === 'correct'
-                        ? '✓ Correct!'
-                        : `The answer was ${feedbackCorrectAnswer?.numerator}/${feedbackCorrectAnswer?.denominator}`}
+              {modelOpen && (
+                <div className="mt-2 flex items-start justify-center gap-6 w-full">
+                  <div className="flex flex-col items-center gap-1 w-28">
+                    <FractionBar numerator={problem.prompt.numerator} denominator={problem.prompt.denominator} />
+                    <span className="font-practice text-xs font-medium text-[#6B6690] tabular-nums">
+                      {problem.prompt.numerator}/{problem.prompt.denominator}
+                    </span>
+                  </div>
+                  {isEquivalent && (
+                    <div className="flex flex-col items-center gap-1 w-28">
+                      <FractionBar numerator={problem.correctAnswer.numerator} denominator={problem.correctAnswer.denominator} />
+                      <span className="font-practice text-xs font-medium text-[#6B6690] tabular-nums">
+                        ?/{targetDenominator}
+                      </span>
                     </div>
                   )}
                 </div>
-              }
-            />
+              )}
+            </div>
 
-            <div className="flex items-center justify-between w-full">
-              <span className="text-sm font-semibold text-[#6B7280]">
+            {/* Secondary status: Streak matches the arithmetic practice
+                convention (PracticeWidget's untimed row) rather than
+                inventing a new "Correct: N" live counter — score is not
+                over-emphasized during active practice. */}
+            <div className="flex items-end justify-between w-full font-practice pt-1">
+              <div key={stats.currentStreak} className="flex flex-col gap-0.5 leading-none animate-[pop_0.25s_ease-out]">
+                <span className="text-[13px] font-bold text-[#211D4F]">Streak</span>
+                <span className="flex items-baseline gap-1">
+                  <span className={`text-[2rem] font-extrabold leading-none tabular-nums ${stats.currentStreak > 0 ? 'text-amber-600' : 'text-[#8983B8]'}`}>
+                    {stats.currentStreak}
+                  </span>
+                  {stats.currentStreak > 0 && <span aria-hidden="true" className="text-base leading-none translate-y-[-1px]">🔥</span>}
+                </span>
+              </div>
+              <span className="text-xs font-medium text-[#8983B8]">
                 Question {Math.min(totalAnsweredRef.current + 1, questionCount)} of {questionCount}
               </span>
-              <span className="text-sm font-semibold text-[#4F46E5]">Correct: {correct}</span>
             </div>
           </div>
         )}
@@ -216,6 +293,7 @@ export default function FractionPracticeWidget({ skill, storageKey, label, quest
             preSessionPersonalBest={0}
             isNewStreakRecord={false}
             onRestart={handleRestart}
+            variant="prototype"
             questionCount={questionCount}
           />
         )}

@@ -48,6 +48,7 @@ export const tests = [
       const multiplier = targetDenominator / problem.prompt.denominator;
       assert.equal(problem.correctAnswer.numerator, problem.prompt.numerator * multiplier);
       assert.notEqual(targetDenominator, 0);
+      assert.ok(targetDenominator <= 12, 'target denominator must stay within FractionBar\'s 2-12 supported partition range for the optional two-bar model');
     }
   }),
 

@@ -77,8 +77,10 @@ export interface FractionGenerationOptions {
 
 /**
  * Equivalent Fractions: a simple reduced base fraction, a multiplier > 1
- * applied to both terms, and a fixed target denominator. Classroom-friendly
- * bounds keep the target denominator at or below 24.
+ * applied to both terms, and a fixed target denominator. The multiplier is
+ * capped so the target denominator never exceeds 12 — both the prompt and
+ * the target representation need to render in FractionBar's 2-12 supported
+ * partition range for the optional "Show model" two-bar comparison.
  */
 function generateEquivalentFractionsProblem(random: RandomSource, history: FractionGenerationHistory): FractionProblem {
   let prompt: Fraction = { numerator: 0, denominator: 0 };
@@ -88,7 +90,8 @@ function generateEquivalentFractionsProblem(random: RandomSource, history: Fract
   for (let attempts = 0; attempts < MAX_RETRY_ATTEMPTS; attempts++) {
     const baseDenominator = randInt(2, 6, random);
     const baseNumerator = randomProperCoprimeNumerator(baseDenominator, random);
-    const multiplier = randInt(2, 4, random);
+    const maxMultiplier = Math.max(2, Math.floor(12 / baseDenominator));
+    const multiplier = randInt(2, maxMultiplier, random);
     targetDenominator = baseDenominator * multiplier;
     prompt = { numerator: baseNumerator, denominator: baseDenominator };
     correctAnswer = { numerator: baseNumerator * multiplier, denominator: targetDenominator };
