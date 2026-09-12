@@ -1,0 +1,25 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import FractionPracticeWidget from '@/components/FractionPracticeWidget';
+import '@/styles/practice-surface-prototype.css';
+---
+
+<!--
+  Internal prototype route — not part of public Fractions IA yet (see
+  docs/fractions-architecture.md). Explicitly noindex'd and excluded from the
+  sitemap (astro.config.mjs), and deliberately not linked from global nav,
+  the homepage, grade pages, or any InternalLinks module. Only reachable by
+  direct URL during prototype review.
+-->
+<BaseLayout
+  title="Fractions Prototype: Equivalent Fractions"
+  description="Internal prototype — not a public page."
+  canonical="/fractions/prototype-equivalent/"
+  noindex={true}
+>
+  <main class="max-w-xl mx-auto px-4 py-8">
+    <p class="text-xs font-bold uppercase tracking-wide text-[#DC2626] mb-2">Internal prototype — not indexed, not linked publicly</p>
+    <h1 class="text-2xl font-bold text-[#1E1B4B] mb-4">Equivalent Fractions (prototype)</h1>
+    <FractionPracticeWidget client:load skill="equivalent-fractions" storageKey="fractions-prototype-equivalent" label="Equivalent Fractions (Prototype)" />
+  </main>
+</BaseLayout>
