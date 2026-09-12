@@ -5,7 +5,6 @@ import type { SessionResult } from '@/engine/types';
 
 export interface MultiplicationTestDimensions {
   readonly problem_count: MultiplicationTestQuestionCount;
-  readonly timed: boolean;
   readonly selection_scope: MultiplicationTestSelectionScope;
 }
 
@@ -18,7 +17,7 @@ type EventParams = {
 };
 export type MultiplicationTestAnalyticsEvent = keyof EventParams;
 
-const ALLOWED_KEYS = new Set(['problem_count', 'timed', 'selection_scope', 'completion_reason']);
+const ALLOWED_KEYS = new Set(['problem_count', 'selection_scope', 'completion_reason']);
 
 /** Runtime allowlisting complements the event map so no untyped caller can leak arbitrary data (exact facts, score, answers). */
 function safeEventPayload(params: object): Record<string, string | number | boolean> {

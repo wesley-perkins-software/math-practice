@@ -1,7 +1,6 @@
 import type { PracticeConfig, Problem, SessionResult } from './types';
 import { generateProblemSet, createGenerationHistory } from './generator';
 import { createSeededRandom } from './random';
-import { calculateTimedScore } from './scorer';
 
 /**
  * Deliberately NOT the shared `QuestionCount` (10|20|30|50) — the Test
@@ -9,23 +8,25 @@ import { calculateTimedScore } from './scorer';
  * touching a type every other practice surface's finite-session path
  * depends on.
  */
-export const MULTIPLICATION_TEST_QUESTION_COUNTS = [10, 20, 50] as const;
+export const MULTIPLICATION_TEST_QUESTION_COUNTS = [10, 20, 30] as const;
 export type MultiplicationTestQuestionCount = (typeof MULTIPLICATION_TEST_QUESTION_COUNTS)[number];
-
-export const MULTIPLICATION_TEST_TIMER_SECONDS = 60 as const;
 
 const ALL_TABLES: readonly number[] = Object.freeze(Array.from({ length: 12 }, (_, i) => i + 1));
 
+/**
+ * V1 is a fixed-length assessment only — no user-configurable timer. Total
+ * elapsed time is still measured (see buildMultiplicationTestRuntimeConfig)
+ * and shown in results, but there is no countdown or time pressure. Timed
+ * fluency is the Arithmetic Speed Drill's job, not the Test's.
+ */
 export interface MultiplicationTestConfig {
   readonly facts: readonly number[];
   readonly questionCount: MultiplicationTestQuestionCount;
-  readonly timed: boolean;
 }
 
 export const DEFAULT_MULTIPLICATION_TEST_CONFIG: MultiplicationTestConfig = Object.freeze({
   facts: ALL_TABLES,
   questionCount: 20,
-  timed: false,
 });
 
 export function isMultiplicationTestQuestionCount(value: unknown): value is MultiplicationTestQuestionCount {
@@ -47,17 +48,15 @@ function isValidFactsSelection(facts: readonly number[]): boolean {
 export function normalizeMultiplicationTestConfig(input: {
   facts?: readonly number[];
   questionCount?: number;
-  timed?: boolean;
 }): MultiplicationTestConfig {
   const facts = input.facts && isValidFactsSelection(input.facts) ? [...input.facts] : [...ALL_TABLES];
   const questionCount = isMultiplicationTestQuestionCount(input.questionCount) ? input.questionCount : DEFAULT_MULTIPLICATION_TEST_CONFIG.questionCount;
-  const timed = input.timed === true;
-  return Object.freeze({ facts, questionCount, timed });
+  return Object.freeze({ facts, questionCount });
 }
 
 // ─── URL query codec — configuration only, never results/answers/seed ────────
 
-const ALLOWED_QUERY_KEYS = new Set(['facts', 'count', 'timed']);
+const ALLOWED_QUERY_KEYS = new Set(['facts', 'count']);
 const MAX_QUERY_LENGTH = 512;
 const MAX_PARAMETER_LENGTH = 64;
 
@@ -66,11 +65,11 @@ function parsePositiveInteger(value: string): number | undefined {
 }
 
 /**
- * Strictly parses `?facts=1,2,3&count=20&timed=1` into a config. Any
- * malformation (unknown/duplicate keys, oversized input, invalid values)
- * fails the whole parse rather than partially repairing it — the caller
- * falls back to `DEFAULT_MULTIPLICATION_TEST_CONFIG` on failure, and the
- * page never redirects for a malformed query.
+ * Strictly parses `?facts=1,2,3&count=20` into a config. Any malformation
+ * (unknown/duplicate keys, oversized input, invalid values) fails the whole
+ * parse rather than partially repairing it — the caller falls back to
+ * `DEFAULT_MULTIPLICATION_TEST_CONFIG` on failure, and the page never
+ * redirects for a malformed query.
  */
 export function parseMultiplicationTestQuery(query: string | URLSearchParams): MultiplicationTestConfig | undefined {
   try {
@@ -105,14 +104,7 @@ export function parseMultiplicationTestQuery(query: string | URLSearchParams): M
       questionCount = parsed;
     }
 
-    let timed: boolean | undefined;
-    const rawTimed = values.get('timed');
-    if (rawTimed !== undefined) {
-      if (rawTimed !== '0' && rawTimed !== '1') return undefined;
-      timed = rawTimed === '1';
-    }
-
-    return normalizeMultiplicationTestConfig({ facts, questionCount, timed });
+    return normalizeMultiplicationTestConfig({ facts, questionCount });
   } catch {
     return undefined;
   }
@@ -127,22 +119,25 @@ export function serializeMultiplicationTestQuery(config: MultiplicationTestConfi
   if (config.questionCount !== DEFAULT_MULTIPLICATION_TEST_CONFIG.questionCount) {
     params.set('count', String(config.questionCount));
   }
-  if (config.timed) {
-    params.set('timed', '1');
-  }
   return params.toString();
 }
 
 // ─── Problem generation — reuses the existing generator/seeded-RNG pipeline ──
 
-/** Base runtime config for problem generation. Not part of the ALL_PRESETS/progress registry — this identity is never used to read or write stats. */
+/**
+ * Base runtime config for problem generation. Not part of the
+ * ALL_PRESETS/progress registry — this identity is never used to read or
+ * write stats. Always untimed: `PracticeWidget` still measures elapsed time
+ * for an untimed finite session (captured at session start, i.e. Start
+ * Test) and reports it in the completed `SessionResult` — the Test just
+ * never puts the learner under a countdown.
+ */
 export function buildMultiplicationTestRuntimeConfig(config: MultiplicationTestConfig): PracticeConfig {
   return Object.freeze({
     storageKey: 'mult-test',
     operation: 'multiplication',
-    mode: config.timed ? 'timed' : 'untimed',
-    timerDuration: MULTIPLICATION_TEST_TIMER_SECONDS,
-    fixedTimerDuration: true,
+    mode: 'untimed',
+    timerDuration: 60,
     operandA: { min: 1, max: 12 },
     operandB: { min: 1, max: 12 },
     factsMode: true,
@@ -190,8 +185,6 @@ export function dedupeMissedProblems(missed: readonly Problem[]): Problem[] {
 
 export interface MultiplicationTestResult {
   readonly session: SessionResult;
-  /** Only meaningful (and only computed) for a timed attempt. */
-  readonly correctPerMinute?: number;
   /** Exact missed equations, deduped — never the submitted answer or response time. */
   readonly missed: readonly Problem[];
   readonly config: MultiplicationTestConfig;
@@ -203,12 +196,8 @@ export function buildMultiplicationTestResult(
   config: MultiplicationTestConfig,
 ): MultiplicationTestResult {
   const deduped = dedupeMissedProblems(missed);
-  const correctPerMinute = config.timed
-    ? calculateTimedScore(session.correct, session.elapsedSeconds ?? session.durationSeconds)
-    : undefined;
   return Object.freeze({
     session,
-    ...(correctPerMinute === undefined ? {} : { correctPerMinute }),
     missed: Object.freeze(deduped),
     config,
   });

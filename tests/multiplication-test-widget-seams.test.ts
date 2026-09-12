@@ -68,4 +68,19 @@ export const tests = [
     assert.equal(missedSection.includes('writesProgress='), false, 'missed-fact practice must use the default (true) progress writes — it is genuine practice');
     assert.ok(missedSection.includes('sessionPresentation="shared"'));
   }),
+  test('the Test runner offers no timed/Timing configuration — V1 is fixed-length only', () => {
+    const runner = source('src/components/MultiplicationTestRunner.tsx');
+    assert.equal(runner.includes('Timing'), false);
+    assert.equal(runner.includes('Untimed'), false);
+    assert.equal(runner.includes('60 sec'), false);
+    assert.equal(runner.includes('config.timed'), false);
+    assert.equal(runner.includes('timed:'), false);
+  }),
+  test('removing the Test\'s timed mode did not touch the shared timer/session infrastructure Speed Drill and shared timed practice still rely on', () => {
+    const session = source('src/engine/session.ts');
+    assert.ok(session.includes('export function expirePracticeTimer'), 'the shared timer-expiry boundary must still exist for every other timed surface');
+    const widget = source('src/components/PracticeWidget.tsx');
+    assert.ok(widget.includes("const isTimed = config.mode === 'timed';"), 'PracticeWidget must still support mode: \'timed\' generically for Speed Drill and shared timed practice links');
+    assert.ok(widget.includes('DurationPicker'), 'the classic timed duration picker must remain available to non-Test callers');
+  }),
 ];

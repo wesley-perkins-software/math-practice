@@ -10,9 +10,10 @@ interface Props {
 
 /** Assessment-oriented results: score/percentage/time/missed facts — deliberately no streak, PB, or historical comparison. */
 export default function TestResultsCard({ result, onRetake, onPracticeMissed }: Props) {
-  const { session, correctPerMinute, missed } = result;
+  const { session, missed } = result;
   const elapsed = session.elapsedSeconds ?? session.durationSeconds;
   const elapsedLabel = elapsed >= 60 ? `${Math.floor(elapsed / 60)}m ${elapsed % 60}s` : `${elapsed}s`;
+  const missedCount = session.total - session.correct;
 
   return (
     <div className="flex flex-col items-center gap-5 py-4 w-full font-practice animate-[fadeIn_0.25s_ease-out]" role="status" aria-live="polite">
@@ -30,8 +31,8 @@ export default function TestResultsCard({ result, onRetake, onPracticeMissed }: 
           <div className="text-xs text-[#6B6690]">Time</div>
         </div>
         <div className="rounded-xl p-3 text-center border bg-[#FAF9FE] border-[#E4E1F5]">
-          <div className="text-lg font-bold text-[#211D4F]">{correctPerMinute !== undefined ? correctPerMinute : session.total - session.correct}</div>
-          <div className="text-xs text-[#6B6690]">{correctPerMinute !== undefined ? 'Correct / min' : 'Missed'}</div>
+          <div className="text-lg font-bold text-[#211D4F]">{missedCount}</div>
+          <div className="text-xs text-[#6B6690]">Missed</div>
         </div>
       </div>
 

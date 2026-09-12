@@ -84,7 +84,6 @@ export default function MultiplicationTestRunner() {
 
   const dimensions = useMemo(() => ({
     problem_count: config.questionCount,
-    timed: config.timed,
     selection_scope: deriveMultiplicationTestSelectionScope(config.facts),
   }), [config]);
 
@@ -92,8 +91,8 @@ export default function MultiplicationTestRunner() {
   // that function's job is to make an untrusted/external config (the URL query) safe, and its
   // strict "non-empty facts" rule would otherwise silently snap a mid-edit "Clear all" back to
   // all 12 tables. The UI itself only ever produces well-formed values (toggled 1–12 facts, a
-  // literal question count, a boolean), and Start Test is disabled while facts is empty.
-  function updateConfig(next: Partial<{ facts: number[]; questionCount: MultiplicationTestQuestionCount; timed: boolean }>) {
+  // literal question count), and Start Test is disabled while facts is empty.
+  function updateConfig(next: Partial<{ facts: number[]; questionCount: MultiplicationTestQuestionCount }>) {
     setConfig((prev) => ({ ...prev, ...next }));
   }
 
@@ -140,14 +139,14 @@ export default function MultiplicationTestRunner() {
     return (
       <div className="w-full max-w-[length:var(--practice-card-max-w)] mx-auto font-practice">
         <p className="text-sm sm:text-base text-body leading-relaxed mb-5">
-          A finite, scored multiplication facts test. Choose your tables and question count, then see your score and missed facts at the end — no signup, nothing saved.
+          A free, scored multiplication facts test. Choose your tables and question count, then see your score and missed facts at the end — no signup required.
         </p>
 
         <div className="mb-5">
           <FactsGrid selected={config.facts} onChange={(facts) => updateConfig({ facts })} />
         </div>
 
-        <fieldset className="border-0 p-0 m-0 mb-5">
+        <fieldset className="border-0 p-0 m-0 mb-6">
           <legend className="static block mb-2 text-sm font-semibold text-[#211D4F]">Questions</legend>
           <div className="grid grid-cols-3 gap-2">
             {MULTIPLICATION_TEST_QUESTION_COUNTS.map((count) => (
@@ -163,32 +162,6 @@ export default function MultiplicationTestRunner() {
                 {count}
               </button>
             ))}
-          </div>
-        </fieldset>
-
-        <fieldset className="border-0 p-0 m-0 mb-6">
-          <legend className="static block mb-2 text-sm font-semibold text-[#211D4F]">Timing</legend>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              type="button"
-              aria-pressed={!config.timed}
-              onClick={() => updateConfig({ timed: false })}
-              className={`min-h-[44px] rounded-lg border text-sm font-bold transition-all ${
-                !config.timed ? 'border-[#4F46E5] bg-[#F5F3FF] text-[#211D4F]' : 'border-[#D8D4EE] bg-white text-[#211D4F] hover:border-[#4F46E5]'
-              }`}
-            >
-              Untimed
-            </button>
-            <button
-              type="button"
-              aria-pressed={config.timed}
-              onClick={() => updateConfig({ timed: true })}
-              className={`min-h-[44px] rounded-lg border text-sm font-bold transition-all ${
-                config.timed ? 'border-[#4F46E5] bg-[#F5F3FF] text-[#211D4F]' : 'border-[#D8D4EE] bg-white text-[#211D4F] hover:border-[#4F46E5]'
-              }`}
-            >
-              60 sec
-            </button>
           </div>
         </fieldset>
 

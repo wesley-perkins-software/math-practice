@@ -46,6 +46,20 @@ export const tests = [
     }
     assert.ok(source('src/pages/multiplication/facts.astro').includes('Take a Multiplication Test'));
   }),
+  test('the Test page carries no stale timed-mode title, FAQ, or content after V1 removed user-configurable timing', () => {
+    const page = source('src/pages/multiplication/test/index.astro');
+    assert.equal(page.includes('Timed & Untimed'), false, 'title must not promise a timed mode that no longer exists');
+    assert.equal(page.includes('60-second'), false, 'no remaining copy should reference a 60-second Test timer');
+    assert.equal(page.includes('60 sec'), false);
+    assert.equal(page.includes('Is the multiplication test timed?'), false, 'the stale timed FAQ question must be replaced');
+    assert.ok(page.includes('Does the multiplication test have a timer?'), 'the FAQ must answer the timer question directly, since the Test genuinely has none');
+    assert.ok(page.includes('Arithmetic Speed Drill'), 'the FAQ/copy should point timed-fluency seekers to the Speed Drill instead');
+    assert.equal(page.includes('correct answers per minute'), false, 'correct-per-minute is a timed-only stat that no longer applies');
+  }),
+  test('the score-explainer sentence no longer renders directly under the tool across every phase', () => {
+    const page = source('src/pages/multiplication/test/index.astro');
+    assert.equal(page.includes('slot="quick-answer"'), false, 'the standalone score-explainer line under the tool must be removed, not replaced with another one');
+  }),
   test('for-teachers gets only a contextual line, not a new hero/callout section', () => {
     const page = source('src/pages/for-teachers.astro');
     const idx = page.indexOf("href: '/multiplication/test/'");
