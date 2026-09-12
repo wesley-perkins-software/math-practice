@@ -65,15 +65,16 @@ export const OPERATION_MENUS: Record<Operation, OperationMenu> = {
   multiplication: {
     hub: { label: 'Multiplication Practice', href: '/multiplication/' },
     items: [
-      { label: 'Multiplication Facts', href: '/multiplication/facts/' },
+      { label: 'Mixed Multiplication Facts', href: '/multiplication/facts/' },
+      { label: 'Multiplication Test', href: '/multiplication/test/' },
     ],
-    // Matches the Multiplication hub's own order: Times Tables, then Facts.
+    // Matches the Multiplication hub's own order: Times Tables, then Facts, then Test.
     grid: { label: 'Times Tables', basePath: '/multiplication/times-tables', max: 12, position: 'before' },
   },
   division: {
     hub: { label: 'Division Practice', href: '/division/' },
     items: [
-      { label: 'Division Facts', href: '/division/facts/' },
+      { label: 'Mixed Division Facts', href: '/division/facts/' },
       { label: 'Division With Remainders', href: '/division/remainders/' },
     ],
     // Matches the Division hub's own order: Divide By, then Facts, then Remainders.

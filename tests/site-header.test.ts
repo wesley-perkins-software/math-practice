@@ -28,4 +28,14 @@ export const tests = [
     assert.equal(source.includes('xl:flex'), false);
     assert.equal(source.includes('xl:hidden'), false);
   }),
+  test('brand icon and wordmark are modestly enlarged, not left at the old undersized values', () => {
+    assert.ok(source.includes('w-8 h-8 rounded-lg bg-[#4F46E5]'), 'brand icon should be w-8 h-8 (up from w-7 h-7)');
+    assert.equal(source.includes('w-7 h-7 rounded-lg bg-[#4F46E5]'), false);
+    assert.ok(/width="16" height="16" fill="white"/.test(source), 'brand glyph svg should be 16x16 (up from 14x14)');
+    assert.equal(source.includes('width="14" height="14" fill="white"'), false);
+    // Wordmark: exactly one step up from text-base — asserted as "not text-base" plus "no wrapping"
+    // (whitespace-nowrap) rather than pinning an exact class, since visual QA may land on text-lg or text-[17px].
+    assert.ok(/text-(lg|\[17px\]) font-bold text-white tracking-tight whitespace-nowrap/.test(source), 'wordmark should be enlarged beyond text-base while staying on one line');
+    assert.equal(/text-base font-bold text-white tracking-tight/.test(source), false);
+  }),
 ];

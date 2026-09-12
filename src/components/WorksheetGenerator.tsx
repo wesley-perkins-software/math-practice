@@ -21,21 +21,31 @@ const OP_SYMBOL: Record<string, string> = {
 
 const PROBLEM_COUNT = 12;
 
-function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
+/**
+ * The site's canonical division-bracket figure — divisor outside, dividend
+ * inside a top/left-bordered bracket, quotient (and remainder, when the
+ * problem has one) above the bar. Originally built for division-with-
+ * remainders worksheets; generalized here to render every division
+ * worksheet problem, including exact basic division facts, so printable
+ * division never falls back to the older stacked "dividend / ÷divisor"
+ * layout used by the other operations.
+ */
+function DivisionProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
   const dividendDigits = String(problem.operandA).length;
+  const hasRemainder = problem.remainder !== undefined;
 
   return (
     <div className="worksheet-problem long-division-problem flex min-h-[220px] flex-col items-center justify-start rounded-xl border border-[#C7D2FE] bg-white px-4 py-5">
-      <div className="long-division-figure inline-flex items-end font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
+      <div className="long-division-figure inline-flex items-end font-sans text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
         {/* Divisor — self-end keeps it vertically aligned with the dividend */}
         <span className="long-division-divisor self-end pr-3">{problem.operandB}</span>
 
         {/* Dividend column: answer sits directly above the bracket */}
         <div className="flex flex-col items-center">
           {showAnswer ? (
-            <div className="long-division-answer mb-1 flex items-baseline gap-1 font-mono font-bold text-[#059669]">
+            <div className="long-division-answer mb-1 flex items-baseline gap-1 font-sans font-bold text-[#059669]">
               <span className="text-[1.75rem] leading-none">{problem.correctAnswer}</span>
-              <span className="text-base leading-none">R{problem.remainder}</span>
+              {hasRemainder && <span className="long-division-remainder text-base leading-none">R{problem.remainder}</span>}
             </div>
           ) : (
             <div className="long-division-answer-blank mb-1 h-9" aria-hidden="true" />
@@ -55,8 +65,8 @@ function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAn
 }
 
 function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswer: boolean }) {
-  if (problem.remainder !== undefined) {
-    return <LongDivisionProblem problem={problem} showAnswer={showAnswer} />;
+  if (problem.operation === 'division') {
+    return <DivisionProblem problem={problem} showAnswer={showAnswer} />;
   }
 
   const symbol = OP_SYMBOL[problem.operation];
@@ -65,14 +75,14 @@ function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswe
   return (
     <div className="worksheet-problem flex min-h-[120px] flex-col items-end rounded-xl border border-[#E0E7FF] bg-white p-4">
       <div className="problem-inner flex flex-col items-end">
-        <div className="font-mono text-2xl font-bold tabular-nums text-[#1E1B4B]">{problem.operandA}</div>
-        <div className="flex items-center gap-2 font-mono text-2xl font-bold tabular-nums text-[#1E1B4B]">
+        <div className="worksheet-digits font-sans text-2xl font-bold tabular-nums text-[#1E1B4B]">{problem.operandA}</div>
+        <div className="worksheet-digits flex items-center gap-2 font-sans text-2xl font-bold tabular-nums text-[#1E1B4B]">
           <span className="text-[#4F46E5]">{symbol}</span>
           <span>{problem.operandB}</span>
         </div>
         <div className="mb-2 mt-1 w-full border-t-2 border-[#1E1B4B]" />
         {showAnswer ? (
-          <div className="font-mono text-xl font-bold tabular-nums text-[#059669]">{answerText}</div>
+          <div className="worksheet-digits font-sans text-xl font-bold tabular-nums text-[#059669]">{answerText}</div>
         ) : (
           <div className="h-7" aria-hidden="true" />
         )}
@@ -89,7 +99,10 @@ export default function WorksheetGenerator({ configs }: Props) {
   const [printMode, setPrintMode] = useState<'worksheet' | 'answers' | null>(null);
 
   const selectedConfig = configs[selectedIndex]?.config;
-  const isLongDivisionMode = Boolean(selectedConfig?.withRemainder);
+  // Covers every division worksheet (basic facts and with-remainder alike) —
+  // both now render through the same division-bracket figure above, which
+  // needs this print-sizing treatment regardless of whether a remainder is present.
+  const isDivisionMode = selectedConfig?.operation === 'division';
 
   function generate() {
     setProblems(generateProblemSet(selectedConfig, PROBLEM_COUNT));
@@ -166,7 +179,7 @@ export default function WorksheetGenerator({ configs }: Props) {
       </div>
 
       {generated && (
-        <div className={`worksheet-area space-y-4 ${isLongDivisionMode ? 'long-division-mode' : ''}`}>
+        <div className={`worksheet-area space-y-4 ${isDivisionMode ? 'long-division-mode' : ''}`}>
           <div className="print-only-header mb-3 hidden print:block">
             <div className="flex items-end gap-2 pb-3 text-sm text-[#1E1B4B]">
               <span>Name:</span>
