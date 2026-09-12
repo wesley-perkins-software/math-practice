@@ -17,6 +17,8 @@ interface Props {
   feedbackContent?: React.ReactNode;
   /** 'prototype' opts into the redesigned surface (currently /addition/1-digit only). */
   variant?: 'classic' | 'prototype';
+  /** False hides the correct/incorrect answer color while leaving the accept/clear/advance timing (driven by feedbackState) unchanged. */
+  revealCorrectness?: boolean;
 }
 
 export default function WrittenProblemInput({
@@ -26,7 +28,9 @@ export default function WrittenProblemInput({
   feedbackState = 'idle',
   feedbackContent,
   variant = 'classic',
+  revealCorrectness = true,
 }: Props) {
+  const colorState = revealCorrectness ? feedbackState : 'idle';
   const symbol = OP_SYMBOL[problem.operation];
   const [value, setValue] = useState('');
   const [isVisible, setIsVisible] = useState(false);
@@ -97,9 +101,9 @@ export default function WrittenProblemInput({
   }
 
   const answerColor =
-    feedbackState === 'correct'
+    colorState === 'correct'
       ? 'text-[#059669]'
-      : feedbackState === 'incorrect'
+      : colorState === 'incorrect'
       ? 'text-[#DC2626]'
       : 'text-[#1E1B4B]';
 
@@ -107,9 +111,9 @@ export default function WrittenProblemInput({
 
   if (variant === 'prototype') {
     const answerColorProto =
-      feedbackState === 'correct'
+      colorState === 'correct'
         ? 'text-[#059669]'
-        : feedbackState === 'incorrect'
+        : colorState === 'incorrect'
         ? 'text-[#DC2626]'
         : 'text-[#211D4F]';
 
