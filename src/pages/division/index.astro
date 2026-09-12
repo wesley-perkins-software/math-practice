@@ -31,6 +31,7 @@ const modes = [
 
 const relatedLinks = [
   { href: '/division/divide-by/', label: 'All Divide By Practice', description: 'Browse every divisor, 1 through 12, in one place' },
+  { href: '/arithmetic-speed-drill/', label: 'Try the 60-Second Speed Drill', description: 'A timed fluency challenge across all operations' },
   { href: '/multiplication/facts/', label: 'Multiplication Facts Practice', description: 'Strong times tables make division much easier' },
   { href: '/multiplication/', label: 'Multiplication Practice', description: 'Need a refresher? Practice multiplication first' },
   { href: '/math-worksheets/division-worksheets/', label: 'Division Worksheets', description: 'Print extra division pages with and without remainders' },
@@ -175,10 +176,8 @@ const faqItems = [
       </div>
     </section>
 
-    <section class="mt-12" aria-labelledby="related-heading">
-      <h2 id="related-heading" class="text-base font-semibold text-[#1E293B] mb-3">Related Practice</h2>
-      <InternalLinks client:load links={relatedLinks} />
-    </section>
+    <!-- Related links (InternalLinks renders its own "Related Practice" heading/nav landmark) -->
+    <InternalLinks client:load links={relatedLinks} />
 
     <section class="mt-12" aria-labelledby="faq-heading">
       <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
