@@ -36,16 +36,37 @@ interface Props {
    * session at all. Callers that omit this prop are unaffected.
    */
   problems?: Problem[];
+  /**
+   * 'hidden' suppresses the per-answer Correct/Incorrect banner and the
+   * colored answer text (e.g. for an assessment where correctness is only
+   * revealed at the end). The accept-and-advance state machine and its
+   * timing are unaffected — only what's visually revealed changes. Default
+   * 'shown' preserves existing behavior for every current caller.
+   */
+  feedbackVisibility?: 'shown' | 'hidden';
+  /**
+   * False skips every write this session would otherwise make to
+   * `mp_stats_<storageKey>` and the shared `mp_session_log` — i.e. this
+   * session never appears in `/progress/` and never affects another
+   * surface's streak/personal-best/attempt counters for the same
+   * `storageKey`. Default `true` preserves existing behavior for every
+   * current caller (including `sessionPresentation="shared"`, which already
+   * relies on writing under the base practice's identity).
+   */
+  writesProgress?: boolean;
   /** Narrow lifecycle seam used by the shared runner; callbacks never receive problems or answers. */
   onFirstAcceptedAnswer?: () => void;
+  /** Fires once per accepted answer, with correctness only — never the submitted value. */
+  onAnswerSubmit?: (problem: Problem, isCorrect: boolean) => void;
   onSessionComplete?: (result: SessionResult) => void;
   onReplay?: () => void;
 }
 
-export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical', problems, onFirstAcceptedAnswer, onSessionComplete, onReplay }: Props) {
+export default function PracticeWidget({ config, variant = 'classic', darkText = false, questionCount, sessionPresentation = 'canonical', problems, feedbackVisibility = 'shown', writesProgress = true, onFirstAcceptedAnswer, onAnswerSubmit, onSessionComplete, onReplay }: Props) {
   const isTimed = config.mode === 'timed';
   const trackStreaks = sessionPresentation === 'canonical';
   const isTimerDurationFixed = Boolean(config.fixedTimerDuration);
+  const revealCorrectness = feedbackVisibility !== 'hidden';
 
   // Session state
   const [phase, setPhase] = useState<Phase>('idle');
@@ -85,8 +106,8 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   const persistedResultRef = useRef<string | null>(null);
   const logicalCompletionTimeRef = useRef<number | null>(null);
   const interactionTrackedRef = useRef(false);
-  const lifecycleRef = useRef({ onFirstAcceptedAnswer, onSessionComplete, onReplay });
-  lifecycleRef.current = { onFirstAcceptedAnswer, onSessionComplete, onReplay };
+  const lifecycleRef = useRef({ onFirstAcceptedAnswer, onAnswerSubmit, onSessionComplete, onReplay });
+  lifecycleRef.current = { onFirstAcceptedAnswer, onAnswerSubmit, onSessionComplete, onReplay };
 
   // Refs that are always current — safe to read in callbacks/effects without stale closures
   const correctRef = useRef(0);
@@ -141,7 +162,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
   function savePendingUntimedSession() {
     // A finite session has its own explicit boundary; do not turn tab hiding
     // into a partial completion or reset its in-progress answer count.
-    if (isTimed || questionCount !== undefined || totalAnsweredRef.current === 0) return;
+    if (isTimed || questionCount !== undefined || totalAnsweredRef.current === 0 || !writesProgress) return;
     const elapsed = sessionStartTimeRef.current > 0
       ? Math.round((Date.now() - sessionStartTimeRef.current) / 1000)
       : 0;
@@ -260,33 +281,38 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     if (phase === 'complete' && result) {
       if (persistedResultRef.current === result.timestamp) return;
       persistedResultRef.current = result.timestamp;
-      const current = loadStats(config.storageKey);
-      const prevLongestStreak = current.longestStreak;
-      const prevPersonalBest = current.personalBestScore;
-      const sessionUpdated = updateStatsAfterSession(current, result, isTimed);
-      // Untimed answers are recorded as they happen. Finishing a finite
-      // untimed session must not add those attempts for a second time.
-      const updated = isTimed
-        ? sessionUpdated
-        : { ...sessionUpdated, totalProblemsAttempted: current.totalProblemsAttempted };
-      saveStats(config.storageKey, updated);
-      setStats(updated);
-      const newStreakRecord = !isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0;
-      setIsNewStreakRecord(newStreakRecord);
-      appendSessionLog({
-        storageKey: config.storageKey,
-        label: config.label ?? config.storageKey,
-        correct: result.correct,
-        total: result.total,
-        score: result.score,
-        durationSeconds: result.durationSeconds,
-        ...(result.elapsedSeconds === undefined ? {} : { elapsedSeconds: result.elapsedSeconds }),
-        ...(result.timeLimitSeconds === undefined ? {} : { timeLimitSeconds: result.timeLimitSeconds }),
-        ...(result.completionReason === undefined ? {} : { completionReason: result.completionReason }),
-        ...(result.questionTarget === undefined ? {} : { questionTarget: result.questionTarget }),
-        isTimed,
-        timestamp: result.timestamp,
-      });
+      let isPersonalBest = false;
+      let newStreakRecord = false;
+      if (writesProgress) {
+        const current = loadStats(config.storageKey);
+        const prevLongestStreak = current.longestStreak;
+        const prevPersonalBest = current.personalBestScore;
+        const sessionUpdated = updateStatsAfterSession(current, result, isTimed);
+        // Untimed answers are recorded as they happen. Finishing a finite
+        // untimed session must not add those attempts for a second time.
+        const updated = isTimed
+          ? sessionUpdated
+          : { ...sessionUpdated, totalProblemsAttempted: current.totalProblemsAttempted };
+        saveStats(config.storageKey, updated);
+        setStats(updated);
+        newStreakRecord = !isTimed && updated.longestStreak > prevLongestStreak && updated.longestStreak > 0;
+        setIsNewStreakRecord(newStreakRecord);
+        appendSessionLog({
+          storageKey: config.storageKey,
+          label: config.label ?? config.storageKey,
+          correct: result.correct,
+          total: result.total,
+          score: result.score,
+          durationSeconds: result.durationSeconds,
+          ...(result.elapsedSeconds === undefined ? {} : { elapsedSeconds: result.elapsedSeconds }),
+          ...(result.timeLimitSeconds === undefined ? {} : { timeLimitSeconds: result.timeLimitSeconds }),
+          ...(result.completionReason === undefined ? {} : { completionReason: result.completionReason }),
+          ...(result.questionTarget === undefined ? {} : { questionTarget: result.questionTarget }),
+          isTimed,
+          timestamp: result.timestamp,
+        });
+        isPersonalBest = isTimed && updated.personalBestScore > prevPersonalBest;
+      }
       if (!isTimed) totalAnsweredRef.current = 0;
       trackEvent('practice_session_complete', {
         operation: config.operation,
@@ -296,12 +322,12 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
         total_answered: result.total,
         accuracy_pct: result.score,
         duration_seconds: result.durationSeconds,
-        is_personal_best: isTimed && updated.personalBestScore > prevPersonalBest,
+        is_personal_best: isPersonalBest,
         is_new_streak_record: newStreakRecord,
       });
       lifecycleRef.current.onSessionComplete?.(result);
     }
-  }, [phase, result, config.storageKey, config.label, isTimed]);
+  }, [phase, result, config.storageKey, config.label, isTimed, writesProgress]);
 
   function handleDurationChange(d: TimerDuration) {
     setDuration(d);
@@ -332,6 +358,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
     totalAnsweredRef.current = submission.state.completedQuestions;
     if (submission.state.questionCompletionPending) logicalCompletionTimeRef.current = Date.now();
     const isCorrect = scoreAnswer(problem, answer, remainder);
+    lifecycleRef.current.onAnswerSubmit?.(problem, isCorrect);
 
     trackEvent('answer_submit', {
       operation: config.operation,
@@ -340,7 +367,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
       problem_index: totalAnsweredRef.current,
     });
 
-    if (!isTimed) {
+    if (!isTimed && writesProgress) {
       // Update streak and problem count per answer for untimed mode.
       // Sessions never end via timer, so tracking totalProblemsAttempted here ensures
       // the progress dashboard reflects activity even before a session is formally closed.
@@ -525,7 +552,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
                   ? <TimerDisplay secondsRemaining={secondsRemaining} variant={variant} />
                   : <TimerDisplay secondsRemaining={duration} variant={variant} />
                 }
-                {isPrototype ? (
+                {isPrototype && revealCorrectness ? (
                   // Correct: live count of correct answers this session —
                   // reuses the same `correct` state ScoreCard already reads
                   // at session end, so this is purely a display of existing
@@ -568,7 +595,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
                 showRemainder={problem.remainder !== undefined}
                 feedbackContent={(
                   <div className="h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto flex items-center justify-center w-full">
-                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} variant={variant} />
+                    <FeedbackBanner state={revealCorrectness ? feedbackState : 'hidden'} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} variant={variant} />
                   </div>
                 )}
               />
@@ -580,7 +607,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
                 feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
                 feedbackContent={(
                   <div className="min-h-[1.75rem] flex items-center justify-center w-full">
-                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
+                    <FeedbackBanner state={revealCorrectness ? feedbackState : 'hidden'} correctAnswer={feedbackCorrectAnswer} correctRemainder={feedbackCorrectRemainder} />
                   </div>
                 )}
               />
@@ -590,6 +617,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
                 onSubmit={handleAnswer}
                 disabled={feedbackState !== 'hidden'}
                 feedbackState={feedbackState === 'hidden' ? 'idle' : feedbackState}
+                revealCorrectness={revealCorrectness}
                 variant={variant}
                 feedbackContent={(
                   // Fixed height (not min-height) reserved from the start, sized to
@@ -607,7 +635,7 @@ export default function PracticeWidget({ config, variant = 'classic', darkText =
                   // worksheet-like, so that's what ships: this lane only ever
                   // shows something once there's real feedback to give.
                   <div className={`${isPrototype ? 'h-[length:var(--practice-feedback-h)] max-w-[length:var(--practice-feedback-max-w)] mx-auto' : 'min-h-[1.75rem]'} flex items-center justify-center w-full`}>
-                    <FeedbackBanner state={feedbackState} correctAnswer={feedbackCorrectAnswer} variant={variant} />
+                    <FeedbackBanner state={revealCorrectness ? feedbackState : 'hidden'} correctAnswer={feedbackCorrectAnswer} variant={variant} />
                   </div>
                 )}
               />

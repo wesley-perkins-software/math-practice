@@ -1,0 +1,117 @@
+---
+import PracticeLayout from '@/layouts/PracticeLayout.astro';
+import MultiplicationTestRunner from '@/components/MultiplicationTestRunner';
+import InternalLinks from '@/components/InternalLinks';
+import { ORGANIZATION_ID } from '@/config/site';
+import '@/styles/practice-surface-prototype.css';
+
+const SITE = 'https://mathpracticeonline.com';
+
+const links = [
+  { href: '/multiplication/facts/', label: 'Practice Multiplication Facts', description: 'Untimed drill with instant feedback after every answer' },
+  { href: '/multiplication/times-tables/', label: 'Times Tables Practice', description: 'Focus on one table at a time (1–12)' },
+  { href: '/arithmetic-speed-drill/', label: 'Try the 60-Second Speed Drill', description: 'An endless, timed fluency challenge across all operations' },
+  { href: '/multiplication/', label: 'Multiplication Hub', description: 'All multiplication modes and resources' },
+  { href: '/for-teachers/', label: 'For Teachers', description: 'Using Math Practice Online in the classroom' },
+];
+
+const faqItems = [
+  {
+    q: 'What is the Multiplication Test?',
+    a: 'A finite, scored multiplication facts assessment. Choose which times tables to include and how many questions, then answer them one at a time. Your score, accuracy, and any missed facts are shown only at the end — there\'s no feedback during the test.',
+  },
+  {
+    q: 'Is the multiplication test timed?',
+    a: 'Timing is optional. By default the test is untimed (though your total time is still measured and shown at the end). You can switch to a 60-second timed test, which ends the moment the clock runs out.',
+  },
+  {
+    q: 'How is my score calculated?',
+    a: 'Your score is the number of correct answers out of the total questions, shown as a count and a percentage. In the 60-second timed test, you also see correct answers per minute.',
+  },
+  {
+    q: 'Can teachers use this with a class?',
+    a: 'Yes. Share the test\'s URL to hand a class the same tables, question count, and timer setting — each student still gets an independently generated set of problems, not an identical answer key.',
+  },
+  {
+    q: 'Is any test data saved?',
+    a: 'No. The test doesn\'t use accounts and doesn\'t save results or history between visits — refreshing the page resets it. Nothing from the test is added to your regular practice progress.',
+  },
+  {
+    q: 'What is the difference between practice and a test?',
+    a: 'Practice gives instant right/wrong feedback after every answer and never really ends. The test hides feedback until you finish, has a fixed number of questions, and ends with a single score plus a review of anything you missed.',
+  },
+];
+---
+
+<PracticeLayout
+  title="Multiplication Test — Free Timed & Untimed Facts Test | Math Practice Online"
+  description="Take a free multiplication facts test. Choose your tables and question count, optionally add a 60-second timer, then see your score and review missed facts. No signup."
+  canonical={`${SITE}/multiplication/test`}
+  pilotLayout
+  breadcrumb={[{ label: 'Home', href: '/' }, { label: 'Multiplication', href: '/multiplication/' }, { label: 'Multiplication Test' }]}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": faqItems.map(({ q, a }) => ({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": { "@type": "Answer", "text": a }
+      }))
+    })} />
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "LearningResource",
+      "name": "Multiplication Test",
+      "description": "A finite, scored multiplication facts assessment with optional 60-second timing and missed-fact review.",
+      "url": `${SITE}/multiplication/test`,
+      "educationalLevel": ["Grade 3", "Grade 4"],
+      "teaches": "Multiplication",
+      "provider": { "@id": ORGANIZATION_ID }
+    })} />
+  </Fragment>
+
+  <h1 slot="h1" class="text-xl sm:text-2xl font-bold text-[#1E293B] leading-tight">Multiplication Test</h1>
+
+  <MultiplicationTestRunner slot="widget" client:load />
+
+  <Fragment slot="quick-answer">
+    <p>Your score is the number of correct answers out of the total, shown with your accuracy, elapsed time, and any missed facts.</p>
+  </Fragment>
+
+  <div slot="how-it-works" class="mt-12 space-y-10">
+    <section aria-labelledby="hiw-heading">
+      <h2 id="hiw-heading" class="text-lg font-semibold text-[#1E293B] mb-3">How the Multiplication Test Works</h2>
+      <p class="text-sm text-body leading-relaxed">
+        Choose one table, several, or all 1–12, pick 10, 20, or 50 questions, and decide whether to run it untimed or against a 60-second clock. Unlike ordinary practice, the test doesn't reveal whether each answer was right or wrong as you go — you find out at the end, along with your score, accuracy, elapsed time, and a review of any facts you missed.
+      </p>
+    </section>
+
+    <section aria-labelledby="tips-heading">
+      <h2 id="tips-heading" class="text-lg font-semibold text-[#1E293B] mb-3">Practice vs. a Test</h2>
+      <div class="text-sm text-body leading-relaxed space-y-3">
+        <p>
+          If you're still building fact fluency, start with <a href="/multiplication/facts/" class="text-[#4F46E5] font-medium hover:underline">untimed multiplication practice</a>, which shows feedback after every answer. Come back here once you're ready to see how you'd do on a real, timed multiplication quiz.
+        </p>
+        <p>
+          After a test, use <strong>Practice Missed Facts</strong> to drill exactly the facts you got wrong — with feedback restored — rather than repeating the whole test from scratch.
+        </p>
+      </div>
+    </section>
+
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" class="text-lg font-semibold text-[#1E293B] mb-4">Frequently Asked Questions</h2>
+      <div class="flex flex-col gap-4">
+        {faqItems.map(({ q, a }) => (
+          <div class="bg-white border border-[#E2E8F0] rounded-xl px-5 py-4">
+            <h3 class="text-sm font-semibold text-[#1E293B] mb-1.5">{q}</h3>
+            <p class="text-sm text-body leading-relaxed">{a}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <InternalLinks links={links} />
+  </div>
+</PracticeLayout>
