@@ -26,14 +26,14 @@ function LongDivisionProblem({ problem, showAnswer }: { problem: Problem; showAn
 
   return (
     <div className="worksheet-problem long-division-problem flex min-h-[220px] flex-col items-center justify-start rounded-xl border border-[#C7D2FE] bg-white px-4 py-5">
-      <div className="long-division-figure inline-flex items-end font-mono text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
+      <div className="long-division-figure inline-flex items-end font-sans text-[2rem] font-bold leading-none tabular-nums text-[#1E1B4B]">
         {/* Divisor — self-end keeps it vertically aligned with the dividend */}
         <span className="long-division-divisor self-end pr-3">{problem.operandB}</span>
 
         {/* Dividend column: answer sits directly above the bracket */}
         <div className="flex flex-col items-center">
           {showAnswer ? (
-            <div className="long-division-answer mb-1 flex items-baseline gap-1 font-mono font-bold text-[#059669]">
+            <div className="long-division-answer mb-1 flex items-baseline gap-1 font-sans font-bold text-[#059669]">
               <span className="text-[1.75rem] leading-none">{problem.correctAnswer}</span>
               <span className="text-base leading-none">R{problem.remainder}</span>
             </div>
@@ -65,14 +65,14 @@ function WorksheetProblem({ problem, showAnswer }: { problem: Problem; showAnswe
   return (
     <div className="worksheet-problem flex min-h-[120px] flex-col items-end rounded-xl border border-[#E0E7FF] bg-white p-4">
       <div className="problem-inner flex flex-col items-end">
-        <div className="font-mono text-2xl font-bold tabular-nums text-[#1E1B4B]">{problem.operandA}</div>
-        <div className="flex items-center gap-2 font-mono text-2xl font-bold tabular-nums text-[#1E1B4B]">
+        <div className="worksheet-digits font-sans text-2xl font-bold tabular-nums text-[#1E1B4B]">{problem.operandA}</div>
+        <div className="worksheet-digits flex items-center gap-2 font-sans text-2xl font-bold tabular-nums text-[#1E1B4B]">
           <span className="text-[#4F46E5]">{symbol}</span>
           <span>{problem.operandB}</span>
         </div>
         <div className="mb-2 mt-1 w-full border-t-2 border-[#1E1B4B]" />
         {showAnswer ? (
-          <div className="font-mono text-xl font-bold tabular-nums text-[#059669]">{answerText}</div>
+          <div className="worksheet-digits font-sans text-xl font-bold tabular-nums text-[#059669]">{answerText}</div>
         ) : (
           <div className="h-7" aria-hidden="true" />
         )}

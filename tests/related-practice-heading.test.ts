@@ -43,7 +43,10 @@ export const tests = [
     // scoped to the relatedLinks array itself (the modes array above it reuses one of the same hrefs).
     const s = source('src/pages/multiplication/index.astro');
     const relatedLinksBlock = s.slice(s.indexOf('const relatedLinks'), s.indexOf('const faqItems'));
-    const order = ['/multiplication/test/', '/multiplication/times-tables/', '/arithmetic-speed-drill/', '/division/facts/', '/3rd-grade-math-practice/', '/math-worksheets/multiplication-worksheets/', '/division/'];
+    // Multiplication Test moved from this secondary list into the primary
+    // "Choose a Practice Mode" cards (see multiplication-test-discoverability.test.ts),
+    // so it's no longer expected here — everything else keeps its order.
+    const order = ['/multiplication/times-tables/', '/arithmetic-speed-drill/', '/division/facts/', '/3rd-grade-math-practice/', '/math-worksheets/multiplication-worksheets/', '/division/'];
     let cursor = -1;
     for (const href of order) {
       const idx = relatedLinksBlock.indexOf(`href: '${href}'`);

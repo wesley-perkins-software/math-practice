@@ -209,7 +209,7 @@
   }
 
   /* Operand number rows */
-  .worksheet-problem .font-mono {
+  .worksheet-problem .worksheet-digits {
     font-size: 20pt !important;
     line-height: 1.25 !important;
   }
