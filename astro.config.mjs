@@ -41,7 +41,11 @@ export default defineConfig({
           '/multiplication-practice/mixed/',
           '/multiplication-practice/times-tables/',
         ];
-        return !page.endsWith('/practice/') && !redirectPaths.some((path) => page.endsWith(path));
+        // Internal Fractions prototype routes: noindex'd in-page too (see
+        // src/pages/fractions/prototype-*.astro) — excluded here as well
+        // since noindex alone doesn't keep a URL out of the sitemap.
+        const isFractionsPrototype = page.includes('/fractions/prototype-');
+        return !page.endsWith('/practice/') && !isFractionsPrototype && !redirectPaths.some((path) => page.endsWith(path));
       },
     }),
   ],
